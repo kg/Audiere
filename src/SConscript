@@ -10,7 +10,6 @@ sources = Split("""
     device_null
     file_ansi
     input
-    input_mp3
     input_ogg
     input_wav
     noise
@@ -27,27 +26,9 @@ sources = Split("""
     version
 """)
 
-mpegsound_sources = Split("""
-    bitwindow
-    fileinput
-    filter
-    filter_2
-    huffmantable
-    mpeglayer1
-    mpeglayer2
-    mpeglayer3
-    mpegtable
-    mpegtoraw
-    soundinputstream
-    soundplayer
-""")
-
 sources = map(lambda n: n + '.cpp', sources)
-sources.extend(map(lambda n: 'mpegsound/' + n + '.cpp', mpegsound_sources))
 
-env = base_env.Copy()
-env['CPPPATH'].append('mpegsound')
-target = env.Library('audiere', sources)
+target = base_env.Library('audiere', sources)
 
-env.Install(os.path.join(PREFIX, 'include'), 'audiere.h')
-env.Install(os.path.join(PREFIX, 'lib32'), target)
+base_env.Install(os.path.join(PREFIX, 'include'), 'audiere.h')
+base_env.Install(os.path.join(PREFIX, 'lib32'), target)

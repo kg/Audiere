@@ -90,7 +90,7 @@ namespace audiere {
 
     // how much data can we write?
     const int filled = alGetFilled(m_port);
-    int can_write = 50000 - filled;  // empty portion of the buffer
+    int can_write = 5000 - filled;  // empty portion of the buffer
 
     // write 1024 frames at a time
     static const int BUFFER_SIZE = 1024;

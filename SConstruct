@@ -12,6 +12,7 @@ CXXFLAGS = ['-LANG:std',
             '-DHAVE_AL',
             '-DNO_MIKMOD',
             '-DNO_FLAC',
+            '-DNO_MP3',
             '-DWORDS_BIGENDIAN']
 
 # build debug?

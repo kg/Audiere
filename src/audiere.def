@@ -10,3 +10,5 @@ EXPORTS
   AdrCreatePinkNoise
   AdrOpenSound
   AdrCreateSampleBuffer
+  AdrCreateSampleBufferFromSource
+  AdrOpenSoundEffect

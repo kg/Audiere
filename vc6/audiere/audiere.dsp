@@ -230,6 +230,10 @@ SOURCE=..\..\src\sound.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\sound_effect.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\square_wave.cpp
 # End Source File
 # Begin Source File

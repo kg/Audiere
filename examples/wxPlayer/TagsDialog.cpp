@@ -1,6 +1,4 @@
-#include "TagsDialog.h"
-
-
+#include <algorithm>
 #include "TagsDialog.h"
 
 
@@ -19,14 +17,18 @@ TagsDialog::TagsDialog(
   m_tags  = new wxListBox(this, -1);
   m_tags->SetFocus();
 
+  std::vector<std::string> tags;
   for (int i = 0; i < source->getTagCount(); ++i) {
-    std::string tag = source->getTagKey(i);
+    std::string tag = source->getTagType(i);
+    tag += ": ";
+    tag += source->getTagKey(i);
     tag += "=";
     tag += source->getTagValue(i);
-    tag += " (";
-    tag += source->getTagType(i);
-    tag += ")";
-    m_tags->Append(tag.c_str());
+    tags.push_back(tag.c_str());
+  }
+  std::sort(tags.begin(), tags.end());
+  for (size_t i = 0; i < tags.size(); ++i) {
+    m_tags->Append(tags[i].c_str());
   }
 
   m_close = new wxButton(this, -1, "Close");

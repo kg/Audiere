@@ -3,6 +3,8 @@
   Added support for reading metadata tags from Ogg Vorbis files.
   Interface designed with help from Brian Robb and Andy Friesen.
 
+  Added ID3v1 support.  (Original code written by Brian Robb.)
+
 2003.09.04
 
   Opens MP3 files with ID3v2 tags with the MP3 decoder, not the MOD

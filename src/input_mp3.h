@@ -27,6 +27,9 @@ namespace audiere {
     bool putblock(void *buffer,int size);
 
   private:
+    void readID3v1Tags();
+    void readID3v2Tags();
+
     FilePtr m_file;
 
     // from format chunk

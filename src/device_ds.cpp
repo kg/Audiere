@@ -75,7 +75,7 @@ namespace audiere {
 
     ADR_LOG("Created DS object");
 
-    LPCGUID guid = NULL;
+    LPGUID guid = NULL;
     GUID stack_guid;  // so we can point 'guid' to an object that won't be destroyed
 
     std::string guid_string = parameters.getValue("device_guid", "");

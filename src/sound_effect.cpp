@@ -37,7 +37,7 @@ namespace audiere {
     }
 
     void ADR_CALL setPitchShift(float shift) {
-      return m_stream->setPitchShift(shift);
+      m_stream->setPitchShift(shift);
     }
 
     float ADR_CALL getPitchShift() {
@@ -54,6 +54,10 @@ namespace audiere {
     MultipleSoundEffect(AudioDevice* device, SampleBuffer* sb) {
       m_device = device;
       m_buffer = sb;
+
+      m_volume = 1;
+      m_pan = 0;
+      m_shift = 1;
     }
 
     void ADR_CALL play() {

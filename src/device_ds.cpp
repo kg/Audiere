@@ -124,17 +124,19 @@ namespace audiere {
     ADR_ASSERT(m_open_streams.size() == 0,
       "DirectSound output context should not die with open streams");
 
+    // shut down DirectSound
+    if (m_direct_sound) {
+      m_direct_sound->Release();
+      m_direct_sound = NULL;
+    }
+
     // if the anonymous window is open, close it
     if (m_anonymous_window) {
       DestroyWindow(m_anonymous_window);
       m_anonymous_window = NULL;
     }
 
-    // shut down DirectSound
-    if (m_direct_sound) {
-      m_direct_sound->Release();
-      m_direct_sound = NULL;
-    }
+    CoUninitialize();
   }
 
 

@@ -2,7 +2,10 @@
 
   fixed bug where resetting an MP3 input stream would emit a short burst
     of static
-  fixed static between repeats in repeatable streams (thanks valgrind!)
+  fixed static between repeats in repeatable streams (thanks
+    valgrind!)
+  fixed an exit crash on some systems by adding a CoUninitialize call
+    to the DirectSound device destructor
 
 2003.05.27
 

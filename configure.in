@@ -65,6 +65,8 @@ AC_SUBST(WORDS_BIGENDIAN)
 AC_OUTPUT(
 	Makefile
 	doc/Makefile
+        examples/Makefile
+        examples/simple/Makefile
         src/Makefile
         src/mikmod/Makefile
         src/mikmod/mikmod/Makefile
@@ -72,6 +74,6 @@ AC_OUTPUT(
         src/mikmod/mikmod/virtch/Makefile
         src/mikmod/mikmod/virtch/resfilter/Makefile
         src/mikmod/mmio/Makefile
-        examples/Makefile
-        examples/simple/Makefile
+        test/Makefile
+        test/interactive/Makefile
 )

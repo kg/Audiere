@@ -1,0 +1,4 @@
+Audio::Audiere is available through:
+
+    http://search.cpan.org/~tels/Audio-Audiere/
+    http://search.cpan.org/

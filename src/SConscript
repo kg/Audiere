@@ -1,0 +1,32 @@
+import os
+
+Import('base_env PREFIX')
+
+sources = Split("""
+    buffer_stream
+    debug
+    device
+    device_null
+    device_al
+    file_ansi
+    input
+    input_ogg
+    input_wav
+    mixer
+    repeatable
+    resampler
+    sound
+    threads_posix
+    timer_posix
+    tone
+    utility
+    version
+""")
+
+sources = map(lambda n: n + '.cpp', sources)
+
+env = base_env.Copy()
+target = env.SharedLibrary('audiere', sources)
+
+env.Install(os.path.join(PREFIX, 'include'), 'audiere.h')
+env.Install(os.path.join(PREFIX, 'lib32'), target)

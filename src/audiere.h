@@ -1214,6 +1214,192 @@ namespace audiere {
     return hidden::AdrCreateMemoryFile(buffer, size);
   }
     
+  namespace events
+  {
+      const std::string SoundStoppedEventType = "SoundStopped";
+
+      /**
+        * superclass of all events that can be triggered
+        */
+      class Event {
+          public:
+              Event(const std::string& newType) {type = newType;}
+              std::string getType() const {return type;}
+
+          private:
+              std::string type;
+      };
+
+      /**
+        * Superclass of all user classes that can subscribe to events. The destructor automatically
+        * cancels all subscriptions */
+      class Subscriber {
+          public:
+              /**
+                * Destructor, cancels all subscriptions 
+                */
+              virtual ~Subscriber();
+              
+              /**
+                * subscribe to the given event type. When an event of this type occurs, the handleEvent
+                * method will be called
+                */
+              void subscribeTo(const std::string& eventType);
+
+              /**
+                * will be called when an event of a subscribed type occured. Note that the subclass should
+                * handle the appropriate down-casting (using dynamic_cast<TheRealEventType>(theEvent)).
+                * WARNING: THIS METHOD MAY BE CALLED FROM A SEPARATE THREAD, MAKE SURE ANY CODE THAT
+                * YOU PUT IN THE IMPLEMENTATION IS THREAD-SAFE AND RETURNS QUICKLY
+                */
+              virtual void handleEvent(const Event& theEvent)=0;
+      };
+
+      /**
+        * The event Manager is responsible for distrubuting events to subscibers. In addition
+        * it handles all (un)subscribe requests
+        */
+      class Manager {
+          public:
+              /**
+                * initialisation method, call this once. If you don't you will
+                * not get any events, call it more than once and who knows :)
+                */
+              static void init();
+              /**
+                * reverse of init(); it stops the manager. You will not get
+                * any further events. If you called init(), make sure you 
+                * call stop() before exiting your application.
+                */
+              static void stop();
+              /**
+                * cancels all subscriptions, this is also called from the
+                * destructor of Subscriber
+                */
+              static void unsubscribeAll(Subscriber* theSubscriber);
+              /**
+                * call this to subscribe to the specified event. When an event
+                * of the given type is published, the subscriber will be called
+                */
+              static void subscribeTo(Subscriber* theSubscriber, const std::string& eventType);
+
+              /**
+                * send the given event to the applicable subscribers. Do not
+                * delete the Event being referenced, this will be done
+                * automatically, therefore you can't assume the object still
+                * exists at any point in time after this call
+                */
+              static void publish(Event* theEvent);
+      };
+
+      /**
+        * this event is triggered when a sound goes from playing to stopped. The reason for this change in
+        * state is unknown. Therefore, if you call stop() on your OutputStream, don't be alarmed if this triggers
+        * this event.
+        */
+      class StoppedEvent : public Event {
+          public:
+              StoppedEvent(OutputStream* newStream) : Event(SoundStoppedEventType), theStream(newStream) { }
+              OutputStream* getStream() const {  return theStream; }
+
+          private:
+              OutputStream* theStream;
+      };
+  } // end namespace events
+
+#if defined(WIN32) || defined(_WIN32)
+#define CDAUDIO_WINDOWS
+#endif
+
+  /**
+   * represents a drive capable of playing CD audio. Internally, this
+   * uses the MCI subsystem in windows and libcdaudio on other platforms.
+   * MCI subsystem: http://msdn.microsoft.com/library/default.asp?url=/library/en-us/multimed/htm/_win32_multimedia_command_strings.asp
+   * libcdaudio: http://cdcd.undergrid.net/libcdaudio/
+   */
+  class CDDrive {
+    public:
+        /**
+         * constructor, the device is the file system device
+         * (for example /dev/cdrom for linux). For windows pass the
+         * drive letter only (i.e. "d" not "d:\")
+         */
+        CDDrive(const std::string& device);
+
+        virtual ~CDDrive();
+
+        /**
+         * stops the playback, if the playback was already stopped, this
+         * does nothing
+         */
+        virtual void stop();
+        /**
+         * starts playback of the given track. If another track was
+         * already playing, the previous track is stopped
+         */
+        virtual void play(long track);
+        /**
+         * pauses playback of the track that is currently playing (if any)
+         * This does nothing if no track is playing
+         */
+        virtual void pause();
+        /**
+         * resumes playback of the track that is currently paused (if any)
+         * This does nothing if no track is paused
+         */
+        virtual void resume();
+        /**
+         * returns true if the CD is currently playing a sound, this could
+         * be through us, or through some other program */
+        virtual bool isPlaying();
+
+        /**
+         * returns true if the drive contains a cd. This might be slow
+         * on some systems, use with care */
+        bool containsCD();	
+
+    protected:
+#ifndef CDAUDIO_WINDOWS
+        int desc;
+#endif
+        std::string deviceName;
+  };
+
+ /**
+   * Stream used to play an audio cd track.
+   * This stream type is extremely basic at this point in time, it is
+   * not seekable, volume changes are not supported, panning isn't and
+   * pitch shifts aren't.
+   * Use OpenCDSound to create a CDAudioStream, do not create one directly
+   */
+  class CDAudioStream: public RefImplementation<OutputStream> {
+    public:
+       CDAudioStream(CDDrive* device, int track);
+  
+       void ADR_CALL play();
+       void ADR_CALL stop();
+       void ADR_CALL pause();
+       void ADR_CALL resume();
+       bool ADR_CALL isPlaying();
+       void ADR_CALL reset();
+       void ADR_CALL setRepeat(bool repeat);
+       bool ADR_CALL getRepeat();
+       void ADR_CALL setVolume(float volume);
+       float ADR_CALL getVolume();
+       void ADR_CALL setPan(float pan);
+       float ADR_CALL getPan();
+       void ADR_CALL setPitchShift(float pan);
+       float ADR_CALL getPitchShift();
+       bool ADR_CALL isSeekable();
+       int ADR_CALL getLength();
+       void ADR_CALL setPosition(int position);
+       int ADR_CALL getPosition();
+    private:
+      CDDrive* theDrive;
+      int trackNum;
+  };
+  
+  CDAudioStream* OpenCDSound(CDDrive* theDrive, int track);
 }
 
 

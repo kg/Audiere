@@ -118,7 +118,13 @@ namespace audiere {
 
   void
   NullOutputStream::stop() {
-    m_is_playing = false;
+    if( m_is_playing ) {
+        m_is_playing = false;
+        // let subscribers know that the sound was stopped
+        events::Manager::publish(new events::StoppedEvent(this));
+    } else {
+        m_is_playing = false;
+    }
   }
 
 

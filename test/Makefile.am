@@ -1,2 +1,2 @@
-SUBDIRS = buffer device interactive performance
+SUBDIRS = buffer device formats interactive performance
 

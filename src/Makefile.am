@@ -8,6 +8,18 @@ INCLUDES = \
 lib_LTLIBRARIES = libaudiere.la
 include_HEADERS = audiere.h
 
+if HAVE_FLAC
+FLAC_SOURCES = input_flac.cpp input_flac.h
+else
+FLAC_DIST    = input_flac.cpp input_flac.h
+endif
+
+if HAVE_OGG
+OGG_SOURCES = input_ogg.cpp input_ogg.h
+else
+OGG_DIST    = input_ogg.cpp input_ogg.h
+endif
+
 if HAVE_OPENAL
 OPENAL_SOURCES = device_oal.cpp device_oal.h
 else
@@ -26,7 +38,7 @@ else
 OSS_DIST    = device_oss.cpp device_oss.h
 endif
 
-EXTRA_DIST = $(OPENAL_DIST) $(AL_DIST) $(OSS_DIST)
+EXTRA_DIST = $(FLAC_DIST) $(OGG_DIST) $(OPENAL_DIST) $(AL_DIST) $(OSS_DIST)
 
 libaudiere_la_SOURCES = \
 	debug.cpp \
@@ -42,14 +54,12 @@ libaudiere_la_SOURCES = \
 	$(OSS_SOURCES) \
 	file_ansi.cpp \
 	input.cpp \
-	input_flac.cpp \
-	input_flac.h \
+	$(FLAC_SOURCES) \
 	input_mod.cpp \
 	input_mod.h \
 	input_mp3.cpp \
 	input_mp3.h \
-	input_ogg.cpp \
-	input_ogg.h \
+	$(OGG_SOURCES) \
 	input_wav.cpp \
 	input_wav.h \
 	internal.h \

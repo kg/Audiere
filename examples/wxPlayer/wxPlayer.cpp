@@ -1,12 +1,6 @@
 #ifdef _MSC_VER
-
 #pragma warning(disable : 4786)
-
-// for some reason, we have to include windows.h for this to run
-#include <windows.h>
-
 #endif
-
 
 #include <set>
 #include <wx/wx.h>

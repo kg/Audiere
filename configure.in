@@ -7,15 +7,9 @@ AC_CONFIG_AUX_DIR(config)
 
 AC_CANONICAL_SYSTEM
 
-MAJOR_VERSION=1
-MINOR_VERSION=9
-PATCH_VERSION=1
-VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
+VERSION=1.9.1
 PACKAGE="audiere"
 
-AC_SUBST(MAJOR_VERSION)
-AC_SUBST(MINOR_VERSION)
-AC_SUBST(PATCH_VERSION)
 AC_SUBST(VERSION)
 AC_SUBST(PACKAGE)
 
@@ -75,10 +69,14 @@ dnl Look for FLAC
 AC_CHECK_LIB(FLAC, FLAC__seekable_stream_decoder_process_single,
     LIBS="-lFLAC++ -lFLAC -lm $LIBS"
     EXTRA_LIBS="-lFLAC++ -lFLAC -lm $EXTRA_LIBS"
+    HAVE_FLAC=true
   ,
-    AC_MSG_ERROR([libFLAC not found.  Install FLAC from http://flac.sourceforge.net/])
+    AC_MSG_WARN([libFLAC not found.  Install FLAC from http://flac.sourceforge.net/])
+    AC_MSG_WARN([Disabling FLAC support.])
+    AC_DEFINE(NO_FLAC)
   ,
     -lm)
+AM_CONDITIONAL(HAVE_FLAC, test "x$HAVE_FLAC" = "xtrue")
 
 dnl Look for the POSIX realtime clock
 AC_SEARCH_LIBS(clock_gettime, rt,
@@ -115,15 +113,19 @@ AC_CHECK_HEADER(unistd.h)
 AC_CHECK_HEADER(sys/soundcard.h,
     HAVE_OSS=true
     AC_DEFINE(HAVE_OSS))
+AM_CONDITIONAL(HAVE_OSS, test "x$HAVE_OSS" = "xtrue")
+
 AC_CHECK_HEADER(vorbis/vorbisfile.h,
+    HAVE_OGG=true
     LIBS="-lvorbisfile -lvorbis -logg $LIBS"
     EXTRA_LIBS="-lvorbisfile -lvorbis -logg $EXTRA_LIBS"
   ,
     AC_MSG_RESULT(no)
-    AC_MSG_ERROR([Could not find vorbisfile header.  You do not appear to have libvorbis installed.
-Get libvorbis from http://www.vorbis.com/]))
-
-AM_CONDITIONAL(HAVE_OSS, test "x$HAVE_OSS" = "xtrue")
+    AC_MSG_WARN([Could not find vorbisfile header.  You do not appear to have libvorbis installed.
+Get libvorbis from http://www.vorbis.com/])
+    AC_MSG_WARN([Disabling Ogg Vorbis support.])
+    AC_DEFINE(NO_OGG))
+AM_CONDITIONAL(HAVE_OGG, test "x$HAVE_OGG" = "xtrue")
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 
@@ -151,6 +153,7 @@ AC_OUTPUT(
         test/Makefile
         test/buffer/Makefile
         test/device/Makefile
+	test/formats/Makefile
         test/interactive/Makefile
         test/performance/Makefile,
     [chmod a+x audiere-config])

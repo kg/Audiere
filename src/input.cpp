@@ -9,7 +9,9 @@
 #include "input_mod.h"
 #endif
 #include "input_mp3.h"
+#ifndef NO_OGG
 #include "input_ogg.h"
+#endif
 #include "input_wav.h"
 #include "internal.h"
 #include "utility.h"
@@ -31,7 +33,9 @@ namespace audiere {
   ADR_EXPORT(const char*, AdrGetSupportedFileFormats)() {
     return
       "MP3 Files:mp3"  ";"
+#ifndef NO_OGG
       "Ogg Vorbis Files:ogg"  ";"
+#endif
 #ifndef NO_FLAC
       "FLAC Files:flac"  ";"
 #endif
@@ -83,9 +87,11 @@ namespace audiere {
 
         TRY_SOURCE(WAVInputStream);
 
+#ifndef NO_OGG
       } else if (end_is(filename, ".ogg")) {
 
         TRY_SOURCE(OGGInputStream);
+#endif
 
 #ifndef NO_MIKMOD
       } else if (end_is(filename, ".it") ||
@@ -112,7 +118,9 @@ namespace audiere {
     TRY_SOURCE(MODInputStream);
 #endif
     TRY_SOURCE(WAVInputStream);
+#ifndef NO_OGG
     TRY_SOURCE(OGGInputStream);
+#endif
     TRY_SOURCE(MP3InputStream);
 #ifndef NO_FLAC
     TRY_SOURCE(FLACInputStream);

@@ -13,26 +13,13 @@ NS_IMPL_ISUPPORTS1(mozAudioService, mozIAudioService);
 
 
 NS_IMETHODIMP
-mozAudioService::CreateContext(
-  const char* output_device,
-  const char* parameters,
-  mozIAudioContext** rv)
+mozAudioService::CreateContext(mozIAudioContext** rv)
 {
-  if (!output_device || !parameters || !rv) {
+  if (!rv) {
     return NS_ERROR_NULL_POINTER;
   }
 
-  ADR_CONTEXT context = AdrCreateContext(
-    output_device,
-    parameters,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-  );
-
+  ADR_CONTEXT context = AdrCreateContext(0);
   if (context) {
 
     *rv = new mozAudioContext(context);

@@ -16,6 +16,6 @@ Look in the IDL files for the full API.
 Short JavaScript example:
 
 var service = Components.classes["@aegisknight.org/audio;1"].getService(Components.interfaces.mozIAudioService);
-var context = service.createContext("autodetect", "")
+var context = service.createContext();
 var song = context.openStream("song.mp3");
 song.play();

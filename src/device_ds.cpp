@@ -127,8 +127,10 @@ namespace audiere {
 
 
   DSAudioDevice::~DSAudioDevice() {
-    ADR_ASSERT(m_open_streams.size() == 0,
-      "DirectSound output context should not die with open streams");
+    ADR_ASSERT(m_open_streams.empty(),
+      "DirectSound device should not die with open streams");
+    ADR_ASSERT(m_open_buffers.empty(),
+      "DirectSound device should not die with open buffers");
 
     // shut down DirectSound
     if (m_direct_sound) {
@@ -157,6 +159,13 @@ namespace audiere {
     while (i != m_open_streams.end()) {
       DSOutputStream* s = *i++;
       s->update();
+    }
+
+    // enumerate all open buffers
+    BufferList::iterator j = m_open_buffers.begin();
+    while (j != m_open_buffers.end()) {
+      DSOutputBuffer* b = *j++;
+      b->update();
     }
 
     Sleep(50);
@@ -228,7 +237,6 @@ namespace audiere {
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
     ADR_GUARD("DSAudioDevice::openBuffer");
-    SYNCHRONIZED(this);
 
     const int frame_size = channel_count * GetSampleSize(sample_format);
 
@@ -247,7 +255,7 @@ namespace audiere {
     dsbd.dwSize  = sizeof(dsbd);
     dsbd.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
                    DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |
-                   DSBCAPS_STATIC;
+                   DSBCAPS_STATIC | DSBCAPS_CTRLPOSITIONNOTIFY;
     if (m_global_focus) {
       dsbd.dwFlags |= DSBCAPS_GLOBALFOCUS;
     }
@@ -302,7 +310,11 @@ namespace audiere {
 
     buffer->Unlock(data, data_size, 0, 0);
 
-    return new DSOutputBuffer(this, buffer, buffer_frame_count, frame_size);
+    DSOutputBuffer* b = new DSOutputBuffer(
+      this, buffer, buffer_frame_count, frame_size);
+    SYNCHRONIZED(this);
+    m_open_buffers.push_back(b);
+    return b;
   }
 
 
@@ -316,6 +328,13 @@ namespace audiere {
   DSAudioDevice::removeStream(DSOutputStream* stream) {
     SYNCHRONIZED(this);
     m_open_streams.remove(stream);
+  }
+
+
+  void
+  DSAudioDevice::removeBuffer(DSOutputBuffer* buffer) {
+    SYNCHRONIZED(this);
+    m_open_buffers.remove(buffer);
   }
 
 

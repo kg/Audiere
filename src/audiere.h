@@ -614,7 +614,7 @@ namespace audiere {
     /// A code representing the reason the stream stopped playback.
     enum Reason {
       STOP_CALLED,  ///< stop() was called from an external source.
-      SOURCE_ENDED, ///< The sample source ran out of samples.
+      STREAM_ENDED, ///< The stream reached its end.
     };
 
     /// @return Pointer to the OutputStream that stopped playback.

@@ -395,7 +395,7 @@ namespace audiere {
       m_next_read = 0;
       fillStream();
 
-      m_device->fireStopEvent(this, StopEvent::SOURCE_ENDED);
+      m_device->fireStopEvent(this, StopEvent::STREAM_ENDED);
       return;
     }
   }

@@ -10,6 +10,8 @@ namespace audiere {
     int length,
     int frame_size)
   {
+    ADR_GUARD("DSOutputBuffer::DSOutputBuffer");
+
     m_device     = device; // keep the device alive while the buffer exists
     m_buffer     = buffer;
     m_length     = length;
@@ -22,11 +24,35 @@ namespace audiere {
     m_repeating  = false;
     m_volume     = 1;
     m_pan        = 0;
+
+    m_stop_event = 0;
+
+    // Set up the stop notification if we can.
+    IDirectSoundNotify* notify;
+    HRESULT rv = m_buffer->QueryInterface(
+        IID_IDirectSoundNotify, (void**)&notify);
+    if (SUCCEEDED(rv) && notify) {
+      m_stop_event = CreateEvent(0, FALSE, FALSE, 0);
+      if (!m_stop_event) {
+        ADR_LOG("DSOutputBuffer stop event creation failed.  Not firing stop events.");
+      } else {
+        DSBPOSITIONNOTIFY n;
+        n.dwOffset = DSBPN_OFFSETSTOP;
+        n.hEventNotify = m_stop_event;
+        notify->SetNotificationPositions(1, &n);
+      }
+    }
   }
 
 
   DSOutputBuffer::~DSOutputBuffer() {
+    ADR_GUARD("DSOutputBuffer::~DSOutputBuffer");
+
+    m_device->removeBuffer(this);
     m_buffer->Release();
+    if (m_stop_event) {
+      CloseHandle(m_stop_event);
+    }
   }
 
 
@@ -39,6 +65,7 @@ namespace audiere {
   void
   DSOutputBuffer::stop() {
     m_buffer->Stop();
+    m_device->fireStopEvent(this, StopEvent::STOP_CALLED);
   }
 
 
@@ -135,6 +162,16 @@ namespace audiere {
     DWORD play;
     m_buffer->GetCurrentPosition(&play, 0);
     return play / m_frame_size;
+  }
+
+  void
+  DSOutputBuffer::update() {
+    if (m_stop_event) {
+      DWORD result = WaitForSingleObject(m_stop_event, 0);
+      if (result == WAIT_OBJECT_0) {
+        m_device->fireStopEvent(this, StopEvent::STREAM_ENDED);
+      }
+    }
   }
 
 }

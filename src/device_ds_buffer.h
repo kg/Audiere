@@ -44,6 +44,8 @@ namespace audiere {
     int  ADR_CALL getPosition();
 
   private:
+    void update(); ///< Solely for processing events.
+
     RefPtr<DSAudioDevice> m_device;
     IDirectSoundBuffer* m_buffer;
     int m_length;
@@ -54,6 +56,10 @@ namespace audiere {
     bool  m_repeating;
     float m_volume;
     float m_pan;
+
+    HANDLE m_stop_event;
+
+    friend class DSAudioDevice;
   };
 
 }

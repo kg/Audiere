@@ -21,6 +21,7 @@
 
 namespace audiere {
 
+  class DSOutputBuffer;
   class DSOutputStream;
 
   class DSAudioDevice : public AbstractDevice, public Mutex {
@@ -54,11 +55,14 @@ public:
 
   private:
     typedef std::list<DSOutputStream*> StreamList;
+    typedef std::list<DSOutputBuffer*> BufferList;
 
     void removeStream(DSOutputStream* stream);
+    void removeBuffer(DSOutputBuffer* buffer);
 
     IDirectSound* m_direct_sound;
     StreamList    m_open_streams;
+    BufferList    m_open_buffers;
 
     bool m_global_focus;
     int m_buffer_length;     ///< length of streaming buffer in milliseconds
@@ -66,6 +70,7 @@ public:
 
     HWND m_anonymous_window;
 
+    friend class DSOutputBuffer;
     friend class DSOutputStream;
   };
 

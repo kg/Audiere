@@ -36,8 +36,8 @@ public:
     cout << "Stopped!  Reason: ";
     if (event->getReason() == StopEvent::STOP_CALLED) {
       cout << "Stop Called";
-    } else if (event->getReason() == StopEvent::SOURCE_ENDED) {
-      cout << "Source Ended";
+    } else if (event->getReason() == StopEvent::STREAM_ENDED) {
+      cout << "Stream Ended";
     } else {
       cout << "Unknown";
     }
@@ -53,9 +53,11 @@ public:
 };
 
 
-bool loadStreams() {
+bool loadStreams(bool loop = false) {
   g_sound  = OpenSound(g_device, "data/laugh.wav", false);
   g_stream = OpenSound(g_device, "data/laugh.wav", true);
+  g_sound ->setRepeat(loop);
+  g_stream->setRepeat(loop);
 
   if (!g_sound || !g_stream) {
     cerr << "Opening data/laugh.wav failed" << endl;
@@ -85,15 +87,15 @@ int main(int argc, const char** argv) {
   g_callback = new MyStopCallback;
   g_device->registerCallback(g_callback.get());
 
-#define LOAD_STREAMS() if (!loadStreams()) { return EXIT_FAILURE; }
+#define LOAD_STREAMS(x) if (!loadStreams x) { return EXIT_FAILURE; }
 
-  LOAD_STREAMS()
+  LOAD_STREAMS(())
 
   g_sound->play();
   g_stream->play();
 
   PassOut(3);
-  LOAD_STREAMS()
+  LOAD_STREAMS(())
 
   g_sound->play();
   g_stream->play();
@@ -101,7 +103,13 @@ int main(int argc, const char** argv) {
   g_stream->stop();
 
   PassOut(3);
-  LOAD_STREAMS()
+  LOAD_STREAMS((true))
+
+  g_sound->play();
+  g_stream->play();
+
+  PassOut(3);
+  LOAD_STREAMS(())
 
   g_sound->play();
   g_sound->reset();

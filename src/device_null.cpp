@@ -259,7 +259,7 @@ namespace audiere {
         ADR_LOG("Stopping null output stream");
         m_source->reset();
         doStop(true);
-        m_device->fireStopEvent(this, StopEvent::SOURCE_ENDED);
+        m_device->fireStopEvent(this, StopEvent::STREAM_ENDED);
       }
 
       m_last_update = now;

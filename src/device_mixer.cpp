@@ -251,7 +251,7 @@ namespace audiere {
       if (m_is_playing) {
         m_is_playing = false;
         // let subscribers know that the sound was stopped
-        m_device->fireStopEvent(this, StopEvent::SOURCE_ENDED);
+        m_device->fireStopEvent(this, StopEvent::STREAM_ENDED);
       } else {
         m_is_playing = false;
       }

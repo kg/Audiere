@@ -105,15 +105,15 @@ SOURCE=.\data_types.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\default_io.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\default_io.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\ds_utility.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\file.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\file_win32.cpp
 # End Source File
 # Begin Source File
 
@@ -122,6 +122,14 @@ SOURCE=.\output.cpp
 # Begin Source File
 
 SOURCE=.\output.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\output_al.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\output_al.hpp
 # End Source File
 # Begin Source File
 
@@ -174,6 +182,22 @@ SOURCE=.\threads_win32.cpp
 # Begin Source File
 
 SOURCE=..\naikai\audiere\acoustique\acoustique.h
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\al.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\alc.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\alctypes.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\altypes.h"
 # End Source File
 # End Group
 # End Target

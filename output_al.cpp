@@ -153,6 +153,8 @@ ALOutputStream::ALOutputStream(
   m_SampleRate    = sample_rate;
   m_BitsPerSample = bits_per_sample;
 
+  m_Buffers = new ALuint[m_ChannelCount * AL_BUFFER_COUNT];
+  m_Sources = new ALuint[m_ChannelCount];
   memcpy(m_Buffers, buffers, sizeof(ALuint) * m_ChannelCount * AL_BUFFER_COUNT);
   memcpy(m_Sources, sources, sizeof(ALuint) * m_ChannelCount);
 
@@ -185,6 +187,7 @@ ALOutputStream::~ALOutputStream()
   alDeleteSources(m_ChannelCount, m_Sources);
   delete[] m_Sources;
   alDeleteBuffers(AL_BUFFER_COUNT * m_ChannelCount, m_Buffers);
+  delete[] m_Buffers;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

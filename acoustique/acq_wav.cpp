@@ -57,7 +57,7 @@ static inline bool IsValidSampleSize(acq_u32 size) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static acq_u32 SkipBytes(ACQ_INTERNAL_STREAM* stream, acq_u32 size)
+static acq_u32 SkipBytes(ACQ_STREAM stream, acq_u32 size)
 {
   acq_u8 dummy[INPUT_BUFFER_SIZE];  // may as well use the input buffer size
   int total_read = 0;
@@ -80,7 +80,7 @@ static acq_u32 SkipBytes(ACQ_INTERNAL_STREAM* stream, acq_u32 size)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool WAV_Open(ACQ_INTERNAL_STREAM* stream)
+bool WAV_Open(ACQ_STREAM stream)
 {
   WAV_INTERNAL* wav_internal = new WAV_INTERNAL;
   wav_internal->in_data_chunk        = false;
@@ -192,7 +192,7 @@ bool WAV_Open(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void WAV_Close(ACQ_INTERNAL_STREAM* stream)
+void WAV_Close(ACQ_STREAM stream)
 {
   WAV_INTERNAL* wav_internal = (WAV_INTERNAL*)stream->internal;
   delete wav_internal;
@@ -200,7 +200,7 @@ void WAV_Close(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int WAV_Read(ACQ_INTERNAL_STREAM* stream, void* samples, const int sample_count)
+int WAV_Read(ACQ_STREAM stream, void* samples, const int sample_count)
 {
   WAV_INTERNAL* wav_internal = (WAV_INTERNAL*)stream->internal;
   acq_u8* out = (acq_u8*)samples;
@@ -298,7 +298,7 @@ int WAV_Read(ACQ_INTERNAL_STREAM* stream, void* samples, const int sample_count)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool WAV_Reset(ACQ_INTERNAL_STREAM* stream)
+bool WAV_Reset(ACQ_STREAM stream)
 {
   WAV_Close(stream);
 

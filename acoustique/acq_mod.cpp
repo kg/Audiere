@@ -98,7 +98,7 @@ static int CRT_CALL MMSeek(FILE* stream, long offset, int origin);
 static int CRT_CALL MMTell(FILE* stream);
 static int CRT_CALL MMEof(FILE* stream);
 
-static void ReadPage(ACQ_INTERNAL_STREAM* stream);
+static void ReadPage(ACQ_STREAM stream);
 
 
 static MD_DEVICE drv_acq =
@@ -160,7 +160,7 @@ static MD_DEVICE drv_acq =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool MOD_Open(ACQ_INTERNAL_STREAM* stream)
+bool MOD_Open(ACQ_STREAM stream)
 {
   // first time we run, initialize MikMod
   static bool initialized = false;
@@ -256,7 +256,7 @@ bool MOD_Open(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void MOD_Close(ACQ_INTERNAL_STREAM* stream)
+void MOD_Close(ACQ_STREAM stream)
 {
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)stream->internal;
 
@@ -277,7 +277,7 @@ void MOD_Close(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int MOD_Read(ACQ_INTERNAL_STREAM* stream, void* samples, int sample_count)
+int MOD_Read(ACQ_STREAM stream, void* samples, int sample_count)
 {
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)stream->internal;
 
@@ -317,7 +317,7 @@ int MOD_Read(ACQ_INTERNAL_STREAM* stream, void* samples, int sample_count)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool MOD_Reset(ACQ_INTERNAL_STREAM* stream)
+bool MOD_Reset(ACQ_STREAM stream)
 {
   // XXX possible optimization: keep data pages that we've already loaded
   MOD_Close(stream);
@@ -399,7 +399,7 @@ void ACQ_GetMode(MDRIVER* md, uint* mixspeed, uint* mode,
 
 int CRT_CALL MMRead(void* buffer, size_t size, size_t count, FILE* stream)
 {
-  ACQ_INTERNAL_STREAM* internal = (ACQ_INTERNAL_STREAM*)stream;
+  ACQ_STREAM internal = (ACQ_STREAM)stream;
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)internal->internal;
 
   // SETUP
@@ -482,7 +482,7 @@ int CRT_CALL MMPutC(int c, FILE* stream)
 
 int CRT_CALL MMSeek(FILE* stream, long offset, int origin)
 {
-  ACQ_INTERNAL_STREAM* internal = (ACQ_INTERNAL_STREAM*)stream;
+  ACQ_STREAM internal = (ACQ_STREAM)stream;
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)internal->internal;
 
   // calculate destination position
@@ -554,7 +554,7 @@ int CRT_CALL MMSeek(FILE* stream, long offset, int origin)
 
 int CRT_CALL MMTell(FILE* stream)
 {
-  ACQ_INTERNAL_STREAM* internal = (ACQ_INTERNAL_STREAM*)stream;
+  ACQ_STREAM internal = (ACQ_STREAM)stream;
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)internal->internal;
 
   return mod_internal->position;
@@ -564,7 +564,7 @@ int CRT_CALL MMTell(FILE* stream)
 
 int CRT_CALL MMEof(FILE* stream)
 {
-  ACQ_INTERNAL_STREAM* internal = (ACQ_INTERNAL_STREAM*)stream;
+  ACQ_STREAM internal = (ACQ_STREAM)stream;
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)internal->internal;
   
   return (
@@ -575,7 +575,7 @@ int CRT_CALL MMEof(FILE* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void ReadPage(ACQ_INTERNAL_STREAM* stream)
+void ReadPage(ACQ_STREAM stream)
 {
   // XXX optimization - use current page rather than head to search
 

@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 acoustique_s.lib dxguid.lib openal32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /libpath:"../nbase"
+# ADD LINK32 acoustique_s.lib openal32.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /libpath:"../nbase"
 
 !ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
 
@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 acoustique_sd.lib dxguid.lib openal32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept /libpath:"../nbase"
+# ADD LINK32 acoustique_sd.lib openal32.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept /libpath:"../nbase"
 
 !ENDIF 
 
@@ -112,15 +112,19 @@ SOURCE=.\data_types.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\default_io.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\default_io.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\ds_utility.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\file.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\file_win32.cpp
 # End Source File
 # Begin Source File
 
@@ -189,6 +193,22 @@ SOURCE=.\threads_win32.cpp
 # Begin Source File
 
 SOURCE=..\naikai\audiere\acoustique\acoustique.h
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\al.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\alc.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\alctypes.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\openal\include\AL\altypes.h"
 # End Source File
 # End Group
 # End Target

@@ -18,7 +18,7 @@ typedef unsigned long  acq_u32;
 typedef signed   long  acq_s32;
 
 
-struct ACQ_INTERNAL_STREAM
+struct ACQ_STREAMimp
 {
   void*              opaque;
   ACQ_READ_CALLBACK  read;
@@ -31,12 +31,12 @@ struct ACQ_INTERNAL_STREAM
   int sample_rate;
 
   // stream_format-specific
-  bool (*stream_open) (ACQ_INTERNAL_STREAM* stream);
-  void (*stream_close)(ACQ_INTERNAL_STREAM* stream);
-  int  (*stream_read) (ACQ_INTERNAL_STREAM* stream,
+  bool (*stream_open) (ACQ_STREAM stream);
+  void (*stream_close)(ACQ_STREAM stream);
+  int  (*stream_read) (ACQ_STREAM stream,
                        void* samples,
                        int sample_count);
-  bool (*stream_reset)(ACQ_INTERNAL_STREAM* stream);
+  bool (*stream_reset)(ACQ_STREAM stream);
   
   // used for stream_format private data
   void* internal;
@@ -57,12 +57,12 @@ inline T acq_max(T a, T b) {
 
 
 #define DECLARE_STATE(name)                                \
-  extern bool name##_Open (ACQ_INTERNAL_STREAM* stream);   \
-  extern void name##_Close(ACQ_INTERNAL_STREAM* stream);   \
-  extern int  name##_Read (ACQ_INTERNAL_STREAM* stream,    \
+  extern bool name##_Open (ACQ_STREAM stream);   \
+  extern void name##_Close(ACQ_STREAM stream);   \
+  extern int  name##_Read (ACQ_STREAM stream,    \
                            void* samples,                  \
                            int sample_count);              \
-  extern bool name##_Reset(ACQ_INTERNAL_STREAM* stream);
+  extern bool name##_Reset(ACQ_STREAM stream);
 
 DECLARE_STATE(MOD)  // acq_mod.cpp
 DECLARE_STATE(MP3)  // acq_mp3.cpp

@@ -59,7 +59,7 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
   }
 
   // create the new stream object
-  ACQ_INTERNAL_STREAM* stream = new ACQ_INTERNAL_STREAM;
+  ACQ_STREAM stream = new ACQ_STREAMimp;
   stream->opaque        = opaque;
   stream->read          = read;
   stream->reset         = reset;
@@ -118,9 +118,8 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void ACQ_CALL AcqCloseStream(ACQ_STREAM s)
+void ACQ_CALL AcqCloseStream(ACQ_STREAM stream)
 {
-  ACQ_INTERNAL_STREAM* stream = (ACQ_INTERNAL_STREAM*)s;
   stream->stream_close(stream);
   delete stream;
 }
@@ -128,12 +127,11 @@ void ACQ_CALL AcqCloseStream(ACQ_STREAM s)
 ////////////////////////////////////////////////////////////////////////////////
 
 void ACQ_CALL AcqGetStreamInformation(
-  ACQ_STREAM s,
+  ACQ_STREAM stream,
   int* num_channels,
   int* bits_per_sample,
   int* sample_rate)
 {
-  ACQ_INTERNAL_STREAM* stream = (ACQ_INTERNAL_STREAM*)s;
   *num_channels    = stream->num_channels;
   *bits_per_sample = stream->bits_per_sample;
   *sample_rate     = stream->sample_rate;
@@ -141,21 +139,19 @@ void ACQ_CALL AcqGetStreamInformation(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ACQ_CALL AcqReadStream(ACQ_STREAM s, void* samples, int sample_count)
+int ACQ_CALL AcqReadStream(ACQ_STREAM stream, void* samples, int sample_count)
 {
   if (sample_count <= 0) {
     return 0;
   }
 
-  ACQ_INTERNAL_STREAM* stream = (ACQ_INTERNAL_STREAM*)s;
   return stream->stream_read(stream, samples, sample_count);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ACQ_BOOL ACQ_CALL AcqResetStream(ACQ_STREAM s)
+ACQ_BOOL ACQ_CALL AcqResetStream(ACQ_STREAM stream)
 {
-  ACQ_INTERNAL_STREAM* stream = (ACQ_INTERNAL_STREAM*)s;
   return (stream->stream_reset(stream) != true);
 }
 

@@ -46,7 +46,7 @@ static void RenderSamples(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool MP3_Open(ACQ_INTERNAL_STREAM* stream)
+bool MP3_Open(ACQ_STREAM stream)
 {
   // initialize Acoustique PCM format flags
   //   MP3 supports three sample rates: 44100, 32000, and 48000 (maybe more?)
@@ -86,7 +86,7 @@ bool MP3_Open(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void MP3_Close(ACQ_INTERNAL_STREAM* stream)
+void MP3_Close(ACQ_STREAM stream)
 {
   MP3_INTERNAL* mp3_internal = (MP3_INTERNAL*)stream->internal;
 
@@ -101,7 +101,7 @@ void MP3_Close(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int MP3_Read(ACQ_INTERNAL_STREAM* stream, void* samples, int sample_count)
+int MP3_Read(ACQ_STREAM stream, void* samples, int sample_count)
 {
   MP3_INTERNAL* mp3_internal = (MP3_INTERNAL*)stream->internal;
   mad_stream& c_stream = mp3_internal->stream;
@@ -206,7 +206,7 @@ int MP3_Read(ACQ_INTERNAL_STREAM* stream, void* samples, int sample_count)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool MP3_Reset(ACQ_INTERNAL_STREAM* stream)
+bool MP3_Reset(ACQ_STREAM stream)
 {
   MP3_Close(stream);
 

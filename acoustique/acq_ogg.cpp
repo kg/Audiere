@@ -27,7 +27,7 @@ static long   FileTell(void* datasource);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool OGG_Open(ACQ_INTERNAL_STREAM* stream)
+bool OGG_Open(ACQ_STREAM stream)
 {
   // allocate the internal OGG structure
   OGG_INTERNAL* ogg_internal = new OGG_INTERNAL;
@@ -64,7 +64,7 @@ bool OGG_Open(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OGG_Close(ACQ_INTERNAL_STREAM* stream)
+void OGG_Close(ACQ_STREAM stream)
 {
   OGG_INTERNAL* ogg_internal = (OGG_INTERNAL*)stream->internal;
   ov_clear(&ogg_internal->vf);
@@ -72,7 +72,7 @@ void OGG_Close(ACQ_INTERNAL_STREAM* stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int OGG_Read(ACQ_INTERNAL_STREAM* stream, void* samples, const int sample_count)
+int OGG_Read(ACQ_STREAM stream, void* samples, const int sample_count)
 {
   OGG_INTERNAL* ogg_internal = (OGG_INTERNAL*)stream->internal;
   int sample_size = stream->bits_per_sample * stream->num_channels / 8;
@@ -133,7 +133,7 @@ int OGG_Read(ACQ_INTERNAL_STREAM* stream, void* samples, const int sample_count)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool OGG_Reset(ACQ_INTERNAL_STREAM* stream)
+bool OGG_Reset(ACQ_STREAM stream)
 {
   OGG_Close(stream);
   stream->reset(stream->opaque);
@@ -144,7 +144,7 @@ bool OGG_Reset(ACQ_INTERNAL_STREAM* stream)
 
 size_t FileRead(void* ptr, size_t size, size_t nmemb, void* datasource)
 {
-  ACQ_INTERNAL_STREAM* stream = (ACQ_INTERNAL_STREAM*)datasource;
+  ACQ_STREAM stream = (ACQ_STREAM)datasource;
   OGG_INTERNAL* ogg_internal = (OGG_INTERNAL*)stream->internal;
 
   int bytes_read = stream->read(stream->opaque, ptr, size * nmemb);
@@ -154,7 +154,7 @@ size_t FileRead(void* ptr, size_t size, size_t nmemb, void* datasource)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static int64_t Skip(ACQ_INTERNAL_STREAM* stream, int64_t distance)
+static int64_t Skip(ACQ_STREAM stream, int64_t distance)
 {
   static const int INPUT_BUFFER_SIZE = 4096;
   acq_u8 dummy[INPUT_BUFFER_SIZE];
@@ -231,7 +231,7 @@ int FileClose(void* /*datasource*/)
 
 long FileTell(void* datasource)
 {
-  ACQ_INTERNAL_STREAM* stream = (ACQ_INTERNAL_STREAM*)datasource;
+  ACQ_STREAM stream = (ACQ_STREAM)datasource;
   OGG_INTERNAL* ogg_internal = (OGG_INTERNAL*)stream->internal;
 
   return ogg_internal->location;

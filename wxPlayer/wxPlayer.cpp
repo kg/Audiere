@@ -240,7 +240,7 @@ class wxPlayer : public wxApp
 public:
   bool OnInit() {
     g_context = AdrCreateContext(
-      "autodetect",
+      "openal",
       "",
       NULL, NULL, NULL, NULL, NULL, NULL
     );

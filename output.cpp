@@ -1,5 +1,6 @@
 #include <string.h>
 #include "output.hpp"
+#include "output_al.hpp"
 #include "output_null.hpp"
 
 #ifdef _WIN32
@@ -24,7 +25,8 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
     }
 
   // autodetect
-  if (strcmp(device, "autodetect") == 0) {
+  if (strcmp(device, "") == 0 ||
+      strcmp(device, "autodetect") == 0) {
 
     TRY_CONTEXT(DS8OutputContext)
     TRY_CONTEXT(DS3OutputContext)
@@ -35,6 +37,11 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
 
     TRY_CONTEXT(DS8OutputContext)
     TRY_CONTEXT(DS3OutputContext)
+
+  // OpenAL
+  } else if (strcmp(device, "openal") == 0) {
+  
+    TRY_CONTEXT(ALOutputContext)
 
   // null
   } else if (strcmp(device, "null") == 0) {

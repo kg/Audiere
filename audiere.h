@@ -30,8 +30,8 @@ typedef int   (ADR_CALL *ADR_FILE_TELL)(void* file);
 
 
 /* audiere opaque types */
-typedef void* ADR_CONTEXT;
-typedef void* ADR_STREAM;
+typedef struct ADR_CONTEXTimp* ADR_CONTEXT;
+typedef struct ADR_STREAMimp*  ADR_STREAM;
 
 
 /* boolean */
@@ -99,7 +99,7 @@ ADR_EXTERN_C void ADR_CALL AdrDestroyContext(
  * Returns a new audio stream, or NULL if failure.
  *
  * context  - context within which to create the audio stream
- * filename - name passed into file open callback
+ * filename - UTF-8 filename passed into file open callback
  *
  */
 ADR_EXTERN_C ADR_STREAM ADR_CALL AdrOpenStream(

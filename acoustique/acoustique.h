@@ -34,7 +34,7 @@ typedef int ACQ_BOOL;
 
 
 /* ACQ_STREAM */
-typedef void* ACQ_STREAM;
+typedef struct ACQ_STREAMimp* ACQ_STREAM;
 
 
 /* stream format definitions */

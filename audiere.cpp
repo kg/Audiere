@@ -2,12 +2,12 @@
 #include <ctype.h>
 #include <acoustique.h>
 #include "audiere.h"
-#include "default_io.hpp"
+#include "file.hpp"
 #include "output.hpp"
 #include "threads.hpp"
 
 
-struct ADR_CONTEXT_STRUCT
+struct ADR_CONTEXTimp
 {
   const char* output_device;
 
@@ -29,12 +29,12 @@ struct ADR_CONTEXT_STRUCT
 };
 
 
-struct ADR_STREAM_STRUCT
+struct ADR_STREAMimp
 {
-  ADR_CONTEXT_STRUCT* context;
-  void*               file_handle;
-  ACQ_STREAM          input_stream;
-  IOutputStream*      output_stream;
+  ADR_CONTEXT    context;
+  void*          file_handle;
+  ACQ_STREAM     input_stream;
+  IOutputStream* output_stream;
 
   int sample_size;
 
@@ -72,15 +72,15 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
 {
   // if any of the file callbacks are NULL, use the default ones
   if (!open || !close || !read || !seek || !tell) {
-    open  = DefaultOpen;
-    close = DefaultClose;
-    read  = DefaultRead;
-    seek  = DefaultSeek;
-    tell  = DefaultTell;
+    open  = DefaultFileOpen;
+    close = DefaultFileClose;
+    read  = DefaultFileRead;
+    seek  = DefaultFileSeek;
+    tell  = DefaultFileTell;
   }
 
   // initialize the context
-  ADR_CONTEXT_STRUCT* context = new ADR_CONTEXT_STRUCT;
+  ADR_CONTEXT context = new ADR_CONTEXTimp;
   context->opaque = opaque;
   context->open   = open;
   context->close  = close;
@@ -117,24 +117,21 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
 
 void ADR_CALL AdrDestroyContext(ADR_CONTEXT context)
 {
-  ADR_CONTEXT_STRUCT* internal = (ADR_CONTEXT_STRUCT*)context;
-
-  // decrement the refcount
-  internal->refcount--;
-  if (internal->refcount == 0) {
+  context->refcount--;
+  if (context->refcount == 0) {
   
     // ask the thread to die
-    internal->thread_should_die = true;
+    context->thread_should_die = true;
 
     // wait until the thread is dead
-    while (internal->thread_should_die) {
+    while (context->thread_should_die) {
       AI_Sleep(50);
     }
 
-    AI_DestroyCriticalSection(internal->cs);
+    AI_DestroyCriticalSection(context->cs);
   
-    delete internal->output_context;
-    delete internal;
+    delete context->output_context;
+    delete context;
   }
 }
 
@@ -142,7 +139,7 @@ void ADR_CALL AdrDestroyContext(ADR_CONTEXT context)
 
 void ThreadRoutine(void* opaque)
 {
-  ADR_CONTEXT_STRUCT* context = (ADR_CONTEXT_STRUCT*)opaque;
+  ADR_CONTEXT context = (ADR_CONTEXT)opaque;
 
   // while we're not dead, process the sound update loop
   while (!context->thread_should_die) {
@@ -179,9 +176,9 @@ bool case_strings_equal(const char* a, const char* b)
 
 ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
 {
-  ADR_STREAM_STRUCT* stream = new ADR_STREAM_STRUCT;
-  stream->context    = (ADR_CONTEXT_STRUCT*)context;
-  stream->repeat     = ADR_FALSE;
+  ADR_STREAM stream = new ADR_STREAMimp;
+  stream->context = context;
+  stream->repeat  = ADR_FALSE;
 
   // open file
   stream->file_handle = stream->context->open(
@@ -283,7 +280,7 @@ ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
 
 int ACQ_CALL FileRead(void* opaque, void* bytes, int byte_count)
 {
-  ADR_STREAM_STRUCT* stream = (ADR_STREAM_STRUCT*)opaque;
+  ADR_STREAM stream = (ADR_STREAM)opaque;
   return stream->context->read(stream->file_handle, bytes, byte_count);
 }
 
@@ -291,7 +288,7 @@ int ACQ_CALL FileRead(void* opaque, void* bytes, int byte_count)
 
 void ACQ_CALL FileReset(void* opaque)
 {
-  ADR_STREAM_STRUCT* stream = (ADR_STREAM_STRUCT*)opaque;
+  ADR_STREAM stream = (ADR_STREAM)opaque;
   stream->context->seek(stream->file_handle, 0);
 }
 
@@ -299,7 +296,7 @@ void ACQ_CALL FileReset(void* opaque)
 
 int ADR_CALL SampleSource(void* opaque, const int sample_count, void* samples)
 {
-  ADR_STREAM_STRUCT* stream = (ADR_STREAM_STRUCT*)opaque;
+  ADR_STREAM stream = (ADR_STREAM)opaque;
 
   if (stream->repeat) {
 
@@ -350,7 +347,7 @@ int ADR_CALL SampleSource(void* opaque, const int sample_count, void* samples)
 
 void ADR_CALL SampleReset(void* opaque)
 {
-  ADR_STREAM_STRUCT* stream = (ADR_STREAM_STRUCT*)opaque;
+  ADR_STREAM stream = (ADR_STREAM)opaque;
   AcqResetStream(stream->input_stream);
 }
 
@@ -358,7 +355,7 @@ void ADR_CALL SampleReset(void* opaque)
 
 void ADR_CALL AdrCloseStream(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
+  ADR_STREAM internal = (ADR_STREAM)stream;
 
   // close output_stream
   AI_EnterCriticalSection(internal->context->cs);
@@ -382,93 +379,80 @@ void ADR_CALL AdrCloseStream(ADR_STREAM stream)
 
 void ADR_CALL AdrPlayStream(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-
   // tell the output driver to start asking for samples
-  internal->output_stream->Play();
+  stream->output_stream->Play();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ADR_CALL AdrPauseStream(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-
   // tell the output driver to stop asking for samples
-  internal->output_stream->Stop();
+  stream->output_stream->Stop();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ADR_CALL AdrResetStream(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-
-  AI_EnterCriticalSection(internal->context->cs);
+  AI_EnterCriticalSection(stream->context->cs);
 
   // reset the input stream
-  AcqResetStream(internal->input_stream);
+  AcqResetStream(stream->input_stream);
 
   // reset the output stream
-  internal->output_stream->Reset();
+  stream->output_stream->Reset();
 
-  AI_LeaveCriticalSection(internal->context->cs);
+  AI_LeaveCriticalSection(stream->context->cs);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 ADR_BOOL ADR_CALL AdrIsStreamPlaying(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-  return internal->output_stream->IsPlaying();
+  return stream->output_stream->IsPlaying();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ADR_CALL AdrSetStreamRepeat(ADR_STREAM stream, ADR_BOOL repeat)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-  internal->repeat = repeat;
+  stream->repeat = repeat;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 ADR_BOOL ADR_CALL AdrGetStreamRepeat(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-  return internal->repeat;
+  return stream->repeat;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ADR_CALL AdrSetStreamVolume(ADR_STREAM stream, int volume)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-  internal->output_stream->SetVolume(volume);
+  stream->output_stream->SetVolume(volume);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 int ADR_CALL AdrGetStreamVolume(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-  return internal->output_stream->GetVolume();
+  return stream->output_stream->GetVolume();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ADR_CALL AdrSetStreamPan(ADR_STREAM stream, int pan)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-  internal->output_stream->SetPan(pan);
+  stream->output_stream->SetPan(pan);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 int ADR_CALL AdrGetStreamPan(ADR_STREAM stream)
 {
-  ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
-  return internal->output_stream->GetPan();
+  return stream->output_stream->GetPan();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -56,20 +56,25 @@ if [[ "x$GCC" = "xyes" ]]; then
 fi
 
 dnl Look for pthreads
-AC_CHECK_LIB(pthread, pthread_create,,AC_MSG_RESULT(no)
+AC_CHECK_LIB(pthread, pthread_create,
+    LIBS="-lpthread $LIBS"
+    EXTRA_LIBS="-lpthread $EXTRA_LIBS"
+  ,
+    AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find pthread library))
 
 dnl Look for OpenAL
 AC_CHECK_LIB(openal, alBufferData,
     HAVE_OPENAL=true
     AC_DEFINE(HAVE_OPENAL)
-    LIBS="$LIBS -lopenal $OPENAL_LIBS",, $OPENAL_LIBS)
+    LIBS="-lopenal $OPENAL_LIBS $LIBS"
+    EXTRA_LIBS="-lopenal $OPENAL_LIBS $EXTRA_LIBS",, $OPENAL_LIBS)
 AM_CONDITIONAL(HAVE_OPENAL, test "x$HAVE_OPENAL" = "xtrue")
 
 dnl Look for FLAC
 AC_CHECK_LIB(FLAC, FLAC__seekable_stream_decoder_process_single,
-    FLAC_LIBS="-lFLAC++ -lFLAC -lm"
-    AC_SUBST(FLAC_LIBS)
+    LIBS="-lFLAC++ -lFLAC -lm $LIBS"
+    EXTRA_LIBS="-lFLAC++ -lFLAC -lm $EXTRA_LIBS"
   ,
     AC_MSG_ERROR([libFLAC not found.  Install FLAC from http://flac.sourceforge.net/]),
   ,
@@ -83,7 +88,8 @@ dnl Look for SGI audio
 AC_CHECK_LIB(audio, alNewConfig,
     HAVE_AL=true
     AC_DEFINE(HAVE_AL)
-    LIBS="$LIBS -laudio")
+    LIBS="-laudio $LIBS"
+    EXTRA_LIBS="-laudio $EXTRA_LIBS")
 AM_CONDITIONAL(HAVE_AL, test "x$HAVE_AL" = "xtrue")
 
 dnl Look for wxWindows
@@ -109,7 +115,11 @@ AC_CHECK_HEADER(unistd.h)
 AC_CHECK_HEADER(sys/soundcard.h,
     HAVE_OSS=true
     AC_DEFINE(HAVE_OSS))
-AC_CHECK_HEADER(vorbis/vorbisfile.h,,AC_MSG_RESULT(no)
+AC_CHECK_HEADER(vorbis/vorbisfile.h,
+    LIBS="-lvorbisfile -lvorbis -logg $LIBS"
+    EXTRA_LIBS="-lvorbisfile -lvorbis -logg $EXTRA_LIBS"
+  ,
+    AC_MSG_RESULT(no)
     AC_MSG_ERROR([Could not find vorbisfile header.  You do not appear to have libvorbis installed.
 Get libvorbis from http://www.vorbis.com/]))
 
@@ -122,7 +132,9 @@ AC_C_BIGENDIAN
 dnl Output makefiles.
 
 AC_SUBST(WORDS_BIGENDIAN)
+AC_SUBST(EXTRA_LIBS)
 AC_OUTPUT(
+        audiere-config
 	Makefile
 	doc/Makefile
         examples/Makefile
@@ -140,4 +152,5 @@ AC_OUTPUT(
         test/buffer/Makefile
         test/device/Makefile
         test/interactive/Makefile
-        test/performance/Makefile)
+        test/performance/Makefile,
+    [chmod a+x audiere-config])

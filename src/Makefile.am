@@ -73,11 +73,7 @@ libaudiere_la_SOURCES = \
 	version.cpp
 
 libaudiere_la_LDFLAGS = \
-	-release $(VERSION) \
-	-lvorbisfile \
-	-lvorbis \
-	-logg \
-	@FLAC_LIBS@
+	-release $(VERSION)
 
 libaudiere_la_LIBADD = \
 	mikmod/mmio/libmmio.la \

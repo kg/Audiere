@@ -14,7 +14,6 @@
   #if DIRECTSOUND_VERSION >= 0x0800
     #include "output_ds8.hpp"
   #endif
-  #include "output_dll.hpp"
 #else
   #include "output_oss.hpp"
 #endif
@@ -72,11 +71,6 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
   } else if (strcmp(device, "null") == 0) {
 
     TRY_CONTEXT(NullOutputContext);
-
-  // dll
-  } else if (strcmp(device, "dll") == 0) {
-
-    TRY_CONTEXT(DLLOutputContext);
 
   }
 

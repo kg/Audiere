@@ -127,14 +127,6 @@ SOURCE=.\output.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\output_dll.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\output_dll.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\output_ds.cpp
 # End Source File
 # Begin Source File

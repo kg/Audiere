@@ -1,5 +1,8 @@
 2003.06.29
 
+  Removed the VC7 build system.  It's out of date, nobody uses it, and
+  they could just open the VC6 one in VC7 anyway.
+
   Added support for custom loop points via the LoopPointSource interface.
 
 2003.06.21

@@ -25,7 +25,7 @@ private:
   wxSlider*     m_pan;
   wxSlider*     m_pitch;
 
-  DECLARE_EVENT_TABLE();
+  DECLARE_EVENT_TABLE()
 };
 
 

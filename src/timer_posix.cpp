@@ -8,7 +8,7 @@ adr_u64 GetNow() {
   struct timespec tp;
   int result = clock_gettime(CLOCK_REALTIME, &tp);
   if (result == 0) {
-    return adr_u64(tp.tv_sec) * 1000000 + adr_u64(tv.nsec) / 1000;
+    return adr_u64(tp.tv_sec) * 1000000 + adr_u64(tp.tv_nsec) / 1000;
   } else {
     // can't use realtime clock!  Try to use gettimeofday
     struct timeval tv;

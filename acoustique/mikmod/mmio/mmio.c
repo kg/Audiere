@@ -257,7 +257,7 @@ static UBYTE  _mm_cpybuf[COPY_BUFSIZE];
 // =====================================================================================
 {
     if(!stream) return 1;
-    if(stream->fp) return feof(stream->fp);
+    if(stream->fp) return stream->feof(stream->fp);
 
     return 0;
 }

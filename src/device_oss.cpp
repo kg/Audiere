@@ -112,6 +112,16 @@ namespace audiere {
   }
 
 
+  OutputStream*
+  OSSAudioDevice::openBuffer(
+    void* samples, int sample_count,
+    int channel_count, int sample_rate, SampleFormat sample_format)
+  {
+    /// @todo  implement OSSAudioDevice::openBuffer
+    return 0;
+  }
+
+
   OSSOutputStream::OSSOutputStream(Mixer* mixer, SampleSource* source) {
     m_mixer      = mixer;
     m_source     = source;
@@ -137,15 +147,27 @@ namespace audiere {
   }
 
 
+  bool
+  OSSOutputStream::isPlaying() {
+    return m_mixer->isPlaying(m_source);
+  }
+
+
   void
   OSSOutputStream::reset() {
     m_source->reset();
   }
 
 
+  void
+  OSSOutputStream::setRepeat(bool repeat) {
+    /// @todo  implement OSSOutputStream::setRepeat
+  }
+
+
   bool
-  OSSOutputStream::isPlaying() {
-    return m_mixer->isPlaying(m_source);
+  OSSOutputStream::getRepeat() {
+    /// @todo  implement OSSOutputStream::getRepeat
   }
 
 
@@ -159,6 +181,45 @@ namespace audiere {
   float
   OSSOutputStream::getVolume() {
     return m_volume;
+  }
+
+
+  void
+  OSSOutputStream::setPan(float pan) {
+    /// @todo  implement OSSOutputStream::setPan
+  }
+
+
+  float
+  OSSOutputStream::getPan() {
+    /// @todo  implement OSSOutputStream::getPan
+    return 0.0f;
+  }
+
+
+  bool
+  OSSOutputStream::isSeekable() {
+    /// @todo  implement OSSOutputStream::isSeekable
+    return false;
+  }
+
+
+  int
+  OSSOutputStream::getLength() {
+    /// @todo  implement OSSOutputStream::getLength
+  }
+
+
+  void
+  OSSOutputStream::setPosition(int position) {
+    /// @todo  implement OSSOutputStream::setPosition
+  }
+
+
+  int
+  OSSOutputStream::getPosition() {
+    /// @todo  implement OSSOutputStream::getPosition
+    return 0;
   }
 
 }

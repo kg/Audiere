@@ -17,6 +17,9 @@ namespace audiere {
     bool initialize(const char* parameters);
     void update();
     OutputStream* openStream(SampleSource* source);
+    OutputStream* openBuffer(
+      void* samples, int sample_count,
+      int channel_count, int sample_rate, SampleFormat sample_format);
 
   private:
     int m_output_device;
@@ -33,10 +36,20 @@ namespace audiere {
   public:
     void play();
     void stop();
-    void reset();
     bool isPlaying();
+    void reset();
+
+    void setRepeat(bool repeat);
+    bool getRepeat();
     void  setVolume(float volume);
     float getVolume();
+    void  setPan(float pan);
+    float getPan();
+
+    bool isSeekable();
+    int  getLength();
+    void setPosition(int position);
+    int  getPosition();
 
   private:
     Mixer* m_mixer;

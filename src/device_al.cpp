@@ -143,9 +143,18 @@ namespace audiere {
   }
 
 
+  OutputStream*
+  ALAudioDevice::openBuffer(
+    void* samples, int sample_count,
+    int channel_count, int sample_rate, SampleFormat sample_format)
+  {
+    /// @todo  implement ALAudioDevice::openBuffer
+    return 0;
+  }
+
+
   void
   ALAudioDevice::removeStream(ALOutputStream* stream) {
-    // remove ourself from the list
     m_open_streams.remove(stream);
   }
 
@@ -310,6 +319,12 @@ namespace audiere {
   }
 
 
+  bool
+  ALOutputStream::isPlaying() {
+    return m_is_playing;
+  }
+
+
   void
   ALOutputStream::reset() {
     bool is_playing = isPlaying();
@@ -325,9 +340,16 @@ namespace audiere {
   }
 
 
+  void
+  ALOutputStream::setRepeat(bool repeat) {
+    /// @todo  implement ALOutputStream::setRepeat
+  }
+
+
   bool
-  ALOutputStream::isPlaying() {
-    return m_is_playing;
+  ALOutputStream::getRepeat() {
+    /// @todo  implement ALOutputStream::getRepeat
+    return false;
   }
 
 
@@ -341,6 +363,46 @@ namespace audiere {
   float
   ALOutputStream::getVolume() {
     return m_volume;
+  }
+
+
+  void
+  ALOutputStream::setPan(float pan) {
+    /// @todo  implement ALOutputStream::setPan
+  }
+
+
+  float
+  ALOutputStream::getPan() {
+    /// @todo  implement ALOutputStream::getPan
+    return 0.0f;
+  }
+
+
+  bool
+  ALOutputStream::isSeekable() {
+    /// @todo  implement ALOutputStream::isSeekable
+    return false;
+  }
+
+
+  int
+  ALOutputStream::getLength() {
+    /// @todo  implement ALOutputStream::getLength
+    return 0;
+  }
+
+
+  void
+  ALOutputStream::setPosition(int /*position*/) {
+    /// @todo  implement ALOutputStream::setPosition
+  }
+
+
+  int
+  ALOutputStream::getPosition() {
+    /// @todo  implement ALOutputStream::getPosition
+    return 0;
   }
 
 }

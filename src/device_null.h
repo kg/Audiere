@@ -15,7 +15,7 @@ namespace audiere {
 
   class NullOutputStream;
 
-  class NullAudioDevice : public AbstractDevice, public Synchronized {
+  class NullAudioDevice : public AbstractDevice, public Mutex {
   public:
     static NullAudioDevice* create(const ParameterList& parameters);
 

@@ -16,7 +16,7 @@ namespace audiere {
 
   class DSOutputStream
     : public RefImplementation<OutputStream>
-    , public Synchronized
+    , public Mutex
   {
   public:
     DSOutputStream(

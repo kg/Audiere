@@ -23,7 +23,7 @@ namespace audiere {
 
   class DSOutputStream;
 
-  class DSAudioDevice : public AbstractDevice, public Synchronized {
+  class DSAudioDevice : public AbstractDevice, public Mutex {
   public:
     static DSAudioDevice* create(const ParameterList& parameters);
 

@@ -611,6 +611,9 @@ namespace audiere {
    * and call registerStopCallback() on the device, passing your
    * implementation.  streamStopped() will be called whenever a stream on that
    * device stops playback.
+   *
+   * WARNING: StopCallback is called from another thread.  Make sure your
+   * callback is thread-safe.
    */
   class StopCallback : public RefCounted {
   protected:

@@ -10,11 +10,6 @@ namespace audiere {
     void*            opaque;
   };
 
-  struct AI_CriticalSectionStruct {
-    CRITICAL_SECTION cs;
-  };
-
-
   static unsigned WINAPI InternalThreadRoutine(void* opaque);
 
 
@@ -75,7 +70,7 @@ namespace audiere {
 
 
   unsigned WINAPI InternalThreadRoutine(void* opaque) {
-    ThreadInternal* internal = (ThreadInternal*)opaque;
+    ThreadInternal* internal = static_cast<ThreadInternal*>(opaque);
 
     // call the function passed 
     internal->routine(internal->opaque);
@@ -89,26 +84,56 @@ namespace audiere {
   }
 
 
-  AI_CriticalSection AI_CreateCriticalSection() {
-    AI_CriticalSectionStruct* cs = new AI_CriticalSectionStruct;
-    ::InitializeCriticalSection(&cs->cs);
-    return cs;
+  struct Mutex::Impl {
+    CRITICAL_SECTION cs;
+  };
+
+  Mutex::Mutex() {
+    m_impl = new Impl;
+    InitializeCriticalSection(&m_impl->cs);
+  }
+
+  Mutex::~Mutex() {
+    DeleteCriticalSection(&m_impl->cs);
+    delete m_impl;
+  }
+
+  void Mutex::lock() {
+    EnterCriticalSection(&m_impl->cs);
+  }
+
+  void Mutex::unlock() {
+    LeaveCriticalSection(&m_impl->cs);
   }
 
 
-  void AI_DestroyCriticalSection(AI_CriticalSection cs) {
-    ::DeleteCriticalSection(&cs->cs);
-    delete cs;
+  struct CondVar::Impl {
+    HANDLE event;
+  };
+
+  CondVar::CondVar() {
+    ADR_GUARD("CondVar::CondVar");
+    m_impl = new Impl;
+    m_impl->event = CreateEvent(0, FALSE, FALSE, 0);
+    if (!m_impl->event) {
+      ADR_LOG("CreateEvent() failed");
+      abort();
+    }
   }
 
-
-  void AI_EnterCriticalSection(AI_CriticalSection cs) {
-    ::EnterCriticalSection(&cs->cs);
+  CondVar::~CondVar() {
+    CloseHandle(m_impl->event);
+    delete m_impl;
   }
 
+  void CondVar::wait(Mutex& mutex, float seconds) {
+    mutex.unlock();
+    WaitForSingleObject(m_impl->event, int(seconds * 1000));
+    mutex.lock();
+  }
 
-  void AI_LeaveCriticalSection(AI_CriticalSection cs) {
-    ::LeaveCriticalSection(&cs->cs);
+  void CondVar::notify() {
+    SetEvent(m_impl->event);
   }
 
 }

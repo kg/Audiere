@@ -2,7 +2,9 @@
 #define DEVICE_H
 
 
+#include <queue>
 #include "audiere.h"
+#include "threads.h"
 
 
 namespace audiere {
@@ -31,41 +33,32 @@ namespace audiere {
 
   /// Contains default implementation of functionality common to all devices.
   class AbstractDevice : public RefImplementation<AudioDevice> {
+  protected:
+    AbstractDevice();
+    ~AbstractDevice();
+
   public:
-    void ADR_CALL registerStopCallback(StopCallback* callback) {
-      m_callbacks.push_back(callback);
-    }
-
-    void ADR_CALL unregisterStopCallback(StopCallback* callback) {
-      for (size_t i = 0; i < m_callbacks.size(); ++i) {
-        if (m_callbacks[i] == callback) {
-          m_callbacks.erase(m_callbacks.begin() + i);
-          return;
-        }
-      }
-    }
-
-    void ADR_CALL clearStopCallbacks() {
-      m_callbacks.clear();
-    }
+    void ADR_CALL registerStopCallback(StopCallback* callback);
+    void ADR_CALL unregisterStopCallback(StopCallback* callback);
+    void ADR_CALL clearStopCallbacks();
 
   protected:
-    void fireStopEvent(OutputStream* stream, StopEvent::Reason reason) {
-      StopEventPtr event = new StopEventImpl(stream, reason);
-      fireStopEvent(event);
-    }
-
-    void fireStopEvent(const StopEventPtr& event) {
-      fireStopEvent(event.get());
-    }
-
-    void fireStopEvent(StopEvent* event) {
-      for (size_t i = 0; i < m_callbacks.size(); ++i) {
-        m_callbacks[i]->streamStopped(event);
-      }
-    }
+    void fireStopEvent(OutputStream* stream, StopEvent::Reason reason);
+    void fireStopEvent(const StopEventPtr& event);
 
   private:
+    static void eventThread(void* arg);
+    void eventThread();
+    void processEvent(StopEvent* event);
+
+    volatile bool m_thread_exists;
+    volatile bool m_thread_should_die;
+
+    Mutex m_event_mutex;
+    CondVar m_events_available;
+    typedef std::queue<StopEventPtr> EventQueue;
+    EventQueue m_events;
+
     std::vector<StopCallbackPtr> m_callbacks;
   };
 

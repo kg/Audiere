@@ -22,7 +22,7 @@ namespace audiere {
 
 
   /// Always produce 16-bit, stereo audio at the specified rate.
-  class MixerDevice : public AbstractDevice, public Synchronized {
+  class MixerDevice : public AbstractDevice, public Mutex {
   public:
     MixerDevice(int rate);
 

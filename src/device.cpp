@@ -39,6 +39,107 @@
 
 namespace audiere {
 
+  AbstractDevice::AbstractDevice() {
+    m_thread_exists = false;
+    m_thread_should_die = false;
+
+    bool result = AI_CreateThread(eventThread, this, 2);
+    if (!result) {
+      ADR_LOG("THREAD CREATION FAILED");
+    }
+  }
+
+  AbstractDevice::~AbstractDevice() {
+    m_thread_should_die = true;
+
+    // Trick the thread into no longer waiting.
+    m_events_available.notify();
+
+    while (m_thread_exists) {
+      AI_Sleep(50);
+    }
+  }
+
+  void AbstractDevice::registerStopCallback(StopCallback* callback) {
+    m_callbacks.push_back(callback);
+  }
+
+  void AbstractDevice::unregisterStopCallback(StopCallback* callback) {
+    for (size_t i = 0; i < m_callbacks.size(); ++i) {
+      if (m_callbacks[i] == callback) {
+        m_callbacks.erase(m_callbacks.begin() + i);
+        return;
+      }
+    }
+  }
+
+  void AbstractDevice::clearStopCallbacks() {
+    m_callbacks.clear();
+  }
+
+  void AbstractDevice::fireStopEvent(OutputStream* stream, StopEvent::Reason reason) {
+    StopEventPtr event = new StopEventImpl(stream, reason);
+    fireStopEvent(event);
+  }
+
+  void AbstractDevice::fireStopEvent(const StopEventPtr& event) {
+    m_event_mutex.lock();
+    m_events.push(event);
+    m_event_mutex.unlock();
+    m_events_available.notify();
+  }
+
+  void AbstractDevice::eventThread(void* arg) {
+    ADR_GUARD("AbstractDevice::eventThread[static]");
+    ADR_LOG(arg ? "arg is valid" : "arg is not valid");
+    
+    AbstractDevice* This = static_cast<AbstractDevice*>(arg);
+    This->eventThread();
+  }
+
+  void AbstractDevice::eventThread() {
+    ADR_GUARD("AbstractDevice::eventThread");
+    m_thread_exists = true;
+    while (!m_thread_should_die) {
+      m_event_mutex.lock();
+      while (m_events.empty()) {
+        m_events_available.wait(m_event_mutex, 1);
+        if (m_thread_should_die) {
+          break;
+        }
+      }
+      if (m_thread_should_die) {
+        m_event_mutex.unlock();
+        break;
+      }
+
+      // Make a local copy of the events so they can be processed without
+      // leaving the mutex locked.
+      EventQueue events = m_events;
+
+      // Queues don't support clear().  o_o
+      while (!m_events.empty()) {
+        m_events.pop();
+      }
+
+      m_event_mutex.unlock();
+
+      // Process the events.
+      while (!events.empty()) {
+        StopEventPtr event = events.front();
+        events.pop();
+        processEvent(event.get());
+      }
+    }
+    m_thread_exists = false;
+  }
+
+  void AbstractDevice::processEvent(StopEvent* event) {
+    for (size_t i = 0; i < m_callbacks.size(); ++i) {
+      m_callbacks[i]->streamStopped(event);
+    }
+  }
+
 
   ADR_EXPORT(const char*) AdrGetSupportedAudioDevices() {
     return

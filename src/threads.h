@@ -25,56 +25,55 @@ namespace audiere {
   // waiting
   void AI_Sleep(unsigned milliseconds);
 
-  // critical section
-  AI_CriticalSection AI_CreateCriticalSection();
-  void AI_DestroyCriticalSection(AI_CriticalSection cs);
-  void AI_EnterCriticalSection(AI_CriticalSection cs);
-  void AI_LeaveCriticalSection(AI_CriticalSection cs);
 
-
-  class Synchronized {
+  class Mutex {
   public:
-    Synchronized() {
-      m_cs = AI_CreateCriticalSection();
-      // if it fails...  uh oh
-    }
+    Mutex();
+    ~Mutex();
 
-    ~Synchronized() {
-      AI_DestroyCriticalSection(m_cs);
-    }
-
-    void lock() {
-      //ADR_GUARD("Synchronized::lock()");
-      AI_EnterCriticalSection(m_cs);
-    }
-
-    void unlock() {
-      //ADR_GUARD("Synchronized::unlock()");
-      AI_LeaveCriticalSection(m_cs);
-    }
+    void lock();
+    void unlock();
 
   private:
-    AI_CriticalSection m_cs;
+    struct Impl;
+    Impl* m_impl;
   };
 
 
-  class Lock {
+  class CondVar {
   public:
-    Lock(Synchronized* object)
-    : m_object(object) {
-      object->lock();
-    }
+    CondVar();
+    ~CondVar();
 
-    ~Lock() {
-      m_object->unlock();
-    }
+    void wait(Mutex& mutex, float seconds);
+    void notify();
 
   private:
-    Synchronized* m_object;
+    struct Impl;
+    Impl* m_impl;
   };
 
 
-  #define SYNCHRONIZED(on) Lock lock_obj__(on)
+  class ScopedLock {
+  public:
+    ScopedLock(Mutex& mutex): m_mutex(mutex) {
+      m_mutex.lock();
+    }
+
+    ScopedLock(Mutex* mutex): m_mutex(*mutex) {
+      m_mutex.lock();
+    }
+
+    ~ScopedLock() {
+      m_mutex.unlock();
+    }
+
+  private:
+    Mutex& m_mutex;
+  };
+
+
+  #define SYNCHRONIZED(on) ScopedLock lock_obj__(on)
 
 }
 

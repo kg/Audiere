@@ -27,7 +27,7 @@ DS3OutputContext::CreatePrimarySoundBuffer(IDirectSound* ds)
   ADR_GUARD("DS3OutputContext::CreatePrimarySoundBuffer");
 
   // create a primary sound buffer
-  #ifdef USE_DIRECTX8
+  #if DIRECTSOUND_VERSION >= 0x0700
     DSBUFFERDESC1 dsbd;
   #else
     DSBUFFERDESC dsbd;
@@ -35,7 +35,7 @@ DS3OutputContext::CreatePrimarySoundBuffer(IDirectSound* ds)
 
   dsbd.dwSize        = sizeof(dsbd);
   dsbd.dwFlags       = DSBCAPS_PRIMARYBUFFER;
-  dsbd.dwBufferBytes = 0;  // primary buffers don't specify size
+  dsbd.dwBufferBytes = 0;     // primary buffers don't specify size
   dsbd.dwReserved    = 0;
   dsbd.lpwfxFormat   = NULL;  // primary buffers use SetFormat()
   HRESULT rv = ds->CreateSoundBuffer(

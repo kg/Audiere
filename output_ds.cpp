@@ -230,8 +230,8 @@ DSOutputContext::OpenStream(ISampleSource* source)
   wfx.cbSize          = sizeof(wfx);
 
   // define the DirectSound buffer type
-  #ifdef USE_DIRECTX8
-    DSBUFFERDESC dsbd;
+  #if DIRECTSOUND_VERSION >= 0x0700
+    DSBUFFERDESC1 dsbd;
   #else
     DSBUFFERDESC dsbd;
   #endif
@@ -244,7 +244,10 @@ DSOutputContext::OpenStream(ISampleSource* source)
 
   // create the DirectSound buffer
   IDirectSoundBuffer* buffer;
-  HRESULT result = m_DirectSound->CreateSoundBuffer(&dsbd, &buffer, NULL);
+  HRESULT result = m_DirectSound->CreateSoundBuffer(
+    (DSBUFFERDESC*)&dsbd,
+    &buffer,
+    NULL);
   if (FAILED(result) || !buffer) {
     return 0;
   }

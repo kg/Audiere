@@ -59,6 +59,8 @@ EXTRA_DIST = \
 	$(DSOUND_DIST) $(WINMM_DIST)
 
 libaudiere_la_SOURCES = \
+	basic_source.cpp \
+	basic_source.h \
 	debug.cpp \
 	debug.h \
 	default_file.h \
@@ -84,8 +86,6 @@ libaudiere_la_SOURCES = \
 	memory_file.cpp \
 	memory_file.h \
 	noise.cpp \
-	repeatable.cpp \
-	repeatable.h \
 	resampler.cpp \
 	resampler.h \
 	sample_buffer.cpp \

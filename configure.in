@@ -80,7 +80,8 @@ AM_CONDITIONAL(HAVE_FLAC, test "x$HAVE_FLAC" = "xtrue")
 
 dnl Look for DUMB
 AC_CHECK_LIB(dumb, duh_start_renderer,
-    LIBS="-ldumb"
+    LIBS="-ldumb $LIBS"
+    EXTRA_LIBS="-ldumb $EXTRA_LIBS"
     HAVE_DUMB=true
   ,
     AC_MSG_WARN([libdumb not found.  Install DUMB from http://dumb.sourceforge.net/])

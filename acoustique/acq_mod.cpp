@@ -72,6 +72,7 @@ struct MOD_INTERNAL
 
   bool read_whole_file;  // true if we have already hit EndOfStream
   acq_u32 total_file_size;  // the amount of the file we've read so far
+  bool at_eof;
 };
 
 
@@ -203,9 +204,10 @@ bool MOD_Open(ACQ_STREAM stream)
 
   mod_internal->first_page      = NULL;
   mod_internal->current_page    = NULL;
-  mod_internal->read_whole_file = false;
   mod_internal->position        = 0;
+  mod_internal->read_whole_file = false;
   mod_internal->total_file_size = 0;
+  mod_internal->at_eof          = false;
 
   // create output device
   mod_internal->driver = Mikmod_Init(
@@ -447,7 +449,9 @@ int CRT_CALL MMRead(void* buffer, size_t size, size_t count, FILE* stream)
   }
 
   // how many bytes we've read
-  return mod_internal->position - beginning;
+  int read = mod_internal->position - beginning;
+  mod_internal->at_eof = ((size_t)read != size * count);
+  return read;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -484,6 +488,8 @@ int CRT_CALL MMSeek(FILE* stream, long offset, int origin)
 {
   ACQ_STREAM internal = (ACQ_STREAM)stream;
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)internal->internal;
+  
+  mod_internal->at_eof = false;  // seeking resets eof flag
 
   // calculate destination position
   long pos;
@@ -567,10 +573,7 @@ int CRT_CALL MMEof(FILE* stream)
   ACQ_STREAM internal = (ACQ_STREAM)stream;
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)internal->internal;
   
-  return (
-    mod_internal->read_whole_file &&
-    (mod_internal->position == mod_internal->total_file_size)
-  );
+  return mod_internal->at_eof;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

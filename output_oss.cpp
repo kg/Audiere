@@ -123,10 +123,9 @@ OSSOutputContext::OpenStream(ISampleSource* source)
 OSSOutputStream::OSSOutputStream(Mixer* mixer, ISampleSource* source)
 {
   m_mixer      = mixer;
-  m_source     = source;
-  m_is_playing = false;
+  m_source     = new Stopper(source);
 
-  m_mixer->AddSource(source);
+  m_mixer->AddSource(m_source);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +141,7 @@ void
 OSSOutputStream::Play()
 {
   m_mixer->SetPlaying(m_source, true);
-  m_is_playing = true;
+  m_source->SetStopped(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,7 +150,7 @@ void
 OSSOutputStream::Stop()
 {
   m_mixer->SetPlaying(m_source, false);
-  m_is_playing = false;
+  m_source->SetStopped(true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,7 +166,7 @@ OSSOutputStream::Reset()
 bool
 OSSOutputStream::IsPlaying()
 {
-  return m_is_playing;
+  return !m_source->IsStopped();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

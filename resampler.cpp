@@ -78,12 +78,16 @@ Resampler::Read(const int sample_count, void* samples)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void
+bool
 Resampler::Reset()
 {
-  m_source->Reset();
-  FillBuffer();
-  ResetState();
+  if (m_source->Reset()) {
+    FillBuffer();
+    ResetState();
+    return true;
+  } else {
+    return false;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,19 +1,34 @@
+SUBDIRS = mikmod
+
 EXTRA_DIST = documentation
 
-lib_LTLIBRARIES = libaudiere.la
+INCLUDES = \
+	-I mikmod/mmio \
+	-I mikmod/mikmod
 
-include_HEADERS = \
-	audiere.h
+lib_LTLIBRARIES = libaudiere.la
+include_HEADERS = audiere.h
 
 libaudiere_la_SOURCES = \
-	config.h \
 	audiere.cpp \
+	config.h \
 	context.cpp \
 	context.hpp \
 	debug.cpp \
 	debug.hpp \
+	default_file.hpp \
+	endian.hpp \
 	file_ansi.cpp \
+	file.cpp \
 	file.hpp \
+	input.cpp \
+	input.hpp \
+	input_mod.cpp \
+	input_mod.hpp \
+	input_ogg.cpp \
+	input_ogg.hpp \
+	input_wav.cpp \
+	input_wav.hpp \
 	mixer.cpp \
 	mixer.hpp \
 	output.cpp \
@@ -24,12 +39,19 @@ libaudiere_la_SOURCES = \
 	output_oss.hpp \
 	output_null.cpp \
 	output_null.hpp \
+	repeatable.cpp \
+	repeatable.hpp \
 	resampler.cpp \
 	resampler.hpp \
 	stream.cpp \
 	stream.hpp \
 	threads_posix.cpp \
-	threads.hpp
+	threads.hpp \
+	utility.cpp \
+	utility.hpp
 
 libaudiere_la_LDFLAGS = \
-	-release $(VERSION)
+	-release $(VERSION) \
+	-lvorbisfile \
+	-lvorbis \
+	-logg

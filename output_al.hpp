@@ -5,6 +5,7 @@
 #include <list>
 #include <AL/al.h>
 #include <AL/alc.h>
+#include "input.hpp"
 #include "output.hpp"
 
 

@@ -4,9 +4,7 @@
 
 #include <map>
 #include "config.h"
-
-
-#include "output.hpp"
+#include "input.hpp"
 
 
 // always produce 44.1 KHz, 16-bit, stereo audio
@@ -18,7 +16,7 @@ public:
 
   void GetFormat(int& channel_count, int& sample_rate, int& bits_per_sample);
   int Read(int sample_count, void* samples);
-  void Reset();
+  bool Reset();
 
   void AddSource(ISampleSource* source);
   void RemoveSource(ISampleSource* source);

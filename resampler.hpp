@@ -3,7 +3,7 @@
 
 
 #include "config.h"
-#include "output.hpp"
+#include "input.hpp"
 
 
 class Resampler : public ISampleSource
@@ -16,7 +16,7 @@ public:
   void GetFormat(int& channel_count, int& sample_rate, int& bits_per_sample);
 
   int Read(int sample_count, void* samples);
-  void Reset();
+  bool Reset();
 
 private:
   void FillBuffer();

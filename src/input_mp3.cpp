@@ -18,7 +18,8 @@
 // The number of MP3 frame that are processed at a time.  If this value
 // is smaller, the decoder should take less memory.  However, it may
 // skip on corrupt MP3s.
-static const int FRAME_COUNT = 10;
+
+static const int FRAME_COUNT = 5;
 
 
 namespace audiere {
@@ -96,6 +97,8 @@ namespace audiere {
 
     m_decoder = 0;
     m_loader = 0;
+
+    previous_frame = 0;
   }
 
   
@@ -122,15 +125,39 @@ namespace audiere {
       return false;
     }
 
+    m_samples_per_frame = m_decoder->getpcmperframe();
+    m_total_frames = m_decoder->gettotalframes();
     return true;
   }
 
+  bool
+  MP3InputStream::isSeekable() {
+    return (true);
+  }
+
+  int
+  MP3InputStream::getPosition() {
+     return (m_samples_per_frame * m_decoder->getcurrentframe());
+  }
+
+  void
+  MP3InputStream::setPosition(int position) {
+    m_decoder->setframe((int)(position/m_samples_per_frame));	//in present state can only seek to frame not absolute position, need to modify setframe to seek to sample inside frame?
+
+    //m_decoder->setPosition(position, m_samples_per_frame);
+    return;
+  }
+
+  int
+  MP3InputStream::getLength() {
+    return (m_total_frames * m_samples_per_frame);	// doesn't take into consideration last frame not being full up.
+  }
 
   void
   MP3InputStream::getFormat(
-    int& channel_count, 
-    int& sample_rate, 
-    SampleFormat& sample_format) 
+    int& channel_count,
+    int& sample_rate,
+    SampleFormat& sample_format)
   {
     channel_count = m_channel_count;
     sample_rate = m_sample_rate;

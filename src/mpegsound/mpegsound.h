@@ -249,7 +249,7 @@ private:
   /* MPEG header variables */
   /*************************/
 private:
-  int layer,protection,bitrateindex,padding,extendedmode;
+  int layer,protection,bitrateindex,padding,extendedmode, vbr;
   enum _mpegversion  {mpeg1,mpeg2}                               version;
   enum _mode    {fullstereo,joint,dual,single}                   mode;
   enum _frequency {frequency44100,frequency48000,frequency32000} frequency;
@@ -296,13 +296,16 @@ private:
   int decodeframe;
   int *frameoffsets;
 
+
   /******************************/
   /* Frame management functions */
   /******************************/
 public:
   int  getcurrentframe() const {return currentframe;};
   int  gettotalframe()   const {return totalframe;};
+  int gettotalframes(void);
   void setframe(int framenumber);
+  void setPosition(int position, int samples_per_frame);
 
   /***************************************/
   /* Variables made by MPEG-Audio header */

@@ -18,6 +18,8 @@
 
 #define MY_PI 3.14159265358979323846
 
+#define getLength_accurate
+
 Mpegtoraw::Mpegtoraw(Soundinputstream *loader,Soundplayer *player)
 {
   frameoffsets=NULL;
@@ -147,6 +149,7 @@ void Mpegtoraw::initialize()
   register int i;
 //  register REAL *s1,*s2;
 //  REAL *s3,*s4;
+  //printf("initialise\n");
 
   scalefactor=SCALE;
   calcbufferoffset=15;
@@ -173,7 +176,13 @@ void Mpegtoraw::initialize()
   currentframe=decodeframe=0;
   if(loadheader())
   {
-    totalframe=(loader->getsize()+framesize-1)/framesize;
+    #ifdef getLength_accurate
+    totalframe=(loader->getsize()+framesize-1)/framesize;	// Estimate totalframes to create frameoffset array - this value will be a lot bigger for VBR files
+    #else
+    if(!vbr) {
+      totalframe=(loader->getsize()+framesize-1)/framesize;	// Doesn't take into consideration id3 headers
+    }
+    #endif
     loader->setposition(0);
   }
   else totalframe=0;
@@ -227,6 +236,57 @@ void Mpegtoraw::setframe(int framenumber)
   decodeframe=currentframe=framenumber;
 }
 
+
+int Mpegtoraw::gettotalframes(void)
+{
+  #ifdef getLength_accurate
+  int size=0, i=0, pos=0;;
+
+  pos = loader->getposition();
+
+  if(frameoffsets==NULL)return -1;
+  loader->setposition(0);
+  // First frameoffset will be 0 and doesn't matter even if frame does not start there because sync() is called in load_header to scan forward to first sync bit
+
+  // Will have frameoffsets for first frames loaded into buffer (FRAMECOUNT in input_mp3)
+
+  //printf("Framesize %i\n", framesize);
+  //printf("File length %i\n", loader->getsize());
+  //printf("First header at %i\n", frameoffsets[0]);
+
+  size = loader->getsize();
+
+  while (frameoffsets[i]<size) {
+	if(!loadheader()) {
+		i--;			// decrement i count as no next frame on loadheader error
+		break;
+		}
+	//printf("i %i; frameoffsets %i; framesize %i\n", i, frameoffsets[i], framesize);
+	i++;
+	frameoffsets[i]=loader->getposition();
+	}
+
+  //printf("i %i; frameoffsets %i\n", i, frameoffsets[i-1]);
+  loader->setposition(pos);
+  return i;
+  #else
+
+  return totalframe;
+
+  #endif
+ }
+
+
+void Mpegtoraw::setPosition(int position, int samples_per_frame) 
+{
+  int framenumber=0, remainder=0;
+
+  framenumber = (int)(position / samples_per_frame);
+  remainder = position % samples_per_frame;
+
+	// wants to set frame as well as extra samples inside last frame
+}
+
 void Mpegtoraw::clearbuffer()
 {
 //%%  player->abort();
@@ -236,6 +296,7 @@ void Mpegtoraw::clearbuffer()
 bool Mpegtoraw::loadheader()
 {
   register int c;
+  int length;
   bool flag;
 
   sync();
@@ -266,7 +327,7 @@ bool Mpegtoraw::loadheader()
     else if (c=='I') { // possible ID3v2 tag
         char buf[10];
         int c2,c3;
-        int length;
+
 
         if((c2=loader->getbytedirect())<0) break;
         if (c2=='D') {
@@ -307,7 +368,8 @@ bool Mpegtoraw::loadheader()
   version=(_mpegversion)((c>>3)^1);
 
   c=((loader->getbytedirect()))>>1;
-  padding=(c&1);             c>>=1;
+  padding=(c&1);
+  c>>=1;
   frequency=(_frequency)(c&2); c>>=2;
   bitrateindex=(int)c;
   if(bitrateindex==15) {
@@ -319,8 +381,42 @@ bool Mpegtoraw::loadheader()
   extendedmode=c&3;
   mode=(_mode)(c>>2);
 
+// Check for VBR header - proof of concept code needs tidying
+  #ifndef getLength_accurate
+  int pos;
 
-// Making information
+  pos = loader->getposition();
+  char vbr_header[50];
+
+  vbr = 0;
+
+  loader->_readbuffer(vbr_header, 45);
+
+  for (i=0; i<33; i++) {					// VBR identifying string "Xing" will be found in first 32 bytes of remaining header if mp3 is VBR
+    if (vbr_header[i] == 'X') {
+      if (vbr_header[i+1] == 'i') {
+        if (vbr_header[i+2] == 'n') {
+          if (vbr_header[i+3] == 'g') {
+	    vbr = 1;
+	     if (vbr_header[39] > 1) { 								// Means contains number of frames in header!
+	       totalframe = ((vbr_header[40] << 24) & 0xFF000000);		// Need masks to prevent int -ve's causing incorrect calculation
+	       totalframe += ((vbr_header[41] << 16) & 0x00FF0000);
+	       totalframe += ((vbr_header[42] << 8) & 0x0000FF00);
+	       totalframe += ((vbr_header[43]) & 0x000000FF);
+	     }
+	    break;
+	  }
+	}
+      }
+    }
+  }
+
+
+
+   loader->setposition(pos);		// bodge to get working seems to need to be in the position it was before vbr header for rest of code to function after vbr header check - no idea why - anyone!?
+  #endif
+
+ // Making information
   inputstereo= (mode==single)?0:1;
   if(forcetomonoflag)outputstereo=0; else outputstereo=inputstereo;
 
@@ -380,7 +476,7 @@ bool Mpegtoraw::loadheader()
     }
   }
 
-  // if frame size is invalid, fail
+    // if frame size is invalid, fail
   if (framesize < 4 || framesize > 4100) {
     seterrorcode(SOUND_ERROR_BAD);
     return false;

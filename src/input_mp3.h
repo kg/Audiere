@@ -21,10 +21,16 @@ namespace audiere {
       int& sample_rate,
       SampleFormat& sample_format);
     int doRead(int frame_count, void* samples);
-    void ADR_CALL reset();
+    void ADR_CALL reset();int previous_frame;
 
     bool setsoundtype(int stereo, int samplesize, int speed);
     bool putblock(void *buffer,int size);
+
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
+
 
   private:
     void readID3v1Tags();
@@ -41,6 +47,10 @@ namespace audiere {
     Soundinputstream* m_loader;
     
     QueueBuffer m_buffer;
+
+    int m_layer;
+    int m_samples_per_frame;
+    int m_total_frames;
   };
 
 }

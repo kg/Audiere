@@ -4,6 +4,8 @@
 
   wxPlayer now compiles against unicode wxWidgets.  (Emanuel Dejanu)
 
+  Split Doxygen documentation into one for users and one for developers.
+
 2004.11.07
 
   Replaced mpegsound with a stand-alone version of the MPEG audio decoder

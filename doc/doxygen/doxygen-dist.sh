@@ -1,19 +1,27 @@
 #!/bin/sh
 
+HHC="C:/Program Files/HTML Help Workshop/hhc"
+
 die() {
-  echo "Aborting..."
-  exit 1
+    echo "Aborting..."
+    exit 1
 }
 
-VERSION=1.9.4
-BASE=audiere-$VERSION-doxygen
+archive() {
+    VERSION=1.9.4
+    AUDIENCE=$1
+    BASE=audiere-$VERSION-$AUDIENCE-doxygen
 
-rm -rf html $BASE $BASE.tar $BASE.tar.gz $BASE.zip \
-       $BASE.tar.bz2 $BASE.chm || die
-doxygen audiere.doxy          || die
-cp -r html $BASE              || die
-zip -r $BASE.zip $BASE        || die
-tar cfvj $BASE.tar.bz2 $BASE  || die
+    rm -rf "$AUDIENCE" || die
+    doxygen audiere-$AUDIENCE.doxy || die
+    (cd "$AUDIENCE" && \
+     cp -r html $BASE && \
+     zip -r -q $BASE.zip $BASE && \
+     tar cfj $BASE.tar.bz2 $BASE) || die
 
-"C:/Program Files/HTML Help Workshop/hhc" html/index.hhp
-mv html/index.chm $BASE.chm || die
+    (cd $AUDIENCE/html && "$HHC" index.hhp)
+    mv $AUDIENCE/html/index.chm $BASE.chm || die
+}
+
+archive users
+archive devel

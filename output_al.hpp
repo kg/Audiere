@@ -1,11 +1,11 @@
-#ifndef OUTPUT_NULL_HPP
-#define OUTPUT_NULL_HPP
+#ifndef OUTPUT_AL_HPP
+#define OUTPUT_AL_HPP
 
 
 #include "output.hpp"
 
 
-class NullOutputContext : public IOutputContext
+class ALOutputContext : public IOutputContext
 {
 public:
   bool Initialize(const char* parameters);
@@ -20,10 +20,13 @@ public:
     ADR_SAMPLE_RESET reset,
     void* opaque
   );
+
+private:
+  ALCdevice m_Device;
 };
 
 
-class NullOutputStream : public IOutputStream
+class ALOutputStream : public IOutputStream
 {
 public:
   void Play();
@@ -36,13 +39,12 @@ public:
   int  GetPan();
 
 private:
-  NullOutputStream();
+  ALOutputStream();
 
 private:
-  int m_volume;
-  int m_pan;
+  ALCwhatever
 
-  friend NullOutputContext;
+  friend ALOutputContext;
 };
 
 

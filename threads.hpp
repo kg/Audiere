@@ -10,7 +10,7 @@
 #define THREADS_HPP
 
 
-#include "Debug.hpp"
+#include "debug.hpp"
 
 
 typedef void (*AI_ThreadRoutine)(void* opaque);

@@ -1,8 +1,8 @@
 SUBDIRS = resfilter
 
 INCLUDES = \
-	-I .. \
-	-I ../../mmio
+	-I $(top_srcdir)/src/mikmod/mikmod \
+	-I $(top_srcdir)/src/mikmod/mmio
 
 noinst_LTLIBRARIES = libvirtch.la
 

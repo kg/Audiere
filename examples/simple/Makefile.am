@@ -1,7 +1,7 @@
 noinst_PROGRAMS = simple
 
 INCLUDES = \
-	-I ../../src
+	-I $(top_srcdir)/src
 
 simple_SOURCES = \
 	simple.cpp

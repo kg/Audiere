@@ -1,8 +1,8 @@
 SUBDIRS = mikmod
 
 INCLUDES = \
-	-I mikmod/mmio \
-	-I mikmod/mikmod
+	-I $(top_srcdir)/src/mikmod/mmio \
+	-I $(top_srcdir)/src/mikmod/mikmod
 
 lib_LTLIBRARIES = libaudiere.la
 include_HEADERS = audiere.h

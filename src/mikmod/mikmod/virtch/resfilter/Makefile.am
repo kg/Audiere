@@ -1,6 +1,6 @@
 INCLUDES = \
-	-I ../.. \
-	-I ../../../mmio
+	-I $(top_srcdir)/src/mikmod/mmio \
+	-I $(top_srcdir)/src/mikmod/mikmod
 
 noinst_LTLIBRARIES = libresfilter.la
 

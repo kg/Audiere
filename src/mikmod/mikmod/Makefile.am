@@ -1,7 +1,7 @@
 SUBDIRS = loaders virtch
 
 INCLUDES = \
-	-I ../mmio
+	-I $(top_srcdir)/src/mikmod/mmio
 
 noinst_LTLIBRARIES = libmikmod.la
 

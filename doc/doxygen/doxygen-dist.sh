@@ -1,13 +1,15 @@
 #!/bin/sh
 
 die() {
+  echo "Aborting..."
   exit 1
 }
 
 VERSION=1.9.2
 BASE=audiere-$VERSION-doxygen
 
-rm -rf html $BASE         || die
+rm -rf html $BASE $BASE.tar $BASE.tar.gz $BASE.zip \
+       $BASE.tar.bz2 $BASE.chm || die
 doxygen audiere.doxy      || die
 cp -r html $BASE          || die
 zip -r $BASE.zip $BASE    || die

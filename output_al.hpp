@@ -8,6 +8,9 @@
 class ALOutputContext : public IOutputContext
 {
 public:
+  ALOutputDevice();
+  ~ALOutputDevice();
+
   bool Initialize(const char* parameters);
 
   void Update();
@@ -22,7 +25,8 @@ public:
   );
 
 private:
-  ALCdevice m_Device;
+  ALCdevice*  m_Device;
+  ALCcontext* m_Context;
 };
 
 

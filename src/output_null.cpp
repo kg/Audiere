@@ -184,7 +184,7 @@ NullOutputStream::DummyRead(int samples_to_read)
   // read samples into dummy buffer, counting the number we actually read
   adr_u8* dummy = new adr_u8[1024 * m_channel_count * m_bits_per_sample / 8];
   while (samples_to_read > 0) {
-    int read = adr_max(1024, samples_to_read);
+    int read = adr_min(1024, samples_to_read);
     int actual_read = m_source->Read(read, dummy);
     total += actual_read;
     samples_to_read -= actual_read;

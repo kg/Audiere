@@ -253,6 +253,13 @@ namespace audiere {
       m_next_read = 0;
     }
 
+    ADR_IF_DEBUG {
+      char str[80];
+      sprintf(str, "samples_to_read = %d", samples_to_read); ADR_LOG(str);
+      sprintf(str, "samples_read    = %d", samples_read);    ADR_LOG(str);
+      sprintf(str, "m_next_read     = %d", m_next_read);     ADR_LOG(str);
+    }
+
     // unlock
     m_buffer->Unlock(buffer, buffer_length, NULL, 0);
   }
@@ -279,6 +286,10 @@ namespace audiere {
       return;
     }
 
+    // deal with them in samples, not bytes
+    play  /= m_sample_size;
+    write /= m_sample_size;
+
     ADR_IF_DEBUG {
       char str[160];
       sprintf(str,
@@ -286,10 +297,6 @@ namespace audiere {
         play, write, m_next_read);
       ADR_LOG(str);
     }
-
-    // deal with them in samples, not bytes
-    play  /= m_sample_size;
-    write /= m_sample_size;
 
     // how many samples have we written since the last update?
     if (play < m_last_play) {
@@ -337,6 +344,8 @@ namespace audiere {
     int read = streamRead(length1, buffer1);
     if (length1 == read) {
       read += streamRead(length2, buffer2);
+    } else {
+      fillSilence(length2, buffer2);
     }
 
     ADR_IF_DEBUG {
@@ -371,7 +380,8 @@ namespace audiere {
   }
 
 
-  // read as much as possible from the stream source, fill the rest with 0
+  // read as much as possible from the stream source, fill the rest
+  // with silence
   int
   DSOutputStream::streamRead(int sample_count, void* samples) {
     ADR_GUARD("streamRead");
@@ -379,7 +389,13 @@ namespace audiere {
     // try to read from the stream
     int samples_read = m_source->read(sample_count, samples);
 
-    // read the last sample
+    ADR_IF_DEBUG {
+      char str[80];
+      sprintf(str, "samples_read = %d\n", samples_read);
+      ADR_LOG(str);
+    }
+
+    // remember the last sample
     if (samples_read > 0) {
       memcpy(
         m_last_sample,
@@ -390,13 +406,21 @@ namespace audiere {
     // fill the rest with silence
     BYTE* out = (BYTE*)samples + m_sample_size * samples_read;
     int c = sample_count - samples_read;
+    fillSilence(c, out);
+
+    m_total_read += samples_read;
+    return samples_read;
+  }
+
+
+  void
+  DSOutputStream::fillSilence(int sample_count, void* samples) {
+    int c = sample_count;
+    BYTE* out = (BYTE*)samples;
     while (c--) {
       memcpy(out, m_last_sample, m_sample_size);
       out += m_sample_size;
     }
-
-    m_total_read += samples_read;
-    return samples_read;
   }
 
 }

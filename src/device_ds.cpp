@@ -166,10 +166,10 @@ namespace audiere {
     SampleFormat sample_format;
     source->getFormat(channel_count, sample_rate, sample_format);
 
-    int frame_size = channel_count * GetSampleSize(sample_format);
+    const int frame_size = channel_count * GetSampleSize(sample_format);
 
     // calculate an ideal buffer size
-    int buffer_length = sample_rate * m_buffer_length / 1000;
+    const int buffer_length = sample_rate * m_buffer_length / 1000;
 
     // define the wave format
     WAVEFORMATEX wfx;
@@ -203,10 +203,11 @@ namespace audiere {
 
     ADR_LOG("CreateSoundBuffer succeeded");
 
+    // now create the output stream
     DSOutputStream* stream = new DSOutputStream(
       this, buffer, buffer_length, source);
 
-    // add ourselves to the list of streams and return
+    // add it the list of streams and return
     m_open_streams.push_back(stream);
     return stream;
   }

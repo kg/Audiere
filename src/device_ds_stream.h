@@ -50,6 +50,7 @@ namespace audiere {
     void fillStream();
     void update();
     int streamRead(int samples_to_read, void* buffer);
+    void fillSilence(int sample_count, void* buffer);
   
   private:
     RefPtr<DSAudioDevice> m_device;

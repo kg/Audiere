@@ -1,3 +1,7 @@
+2003.07.17
+
+  Made thread priority work when using pthreads.
+
 2003.07.15
 
   1.9.3 released.

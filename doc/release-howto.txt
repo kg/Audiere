@@ -9,6 +9,7 @@ The following files contain version information:
   configure.in
   bindings/python/setup.py
   doc/doxygen/audiere.doxy
+  doc/doxygen/doxygen-dist.sh
   doc/doxygen/mainpage.doxy
   src/audiere.h
   src/version.cpp

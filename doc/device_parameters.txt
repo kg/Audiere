@@ -1,0 +1,34 @@
+Device Parameters
+Chad Austin
+2002.12.21
+
+Each device in Audiere supports a set of parameters that are used to
+customize the device's behavior or performance.  If a device
+encounters parameters it does not understand, it ignores them.
+
+This document describes parameters available for each device.
+
+--
+
+The DirectSound device ("directsound", default on Windows) supports
+the following parameters:
+
+buffer (int) : The length of the audio buffer in milliseconds.  A
+               shorter buffer means lower latency, but could skip more
+               often and suffer reduced performance.  The default is
+               one second.
+
+global (boolean) : This device sets the DSBCAP_GLOBALFOCUS bit on all
+                   of its streams.  This means the application's
+                   sounds can be heard even when the application loses
+                   focus.  If set to false, the application's sounds
+                   can only be heard when it has focus.  The default
+                   is true.
+
+--
+
+The OSS device ("oss", default on Linux) supports the following
+parameters:
+
+device (string) : The file device Audiere should write to.  The
+                  default is "/dev/dsp".

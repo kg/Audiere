@@ -554,6 +554,44 @@ namespace audiere {
      * type MULTIPLE, stop all playing instances of the sound.
      */
     virtual void ADR_CALL stop() = 0;
+
+    /**
+     * Sets the sound's volume.
+     *
+     * @param  volume  0.0 = silence, 1.0 = maximum volume (default)
+     */
+    virtual void ADR_CALL setVolume(float volume) = 0;
+
+    /**
+     * Gets the current volume.
+     *
+     * @return  current volume of the output stream
+     */
+    virtual float ADR_CALL getVolume() = 0;
+
+    /**
+     * Set current pan.
+     *
+     * @param pan  -1.0 = left, 0.0 = center (default), 1.0 = right
+     */
+    virtual void ADR_CALL setPan(float pan) = 0;
+
+    /**
+     * Get current pan.
+     */
+    virtual float ADR_CALL getPan() = 0;
+
+    /**
+     * Set current pitch shift.
+     *
+     * @param shift  can range from 0.5 to 2.0.  default is 1.0.
+     */
+    virtual void ADR_CALL setPitchShift(float shift) = 0;
+
+    /**
+     * Get current pitch shift.  Defaults to 1.0.
+     */
+    virtual float ADR_CALL getPitchShift() = 0;
   };
   typedef RefPtr<SoundEffect> SoundEffectPtr;
 

@@ -11,18 +11,37 @@ namespace audiere {
     }
 
     void ADR_CALL play() {
-      if (m_stream->isPlaying()) {
-        m_stream->reset();
-        m_stream->play();
-      } else {
-        m_stream->reset();
-        m_stream->play();
-      }
+      m_stream->reset();
+      m_stream->play();
     }
 
     void ADR_CALL stop() {
       m_stream->stop();
       m_stream->reset();
+    }
+
+    void ADR_CALL setVolume(float volume) {
+      m_stream->setVolume(volume);
+    }
+
+    float ADR_CALL getVolume() {
+      return m_stream->getVolume();
+    }
+
+    void ADR_CALL setPan(float pan) {
+      m_stream->setPan(pan);
+    }
+
+    float ADR_CALL getPan() {
+      return m_stream->getPan();
+    }
+
+    void ADR_CALL setPitchShift(float shift) {
+      return m_stream->setPitchShift(shift);
+    }
+
+    float ADR_CALL getPitchShift() {
+      return m_stream->getPitchShift();
     }
 
   private:
@@ -43,6 +62,9 @@ namespace audiere {
       if (!stream) {
         return;
       }
+      stream->setVolume(m_volume);
+      stream->setPan(m_pan);
+      stream->setPitchShift(m_shift);
       stream->play();
 
       // go through the list and see if any streams are done playing
@@ -61,10 +83,38 @@ namespace audiere {
       m_streams.clear();
     }
 
+    void ADR_CALL setVolume(float volume) {
+      m_volume = volume;
+    }
+
+    float ADR_CALL getVolume() {
+      return m_volume;
+    }
+
+    void ADR_CALL setPan(float pan) {
+      m_pan = pan;
+    }
+
+    float ADR_CALL getPan() {
+      return m_pan;
+    }
+
+    void ADR_CALL setPitchShift(float shift) {
+      m_shift = shift;
+    }
+
+    float ADR_CALL getPitchShift() {
+      return m_shift;
+    }
+    
   private:
     RefPtr<AudioDevice> m_device;
     RefPtr<SampleBuffer> m_buffer;
     std::vector<RefPtr<OutputStream> > m_streams;
+
+    float m_volume;
+    float m_pan;
+    float m_shift;
   };
 
 

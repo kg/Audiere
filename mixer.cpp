@@ -20,11 +20,21 @@ Mixer::~Mixer()
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-Mixer::Read(void* buffer, const int sample_count)
+Mixer::GetFormat(int& channel_count, int& sample_rate, int& bits_per_sample)
+{
+  channel_count = 2;
+  sample_rate = 44100;
+  bits_per_sample = 16;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+int
+Mixer::Read(const int sample_count, void* samples)
 {
   if (m_sources.size() == 0) {
-    memset(buffer, 0, 4 * sample_count);
-    return;
+    memset(samples, 0, 4 * sample_count);
+    return sample_count;
   }
 
   static const int BUFFER_SIZE = 4096;
@@ -34,7 +44,7 @@ Mixer::Read(void* buffer, const int sample_count)
   adr_s16 stream_buffer[BUFFER_SIZE * 2];
   std::fill(mix_buffer, mix_buffer + BUFFER_SIZE, 0);
 
-  adr_s16* out = (adr_s16*)buffer;
+  adr_s16* out = (adr_s16*)samples;
   int left = sample_count;
   while (left > 0) {
     int playing = 0;
@@ -60,6 +70,15 @@ Mixer::Read(void* buffer, const int sample_count)
 
     left -= to_mix;
   }
+
+  return sample_count;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void
+Mixer::Reset()
+{
 }
 
 ////////////////////////////////////////////////////////////////////////////////

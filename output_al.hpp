@@ -3,8 +3,8 @@
 
 
 #include <list>
-#include <al/al.h>
-#include <al/alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #include "output.hpp"
 
 
@@ -32,7 +32,10 @@ public:
 
 private:
   ALCdevice*  m_Device;
-  ALCcontext* m_Context;
+
+  void* m_Context;
+  // grrr, I wish the OpenAL folks would make up their minds
+  //  ALCcontext* m_Context;
 
   typedef std::list<ALOutputStream*> StreamList;
   StreamList m_OpenStreams;
@@ -95,11 +98,8 @@ private:
   ALuint* m_Sources;
 
   int m_BufferLength;  // in samples
-
   bool m_IsPlaying;
-
   int m_Volume;
-  int m_Pan;
 
   friend ALOutputContext;
 };

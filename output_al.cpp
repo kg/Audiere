@@ -192,7 +192,6 @@ ALOutputStream::ALOutputStream(
 
   m_IsPlaying = false;
   m_Volume    = ADR_VOLUME_MAX;
-  m_Pan       = ADR_PAN_CENTER;
 
   // calculate the desired length (in samples) of each buffer
   m_BufferLength = BUFFER_MILLISECONDS * m_SampleRate / 1000;
@@ -243,7 +242,7 @@ ALOutputStream::Update()
   ALint processed_buffers = INT_MAX;
   for (int i = 0; i < 1/*m_ChannelCount*/; i++) {
     ALint buffers;
-    alGetSourcei(m_Sources[i], AL_BUFFERS_PROCESSED, &buffers);
+    alGetSourceiv(m_Sources[i], AL_BUFFERS_PROCESSED, &buffers);
 
     if (buffers < processed_buffers) {
       processed_buffers = buffers;
@@ -473,30 +472,6 @@ int
 ALOutputStream::GetVolume()
 {
   return m_Volume;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void
-ALOutputStream::SetPan(int pan)
-{
-  if (pan < ADR_PAN_LEFT) {
-    pan = ADR_PAN_LEFT;
-  } else if (pan > ADR_PAN_RIGHT) {
-    pan = ADR_PAN_RIGHT;
-  }
-
-  m_Pan = pan;
-
-
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-int
-ALOutputStream::GetPan()
-{
-  return m_Pan;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

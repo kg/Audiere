@@ -6,7 +6,10 @@
 #include "output_ds8.hpp"
 #include "output_ds3.hpp"
 #include "output_dll.hpp"
+#else
+#define WITH_OPENAL  // if we're not on Windows, we only support OpenAL
 #endif
+
 
 #ifdef WITH_OPENAL
 #include "output_al.hpp"
@@ -26,6 +29,8 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
     } else {                                   \
       delete context;                          \
     }
+
+#ifdef _WIN32
 
   // autodetect
   if (strcmp(device, "") == 0 ||
@@ -61,6 +66,18 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
     TRY_CONTEXT(DLLOutputContext);
 
   }
+
+#else
+
+  if (strcmp(device, "autodetect") == 0) {
+    TRY_CONTEXT(ALOutputContext);
+  } else if (strcmp(device, "openal") == 0) {
+    TRY_CONTEXT(ALOutputContext);
+  } else if (strcmp(device, "null") == 0) {
+    TRY_CONTEXT(NullOutputContext);
+  }
+
+#endif
 
   // otherwise, just fail
 

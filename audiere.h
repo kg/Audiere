@@ -11,7 +11,11 @@
 
 
 /* calling convention */
-#define ADR_CALL __stdcall
+#ifdef _WIN32
+#  define ADR_CALL __stdcall
+#else
+#  define ADR_CALL
+#endif
 
 /* file callback types */
 typedef void* (ADR_CALL *ADR_FILE_OPEN)(void* opaque, const char* filename);

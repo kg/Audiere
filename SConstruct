@@ -8,8 +8,7 @@ Default('.')
 # get installation prefix
 PREFIX = ARGUMENTS.get('prefix', '/usr/local')
 
-CXXFLAGS = ['-LANG:std',
-            '-DHAVE_AL',
+CXXFLAGS = ['-DHAVE_AL',
             '-DNO_MIKMOD',
             '-DNO_FLAC',
             '-DNO_MP3',
@@ -20,16 +19,10 @@ if ARGUMENTS.get('debug', 0):
     CXXFLAGS.extend(['-g', '-DDEBUG'])
 
 base_env = Environment(
-    CXX = 'CC',
-    CXXFLAGS = CXXFLAGS,
-    LINK = 'CC',
-    LINKFLAGS = ['-LANG:std'],
-    SHCXXFLAGS = CXXFLAGS,
-    SHLINK = 'CC',
-    SHLINKFLAGS = ['-shared'],
     CPPPATH = ['/usr/freeware/include'],
     LIBPATH = ['/usr/freeware/lib32'],
     LIBS = ['pthread', 'vorbisfile', 'vorbis', 'ogg', 'audio', 'm'])
+base_env.Append(CXXFLAGS = CXXFLAGS)
 
 Export('PREFIX base_env')
 

@@ -28,7 +28,7 @@ sources = Split("""
 
 sources = map(lambda n: n + '.cpp', sources)
 
-target = base_env.SharedLibrary('audiere', sources)
+target = base_env.Library('audiere', sources)
 
 base_env.Install(os.path.join(PREFIX, 'include'), 'audiere.h')
 base_env.Install(os.path.join(PREFIX, 'lib32'), target)

@@ -8,17 +8,23 @@ Default('.')
 # get installation prefix
 PREFIX = ARGUMENTS.get('prefix', '/usr/local')
 
+CXXFLAGS = ['-LANG:std', '-DHAVE_AL', '-DWORDS_BIGENDIAN']
+
+# build debug?
+if ARGUMENTS.get('debug', 0):
+    CXXFLAGS.extend(['-g', '-DDEBUG'])
+
 base_env = Environment(
     CXX = 'CC',
-    CXXFLAGS = ['-LANG:std'],
+    CXXFLAGS = CXXFLAGS,
     LINK = 'CC',
     LINKFLAGS = ['-LANG:std'],
-    SHCXXFLAGS = ['-LANG:std'],
+    SHCXXFLAGS = CXXFLAGS,
     SHLINK = 'CC',
     SHLINKFLAGS = ['-shared'],
     CPPPATH = ['/usr/freeware/include'],
     LIBPATH = ['/usr/freeware/lib32'],
-    LIBS = ['vorbisfile', 'vorbis', 'ogg'])
+    LIBS = ['vorbisfile', 'vorbis', 'ogg', 'audio'])
 
 Export('PREFIX base_env')
 

@@ -103,13 +103,15 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
 {
   ADR_GUARD("AdrCreateContext");
 
-  std::auto_ptr<ADR_CONTEXT_ATTRimp> delete_attr;
+  ADR_CONTEXT_ATTR delete_attr;
   if (!attr) {
-    delete_attr = std::auto_ptr<ADR_CONTEXT_ATTRimp>(AdrCreateContextAttr());
-    attr = delete_attr.get();
+    delete_attr = AdrCreateContextAttr();
+    attr = delete_attr;
   }
 
-  return reinterpret_cast<ADR_CONTEXT>(Context::Create(attr));
+  Context* context = Context::Create(attr);
+  delete delete_attr;
+  return reinterpret_cast<ADR_CONTEXT>(context);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

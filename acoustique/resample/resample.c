@@ -23,8 +23,6 @@
 #  include "config.h"
 # endif
 
-# include "global.h"
-
 # include <string.h>
 
 # include "resample.h"

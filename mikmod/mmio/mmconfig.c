@@ -573,9 +573,9 @@ static void do_strlwr(char* c) {
     {   if(line = conf->line[lpos])
         {   cpos=0; while(WhiteSpace(line[cpos])) cpos++;
             switch(line[cpos])
-            {   case  '[':  return 0;  // end of subsection
-                case NULL:
-                case  '#':  break;
+            {   case '[':  return 0;  // end of subsection
+                case 0:
+                case '#':  break;
 
                 default:
                     vpos = 0;

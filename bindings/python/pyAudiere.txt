@@ -67,6 +67,10 @@ OutputStream methods and fields:
     - The current panning level of the stream.  0 is centered, -1 is
       all of the way to the left, and 1 is to the right.
 
+  field: pitchshift :: floating point number
+    - The current pitch shift.  1 is no shift, 2 is an octave higher,
+      and 0.5 is an octave lower.
+
   readonly field: seekable :: boolean
     - If this is true, the following fields are applicable.
 

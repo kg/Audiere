@@ -1,7 +1,7 @@
 What does Audiere mean?
 --
 
-  It's just a cool word.  :)  Pronounced "awww dee air".
+  Nothing, really.  Theo Reed suggested it.  Pronounced "ah dee air".
 
 
 I got Audiere to compile and install properly, but when I try to link
@@ -33,7 +33,7 @@ Why not support MIDI?
   feasible.
 
 
-Why doesn't Audiere 1.0.4 support MP3 when Audiere 1.0.3 did?
+Why doesn't Audiere 1.0.4 or 1.9.0 support MP3 when Audiere 1.0.3 did?
 --
 
   Up to version 1.0.3, Audiere used the MAD MP3 decoder to play MP3
@@ -52,3 +52,6 @@ Why doesn't Audiere 1.0.4 support MP3 when Audiere 1.0.3 did?
 
   Besides, Audiere supports Ogg Vorbis, which is equivalent to MP3 for
   most purposes anyway.
+
+  As of August, 2002, Jacky Chong is trying to add support for MP3
+  again using mpglib.

@@ -55,3 +55,9 @@ Why doesn't Audiere 1.0.4 or 1.9.0 support MP3 when Audiere 1.0.3 did?
 
   As of August, 2002, Jacky Chong is trying to add support for MP3
   again using mpglib.
+
+  As of the 1.9.2 release, Audiere supports MP3 thanks to the splay
+  library.  However, there is very little LGPL-compatible MP3 code out
+  there that works across a wide range of MP3s and hardware.  I highly
+  recommend using Ogg Vorbis for all of your music needs.  It uses
+  less CPU time by about a factor of five *and* sounds better.

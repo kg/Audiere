@@ -138,8 +138,11 @@ typedef struct
 class Soundinputstream
 {
 public:
-  Soundinputstream();
-  virtual ~Soundinputstream();
+  Soundinputstream() {
+    __errorcode = SOUND_ERROR_OK;
+  }
+
+  virtual ~Soundinputstream() { }
 
   int geterrorcode(void)  {return __errorcode;};
 
@@ -167,19 +170,19 @@ class Soundplayer
 {
 public:
   Soundplayer() {__errorcode=SOUND_ERROR_OK;};
-  virtual ~Soundplayer();
+  virtual ~Soundplayer() { }
 
   virtual bool initialize(char *filename)                       =0;
-  virtual void abort(void);
-  virtual int  getprocessed(void);
+  virtual void abort() { }
+  virtual int  getprocessed() { return 0; }
 
   virtual bool setsoundtype(int stereo,int samplesize,int speed)=0;
-  virtual bool resetsoundtype(void);
+  virtual bool resetsoundtype() { return true; }
 
   virtual bool putblock(void *buffer,int size)                  =0;
-  virtual int  getblocksize(void);
+  virtual int  getblocksize() { return 1024; }  // default value
 
-  int geterrorcode(void) {return __errorcode;};
+  int geterrorcode() {return __errorcode;};
 
 protected:
   bool seterrorcode(int errorno) {__errorcode=errorno; return false;};

@@ -3,7 +3,10 @@
 from distutils.core import setup, Extension
 
 ext_src = ['AudioDevice.cpp', 'pyAudiere.cpp', 'OutputStream.cpp']
-ext = Extension('audiere', ext_src, libraries = ['audiere', 'stdc++'])
+ext = Extension('audiere', ext_src,
+                include_dirs=['../../src'],
+                library_dirs=['../../src'],
+                libraries = ['audiere', 'stdc++'])
 
 setup(name = 'audiere',
       version = '1.9.3',

@@ -1,7 +1,6 @@
 #include "AudioDevice.h"
 #include "OutputStream.h"
 
-
 void AudioDevice_dealloc(PyObject* self) {
   ((audiere_AudioDeviceObject*)self)->device->unref();
   PyObject_Del(self);

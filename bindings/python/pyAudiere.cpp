@@ -51,7 +51,7 @@ PyMethodDef AudiereMethods[] = {
   #define STDCALL
 #endif
 
-void STDCALL initaudiere() {
+extern "C" void STDCALL initaudiere() {
   audiere_AudioDeviceType.ob_type  = &PyType_Type;
   audiere_OutputStreamType.ob_type = &PyType_Type;
   Py_InitModule("audiere", AudiereMethods);

@@ -44,19 +44,16 @@ public:
   }
 
   void Lock() {
-    std::string s(name());
-    ADR_LOG(("--> Trying to lock   " + s).c_str());
+   
+    ADR_LOG("--> Trying to lock");
     AI_EnterCriticalSection(m_cs);
-    ADR_LOG(("-->:: LOCKED ::   " + s).c_str());
+    ADR_LOG("-->:: LOCKED ::");
   }
 
   void Unlock() {
-    std::string s(name());
-    ADR_LOG(("<-- Unlocking...   " + s).c_str());
+    ADR_LOG("<-- Unlocking...");
     AI_LeaveCriticalSection(m_cs);
   }
-
-  virtual const char* name() = 0;  // for debugging
 
 private:
   AI_CriticalSection m_cs;

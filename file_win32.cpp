@@ -1,3 +1,7 @@
+// THIS FILE MAY HAVE INCORRECT SEMANTICS ON WINDOWS 95, 98, AND ME
+// test with mod files
+
+
 #include <windows.h>
 #include "file.hpp"
 

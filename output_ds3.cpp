@@ -27,12 +27,23 @@ DS3OutputContext::CreatePrimarySoundBuffer(IDirectSound* ds)
   ADR_GUARD("DS3OutputContext::CreatePrimarySoundBuffer");
 
   // create a primary sound buffer
-  DSBUFFERDESC dsbd;
-  memset(&dsbd, 0, sizeof(dsbd));
-  dsbd.dwSize = sizeof(dsbd);
-  dsbd.dwFlags = DSBCAPS_PRIMARYBUFFER;
-  HRESULT rv = ds->CreateSoundBuffer(&dsbd, &m_PrimaryBuffer, NULL);
+  #ifdef USE_DIRECTX8
+    DSBUFFERDESC1 dsbd;
+  #else
+    DSBUFFERDESC dsbd;
+  #endif
+
+  dsbd.dwSize        = sizeof(dsbd);
+  dsbd.dwFlags       = DSBCAPS_PRIMARYBUFFER;
+  dsbd.dwBufferBytes = 0;  // primary buffers don't specify size
+  dsbd.dwReserved    = 0;
+  dsbd.lpwfxFormat   = NULL;  // primary buffers use SetFormat()
+  HRESULT rv = ds->CreateSoundBuffer(
+    (DSBUFFERDESC*)&dsbd,
+    &m_PrimaryBuffer,
+    NULL);
   if (FAILED(rv)) {
+    ADR_LOG("CreateSoundBuffer failed");
     return false;
   }
 
@@ -46,7 +57,7 @@ DS3OutputContext::CreatePrimarySoundBuffer(IDirectSound* ds)
   wf.nChannels = 2; 
   wf.nSamplesPerSec = 44100; 
   wf.wBitsPerSample = 16; 
-  wf.nBlockAlign = wf.wBitsPerSample / 8 * wf.nChannels;
+  wf.nBlockAlign = wf.nChannels * wf.wBitsPerSample / 8;
   wf.nAvgBytesPerSec = wf.nSamplesPerSec * wf.nBlockAlign;
 
   rv = m_PrimaryBuffer->SetFormat(&wf); 

@@ -4,6 +4,7 @@
 
 
 FILE* Log::handle;
+int Log::indent_count;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -13,7 +14,13 @@ Log::Write(const char* str)
 {
   EnsureOpen();
   if (handle) {
-    fwrite(str, 1, strlen(str), handle);
+    std::string s;
+    for (int i = 0; i < indent_count; ++i) {
+      s += "  ";
+    }
+    s += str;
+    s += "\n";
+    fwrite(s.c_str(), 1, s.length(), handle);
     fflush(handle);
   }
 }
@@ -39,21 +46,5 @@ Log::Close()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-int Guard::s_indent_count;
-
-////////////////////////////////////////////////////////////////////////////////
-
-void
-Guard::Write(const char* prefix)
-{
-  std::string s;
-  for (int i = 0; i < s_indent_count; ++i) {
-    s += "  ";
-  }
-  Log::Write((s + prefix + "\n").c_str());
-}
-
-////////////////////////////////////////////////////////////////////////////////
 
 #endif

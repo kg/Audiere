@@ -101,6 +101,8 @@ DSOutputContext::Initialize(const char* parameters)
     return false;
   }
 
+  ADR_LOG("COM initialized properly");
+
   // register anonymous window class
   // don't worry about failure, if it fails, the window creation will fail
   WNDCLASS wc;
@@ -116,8 +118,6 @@ DSOutputContext::Initialize(const char* parameters)
   wc.lpszClassName  = "AudiereHiddenWindow";
   RegisterClass(&wc);
 
-  ADR_LOG("CreateWindow");
-
   // create anonymous window
   m_AnonymousWindow = CreateWindow(
     "AudiereHiddenWindow", "", WS_POPUP,
@@ -126,6 +126,8 @@ DSOutputContext::Initialize(const char* parameters)
   if (!m_AnonymousWindow) {
     return false;
   }
+
+  ADR_LOG("Anonymous window created successfully");
 
   // create the DirectSound object
   rv = CoCreateInstance(
@@ -169,12 +171,17 @@ DSOutputContext::Initialize(const char* parameters)
   ADR_LOG("Set cooperative level");
 
   if (!CreatePrimarySoundBuffer(m_DirectSound)) {
+
+    ADR_LOG("CreatePrimarySoundBuffer failed");
+
     DestroyWindow(m_AnonymousWindow);
     m_AnonymousWindow = NULL;
     m_DirectSound->Release();
     m_DirectSound = NULL;
     return false;
   }
+
+  ADR_LOG("Primary sound buffer created");
 
   return true;
 }
@@ -223,7 +230,11 @@ DSOutputContext::OpenStream(ISampleSource* source)
   wfx.cbSize          = sizeof(wfx);
 
   // define the DirectSound buffer type
-  DSBUFFERDESC dsbd;
+  #ifdef USE_DIRECTX8
+    DSBUFFERDESC dsbd;
+  #else
+    DSBUFFERDESC dsbd;
+  #endif
   memset(&dsbd, 0, sizeof(dsbd));
   dsbd.dwSize          = sizeof(dsbd);
   dsbd.dwFlags         = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
@@ -270,6 +281,8 @@ DSOutputStream::DSOutputStream(
   int buffer_length,
   ISampleSource* source)
 {
+  ADR_GUARD("DSOutputStream::DSOutputStream");
+
   m_Context = context;
   m_Buffer = buffer;
   m_NextRead = 0;
@@ -290,6 +303,8 @@ DSOutputStream::DSOutputStream(
 
 DSOutputStream::~DSOutputStream()
 {
+  ADR_GUARD("DSOutputStream::~DSOutputStream");
+
   m_Context->RemoveStream(this);
 
   // destroy the sound buffer interface
@@ -320,7 +335,14 @@ DSOutputStream::FillStream()
     0
   );
   if (FAILED(result) || !buffer) {
+    ADR_LOG("FillStream failed!");
     return;
+  }
+
+  ADR_IF_DEBUG {
+    char str[80];
+    sprintf(str, "Buffer Length = %d", buffer_length);
+    ADR_LOG(str);
   }
 
   // fill
@@ -353,7 +375,14 @@ DSOutputStream::Update()
   DWORD write;
   HRESULT result = m_Buffer->GetCurrentPosition(&play, &write);
   if (FAILED(result)) {
+    ADR_LOG("GetCurrentPosition failed");
     return;
+  }
+
+  ADR_IF_DEBUG {
+    char str[160];
+    sprintf(str, "play: %d  write: %d", play, write);
+    ADR_LOG(str);
   }
 
   // deal with them in samples, not bytes
@@ -385,20 +414,31 @@ DSOutputStream::Update()
     0
   );
   if (FAILED(result)) {
+    ADR_LOG("Lock() failed!");
     return;
+  }
+
+  ADR_IF_DEBUG {
+    char str[160];
+    sprintf(str, "buffer1: %d  buffer2: %d", buffer1_length, buffer2_length);
+    ADR_LOG(str);
   }
 
   // now actually read samples
   int length1 = buffer1_length / m_SampleSize;
   int length2 = buffer2_length / m_SampleSize;
-  int read1 = StreamRead(length1, buffer1);
-  int read2 = 0;
-  if (length1 == read1) {
-    read2 = StreamRead(length2, buffer2);
+  int read = StreamRead(length1, buffer1);
+  if (length1 == read) {
+    read += StreamRead(length2, buffer2);
   }
 
-  int old_next_read = m_NextRead;
-  m_NextRead = (m_NextRead + read1 + read2) % m_BufferLength;
+  ADR_IF_DEBUG {
+    char str[80];
+    sprintf(str, "read: %d", read);
+    ADR_LOG(str);
+  }
+
+  m_NextRead = (m_NextRead + read) % m_BufferLength;
 
   // unlock
   m_Buffer->Unlock(buffer1, buffer1_length, buffer2, buffer2_length);
@@ -406,10 +446,9 @@ DSOutputStream::Update()
   
   // Should we stop?  If we didn't read any data, and if the read cursor
   // is between the play and the write cursors, we should.
-  bool should_stop = (read1 + read2 == 0 &&
-                      IsBetween(m_NextRead, play, write));
+  if (read == 0 && IsBetween(m_NextRead, play, write)) {
 
-  if (should_stop) {
+    ADR_LOG("Stopping stream!");
 
     m_Buffer->Stop();
     m_Buffer->SetCurrentPosition(0);
@@ -429,6 +468,8 @@ DSOutputStream::Update()
 int
 DSOutputStream::StreamRead(int sample_count, void* samples)
 {
+  ADR_GUARD("StreamRead");
+
   // try to read from the stream
   int samples_read = m_Source->Read(sample_count, samples);
 
@@ -485,27 +526,20 @@ DSOutputStream::Stop()
 void
 DSOutputStream::Reset()
 {
+  ADR_GUARD("DSOutputStream::Reset");
+
   // figure out if we're playing or not
-  bool is_playing = false;
-  DWORD status;
-  HRESULT rv = m_Buffer->GetStatus(&status);
-  if (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING) {
-    is_playing = true;
-  }
+  bool is_playing = IsPlaying();
 
   // if we're playing, stop
   if (is_playing) {
     m_Buffer->Stop();
   }
 
-
   m_Buffer->SetCurrentPosition(0);
-
   m_Source->Reset();
-
   m_NextRead = 0;
   FillStream();
-
 
   // if we were playing, restart
   if (is_playing) {

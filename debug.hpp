@@ -8,54 +8,57 @@
 
 #ifdef _DEBUG
 
-class Log {
-public:
-  static void Write(const char* str);
+  class Log {
+  public:
+    static void Write(const char* str);
+    static void IncrementIndent() { ++indent_count; }
+    static void DecrementIndent() { --indent_count; }
 
-private:
-  static void EnsureOpen();
-  static void Close();
+  private:
+    static void EnsureOpen();
+    static void Close();
 
-private:
-  static FILE* handle;
-};
-
-
-class Guard {
-public:
-  Guard(const char* label)
-  : m_label(label) {
-    Write("+");
-    ++s_indent_count;
-  }
-
-  ~Guard() {
-    --s_indent_count;
-    Write("-");
-  }
-
-  static void Write(const char* prefix);
-
-private:
-  static int s_indent_count;
-  std::string m_label;
-};
+  private:
+    static FILE* handle;
+    static int indent_count;
+  };
 
 
-#define ADR_GUARD(label) Guard guard_obj__(label)
-#define ADR_LOG(label)   (Guard::Write(label))
-#define ADR_IF_DEBUG
-#define ADR_ASSERT(condition, label)
+  class Guard {
+  public:
+    Guard(const char* label)
+    : m_label(label) {
+      Write("+");
+      Log::IncrementIndent();
+    }
+
+    ~Guard() {
+      Log::DecrementIndent();
+      Write("-");
+    }
+
+    void Write(const char* prefix) {
+      Log::Write((prefix + m_label).c_str());
+    }
+
+  private:
+    std::string m_label;
+  };
+
+
+  #define ADR_GUARD(label) Guard guard_obj__(label)
+  #define ADR_LOG(label)   (Log::Write(label))
+  #define ADR_IF_DEBUG     if (true)
+  #define ADR_ASSERT(condition, label) if (!(condition)) { __asm int 3 }
 
 #else
 
-#define ADR_GUARD(label) 
-#define ADR_LOG(label)
-#define ADR_IF_DEBUG
-#define ADR_ASSERT(condition, label)
+  #define ADR_GUARD(label) 
+  #define ADR_LOG(label)
+  #define ADR_IF_DEBUG     if (false)
+  #define ADR_ASSERT(condition, label)
 
 #endif
-
 
 
 #endif

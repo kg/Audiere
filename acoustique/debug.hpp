@@ -81,7 +81,7 @@ namespace debug {
 
   #define ACQ_GUARD(label) Guard guard_obj__(label)
   #define ACQ_LOG(label)   (Guard::Write(label))
-  #define ACQ_IF_DEBUG
+  #define ACQ_IF_DEBUG     if (true)
 
   using namespace debug;  // I normally frown upon this, but it's nice to have them as globals
 
@@ -90,7 +90,7 @@ namespace debug {
 
   #define ACQ_GUARD(label)
   #define ACQ_LOG(label)
-  #define ACQ_IF_DEBUG
+  #define ACQ_IF_DEBUG     if (false)
 
 #endif
 

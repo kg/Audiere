@@ -45,7 +45,6 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
     TRY_CONTEXT(DS8OutputContext)
     #endif
     TRY_CONTEXT(DS3OutputContext)
-    TRY_CONTEXT(NullOutputContext)
 
   // DirectSound
   } else if (strcmp(device, "directsound") == 0) {
@@ -97,8 +96,7 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
 #endif
 
   // otherwise, just fail
-
-  return NULL;
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -29,8 +29,6 @@ class Context : public Synchronized
 public:
   static Context* Create(ADR_CONTEXT_ATTR attr);
 
-  virtual const char* name() { return "Context"; }
-
 private:
   Context() { }  // Initialize() is the constructor
   ~Context();

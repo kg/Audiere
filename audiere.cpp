@@ -103,7 +103,7 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
 {
   ADR_GUARD("AdrCreateContext");
 
-  ADR_CONTEXT_ATTR delete_attr;
+  ADR_CONTEXT_ATTR delete_attr = 0;
   if (!attr) {
     delete_attr = AdrCreateContextAttr();
     attr = delete_attr;

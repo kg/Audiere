@@ -16,8 +16,6 @@ private:
   Stream() { }  // Initialize() is the constructor
   bool Initialize(Context* context, const char* filename);
 
-  virtual const char* name() { return "Stream"; }
-
 public:
   ~Stream();
 

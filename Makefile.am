@@ -8,6 +8,10 @@ include_HEADERS = \
 libaudiere_la_SOURCES = \
 	config.h \
 	audiere.cpp \
+	context.cpp \
+	context.hpp \
+	debug.cpp \
+	debug.hpp \
 	file_ansi.cpp \
 	file.hpp \
 	mixer.cpp \
@@ -22,6 +26,8 @@ libaudiere_la_SOURCES = \
 	output_null.hpp \
 	resampler.cpp \
 	resampler.hpp \
+	stream.cpp \
+	stream.hpp \
 	threads_posix.cpp \
 	threads.hpp
 

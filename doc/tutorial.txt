@@ -29,11 +29,11 @@ You need to open an AudioDevice before you can play sounds...
 Now that we have a device, we can actually open and play sounds.
 
   /*
-   * If OpenSound is called with the last parameter = true, then
+   * If OpenSound is called with the last parameter = false, then
    * Audiere tries to load the sound into memory.  If it can't do
    * that, it will just stream it.
    */
-  RefPtr<OutputStream> sound(OpenSound(device, "effect.wav", true));
+  RefPtr<OutputStream> sound(OpenSound(device.get(), "effect.wav", false));
   if (!sound) {
     // failure
   }
@@ -42,7 +42,7 @@ Now that we have a device, we can actually open and play sounds.
    * Since this file is background music, we don't need to load the
    * whole thing into memory.
    */
-  RefPtr<OutputStream> stream(OpenSound(device, "music.ogg", false));
+  RefPtr<OutputStream> stream(OpenSound(device.get(), "music.ogg", true));
   if (!stream) {
     // failure
   }

@@ -15,19 +15,21 @@ public:
 
   bool Initialize(const char* parameters);
   void Update();
-  IOutputStream* OpenStream(ISampleSource source);
+  IOutputStream* OpenStream(ISampleSource* source);
 
 private:
-  int m_output_file;
+  int m_output_device;
 
   std::auto_ptr<Mixer> m_mixer;
-
-  friend OSSOutputStream;
 };
 
 
 class OSSOutputStream : public IOutputStream
 {
+private:
+  OSSOutputStream(Mixer* mixer, ISampleSource* source);
+  ~OSSOutputStream();
+
 public:
   void Play();
   void Stop();
@@ -37,6 +39,12 @@ public:
   int  GetVolume();
 
 private:
+  Mixer* m_mixer;
+  ISampleSource* m_source;
+  bool m_is_playing;
+  int m_volume;
+
+  friend OSSOutputContext;
 };
 
 

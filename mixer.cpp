@@ -12,6 +12,7 @@ Mixer::Mixer()
 
 Mixer::~Mixer()
 {
+  // assume all streams have been removed
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +20,8 @@ Mixer::~Mixer()
 void
 Mixer::Read(void* buffer, int sample_count)
 {
+  // how many sources are there?
+
   char* out = (char*)buffer;
   while (sample_count--) {
     memcpy(out, m_last_sample, 4);
@@ -27,5 +30,44 @@ Mixer::Read(void* buffer, int sample_count)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+void
+Mixer::AddSource(ISampleSource* source)
+{
+  // initial source attributes
+  SourceAttributes sa;
+  sa.is_playing = true;
+  sa.volume = ADR_VOLUME_MAX;
+  source->GetFormat(
+    sa.channel_count,
+    sa.sample_rate,
+    sa.bits_per_sample);
+
+  m_sources[source] = sa;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void
+Mixer::RemoveSource(ISampleSource* source)
+{
+  m_sources.erase(source);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void
+Mixer::SetPlaying(ISampleSource* source, bool is_playing)
+{
+  m_sources[source].is_playing = is_playing;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void
+Mixer::SetVolume(ISampleSource* source, int volume)
+{
+  m_sources[source].volume = volume;
+}
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,9 @@
+#include <algorithm>
+#include <string>
+#include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <ioctl.h>
+#include <sys/ioctl.h>
 #include <sys/soundcard.h>
 #include "output_oss.hpp"
 
@@ -9,15 +12,15 @@
 
 OSSOutputContext::OSSOutputContext()
 {
-  m_output_file = -1;
+  m_output_device = -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 OSSOutputContext::~OSSOutputContext()
 {
-  if (m_output_file != -1) {
-    close(m_output_file);
+  if (m_output_device != -1) {
+    close(m_output_device);
   }
 }
 
@@ -83,16 +86,54 @@ OSSOutputContext::Initialize(const char* parameters)
 void
 OSSOutputContext::Update()
 {
-  char buffer[1024 * 4];
-  m_mixer->Read(buffer, 1024);
-  // write to the OSS device
+  // find out how much data we can write to the device before it blocks
+  audio_buf_info info;
+  if (ioctl(m_output_device, SNDCTL_DSP_GETOSPACE, &info) == -1) {
+    return;
+  }
+
+  // how many samples is that?
+  int sample_count = info.bytes / 4;
+
+  // write to the OSS device, 1024 samples at a time
+  static const int BUFFER_SIZE = 1024;
+  char buffer[BUFFER_SIZE * 4];
+  while (sample_count > 0) {
+    int transfer_count = std::min(sample_count, BUFFER_SIZE);
+
+    m_mixer->Read(buffer, transfer_count);
+    write(m_output_device, buffer, transfer_count * 4);
+
+    sample_count -= transfer_count;
+  }
+
+  usleep(50000);  // 5 milliseconds
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-IOutputStream* OpenStream(ISampleSource source)
+IOutputStream*
+OSSOutputContext::OpenStream(ISampleSource* source)
 {
-  return 0;
+  return new OSSOutputStream(m_mixer.get(), source);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+OSSOutputStream::OSSOutputStream(Mixer* mixer, ISampleSource* source)
+{
+  m_mixer      = mixer;
+  m_source     = source;
+  m_is_playing = false;
+
+  m_mixer->AddSource(source);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+OSSOutputStream::~OSSOutputStream()
+{
+  m_mixer->RemoveSource(m_source);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +141,8 @@ IOutputStream* OpenStream(ISampleSource source)
 void
 OSSOutputStream::Play()
 {
+  m_mixer->SetPlaying(m_source, true);
+  m_is_playing = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,6 +150,8 @@ OSSOutputStream::Play()
 void
 OSSOutputStream::Stop()
 {
+  m_mixer->SetPlaying(m_source, false);
+  m_is_playing = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,6 +159,7 @@ OSSOutputStream::Stop()
 void
 OSSOutputStream::Reset()
 {
+  m_source->Reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +167,7 @@ OSSOutputStream::Reset()
 bool
 OSSOutputStream::IsPlaying()
 {
+  return m_is_playing;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,6 +175,8 @@ OSSOutputStream::IsPlaying()
 void
 OSSOutputStream::SetVolume(int volume)
 {
+  m_volume = volume;
+  m_mixer->SetVolume(m_source, m_volume);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,6 +184,7 @@ OSSOutputStream::SetVolume(int volume)
 int
 OSSOutputStream::GetVolume()
 {
+  return m_volume;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

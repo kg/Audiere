@@ -4,15 +4,15 @@ include_HEADERS = \
 	audiere.h
 
 libaudiere_la_SOURCES = \
+	config.h \
 	audiere.cpp \
-	data_types.cpp \
-	data_types.hpp \
 	file_ansi.cpp \
 	file.hpp \
 	output.cpp \
 	output.hpp \
-	output_al.cpp \
-	output_al.hpp \
+	@AL_SOURCES@ \
+	output_oss.cpp \
+	output_oss.hpp \
 	output_null.cpp \
 	output_null.hpp \
 	threads_posix.cpp \

@@ -91,10 +91,10 @@ void ParseParameters(
   const char* parameter_string,
   ParameterList& parameters)
 {
-  adr::string key;
-  adr::string value;
+  std::string key;
+  std::string value;
 
-  adr::string* current_string = &key;
+  std::string* current_string = &key;
 
   // walk the string and generate the parameter list
   const char* p = parameter_string;
@@ -117,7 +117,7 @@ void ParseParameters(
       *current_string += *p;
     }
 
-    p++;
+    ++p;
   }
 
   // is there one more parameter without a trailing comma?

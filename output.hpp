@@ -10,7 +10,7 @@
 
 #include <utility>
 #include <list>
-#include "data_types.hpp"
+#include <string>
 #include "audiere.h"
 
 
@@ -58,7 +58,7 @@ extern IOutputContext* OpenContext(
   const char* parameters);
 
 // helper function to parse parameters
-typedef std::pair<adr::string, adr::string> Parameter;
+typedef std::pair<std::string, std::string> Parameter;
 typedef std::list<Parameter> ParameterList;
 
 extern void ParseParameters(

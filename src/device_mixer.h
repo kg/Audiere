@@ -10,6 +10,7 @@
 #include <list>
 #include "audiere.h"
 #include "repeatable.h"
+#include "resampler.h"
 #include "threads.h"
 #include "types.h"
 #include "utility.h"
@@ -67,6 +68,8 @@ namespace audiere {
     float ADR_CALL getVolume();
     void  ADR_CALL setPan(float pan);
     float ADR_CALL getPan();
+    void  ADR_CALL setPitchShift(float shift);
+    float ADR_CALL getPitchShift();
 
     bool ADR_CALL isSeekable();
     int  ADR_CALL getLength();
@@ -79,6 +82,7 @@ namespace audiere {
   private:
     RefPtr<MixerDevice> m_device;
 
+    RefPtr<Resampler> m_resampler;
     RefPtr<RepeatableStream> m_source;
     s16 m_last_l;
     s16 m_last_r;

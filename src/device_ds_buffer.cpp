@@ -14,6 +14,11 @@ namespace audiere {
     m_buffer     = buffer;
     m_length     = length;
     m_frame_size = frame_size;
+
+    DWORD frequency;
+    m_buffer->GetFrequency(&frequency);
+    m_base_frequency = frequency;
+
     m_repeating  = false;
     m_volume     = 1;
     m_pan        = 0;
@@ -90,6 +95,20 @@ namespace audiere {
   float
   DSOutputBuffer::getPan() {
     return m_pan;
+  }
+
+
+  void
+  DSOutputBuffer::setPitchShift(float shift) {
+    m_buffer->SetFrequency(m_base_frequency * shift);
+  }
+
+
+  float
+  DSOutputBuffer::getPitchShift() {
+    DWORD frequency;
+    m_buffer->GetFrequency(&frequency);
+    return float(frequency) / m_base_frequency;
   }
 
 

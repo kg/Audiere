@@ -30,12 +30,12 @@ namespace audiere {
 
     void ADR_CALL setRepeat(bool repeat);
     bool ADR_CALL getRepeat();
-
     void  ADR_CALL setVolume(float volume);
     float ADR_CALL getVolume();
-
     void  ADR_CALL setPan(float pan);
     float ADR_CALL getPan();
+    void  ADR_CALL setPitchShift(float shift);
+    float ADR_CALL getPitchShift();
 
     bool ADR_CALL isSeekable();
     int  ADR_CALL getLength();
@@ -54,6 +54,7 @@ namespace audiere {
     int m_buffer_length;  // in samples
     int m_next_read;  // offset (in samples) where we will read next
     int m_last_play;  // offset (in samples) where the play cursor was
+    int m_base_frequency;  // in Hz
 
     bool m_is_playing;
 

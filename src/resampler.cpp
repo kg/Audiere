@@ -11,6 +11,8 @@ namespace audiere {
       m_native_sample_rate,
       m_native_sample_format);
 
+    m_shift = 1;
+
     fillBuffer();
     resetState();
   }
@@ -56,7 +58,7 @@ namespace audiere {
       m_sr = *m_position++;
       --m_samples_left;
 
-      m_time += m_rate;
+      m_time += m_rate / m_shift;
       while (m_time > m_native_sample_rate && left > 0) {
         m_time -= m_native_sample_rate;
         *out++ = m_sl;
@@ -163,6 +165,16 @@ namespace audiere {
   int
   Resampler::getPosition() {
     return m_source->getPosition() - m_samples_left;
+  }
+
+  void
+  Resampler::setPitchShift(float shift) {
+    m_shift = shift;
+  }
+
+  float
+  Resampler::getPitchShift() {
+    return m_shift;
   }
 
 }

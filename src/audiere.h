@@ -353,6 +353,18 @@ namespace audiere {
     virtual float ADR_CALL getPan() = 0;
 
     /**
+     * Set current pitch shift.
+     *
+     * @param shift  can range from 0.5 to 2.0.  default is 1.0.
+     */
+    virtual void ADR_CALL setPitchShift(float shift) = 0;
+
+    /**
+     * Get current pitch shift.  Defaults to 1.0.
+     */
+    virtual float ADR_CALL getPitchShift() = 0;
+
+    /**
      * @return  true if the stream is seekable, false otherwise
      */
     virtual bool ADR_CALL isSeekable() = 0;

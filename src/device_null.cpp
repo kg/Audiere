@@ -85,6 +85,7 @@ namespace audiere {
   , m_is_playing(false)
   , m_volume(1)
   , m_pan(0)
+  , m_shift(1)
   , m_last_update(0)
   {
     m_source->getFormat(m_channel_count, m_sample_rate, m_sample_format);
@@ -114,6 +115,7 @@ namespace audiere {
 
   void
   NullOutputStream::reset() {
+    SYNCHRONIZED(m_device.get());
     resetTimer();
     m_source->reset();
   }
@@ -163,6 +165,18 @@ namespace audiere {
   }
 
 
+  void
+  NullOutputStream::setPitchShift(float shift) {
+    m_shift = shift;
+  }
+
+
+  float
+  NullOutputStream::getPitchShift() {
+    return m_shift;
+  }
+
+
   bool
   NullOutputStream::isSeekable() {
     return m_source->isSeekable();
@@ -202,12 +216,13 @@ namespace audiere {
     if (m_is_playing) {
       ADR_LOG("Null output stream is playing");
 
-      // get number of milliseconds elapsed since last playing update
+      // get number of microseconds elapsed since last playing update
       // so we can read that much time worth of samples
       u64 now = GetNow();
       u64 elapsed = now - m_last_update;
 
-      int samples_to_read = int(m_sample_rate * elapsed / 1000000);
+      double shifted_time = m_shift * s64(elapsed) / 1000000.0;  // in seconds
+      int samples_to_read = int(m_sample_rate * shifted_time);
 
       ADR_IF_DEBUG {
         char str[100];

@@ -171,7 +171,7 @@ namespace audiere {
     memset(&dsbd, 0, sizeof(dsbd));
     dsbd.dwSize        = sizeof(dsbd);
     dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
-                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPAN |
+                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |
                          DSBCAPS_GLOBALFOCUS;
     dsbd.dwBufferBytes = frame_size * buffer_length;
     dsbd.lpwfxFormat   = &wfx;
@@ -220,7 +220,7 @@ namespace audiere {
     memset(&dsbd, 0, sizeof(dsbd));
     dsbd.dwSize        = sizeof(dsbd);
     dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
-                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPAN |
+                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |
                          DSBCAPS_GLOBALFOCUS | DSBCAPS_STATIC;
     dsbd.dwBufferBytes = buffer_size;
     dsbd.lpwfxFormat   = &wfx;

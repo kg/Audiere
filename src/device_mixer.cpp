@@ -110,7 +110,8 @@ namespace audiere {
     int rate)
   {
     m_device     = device;
-    m_source     = new RepeatableStream(new Resampler(source, rate));
+    m_resampler  = new Resampler(source, rate);
+    m_source     = new RepeatableStream(m_resampler.get());
     m_last_l     = 0;
     m_last_r     = 0;
     m_is_playing = false;
@@ -194,7 +195,21 @@ namespace audiere {
   float
   MixerStream::getPan() {
     SYNCHRONIZED(m_device.get());
-    return m_pan = 255.0f;
+    return m_pan / 255.0f;
+  }
+
+
+  void
+  MixerStream::setPitchShift(float shift) {
+    SYNCHRONIZED(m_device.get());
+    m_resampler->setPitchShift(shift);
+  }
+
+
+  float
+  MixerStream::getPitchShift() {
+    SYNCHRONIZED(m_device.get());
+    return m_resampler->getPitchShift();
   }
 
 

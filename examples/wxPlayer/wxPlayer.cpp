@@ -31,6 +31,7 @@ enum {
   STREAM_REPEAT,
   STREAM_VOLUME,
   STREAM_PAN,
+  STREAM_PITCH,
   STREAM_POS,
   STREAM_UPDATE,
 
@@ -48,9 +49,10 @@ public:
 
     m_playing_label = new wxStaticText(this, -1, "Stopped");
     m_repeating = new wxCheckBox(this, STREAM_REPEAT, "Repeating");
-    m_volume_pan_label = new wxStaticText(this, -1, "Volume - Pan");
+    m_vpp_label = new wxStaticText(this, -1, "Volume - Pan - Pitch");
     m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
     m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
+    m_pitch  = new wxSlider(this, STREAM_PITCH,  100, 50, 200);
     m_length_pos_label = new wxStaticText(this, -1, "Length - Pos");
     m_pos    = new wxSlider(this, STREAM_POS,    0, 0, 1000);
 
@@ -64,19 +66,20 @@ public:
     sizer->Add(
       new wxButton(this, STREAM_RESET, "Reset"),
       1, wxEXPAND | wxALL, 4);
-    sizer->Add(m_playing_label, 1, wxEXPAND | wxALL, 4);
-    sizer->Add(m_repeating, 1, wxEXPAND | wxALL, 4);
-    sizer->Add(m_volume_pan_label, 1, wxEXPAND | wxALL, 4);
-    sizer->Add(m_volume, 1, wxEXPAND | wxALL, 4);
-    sizer->Add(m_pan, 1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_playing_label,    1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_repeating,        1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_vpp_label,        1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_volume,           1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_pan,              1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_pitch,            1, wxEXPAND | wxALL, 4);
     sizer->Add(m_length_pos_label, 1, wxEXPAND | wxALL, 4);
-    sizer->Add(m_pos, 1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_pos,              1, wxEXPAND | wxALL, 4);
 
     if (!m_stream->isSeekable()) {
       m_pos->Enable(false);
     }
 
-    UpdateVolumePanLabel();
+    UpdateVPPLabel();
     UpdateLengthPosLabel();
 
     SetAutoLayout(true);
@@ -113,12 +116,17 @@ public:
 
   void OnChangeVolume() {
     m_stream->setVolume(m_volume->GetValue() / 100.0f);
-    UpdateVolumePanLabel();
+    UpdateVPPLabel();
   }
 
   void OnChangePan() {
     m_stream->setPan(m_pan->GetValue() / 100.0f);
-    UpdateVolumePanLabel();
+    UpdateVPPLabel();
+  }
+
+  void OnChangePitch() {
+    m_stream->setPitchShift(m_pitch->GetValue() / 100.0f);
+    UpdateVPPLabel();
   }
 
   void OnChangePos() {
@@ -136,13 +144,14 @@ public:
     m_playing_label->SetLabel(m_stream->isPlaying() ? "Playing" : "Stopped");
   }
 
-  void UpdateVolumePanLabel() {
+  void UpdateVPPLabel() {
     wxString label;
     label.Printf(
-      "Volume: %1.2f   Pan: %1.2f",
+      "Vol: %1.2f  Pan: %1.2f  Pitch: %1.2f",
       m_volume->GetValue() / 100.0f,
-      m_pan->GetValue() / 100.0f);
-    m_volume_pan_label->SetLabel(label);
+      m_pan->GetValue() / 100.0f,
+      m_pitch->GetValue() / 100.0f);
+    m_vpp_label->SetLabel(label);
   }
 
   void UpdateLengthPosLabel() {
@@ -165,9 +174,10 @@ private:
 
   wxStaticText* m_playing_label;
   wxCheckBox*   m_repeating;
-  wxStaticText* m_volume_pan_label;
+  wxStaticText* m_vpp_label;
   wxSlider*     m_volume;
   wxSlider*     m_pan;
+  wxSlider*     m_pitch;
   wxStaticText* m_length_pos_label;
   wxSlider*     m_pos;
 
@@ -184,6 +194,7 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
 
   EVT_COMMAND_SCROLL(STREAM_VOLUME, StreamFrame::OnChangeVolume)
   EVT_COMMAND_SCROLL(STREAM_PAN,    StreamFrame::OnChangePan)
+  EVT_COMMAND_SCROLL(STREAM_PITCH,  StreamFrame::OnChangePitch)
   EVT_COMMAND_SCROLL(STREAM_POS,    StreamFrame::OnChangePos)
 
   EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdateStatus)

@@ -20,6 +20,10 @@ namespace audiere {
     m_next_read     = 0;
     m_last_play     = 0;
 
+    DWORD frequency;
+    m_buffer->GetFrequency(&frequency);
+    m_base_frequency = frequency;
+
     m_is_playing = false;
 
     m_source = new RepeatableStream(source);
@@ -143,6 +147,20 @@ namespace audiere {
     return m_pan;
   }
 
+
+  void
+  DSOutputStream::setPitchShift(float shift) {
+    m_buffer->SetFrequency(m_base_frequency * shift);
+  }
+
+
+  float
+  DSOutputStream::getPitchShift() {
+    DWORD frequency;
+    m_buffer->GetFrequency(&frequency);
+    return float(frequency) / m_base_frequency;
+  }
+  
 
   bool
   DSOutputStream::isSeekable() {

@@ -35,6 +35,9 @@ namespace audiere {
     void  ADR_CALL setPan(float pan);
     float ADR_CALL getPan();
 
+    void  ADR_CALL setPitchShift(float shift);
+    float ADR_CALL getPitchShift();
+
     bool ADR_CALL isSeekable();
     int  ADR_CALL getLength();
     void ADR_CALL setPosition(int position);
@@ -45,6 +48,8 @@ namespace audiere {
     IDirectSoundBuffer* m_buffer;
     int m_length;
     int m_frame_size;
+
+    int m_base_frequency;
 
     bool  m_repeating;
     float m_volume;

@@ -58,9 +58,10 @@ namespace audiere {
 
     void  ADR_CALL setVolume(float volume);
     float ADR_CALL getVolume();
-
     void  ADR_CALL setPan(float pan);
     float ADR_CALL getPan();
+    void  ADR_CALL setPitchShift(float shift);
+    float ADR_CALL getPitchShift();
 
     bool ADR_CALL isSeekable();
     int  ADR_CALL getLength();
@@ -82,6 +83,7 @@ namespace audiere {
     bool m_is_playing;
     float m_volume;
     float m_pan;
+    float m_shift;
 
     u64 m_last_update;
 

@@ -27,6 +27,9 @@ namespace audiere {
     void ADR_CALL setPosition(int position);
     int  ADR_CALL getPosition();
 
+    void  setPitchShift(float shift);
+    float getPitchShift();
+
   private:
     void fillBuffer();
     void resetState();
@@ -42,6 +45,8 @@ namespace audiere {
     s16 m_native_buffer[NATIVE_BUFFER_SIZE * 2];
     s16* m_position;
     unsigned m_samples_left;  // number of samples left to consume
+
+    float m_shift;
 
     unsigned m_time;
     s16 m_sl; // left channel

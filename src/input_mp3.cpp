@@ -38,37 +38,21 @@ namespace audiere {
   bool
   MP3InputStream::initialize(File* file) {
     m_file = file;
-    frame fr;
 
-    InitMP3(&m_mp3);
-    
-    u32 head;
-    u8 byte;
-
-    int read = m_file->read(&byte, 1);
-    head = byte;
-    head <<= 8;
-    read += m_file->read(&byte, 1);
-    head |= byte;
-    head <<= 8;
-    read += m_file->read(&byte, 1);
-    head |= byte;
-    head <<= 8;
-    read += m_file->read(&byte, 1);
-    head |= byte;
-    if (read != 4) {
+    u8 header[4];
+    if (file->read(header, 4) != 4) {
+      m_file = 0;
       return false;
     }
-    
+
     // see if it's an id3 tag first!
-    if (head>>8 == ('I'<<16)+('D'<<8)+'3') {
-      unsigned int skip;
-      char buffer[6];
+    if (memcmp(header, "ID3", 3) == 0) {
+      u8 buffer[6];
       if (m_file->read(&buffer, 6) != 6) {
         return false;
       }
- 
-      skip = buffer[2] & 127;
+
+      unsigned int skip = buffer[2] & 127;
       skip <<= 7;
       skip += buffer[3] & 127;
       skip <<= 7;
@@ -78,33 +62,23 @@ namespace audiere {
 
       // skip the stupid id3 tag to get our stuff.
       char* temp = new char[skip];
-      read = m_file->read(temp, skip);
+      int read = m_file->read(temp, skip);
       delete[] temp;
       if (read != skip) {
+        m_file = 0;
         return false;
       }
 
       // re-read the header again.
-      read = m_file->read(&byte, 1);
-      head = byte;
-      head <<= 8;
-      read += m_file->read(&byte, 1);
-      head |= byte;
-      head <<= 8;
-      read += m_file->read(&byte, 1);
-      head |= byte;
-      head <<= 8;
-      read += m_file->read(&byte, 1);
-      head |= byte;
-      if (read != 4) {
+      if (file->read(header, 4) != 4) {
+        m_file = 0;
         return false;
       }
     }
 
-
-    if (read_header(&fr, head) == FALSE) {
+    frame fr;
+    if (read_header(&fr, read32_be(header)) == FALSE) {
       m_file = 0;
-      ExitMP3(&m_mp3);
       return false;
     }
 
@@ -121,6 +95,8 @@ namespace audiere {
     computed_buffer = 0;
     computed_buffer_pos = 0;
     computed_buffer_length = 0;
+
+    InitMP3(&m_mp3);
 
     // we're now set!
     return true;

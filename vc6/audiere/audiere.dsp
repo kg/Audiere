@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0rc3\include" /I "..\..\src\libvorbis-1.0rc3\include" /D "NDEBUG" /D for="if (0) ; else for" /D "HAVE_MIKMOD" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "NDEBUG" /D for="if (0) ; else for" /D "HAVE_MIKMOD" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0rc3\include" /I "..\..\src\libvorbis-1.0rc3\include" /D "_DEBUG" /D for="if (0) ; else for" /D "HAVE_MIKMOD" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "_DEBUG" /D for="if (0) ; else for" /D "HAVE_MIKMOD" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -546,23 +546,19 @@ SOURCE=..\..\src\mikmod\mikmod\voiceset.c
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\..\src\libogg-1.0rc3\src\bitwise.c"
+SOURCE="..\..\src\libogg-1.0\src\bitwise.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libogg-1.0rc3\include\ogg\config_types.h"
+SOURCE="..\..\src\libogg-1.0\src\framing.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libogg-1.0rc3\src\framing.c"
+SOURCE="..\..\src\libogg-1.0\include\ogg\ogg.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libogg-1.0rc3\include\ogg\ogg.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\src\libogg-1.0rc3\include\ogg\os_types.h"
+SOURCE="..\..\src\libogg-1.0\include\ogg\os_types.h"
 # End Source File
 # End Group
 # Begin Group "vorbis"
@@ -570,179 +566,171 @@ SOURCE="..\..\src\libogg-1.0rc3\include\ogg\os_types.h"
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\analysis.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\analysis.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\backends.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\backends.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\bitrate.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\bitrate.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\bitrate.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\bitrate.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\block.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\block.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\codebook.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\codebook.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\codebook.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\codebook.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\include\vorbis\codec.h"
+SOURCE="..\..\src\libvorbis-1.0\include\vorbis\codec.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\codec_internal.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\codec_internal.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\envelope.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\envelope.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\envelope.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\envelope.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\floor0.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\floor0.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\floor1.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\floor1.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\iir.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\highlevel.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\info.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\info.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\lookup.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\lookup.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\lookup.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\lookup.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\lookup_data.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\lookup_data.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\lpc.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\lpc.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\lpc.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\lpc.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\lsp.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\lsp.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\lsp.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\lsp.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\mapping0.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\mapping0.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\masking.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\masking.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\mdct.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\mdct.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\mdct.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\mdct.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\misc.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\misc.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\os.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\os.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\psy.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\psy.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\psy.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\psy.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\registry-api.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\registry.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\registry.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\registry.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\registry.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\res0.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\res0.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\scales.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\scales.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\sharedbook.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\sharedbook.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\smallft.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\smallft.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\smallft.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\smallft.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\synthesis.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\synthesis.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\vorbisfile.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\time0.c"
+SOURCE="..\..\src\libvorbis-1.0\include\vorbis\vorbisfile.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\vorbisfile.c"
+SOURCE="..\..\src\libvorbis-1.0\lib\window.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\src\libvorbis-1.0rc3\include\vorbis\vorbisfile.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\window.c"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\src\libvorbis-1.0rc3\lib\window.h"
+SOURCE="..\..\src\libvorbis-1.0\lib\window.h"
 # End Source File
 # End Group
 # End Target

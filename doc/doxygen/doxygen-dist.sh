@@ -5,7 +5,7 @@ die() {
   exit 1
 }
 
-VERSION=1.9.2
+VERSION=1.9.3
 BASE=audiere-$VERSION-doxygen
 
 rm -rf html $BASE $BASE.tar $BASE.tar.gz $BASE.zip \

@@ -37,15 +37,13 @@ public:
   {
     m_stream = stream;
 
-    int slider_max = (m_stream->isSeekable() ? m_stream->getLength() : 1);
-    
     m_playing_label = new wxStaticText(this, -1, "Stopped");
     m_repeating = new wxCheckBox(this, STREAM_REPEAT, "Repeating");
     m_volume_pan_label = new wxStaticText(this, -1, "Volume - Pan");
     m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
     m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
     m_length_pos_label = new wxStaticText(this, -1, "Length - Pos");
-    m_pos    = new wxSlider(this, STREAM_POS,    0, 0, slider_max);
+    m_pos    = new wxSlider(this, STREAM_POS,    0, 0, 1000);
 
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(
@@ -115,12 +113,13 @@ public:
   }
 
   void OnChangePos() {
-    m_stream->setPosition(m_pos->GetValue());
+    int pos = m_pos->GetValue() * m_stream->getLength() / 1000;
+    m_stream->setPosition(pos);
   }
 
   void OnUpdateStatus() {
     if (m_stream->isSeekable()) {
-      m_pos->SetValue(m_stream->getPosition());
+      m_pos->SetValue(1000 * m_stream->getPosition() / m_stream->getLength());
     }
     UpdateLengthPosLabel();
 

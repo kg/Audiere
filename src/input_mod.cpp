@@ -115,7 +115,6 @@ namespace audiere {
       Mikmod_RegisterLoader(load_xm);
       Mikmod_RegisterLoader(load_s3m);
       Mikmod_RegisterLoader(load_mod);
-      Mikmod_RegisterLoader(load_stm);
     
       Mikmod_RegisterDriver(drv_audiere);
 

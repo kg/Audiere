@@ -359,27 +359,11 @@ SOURCE=..\..\src\mikmod\mikmod\loaders\Load_it.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mikmod\mikmod\loaders\Load_m15.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\mikmod\mikmod\loaders\Load_mod.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mikmod\mikmod\loaders\Load_mtm.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\mikmod\mikmod\loaders\Load_s3m.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mikmod\mikmod\loaders\Load_stm.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mikmod\mikmod\loaders\Load_ult.c
 # End Source File
 # Begin Source File
 
@@ -505,10 +489,6 @@ SOURCE=..\..\src\mikmod\mikmod\mikmod.h
 # Begin Source File
 
 SOURCE=..\..\src\mikmod\mikmod\mloader.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mikmod\mikmod\mlreg.c
 # End Source File
 # Begin Source File
 

@@ -46,7 +46,7 @@ PyObject* AudioDevice_OpenSound(PyObject* self, PyObject* args) {
   
   // parse arguments
   const char* filename;
-  int streaming;
+  int streaming = 0;
   if (!PyArg_ParseTuple(args, "s|i", &filename, &streaming)) {
     return 0;
   }

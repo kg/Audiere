@@ -1,5 +1,4 @@
 #ifdef _MSC_VER
-#include <windows.h>
 #pragma warning(disable : 4786)
 #endif
 

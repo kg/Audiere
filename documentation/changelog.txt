@@ -1,3 +1,8 @@
+2001.09.25
+
+  removed panning
+
+
 2001.08.05
 
   1.02 - minor release

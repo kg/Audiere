@@ -84,26 +84,6 @@ mozAudioStream::SetVolume(PRInt16 aVolume)
 
 
 NS_IMETHODIMP
-mozAudioStream::GetPan(PRInt16* aPan)
-{
-  if (!aPan) {
-    return NS_ERROR_NULL_POINTER;
-  }
-
-  *aPan = (PRInt16)AdrGetStreamPan(mStream);
-  return NS_OK;
-}
-
-
-NS_IMETHODIMP
-mozAudioStream::SetPan(PRInt16 aPan)
-{
-  AdrSetStreamPan(mStream, aPan);
-  return NS_OK;
-}
-
-
-NS_IMETHODIMP
 mozAudioStream::GetPlaying(PRBool* aPlaying)
 {
   *aPlaying = (AdrIsStreamPlaying(mStream) ? PR_TRUE : PR_FALSE);

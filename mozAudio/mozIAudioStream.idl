@@ -6,9 +6,6 @@ interface mozIAudioStream : nsISupports
 {
   const long VOLUME_MIN = 0;
   const long VOLUME_MAX = 255;
-  const long PAN_LEFT   = -255;
-  const long PAN_CENTER = 0;
-  const long PAN_RIGHT  = 255;
 
   
   void play();
@@ -17,7 +14,6 @@ interface mozIAudioStream : nsISupports
 
   attribute boolean repeating;
   attribute short   volume;
-  attribute short   pan;
 
   readonly attribute boolean playing;
 };

@@ -247,7 +247,6 @@ DS8OutputStream::DS8OutputStream(
   m_LastSample = new BYTE[m_SampleSize];
 
   SetVolume(ADR_VOLUME_MAX);
-  SetPan(ADR_PAN_CENTER);
 
   // fill the buffer with data
   FillStream();
@@ -521,29 +520,6 @@ int
 DS8OutputStream::GetVolume()
 {
   return m_Volume;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void
-DS8OutputStream::SetPan(int pan)
-{
-  if (pan < ADR_PAN_LEFT) {
-    pan = ADR_PAN_LEFT;
-  } else if (pan > ADR_PAN_RIGHT) {
-    pan = ADR_PAN_RIGHT;
-  }
-
-  m_Pan = pan;
-  m_Buffer->SetPan(Pan_AudiereToDirectSound(pan));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-int
-DS8OutputStream::GetPan()
-{
-  return m_Pan;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

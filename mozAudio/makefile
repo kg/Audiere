@@ -1,4 +1,4 @@
-XPIDL     = xpidl -IF:/mozilla/dist/idl
+XPIDL     = xpidl -ID:/mozilla/mozilla/dist/idl
 XPIDL_H   = $(XPIDL) -m header
 XPIDL_XPT = $(XPIDL) -m typelib
 

@@ -21,9 +21,4 @@ inline int Volume_AudiereToDirectSound(int volume) {
 }
 
 
-inline int Pan_AudiereToDirectSound(int pan) {
-  return pan * (DSBPAN_RIGHT - DSBPAN_LEFT) / 2 / 255;
-}
-
-
 #endif

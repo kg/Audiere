@@ -64,8 +64,6 @@ private:
 
   void (ADR_CALL *AO_SetVolume)(AO_STREAM stream, int volume);
   int  (ADR_CALL *AO_GetVolume)(AO_STREAM stream);
-  void (ADR_CALL *AO_SetPan)(AO_STREAM stream, int pan);
-  int  (ADR_CALL *AO_GetPan)(AO_STREAM stream);
 
   HINSTANCE m_DLL;
 

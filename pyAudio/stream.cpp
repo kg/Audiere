@@ -72,10 +72,6 @@ static PyObject* Stream_getattr(PyObject* self, char* name)
 
     return PyInt_FromLong(AdrGetStreamVolume(object->stream));
       
-  } else if (strcmp(name, "pan") == 0) {
-
-    return PyInt_FromLong(AdrGetStreamPan(object->stream));
-
   } else if (strcmp(name, "repeating") == 0) {
 
     ADR_BOOL repeating = AdrGetStreamRepeat(object->stream);
@@ -90,12 +86,6 @@ static PyObject* Stream_getattr(PyObject* self, char* name)
     return PyInt_FromLong(ADR_VOLUME_MIN);
   } else if (strcmp(name, "VOLUME_MAX") == 0) {
     return PyInt_FromLong(ADR_VOLUME_MAX);
-  } else if (strcmp(name, "PAN_LEFT") == 0) {
-    return PyInt_FromLong(ADR_PAN_LEFT);
-  } else if (strcmp(name, "PAN_CENTER") == 0) {
-    return PyInt_FromLong(ADR_PAN_CENTER);
-  } else if (strcmp(name, "PAN_RIGHT") == 0) {
-    return PyInt_FromLong(ADR_PAN_RIGHT);
   } else {
     return Py_FindMethod(StreamMethods, self, name);
   }
@@ -110,11 +100,6 @@ static int Stream_setattr(PyObject* self, char* name, PyObject* value)
   if (strcmp(name, "volume") == 0) {
 
     AdrSetStreamVolume(object->stream, PyInt_AsLong(value));
-    return 0;
-
-  } else if (strcmp(name, "pan") == 0) {
-
-    AdrSetStreamPan(object->stream, PyInt_AsLong(value));
     return 0;
 
   } else if (strcmp(name, "repeating") == 0) {

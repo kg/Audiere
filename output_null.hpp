@@ -32,15 +32,12 @@ public:
   bool IsPlaying();
   void SetVolume(int volume);
   int  GetVolume();
-  void SetPan(int pan);
-  int  GetPan();
 
 private:
   NullOutputStream();
 
 private:
   int m_volume;
-  int m_pan;
 
   friend NullOutputContext;
 };

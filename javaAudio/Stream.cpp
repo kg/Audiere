@@ -137,30 +137,3 @@ JNIEXPORT void JNICALL Java_org_aegisknight_audiere_Stream_setVolume(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-JNIEXPORT jint JNICALL Java_org_aegisknight_audiere_Stream_getPan(
-  JNIEnv* env,
-  jobject obj)
-{
-  ADR_STREAM stream = GetStream(env, obj);
-  if (stream) {
-    return AdrGetStreamPan(stream);
-  } else {
-    return 0;
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-JNIEXPORT void JNICALL Java_org_aegisknight_audiere_Stream_setPan(
-  JNIEnv* env,
-  jobject obj,
-  jint pan)
-{
-  ADR_STREAM stream = GetStream(env, obj);
-  if (stream) {
-    AdrSetStreamPan(stream, pan);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////

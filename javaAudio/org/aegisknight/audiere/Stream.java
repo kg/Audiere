@@ -4,9 +4,6 @@ public class Stream
 {
     static final int VOLUME_MIN = 0;
     static final int VOLUME_MAX = 255;
-    static final int PAN_LEFT   = -255;
-    static final int PAN_CENTER = 0;
-    static final int PAN_RIGHT  = 255;
 
 
     private Stream() {
@@ -25,10 +22,6 @@ public class Stream
 
     public native int getVolume();
     public native void setVolume(int volume);
-
-    public native int getPan();
-    public native void setPan(int pan);
-
 
     // this is our internal pointer data...
     // evil evil evil  :(

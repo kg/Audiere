@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "output/Static_Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /D "NDEBUG" /D "_LIB" /D for="if (0) ; else for" /D "WITH_OPENAL" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "acoustique" /D "NDEBUG" /D "_LIB" /D for="if (0) ; else for" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "output/Static_Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "_LIB" /D for="if (0) ; else for" /D "WITH_OPENAL" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "acoustique" /D "_DEBUG" /D "_LIB" /D for="if (0) ; else for" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -125,14 +125,6 @@ SOURCE=.\output.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\output_al.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\output_al.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\output_dll.cpp
 # End Source File
 # Begin Source File
@@ -157,10 +149,6 @@ SOURCE=.\output_ds8.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\output_internal.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\output_null.cpp
 # End Source File
 # Begin Source File
@@ -174,30 +162,6 @@ SOURCE=.\threads.hpp
 # Begin Source File
 
 SOURCE=.\threads_win32.cpp
-# End Source File
-# End Group
-# Begin Group "libraries"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\naikai\audiere\acoustique\acoustique.h
-# End Source File
-# Begin Source File
-
-SOURCE="..\third-party\openal\include\AL\al.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\third-party\openal\include\AL\alc.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\third-party\openal\include\AL\alctypes.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\third-party\openal\include\AL\altypes.h"
 # End Source File
 # End Group
 # End Target

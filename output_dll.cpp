@@ -27,8 +27,6 @@ DLLOutputContext::DLLOutputContext()
   AO_IsStreamPlaying = NULL;
   AO_SetVolume       = NULL;
   AO_GetVolume       = NULL;
-  AO_SetPan          = NULL;
-  AO_GetPan          = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,8 +50,6 @@ DLLOutputContext::~DLLOutputContext()
   AO_IsStreamPlaying = NULL;
   AO_SetVolume       = NULL;
   AO_GetVolume       = NULL;
-  AO_SetPan          = NULL;
-  AO_GetPan          = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +74,7 @@ DLLOutputContext::Initialize(const char* parameters)
   }
 
 
-  // open the Sphere audio DLL
+  // open the output DLL
   m_DLL = LoadLibrary(dll_name.c_str());
   if (!m_DLL) {
     return false;
@@ -98,8 +94,6 @@ DLLOutputContext::Initialize(const char* parameters)
   ASSIGN(AO_IsStreamPlaying);
   ASSIGN(AO_SetVolume);
   ASSIGN(AO_GetVolume);
-  ASSIGN(AO_SetPan);
-  ASSIGN(AO_GetPan);
 
   // if any of the functions are NULL, we failed
   if (!AO_OpenDriver      ||
@@ -112,9 +106,7 @@ DLLOutputContext::Initialize(const char* parameters)
       !AO_ResetStream     ||
       !AO_IsStreamPlaying ||
       !AO_SetVolume       ||
-      !AO_GetVolume       ||
-      !AO_SetPan          ||
-      !AO_GetPan) {
+      !AO_GetVolume) {
     
     FreeLibrary(m_DLL);
     return false;
@@ -225,22 +217,6 @@ int
 DLLOutputStream::GetVolume()
 {
   return m_Context->AO_GetVolume(m_Stream);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void
-DLLOutputStream::SetPan(int pan)
-{
-  m_Context->AO_SetPan(m_Stream, pan);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-int
-DLLOutputStream::GetPan()
-{
-  return m_Context->AO_GetPan(m_Stream);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

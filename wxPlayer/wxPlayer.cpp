@@ -24,7 +24,6 @@ public:
   void OnRepeat(wxCommandEvent& event);
 
   void OnChangeVolume(wxScrollEvent& event);
-  void OnChangePan(wxScrollEvent& event);
 
 private:
   wxListBox* m_songs;
@@ -35,7 +34,6 @@ private:
   wxButton* m_reset;
   wxButton* m_repeat;
   wxSlider* m_volume;
-  wxSlider* m_pan;
 
   std::vector<ADR_STREAM> m_streams;
 
@@ -54,7 +52,6 @@ enum {
   event_Repeat,
 
   event_Volume,
-  event_Pan,
 };
 
 
@@ -71,7 +68,6 @@ BEGIN_EVENT_TABLE(wxPlayerFrame, wxFrame)
   EVT_BUTTON(event_Repeat, wxPlayerFrame::OnRepeat)
 
   EVT_COMMAND_SCROLL(event_Volume, wxPlayerFrame::OnChangeVolume)
-  EVT_COMMAND_SCROLL(event_Pan,    wxPlayerFrame::OnChangePan)
   
 END_EVENT_TABLE()
 
@@ -87,7 +83,6 @@ wxPlayerFrame::wxPlayerFrame()
   m_reset  = new wxButton(this, event_Reset,  "reset",  wxDefaultPosition);
   m_repeat = new wxButton(this, event_Repeat, "repeat", wxDefaultPosition);
   m_volume = new wxSlider(this, event_Volume, ADR_VOLUME_MAX, ADR_VOLUME_MIN, ADR_VOLUME_MAX);
-  m_pan    = new wxSlider(this, event_Pan,    ADR_PAN_CENTER, ADR_PAN_LEFT, ADR_PAN_RIGHT);
 }
 
 
@@ -116,7 +111,7 @@ wxPlayerFrame::OnSize(wxSizeEvent& event)
 
   // move the controls
   wxControl* controls[] = {
-    m_load, m_dump, m_play, m_pause, m_reset, m_repeat, m_volume, m_pan
+    m_load, m_dump, m_play, m_pause, m_reset, m_repeat, m_volume
   };
   for (int i = 0; i < sizeof(controls) / sizeof(controls[0]); i++) {
     controls[i]->SetSize(button_x, button_height * i, button_width, button_height);
@@ -218,16 +213,6 @@ wxPlayerFrame::OnChangeVolume(wxScrollEvent& event)
   int volume = event.GetPosition();
   for (int i = 0; i < m_songs->Number(); i++) {
     AdrSetStreamVolume(m_streams[i], volume);
-  }
-}
-
-
-void
-wxPlayerFrame::OnChangePan(wxScrollEvent& event)
-{
-  int pan = event.GetPosition();
-  for (int i = 0; i < m_songs->Number(); i++) {
-    AdrSetStreamPan(m_streams[i], pan);
   }
 }
 

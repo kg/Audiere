@@ -57,8 +57,6 @@ public:
   virtual bool IsPlaying() = 0;
   virtual void SetVolume(int volume) = 0;
   virtual int  GetVolume() = 0;
-  virtual void SetPan(int pan) = 0;
-  virtual int  GetPan() = 0;
 };
 
 

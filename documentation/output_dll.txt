@@ -1,6 +1,6 @@
 Audiere Audio DLL Specification
 Chad Austin
-2001.07.12
+2001.09.25
 
 
 In order for a DLL to qualify as an Audiere audio driver, it must contain
@@ -66,9 +66,7 @@ void    AO_ResetStream(AO_STREAM stream)
 AO_BOOL AO_IsStreamPlaying(AO_STREAM stream)
 
 void AO_SetVolume(AO_STREAM stream, int volume)
-void AO_SetPan(AO_STREAM stream, int pan)
-int AO_GetVolume(AO_STREAM stream)
-int AO_GetPan(AO_STREAM stream)
+int  AO_GetVolume(AO_STREAM stream)
 
 
 ------------------------------------------------------------------------------
@@ -174,22 +172,8 @@ void AO_SetVolume(AO_STREAM stream, int volume)
 
 ------------------------------------------------------------------------------
 
-void AO_SetPan(AO_STREAM stream, int pan)
-
-  left   = -32767
-  center = 0
-  right  = 32767
-
-------------------------------------------------------------------------------
-
 int AO_GetVolume(AO_STREAM stream)
 
   returns current volume of stream
-
-------------------------------------------------------------------------------
-
-int AO_GetPan(AO_STREAM stream)
-
-  returns current pan of stream
 
 ------------------------------------------------------------------------------

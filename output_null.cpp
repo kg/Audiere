@@ -33,8 +33,7 @@ NullOutputContext::OpenStream(
 ////////////////////////////////////////////////////////////////////////////////
 
 NullOutputStream::NullOutputStream()
-: m_volume(255)
-, m_pan(0)
+: m_volume(ADR_VOLUME_MAX)
 {
 }
 
@@ -87,28 +86,6 @@ int
 NullOutputStream::GetVolume()
 {
   return m_volume;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void
-NullOutputStream::SetPan(int pan)
-{
-  if (pan < ADR_PAN_LEFT) {
-    pan = ADR_PAN_LEFT;
-  } else if (pan > ADR_PAN_RIGHT) {
-    pan = ADR_PAN_RIGHT;
-  }
-  
-  m_pan = pan;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-int
-NullOutputStream::GetPan()
-{
-  return m_pan;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

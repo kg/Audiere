@@ -62,8 +62,6 @@ class DS8OutputStream : public IOutputStream
   bool IsPlaying();
   void SetVolume(int volume);
   int  GetVolume();
-  void SetPan(int pan);
-  int  GetPan();
 
 private:
   DS8OutputStream(
@@ -101,7 +99,6 @@ private:
 
   // state
   int m_Volume;
-  int m_Pan;
 
   BYTE* m_LastSample; // the last sample read (used for clickless silence)
 

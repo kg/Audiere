@@ -1,4 +1,6 @@
 Audiere Bindings for Python
+Chad Austin
+2001.09.25
 
 
 Introduction
@@ -39,9 +41,6 @@ song.pause() # stops playback, but does not reset from the beginning
 
 song.volume = integer # volume can be 0 (quiet) up to 255 (loudest)
                       # defaults to 255
-
-song.pan = integer # pan can be -255 (left) to 0 (center) to 255 (right)
-                   # defaults to 0
 
 song.repeating = true|false # sets whether the song should repeat or not
 

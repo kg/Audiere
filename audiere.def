@@ -12,5 +12,3 @@ EXPORTS
   AdrGetStreamRepeat
   AdrSetStreamVolume
   AdrGetStreamVolume
-  AdrSetStreamPan
-  AdrGetStreamPan

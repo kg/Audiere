@@ -24,9 +24,6 @@ typedef int   (ADR_CALL *ADR_FILE_TELL)(void* file);
 /* constants */
 #define ADR_VOLUME_MIN (0)
 #define ADR_VOLUME_MAX (255)
-#define ADR_PAN_LEFT   (-255)
-#define ADR_PAN_CENTER (0)
-#define ADR_PAN_RIGHT  (255)
 
 
 /* audiere opaque types */
@@ -200,30 +197,6 @@ ADR_EXTERN_C void ADR_CALL AdrSetStreamVolume(
  *
  */
 ADR_EXTERN_C int ADR_CALL AdrGetStreamVolume(
-  ADR_STREAM stream);
-
-
-/*
- * AdrSetStreamPan(stream, pan)
- *
- * Sets the stream pan.  Defaults to ADR_PAN_CENTER.
- * ADR_PAN_LEFT is 100% left.
- * ADR_PAN_CENTER (0) is centered.
- * ADR_PAN_RIGHT is 100% right.
- *
- */
-ADR_EXTERN_C void ADR_CALL AdrSetStreamPan(
-  ADR_STREAM stream,
-  int pan);
-
-
-/*
- * AdrGetStreamPan(stream)
- *
- * Returns the current stream pan.
- *
- */
-ADR_EXTERN_C int ADR_CALL AdrGetStreamPan(
   ADR_STREAM stream);
 
 

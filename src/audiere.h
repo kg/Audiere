@@ -1,4 +1,6 @@
 /**
+ * @file
+ *
  * Audiere Sound System
  * Version 1.9.4
  * (c) 2001-2003 Chad Austin
@@ -618,10 +620,14 @@ namespace audiere {
       STREAM_ENDED, ///< The stream reached its end.
     };
 
-    /// @return Pointer to the OutputStream that stopped playback.
+    /**
+     * @return Pointer to the OutputStream that stopped playback.
+     */
     ADR_METHOD(OutputStream*) getOutputStream() = 0;
 
-    /// @return Reason for the stop event.
+    /**
+     * @return Reason for the stop event.
+     */
     ADR_METHOD(Reason) getReason() = 0;
   };
   typedef RefPtr<StopEvent> StopEventPtr;
@@ -748,7 +754,7 @@ namespace audiere {
      *
      * @return name of audio device
      */
-    virtual const char* ADR_CALL getName() = 0;
+    ADR_METHOD(const char*) getName() = 0;
 
     /**
      * Registers 'callback' to receive events.  Callbacks can be
@@ -1538,8 +1544,8 @@ namespace audiere {
    *
    * @return  0 if opening device failed, valid CDDrive object otherwise.
    */
-  inline CDDevice* OpenCDDevice(const char* name) {
-    return hidden::AdrOpenCDDevice(name);
+  inline CDDevice* OpenCDDevice(const char* device) {
+    return hidden::AdrOpenCDDevice(device);
   }
 
   /**
@@ -1549,8 +1555,8 @@ namespace audiere {
    *
    * @return  0 if opening device failed, valid MIDIDevice object otherwise.
    */
-  inline MIDIDevice* OpenMIDIDevice(const char* name) {
-    return hidden::AdrOpenMIDIDevice(name);
+  inline MIDIDevice* OpenMIDIDevice(const char* device) {
+    return hidden::AdrOpenMIDIDevice(device);
   }
 
 }

@@ -53,6 +53,7 @@ enum {
   MIDI_PLAY,
   MIDI_PAUSE,
   MIDI_STOP,
+  MIDI_REPEAT,
   MIDI_POS,
   MIDI_UPDATE,
 };

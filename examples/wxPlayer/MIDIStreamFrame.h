@@ -18,6 +18,7 @@ public:
   void OnPause();
   void OnStop();
 
+  void OnRepeat();
   void OnChangePos();
   void OnUpdateStatus();
 
@@ -26,6 +27,7 @@ private:
 
   wxTimer* m_timer;
 
+  wxCheckBox*   m_repeating;
   wxStaticText* m_is_playing_label;
   wxStaticText* m_length_pos_label;
   wxSlider*     m_pos;

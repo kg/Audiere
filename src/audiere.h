@@ -996,6 +996,12 @@ namespace audiere {
 
     /// Sets the current position of the song.
     ADR_METHOD(void) setPosition(int position) = 0;
+
+    /// Returns true if this song is set to repeat.
+    ADR_METHOD(bool) getRepeat() = 0;
+
+    /// Sets whether the song should repeat on completion.  Defaults to false.
+    ADR_METHOD(void) setRepeat(bool repeat) = 0;
   };
   typedef RefPtr<MIDIStream> MIDIStreamPtr;
 

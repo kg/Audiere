@@ -34,8 +34,9 @@ namespace audiere {
 
     MCIMIDIStream(const std::string& device)
       : MCIDevice(device)
+      , m_repeat(false)
     {
-      sendCommand("set", "time format milliseconds");
+      sendCommand("set", "time format milliseconds", MCI_WAIT);
     }
 
     ADR_METHOD(void) play() {
@@ -46,7 +47,7 @@ namespace audiere {
       if (getPosition() == getLength()) {
         setPosition(0);
       }
-      sendCommand("play");
+      sendCommand("play", "", MCI_NOTIFY);
     }
 
     ADR_METHOD(void) stop() {
@@ -77,15 +78,34 @@ namespace audiere {
 
       char buffer[80];
       sprintf(buffer, "%d", position);
-      sendCommand("seek", std::string("to ") + buffer);
+      sendCommand("seek", std::string("to ") + buffer, MCI_WAIT);
 
       if (playing) {
         play();
       }
     }
 
+    ADR_METHOD(bool) getRepeat() {
+      return m_repeat;
+    }
+
+    ADR_METHOD(void) setRepeat(bool repeat) {
+      m_repeat = repeat;
+    }
+
+  protected:
+    void notify(WPARAM flags) {
+      if (flags == MCI_NOTIFY_SUCCESSFUL) {
+        stop();
+        if (m_repeat) {
+          play();
+        }
+      }
+    }
+
   private:
     std::string m_device;
+    bool m_repeat;
   };
 
 

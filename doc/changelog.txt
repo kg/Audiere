@@ -1,3 +1,9 @@
+2004.07.29
+
+  Added getRepeat() and setRepeat() on MIDIStream.
+
+  MIDI seeking improvements.
+
 2004.07.27
 
   MP3 seeking and framecounting fixes.  (Andrew Gatt)

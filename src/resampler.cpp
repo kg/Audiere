@@ -143,4 +143,30 @@ namespace audiere {
     m_sr = 0;
   }
 
+  bool
+  Resampler::isSeekable() {
+    return m_source->isSeekable();
+  }
+
+  int
+  Resampler::getLength() {
+    return m_source->getLength();
+  }
+
+  void
+  Resampler::setPosition(int position) {
+    m_source->setPosition(position);
+    fillBuffer();
+    resetState();
+  }
+
+  int
+  Resampler::getPosition() {
+    /**
+     * @todo  make this correct wrt how much we have stored in the internal
+     *        buffer
+     */
+    return m_source->getPosition();
+  }
+
 }

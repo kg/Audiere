@@ -9,7 +9,7 @@
 
 namespace audiere {
 
-  class Resampler : public UnseekableSource {
+  class Resampler : public RefImplementation<SampleSource> {
   public:
     Resampler(SampleSource* source, int rate);
 
@@ -21,6 +21,11 @@ namespace audiere {
 
     int ADR_CALL read(int sample_count, void* samples);
     void ADR_CALL reset();
+
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
 
   private:
     void fillBuffer();

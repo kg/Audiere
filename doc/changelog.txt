@@ -1,3 +1,78 @@
+2002.06.04
+
+  mikmod fix so it compiles on Debian
+
+2002.05.19
+
+  wav loader was returning an incorrect number of samples...  I think
+    this fixes the awful sound repeating bug!
+
+2002.05.17
+
+  correct timing in null output driver
+  added test program for verifying basic audiere functionality
+
+2002.05.13
+
+  new autoconf/automake build
+
+2002.05.10
+
+  major source tree restructuring
+  added libogg and libvorbis to source tree for windows build
+  completely new VC6 build system
+
+2002.05.08
+
+  compiles in IRIX (no mikmod and no audio output)
+  gcc 3 on Linux fixes
+  --enable-debug configuration option
+  fix hang if output is inaccessible
+
+2002.04.22
+
+  builds in gcc 3
+
+2002.03.14
+
+  added Doxygen support
+
+2002.03.11
+
+  fixed noisy output in Linux
+
+2002.01.24
+
+  removed Acoustique, moved decoder architecture into Audiere itself
+  switched library completely to LGPL
+  fixed isPlaying() in OSS output driver
+
+2002.01.17
+
+  removed MP3 support
+
+2002.01.16
+
+  got NT4 support working again
+  removed DLL output driver
+
+2002.01.15
+
+  removed null output driver from default list (it has to be selected explicitly)
+
+2002.01.14
+
+  major internal restructuring
+  fixed complete hang on context creation in Win9x
+
+2001.01.13
+
+  support building without DX8
+
+2001.12.19
+
+  corrected feof semantics in MOD loader
+
 2001.12.06
 
   Linux/OSS works (I think)!  Yay!

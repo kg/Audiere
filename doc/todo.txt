@@ -1,3 +1,6 @@
+This file is obsolete.  See the Task Manager at http://sf.net/projects/audiere
+
+
 Work Left To Be Done:
 
 MacOS port
@@ -6,9 +9,7 @@ support 3D audio (OpenAL?  DirectSound3D?  Both?)
 Scheme bindings
 seekable streams
 streaming over a network
-integrate with a sane build system (maybe autoconf/automake?)
 do a thread-safety audit
-make the null output driver actually read samples with correct timing
 
 
 http://sourceforge.net/tracker/?group_id=32783

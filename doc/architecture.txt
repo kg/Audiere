@@ -5,11 +5,11 @@ a filesystem (a way of opening file objects) and an output device (a mechanism f
 mixing streams of PCM data and pumping them to the sound card).  Every context also
 has its own thread associated with it.  The thread's job is to periodically ask
 the output driver to output itself.  If the output driver needs more samples, it
-asks Audiere to provide them, who in term asks Acoustique to decode more samples
+asks Audiere to provide them, who in turn asks Acoustique to decode more samples
 from the file.
 
 Internally, there are several types of output devices.  Currently (as of 1.0.4) it
-supports DirectSound 8, DirectSound 3, null output.
+supports DirectSound 8, DirectSound 3, and null output.
 
 
 Here's a nifty drawing:
@@ -20,7 +20,7 @@ Here's a nifty drawing:
       -----------
      /           \
     /             \
---------------   ----------
-| Acoustique |   | output |
---------------   ----------
+-----------     ----------
+| Decoder |     | output |
+-----------     ----------
 

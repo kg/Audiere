@@ -77,7 +77,7 @@ static void do_strlwr(char* c) {
     while(WhiteSpace(line[i])) i++;
 
     switch(line[i])
-    {   case NULL:
+    {   case 0:
         case  '#': break;
 
         case  '[':
@@ -457,7 +457,7 @@ static void do_strlwr(char* c) {
             switch(line[cpos])
             {   case  '[':  return -1;
 
-                case NULL:
+                case 0:
                 case  '#':  break;
 
                 default:
@@ -508,7 +508,7 @@ static void do_strlwr(char* c) {
                     return 0;
                 break;
 
-                case NULL:
+                case 0:
                 case  '#':  break;
 
                 default:

@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "output/Static_Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "output/Static_Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "_DEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "_DEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"

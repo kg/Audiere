@@ -604,7 +604,7 @@ namespace audiere {
     ADR_FUNCTION(const char*, AdrGetVersion)();
 
     /**
-     * Returns a formatted a string that lists the file formats that Audiere
+     * Returns a formatted string that lists the file formats that Audiere
      * supports.  This function is DLL-safe.
      *
      * It is formatted in the following way:
@@ -612,6 +612,16 @@ namespace audiere {
      * description1:ext1,ext2,ext3;description2:ext1,ext2,ext3
      */
     ADR_FUNCTION(const char*, AdrGetSupportedFileFormats)();
+
+    /**
+     * Returns a formatted string that lists the audio devices Audiere
+     * supports.  This function is DLL-safe.
+     *
+     * It is formatted in the following way:
+     *
+     * name1:description1;name2:description2;...
+     */
+    ADR_FUNCTION(const char*, AdrGetSupportedAudioDevices)();
 
     ADR_FUNCTION(int, AdrGetSampleSize)(SampleFormat format);
 
@@ -660,16 +670,7 @@ namespace audiere {
   }
 
 
-  /// Describes a file format that Audiere supports.
-  struct FileFormatDesc {
-    /// Short description of format, such as "MP3 Files" or "Mod Files"
-    std::string description;
-
-    /// List of support extensions, such as {"mod", "it", "xm"}
-    std::vector<std::string> extensions;
-  };
-
-  inline void _SplitString(
+  inline void SplitString(
     std::vector<std::string>& out,
     const char* in,
     char delim)
@@ -687,22 +688,55 @@ namespace audiere {
     }
   }
 
-  /**
-   * Populates a vector of FileFormatDesc structs.
-   */
+
+  /// Describes a file format that Audiere supports.
+  struct FileFormatDesc {
+    /// Short description of format, such as "MP3 Files" or "Mod Files"
+    std::string description;
+
+    /// List of support extensions, such as {"mod", "it", "xm"}
+    std::vector<std::string> extensions;
+  };
+
+  /// Populates a vector of FileFormatDesc structs.
   inline void GetSupportedFileFormats(std::vector<FileFormatDesc>& formats) {
     std::vector<std::string> descriptions;
-    _SplitString(descriptions, hidden::AdrGetSupportedFileFormats(), ';');
+    SplitString(descriptions, hidden::AdrGetSupportedFileFormats(), ';');
 
     formats.resize(descriptions.size());
-    for (unsigned i = 0; i < formats.size(); ++i) {
+    for (unsigned i = 0; i < descriptions.size(); ++i) {
       const char* d = descriptions[i].c_str();
       const char* colon = strchr(d, ':');
       formats[i].description.assign(d, colon);
 
-      _SplitString(formats[i].extensions, colon + 1, ',');
+      SplitString(formats[i].extensions, colon + 1, ',');
     }
   }
+
+
+  /// Describes a supported audio device.
+  struct AudioDeviceDesc {
+    /// Name of device, i.e. "directsound", "winmm", or "oss"
+    std::string name;
+
+    // Textual description of device.
+    std::string description;
+  };
+
+  /// Populates a vector of AudioDeviceDesc structs.
+  inline void GetSupportedAudioDevices(std::vector<AudioDeviceDesc>& devices) {
+    std::vector<std::string> descriptions;
+    SplitString(descriptions, hidden::AdrGetSupportedAudioDevices(), ';');
+
+    devices.resize(descriptions.size());
+    for (unsigned i = 0; i < descriptions.size(); ++i) {
+      std::vector<std::string> d;
+      SplitString(d, descriptions[i].c_str(), ':');
+      devices[i].name        = d[0];
+      devices[i].description = d[1];
+    }
+  }
+
 
   /**
    * Get the size of a sample in a specific sample format.

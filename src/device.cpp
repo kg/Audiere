@@ -35,6 +35,26 @@
 
 namespace audiere {
 
+
+  ADR_EXPORT(const char*, AdrGetSupportedAudioDevices)() {
+    return
+#ifdef WIN32
+      "directsound:DirectSound (high-performance)"  ";"
+      "winmm:Windows Multimedia (compatible)"  ";"
+#endif
+#ifdef HAVE_OSS
+      "oss:Open Sound System"  ";"
+#endif
+#ifdef HAVE_OPENAL
+      "openal:OpenAL"  ";"
+#endif
+#ifdef HAVE_AL
+      "al:SGI AL"  ";"
+#endif
+      "null:Null output (no sound)"  ;
+  }
+
+
   #define NEED_SEMICOLON do ; while (false)
 
   #define TRY_GROUP(group_name) {                               \

@@ -1,6 +1,7 @@
 EXPORTS
   AdrGetVersion
   AdrGetSupportedFileFormats
+  AdrGetSupportedAudioDevices
   AdrGetSampleSize
   AdrOpenDevice
   AdrOpenSampleSource

@@ -133,9 +133,24 @@ namespace audiere {
   };
 
 
+  class OutputStream3D : public OutputStream {
+  public:
+    virtual void setPosition(double x, double y, double z) = 0;
+    // ... ?
+  };
+
+
+  class AudioDevice3D : public AudioDevice {
+    virtual OutputStream3D* openStream3D(SampleSource* source) = 0;
+  };
+
+
   namespace hidden {
     ADR_FUNCTION(const char*, AdrGetVersion)();
     ADR_FUNCTION(AudioDevice*, AdrOpenDevice)(
+      const char* name,
+      const char* parameters);
+    ADR_FUNCTION(AudioDevice3D*, AdrOpenDevice3D)(
       const char* name,
       const char* parameters);
 
@@ -162,6 +177,13 @@ namespace audiere {
     const char* parameters = 0)
   {
     return hidden::AdrOpenDevice(name, parameters);
+  }
+
+  inline AudioDevice3D* OpenDevice3D(
+    const char* name = 0,
+    const char* parameters = 0)
+  {
+    return hidden::AdrOpenDevice3D(name, parameters);
   }
 
   inline SampleSource* OpenSampleSource(const char* filename) {

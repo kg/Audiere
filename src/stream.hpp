@@ -2,7 +2,7 @@
 #define STREAM_HPP
 
 
-#include <audiere.h>
+#include "audiere.h"
 #include "input.hpp"
 #include "repeatable.hpp"
 #include "threads.hpp"

@@ -9,6 +9,7 @@
 #pragma warning(disable : 4244)
 #endif
 
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,8 +23,6 @@
 
 Mpegtoraw::Mpegtoraw(Soundinputstream *loader,Soundplayer *player)
 {
-  frameoffsets=NULL;
-
   forcetomonoflag=false;
   downfrequency=0;
 
@@ -36,11 +35,6 @@ Mpegtoraw::Mpegtoraw(Soundinputstream *loader,Soundplayer *player)
   version = mpeg1;
   mode = fullstereo;
   frequency = frequency44100;
-}
-
-Mpegtoraw::~Mpegtoraw()
-{
-  delete [] frameoffsets;
 }
 
 #ifndef WORDS_BIGENDIAN
@@ -146,7 +140,6 @@ void Mpegtoraw::initialize()
 {
   static bool initialized=false;
 
-  register int i;
 //  register REAL *s1,*s2;
 //  REAL *s3,*s4;
   //printf("initialise\n");
@@ -157,16 +150,16 @@ void Mpegtoraw::initialize()
 
 //  s1=calcbufferL[0];s2=calcbufferR[0];
 //  s3=calcbufferL[1];s4=calcbufferR[1];
-  for(i=CALCBUFFERSIZE-1;i>=0;i--)
+  for(int i=CALCBUFFERSIZE-1;i>=0;i--)
     calcbufferL[0][i]=calcbufferL[1][i]=
     calcbufferR[0][i]=calcbufferR[1][i]=0.0;
 
   if(!initialized)
   {
-    for(i=0;i<16;i++)hcos_64[i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/64.0));
-    for(i=0;i< 8;i++)hcos_32[i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/32.0));
-    for(i=0;i< 4;i++)hcos_16[i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/16.0));
-    for(i=0;i< 2;i++)hcos_8 [i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/ 8.0));
+    for(int i=0;i<16;i++)hcos_64[i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/64.0));
+    for(int i=0;i< 8;i++)hcos_32[i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/32.0));
+    for(int i=0;i< 4;i++)hcos_16[i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/16.0));
+    for(int i=0;i< 2;i++)hcos_8 [i]=1.0/(2.0*cos(MY_PI*double(i*2+1)/ 8.0));
     hcos_4=1.0/(2.0*cos(MY_PI*1.0/4.0));
     initialized=true;
   }
@@ -187,27 +180,21 @@ void Mpegtoraw::initialize()
   }
   else totalframe=0;
 
-  if(frameoffsets)delete [] frameoffsets;
+  frameoffsets.resize(totalframe);
+  std::fill(frameoffsets.begin(), frameoffsets.end(), 0);
 
-  if(totalframe>0)
-  {
-    frameoffsets=new int[totalframe];
-    for(i=totalframe-1;i>=0;i--)
-      frameoffsets[i]=0;
-  }
-  else frameoffsets=NULL;
   // First frameoffset will be 0 and doesn't matter even if frame does not start there because sync() is called in load_header to scan forward to first sync bit
 
   #ifdef getLength_accurate
   int  size = loader->getsize();
 
-  while (frameoffsets[i]<size) {
-	if(!loadheader()) {
-		break;
-		}
-	i++;
-	frameoffsets[i]=loader->getposition();
-	}
+  int i = 0;
+  for (; i < totalframe && frameoffsets[i] < size; ++i) {
+    if(!loadheader()) {
+      break;
+    }
+    frameoffsets[i]=loader->getposition();
+  }
 
   totalframe = i;
   if (geterrorcode()==SOUND_ERROR_FINISH) seterrorcode(SOUND_ERROR_OK);	// seeking to end of file and trying to load header will trigger SOUND_ERROR_FINISH, reset to continue playback; Any other error will prevent playback
@@ -221,7 +208,7 @@ void Mpegtoraw::setframe(int framenumber)
 {
   int pos=0;
 
-  if(frameoffsets==NULL)return;
+  if(frameoffsets.empty())return;
   if(framenumber==0)pos=frameoffsets[0];
   else
   {

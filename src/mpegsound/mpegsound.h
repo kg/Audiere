@@ -19,6 +19,7 @@
 /************************************/
 /* Inlcude default library packages */
 /************************************/
+#include <vector>
 #include <stdio.h>
 #include <sys/types.h>
 #include <string.h>
@@ -294,7 +295,7 @@ public:
 private:
   int currentframe,totalframe;
   int decodeframe;
-  int *frameoffsets;
+  std::vector<int> frameoffsets;
 
 
   /******************************/
@@ -321,7 +322,6 @@ private:
   /*******************/
 public:
   Mpegtoraw(Soundinputstream *loader,Soundplayer *player);
-  ~Mpegtoraw();
   void initialize();
   bool run(int frames);
   void clearbuffer();

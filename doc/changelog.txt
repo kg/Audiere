@@ -1,3 +1,7 @@
+2004.08.16
+
+  Fixed a null pointer crash when loading an invalid MP3 file.
+
 2004.07.29
 
   Added getRepeat() and setRepeat() on MIDIStream.

@@ -5,6 +5,7 @@
 #include <set>
 #include "audiere.h"
 #include "internal.h"
+#include "repeatable.h"
 #include "threads.h"
 #include "types.h"
 
@@ -22,6 +23,7 @@ namespace audiere {
     ~NullAudioDevice();
 
     bool initialize(const char* parameters);
+    bool supportsStreaming();
     void update();
     OutputStream* openStream(SampleSource* source);
 
@@ -45,11 +47,19 @@ namespace audiere {
     void reset();
     bool isPlaying();
 
+    void setRepeat(bool repeat);
+    bool getRepeat();
+
     void  setVolume(float volume);
     float getVolume();
 
     void  setPan(float pan);
     float getPan();
+
+    bool isSeekable();
+    int  getLength();
+    void setPosition(int position);
+    int  getPosition();
 
   private:
     void resetTimer();
@@ -58,7 +68,7 @@ namespace audiere {
 
     NullAudioDevice* m_device;
                           
-    SampleSource* m_source;
+    RepeatableStream* m_source;
     int m_channel_count;           //
     int m_sample_rate;             // cached stream format
     SampleFormat m_sample_format;  //

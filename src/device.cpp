@@ -130,16 +130,14 @@ namespace audiere {
   }
 
 
-  class ThreadedDevice
-    : public DLLImplementation<AudioDevice>
-    , public Synchronized {
+  class ThreadedDevice : public DLLImplementation<AudioDevice> {
   public:
     ThreadedDevice(AudioDevice* device) {
       m_device = device;
       m_thread_exists = false;
       m_thread_should_die = false;
 
-      // what do we do about failure?
+      /// @todo  what if thread creation fails?
       AI_CreateThread(threadRoutine, this, 0);
     }
 
@@ -152,12 +150,15 @@ namespace audiere {
       delete m_device;
     }
 
+    bool supportsStreaming() {
+      return m_device->supportsStreaming();
+    }
+
     // don't need to update the device...  the thread does it for us
     void update() {
     }
 
     OutputStream* openStream(SampleSource* source) {
-      Lock theLock(this);
       return m_device->openStream(source);
     }
 
@@ -165,7 +166,6 @@ namespace audiere {
     void run() {
       m_thread_exists = true;
       while (!m_thread_should_die) {
-        Lock theLock(this);
         m_device->update();
       }
       m_thread_exists = false;

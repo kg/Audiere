@@ -9,7 +9,7 @@ namespace audiere {
 
   class RepeatableStream : public DLLImplementation<SampleSource> {
   public:
-    RepeatableStream(SampleSource* source, bool initial_state);
+    RepeatableStream(SampleSource* source, bool initial_repeat);
     ~RepeatableStream();
 
     void setRepeat(bool repeat);

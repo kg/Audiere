@@ -1,4 +1,8 @@
-/// Internal platform-specific threads
+/**
+ * @file
+ *
+ * Internal platform-specific threads
+ */
 
 #ifndef THREADS_HPP
 #define THREADS_HPP
@@ -70,6 +74,9 @@ namespace audiere {
   private:
     Synchronized* m_object;
   };
+
+
+  #define SYNCHRONIZED(on) Lock lock_obj__(on)
 
 }
 

@@ -145,7 +145,7 @@ namespace audiere {
     // create output device
     m_driver = Mikmod_Init(
       44100, 2400, this, MD_STEREO, CPU_AUTODETECT,
-      DMODE_16BITS | DMODE_INTERP | DMODE_NOCLICK);
+      DMODE_16BITS | DMODE_INTERP | DMODE_NOCLICK | DMODE_RESONANCE);
     if (!m_driver) {
       m_file = 0;
       return false;

@@ -171,11 +171,11 @@ namespace audiere {
      * |GetSampleSize(format) * sample_count| bytes long.
      *
      * @param sample_count  number of samples to read
-     * @param buffer        buffer to store samples in
+     * @param samples       buffer to store samples in
      *
      * @return  number of samples actually read
      */
-    virtual int read(int sample_count, void* buffer) = 0;
+    virtual int read(int sample_count, void* samples) = 0;
 
     /**
      * Reset the sample source.  This has the same effect as setPosition(0)
@@ -233,6 +233,11 @@ namespace audiere {
     virtual void stop() = 0;
 
     /**
+     * @return  true if the output stream is playing, false otherwise
+     */
+    virtual bool isPlaying() = 0;
+
+    /**
      * Reset the output stream's internal buffer, causing it to buffer new
      * samples from its sample source.  This should be called when the sample
      * source has been changed in some way and the internal buffer's cached
@@ -244,9 +249,16 @@ namespace audiere {
     virtual void reset() = 0;
 
     /**
-     * @return  true if the output stream is playing, false otherwise
+     * Set whether the output stream should repeat.
+     *
+     * @param repeat  true if the stream should repeat, false otherwise
      */
-    virtual bool isPlaying() = 0;
+    virtual void setRepeat(bool repeat) = 0;
+
+    /**
+     * @return  true if the stream is repeating
+     */
+    virtual bool getRepeat() = 0;
 
     /**
      * Sets the stream's volume.
@@ -273,6 +285,30 @@ namespace audiere {
      * Get current pan.
      */
     virtual float getPan() = 0;
+
+    /**
+     * @return  true if the stream is seekable, false otherwise
+     */
+    virtual bool isSeekable() = 0;
+
+    /**
+     * @return  number of samples in the stream, or 0 if the stream is not
+     *          seekable
+     */
+    virtual int getLength() = 0;
+    
+    /**
+     * Sets the current position within the sample source.  If the stream
+     * is not seekable, this method does nothing.
+     */
+    virtual void setPosition(int position) = 0;
+
+    /**
+     * Returns the current position within the sample source.
+     *
+     * @return  current position
+     */
+    virtual int getPosition() = 0;
   };
 
 
@@ -280,9 +316,17 @@ namespace audiere {
    * AudioDevice represents a device on the system which is capable
    * of opening and mixing multiple output streams.  In Windows,
    * DirectSound is such a device.
+   *
+   * This interface is synchronized.  update() and openStream() may
+   * be called on different threads.
    */
   class AudioDevice : public DLLInterface {
   public:
+    /**
+     * @return  true if this device supports streaming audio
+     */
+    virtual bool supportsStreaming() = 0;
+
     /**
      * Tell the device to do any internal state updates.  Some devices
      * update on an internal thread.  If that is the case, this method
@@ -294,6 +338,10 @@ namespace audiere {
      * Open an output stream with a given sample source.  If the sample
      * source ever runs out of data, the output stream automatically stops
      * itself.
+     *
+     * The output stream takes ownership of the sample source, even if
+     * opening the output stream fails (in which case the source is
+     * immediately deleted).
      *
      * @note  Not all audio devices support streaming audio.  At this time,
      *        they all do, but in the future this may not be the case.
@@ -318,53 +366,6 @@ namespace audiere {
 
     /// Read the sound samples into a buffer in memory and read from that.
     BUFFER,
-  };
-
-
-  /**
-   * Convenience object to handle playing, seeking, and repeating sounds.
-   * The Sound interface extends OutputStream, so all of those methods are
-   * available as well.
-   *
-   * @note  Sound objects implement reset() in a way unlike OutputStream.
-   *        reset() will reset the input stream and then reset the output
-   *        stream.
-   */
-  class Sound : public OutputStream {
-  public:
-    /**
-     * Set the repeating state of the sound.
-     */
-    virtual void setRepeat(bool repeat) = 0;
-
-    /**
-     * Return the current repeating state.
-     */
-    virtual bool getRepeat() = 0;
-
-    /**
-     * @return  true if the sound is seekable, false otherwise
-     */
-    virtual bool isSeekable() = 0;
-
-    /**
-     * @return  number of samples in the sound, or 0 if the sound is not
-     *          seekable
-     */
-    virtual int getLength() = 0;
-
-    /**
-     * Sets the current position within the sound.  If the sound
-     * is not seekable, this method does nothing.
-     */
-    virtual void setPosition(int position) = 0;
-
-    /**
-     * Returns the current position within the sound.
-     *
-     * @return  current position
-     */
-    virtual int getPosition() = 0;
   };
 
 
@@ -399,7 +400,7 @@ namespace audiere {
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSourceFromFile)(File* file);
     ADR_FUNCTION(SampleSource*, AdrCreateTone)(double frequency);
 
-    ADR_FUNCTION(Sound*, AdrOpenSound)(
+    ADR_FUNCTION(OutputStream*, AdrOpenSound)(
       AudioDevice* device,
       SampleSource* source,
       SoundMode mode);
@@ -420,10 +421,8 @@ namespace audiere {
 
   /**
    * Open a new audio device. If name or parameters are not specified,
-   * defaults are used.
-   *
-   * Each platform has its own set of audio devices.  Every platform supports
-   * the "null" audio device.
+   * defaults are used. Each platform has its own set of audio devices.
+   * Every platform supports the "null" audio device.
    *
    * @param  name  name of audio device that should be used
    * @param  parameters  comma delimited list of audio-device parameters;
@@ -503,7 +502,7 @@ namespace audiere {
    *                
    * @return  A new sound object if OpenSound succeeds, and 0 otherwise
    */
-  inline Sound* OpenSound(
+  inline OutputStream* OpenSound(
     AudioDevice* device,
     SampleSource* source,
     SoundMode mode)

@@ -30,6 +30,12 @@ namespace audiere {
   }
 
 
+  bool
+  NullAudioDevice::supportsStreaming() {
+    return true;
+  }
+
+
   void
   NullAudioDevice::update() {
     ADR_GUARD("NullAudioDevice::update");
@@ -76,7 +82,7 @@ namespace audiere {
     NullAudioDevice* device,
     SampleSource* source)
   : m_device(device)
-  , m_source(source)
+  , m_source(new RepeatableStream(source, false))
   , m_is_playing(false)
   , m_volume(1)
   , m_last_update(0)
@@ -121,6 +127,20 @@ namespace audiere {
 
 
   void
+  NullOutputStream::setRepeat(bool repeat) {
+    SYNCHRONIZED(m_device);
+    m_source->setRepeat(repeat);
+  }
+
+
+  bool
+  NullOutputStream::getRepeat() {
+    SYNCHRONIZED(m_device);
+    return m_source->getRepeat();
+  }
+
+
+  void
   NullOutputStream::setVolume(float volume) {
     m_volume = volume;
   }
@@ -141,6 +161,32 @@ namespace audiere {
   float
   NullOutputStream::getPan() {
     return m_pan;
+  }
+
+
+  bool
+  NullOutputStream::isSeekable() {
+    return m_source->isSeekable();
+  }
+
+
+  int
+  NullOutputStream::getLength() {
+    return m_source->getLength();
+  }
+
+
+  void
+  NullOutputStream::setPosition(int position) {
+    SYNCHRONIZED(m_device);
+    m_source->setPosition(position);
+    reset();
+  }
+
+
+  int
+  NullOutputStream::getPosition() {
+    return m_source->getPosition();
   }
 
 

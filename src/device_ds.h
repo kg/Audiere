@@ -14,6 +14,7 @@
 #include <list>
 #include "audiere.h"
 #include "internal.h"
+#include "repeatable.h"
 #include "threads.h"
 
 
@@ -30,6 +31,7 @@ namespace audiere {
     ~DSAudioDevice();
 
     bool initialize(const char* parameters);
+    bool supportsStreaming();
     void update();
     OutputStream* openStream(SampleSource* source);
 
@@ -68,14 +70,22 @@ namespace audiere {
   public:
     void play();
     void stop();
-    void reset();
     bool isPlaying();
+    void reset();
+
+    void setRepeat(bool repeat);
+    bool getRepeat();
 
     void  setVolume(float volume);
     float getVolume();
 
     void  setPan(float pan);
     float getPan();
+
+    bool isSeekable();
+    int  getLength();
+    void setPosition(int position);
+    int  getPosition();
 
   private:
 
@@ -94,7 +104,7 @@ namespace audiere {
     int m_buffer_length;  // in samples
     int m_next_read;  // offset (in samples) where we will read next
 
-    SampleSource* m_source;
+    RepeatableStream* m_source;
     int m_sample_size;  // convenience: bits per sample * channel count / 8
 
     float m_volume;

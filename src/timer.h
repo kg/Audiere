@@ -1,4 +1,6 @@
 /**
+ * @file
+ *
  * Platform-independent abstraction for high-resolution timers.
  */
 

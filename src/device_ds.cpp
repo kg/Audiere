@@ -185,6 +185,12 @@ namespace audiere {
   }
 
 
+  bool
+  DSAudioDevice::supportsStreaming() {
+    return true;
+  }
+
+
   void
   DSAudioDevice::update() {
     ADR_GUARD("DSAudioDevice::Update");
@@ -286,7 +292,7 @@ namespace audiere {
     m_next_read     = 0;
     m_buffer_length = buffer_length;
 
-    m_source = source;
+    m_source = new RepeatableStream(source, false);
 
     m_sample_size = sample_size;
     m_last_sample = new BYTE[sample_size];
@@ -309,6 +315,117 @@ namespace audiere {
     delete[] m_last_sample;
 
     delete m_source;
+  }
+
+  
+  void
+  DSOutputStream::play() {
+    m_buffer->Play(0, 0, DSBPLAY_LOOPING);
+  }
+
+
+  void
+  DSOutputStream::stop() {
+    m_buffer->Stop();
+  }
+
+
+  void
+  DSOutputStream::reset() {
+    ADR_GUARD("DSOutputStream::Reset");
+
+    // figure out if we're playing or not
+    bool is_playing = isPlaying();
+
+    // if we're playing, stop
+    if (is_playing) {
+      m_buffer->Stop();
+    }
+
+    m_buffer->SetCurrentPosition(0);
+    m_source->reset();
+    m_next_read = 0;
+    fillStream();
+
+    // if we were playing, restart
+    if (is_playing) {
+      m_buffer->Play(0, 0, DSBPLAY_LOOPING);
+    }
+  }
+
+
+  bool
+  DSOutputStream::isPlaying() {
+    DWORD status;
+    HRESULT rv = m_buffer->GetStatus(&status);
+    return (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING);
+  }
+
+
+  void
+  DSOutputStream::setRepeat(bool repeat) {
+    SYNCHRONIZED(m_device);
+    m_source->setRepeat(repeat);
+  }
+
+
+  bool
+  DSOutputStream::getRepeat() {
+    SYNCHRONIZED(m_device);
+    return m_source->getRepeat();
+  }
+
+
+  void
+  DSOutputStream::setVolume(float volume) {
+    m_volume = volume;
+    m_buffer->SetVolume(Volume_AudiereToDirectSound(volume));
+  }
+
+
+  float
+  DSOutputStream::getVolume() {
+    return m_volume;
+  }
+
+
+  void
+  DSOutputStream::setPan(float pan) {
+    m_pan = pan;
+    m_buffer->SetPan(Pan_AudiereToDirectSound(pan));
+  }
+
+
+  float
+  DSOutputStream::getPan() {
+    return m_pan;
+  }
+
+
+  bool
+  DSOutputStream::isSeekable() {
+    return m_source->isSeekable();
+  }
+
+
+  int
+  DSOutputStream::getLength() {
+    return m_source->getLength();
+  }
+
+
+  void
+  DSOutputStream::setPosition(int position) {
+    SYNCHRONIZED(m_device);
+    m_source->setPosition(position);
+    reset();
+  }
+
+
+  int
+  DSOutputStream::getPosition() {
+    /// @todo  use play cursors and stuff... this isn't accurate information
+    return m_source->getPosition();
   }
 
 
@@ -494,76 +611,6 @@ namespace audiere {
     } else {
       return (position >= start || position < end);
     }
-  }
-
-
-  void
-  DSOutputStream::play() {
-    m_buffer->Play(0, 0, DSBPLAY_LOOPING);
-  }
-
-
-  void
-  DSOutputStream::stop() {
-    m_buffer->Stop();
-  }
-
-
-  void
-  DSOutputStream::reset() {
-    ADR_GUARD("DSOutputStream::Reset");
-
-    // figure out if we're playing or not
-    bool is_playing = isPlaying();
-
-    // if we're playing, stop
-    if (is_playing) {
-      m_buffer->Stop();
-    }
-
-    m_buffer->SetCurrentPosition(0);
-    m_source->reset();
-    m_next_read = 0;
-    fillStream();
-
-    // if we were playing, restart
-    if (is_playing) {
-      m_buffer->Play(0, 0, DSBPLAY_LOOPING);
-    }
-  }
-
-
-  bool
-  DSOutputStream::isPlaying() {
-    DWORD status;
-    HRESULT rv = m_buffer->GetStatus(&status);
-    return (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING);
-  }
-
-
-  void
-  DSOutputStream::setVolume(float volume) {
-    m_volume = volume;
-    m_buffer->SetVolume(Volume_AudiereToDirectSound(volume));
-  }
-
-
-  float
-  DSOutputStream::getVolume() {
-    return m_volume;
-  }
-
-
-  void
-  DSOutputStream::setPan(float pan) {
-    m_pan = pan;
-    m_buffer->SetPan(Pan_AudiereToDirectSound(pan));
-  }
-
-
-  float
-  DSOutputStream::getPan() {
-    return m_pan;
   }
 
 }

@@ -236,7 +236,7 @@ namespace audiere {
       }
 
       // read data out of the buffer
-      u32 samples_to_read = Min<u32>(
+      u32 samples_to_read = std::min<u32>(
         sample_count,
         m_samples_left);
       memcpy(out, m_next_sample, samples_to_read * 4);

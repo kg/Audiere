@@ -9,19 +9,41 @@
 #include "types.h"
 
 
+#if _MSC_VER <= 1200
+
+  // std::min and std::max are broken in VC++ 6, so define our own.
+  // Unfortunately, this means we must include utility.h to use
+  // std::min and std::max
+  namespace std {
+
+    #ifdef min
+      #undef min
+    #endif
+
+    #ifdef max
+      #undef max
+    #endif
+
+    template<typename T>
+    inline T min(T a, T b) {
+      return (a < b ? a : b);
+    }
+
+    template<typename T>
+    inline T max(T a, T b) {
+      return (a > b ? a : b);
+    }
+  }
+
+#else
+
+  #include <algorithm>
+
+#endif
+
+
 namespace audiere {
 
-  // we can't use std::min or std::max in VC++ 6, so define our own
-
-  template<typename T>
-  inline T Min(T a, T b) {
-    return (a < b ? a : b);
-  }
-
-  template<typename T>
-  inline T Max(T a, T b) {
-    return (a > b ? a : b);
-  }
 
   typedef std::pair<std::string, std::string> Parameter;
   typedef std::list<Parameter> ParameterList;

@@ -251,7 +251,7 @@ namespace audiere {
     // read samples into dummy buffer, counting the number we actually read
     u8* dummy = new u8[1024 * m_channel_count * bytes_per_sample];
     while (samples_to_read > 0) {
-      int read = Min(1024, samples_to_read);
+      int read = std::min(1024, samples_to_read);
       int actual_read = m_source->read(read, dummy);
       total += actual_read;
       samples_to_read -= actual_read;

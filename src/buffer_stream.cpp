@@ -38,7 +38,7 @@ namespace audiere {
 
   int
   BufferStream::read(int sample_count, void* samples) {
-    int to_read = Min(sample_count, m_buffer_length - m_position);
+    int to_read = std::min(sample_count, m_buffer_length - m_position);
     memcpy(
       samples,
       m_buffer + m_position * m_block_size,

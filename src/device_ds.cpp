@@ -1,23 +1,3 @@
-/*
-  Audiere DirectSound driver
-
-  Terminology
-
-  block 
-  - set of bytes for the smallest block of audio in a stream
-    (including all of the channels)
-
-  buffer
-  - a circular audio buffer which is constantly refilled with
-    new data from the stream source
-
-  segment
-  - buffers are split into a set of segments data flows from
-    the stream source into the buffer a segment at a time
-
-*/
-
-
 #include <math.h>
 #include "device_ds.h"
 #include "buffer_stream.h"
@@ -43,7 +23,7 @@ namespace audiere {
     if (pan < 0) {
       return -Pan_AudiereToDirectSound(-pan);
     } else {
-      return Volume_AudiereToDirectSound(1 - pan);
+      return -Volume_AudiereToDirectSound(1 - pan);
     }
   }
 

@@ -83,7 +83,7 @@ namespace audiere {
       return 0;
     }
 
-    const int samples_to_read = Min(sample_count, m_samples_left_in_chunk);
+    const int samples_to_read = std::min(sample_count, m_samples_left_in_chunk);
     const int sample_size =
       m_channel_count * GetSampleSize(m_sample_format);
     const int bytes_to_read = samples_to_read * sample_size;

@@ -2,5 +2,6 @@
 
 set -x && \
 aclocal && \
+libtoolize --force --copy && \
 automake --foreign --add-missing --copy && \
 autoconf

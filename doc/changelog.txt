@@ -1,3 +1,8 @@
+2003.06.21
+
+  SoundEffect objects in SINGLE mode no longer stream from the sample
+  source.
+
 2003.06.16
 
   Added AIFF support.

@@ -52,7 +52,7 @@ namespace audiere {
     }
 
   private:
-    RefPtr<OutputStream> m_stream;
+    OutputStreamPtr m_stream;
 
     float m_volume;
     float m_pan;
@@ -127,9 +127,9 @@ namespace audiere {
     }
     
   private:
-    RefPtr<AudioDevice> m_device;
-    RefPtr<SampleBuffer> m_buffer;
-    std::vector<RefPtr<OutputStream> > m_streams;
+    AudioDevicePtr m_device;
+    SampleBufferPtr m_buffer;
+    std::vector<OutputStreamPtr> m_streams;
 
     float m_volume;
     float m_pan;
@@ -148,7 +148,7 @@ namespace audiere {
 
     switch (type) {
       case SINGLE: {
-        OutputStream* os = OpenSound(device, source, true);
+        OutputStream* os = OpenSound(device, source, false);
         return (os ? new SingleSoundEffect(os) : 0);
       }
         

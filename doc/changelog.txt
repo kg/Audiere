@@ -1,6 +1,8 @@
 2002.10.11
 
   added GetSupportedFileFormats for file format enumeration
+  added audiere-config script which provides version information and
+    external library dependencies
 
 2002.10.04
 

@@ -32,10 +32,7 @@ public:
 
 private:
   ALCdevice*  m_Device;
-
-  void* m_Context;
-  // grrr, I wish the OpenAL folks would make up their minds
-  //  ALCcontext* m_Context;
+  ALCcontext* m_Context;
 
   typedef std::list<ALOutputStream*> StreamList;
   StreamList m_OpenStreams;
@@ -62,18 +59,14 @@ private:
     ADR_SAMPLE_SOURCE source,
     ADR_SAMPLE_RESET reset,
     void* opaque,
+    ALuint al_source,
     ALuint* buffers,
-    ALuint* sources,
-    int channel_count,
-    int sample_rate,
-    int bits_per_sample);
+    ALenum format,
+    int sample_rate);
   ~ALOutputStream();
   void Update();
 
-  void ReadDeinterleaved(
-    void* deinterleaved,
-    void* interleaved,  // so the read doesn't have to allocate (slow) anything
-    int block_count);
+  int Read(void* samples, int sample_count);
   void FillBuffers();
 
 private:
@@ -85,17 +78,16 @@ private:
   void*             m_Opaque;
 
   // informational
-  int m_ChannelCount;
-  int m_SampleRate;
-  int m_BitsPerSample;
-  int m_SampleSize;    // convenience
+  int    m_SampleRate;
+  ALenum m_Format;
+  int    m_SampleSize;  // (num channels * bits per sample / 8)
 
   // the last sample read
-  ALubyte* m_LastBlock;  
+  ALubyte* m_LastSample;  
   
   // AL objects
+  ALuint  m_ALSource;
   ALuint* m_Buffers;
-  ALuint* m_Sources;
 
   int m_BufferLength;  // in samples
   bool m_IsPlaying;

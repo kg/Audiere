@@ -225,7 +225,7 @@ class wxPlayer : public wxApp
 public:
   bool OnInit() {
     g_context = AdrCreateContext(
-      "",
+      "openal",
       "",
       NULL, NULL, NULL, NULL, NULL, NULL
     );

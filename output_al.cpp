@@ -122,14 +122,23 @@ ALOutputContext::OpenStream(
   ADR_SAMPLE_RESET reset,
   void* opaque)
 {
-  // OpenAL only supports 8-bit and 16-bit samples
-  if (bits_per_sample != 8 && bits_per_sample != 16) {
+  // calculate OpenAL format
+  ALenum format;
+  if (channel_count == 1 && bits_per_sample == 8) {
+    format = AL_FORMAT_MONO8;
+  } else if (channel_count == 1 && bits_per_sample == 16) {
+    format = AL_FORMAT_MONO16;
+  } else if (channel_count == 2 && bits_per_sample == 8) {
+    format = AL_FORMAT_STEREO8;
+  } else if (channel_count == 2 && bits_per_sample == 16) {
+    format = AL_FORMAT_STEREO16;
+  } else {
     return NULL;
   }
 
   // generate buffers
-  ALuint* buffers = new ALuint[channel_count * BUFFER_COUNT];
-  alGenBuffers(channel_count * BUFFER_COUNT, buffers);
+  ALuint* buffers = new ALuint[BUFFER_COUNT];
+  alGenBuffers(BUFFER_COUNT, buffers);
   if (alGetError() != AL_NO_ERROR) {
     delete[] buffers;
     return NULL;
@@ -137,11 +146,10 @@ ALOutputContext::OpenStream(
 
   // generate sources
   // we have one source for each channel
-  ALuint* sources = new ALuint[channel_count];
-  alGenSources(channel_count, sources);
+  ALuint al_source;
+  alGenSources(1, &al_source);
   if (alGetError() != AL_NO_ERROR) {
-    delete[] sources;
-    alDeleteBuffers(channel_count * BUFFER_COUNT, buffers);
+    alDeleteBuffers(BUFFER_COUNT, buffers);
     delete[] buffers;
     return NULL;
   }
@@ -151,11 +159,10 @@ ALOutputContext::OpenStream(
     source,
     reset,
     opaque,
+    al_source,
     buffers,
-    sources,
-    channel_count,
-    sample_rate,
-    bits_per_sample);
+    format,
+    sample_rate);
   m_OpenStreams.push_back(stream);
   return stream;
 }
@@ -167,11 +174,10 @@ ALOutputStream::ALOutputStream(
   ADR_SAMPLE_SOURCE source,
   ADR_SAMPLE_RESET reset,
   void* opaque,
-  ALuint buffers[BUFFER_COUNT],
-  ALuint* sources,
-  int channel_count,
-  int sample_rate,
-  int bits_per_sample)
+  ALuint al_source,
+  ALuint* buffers,
+  ALenum format,
+  int sample_rate)
 {
   // fill the members
   m_Context = context;
@@ -180,15 +186,20 @@ ALOutputStream::ALOutputStream(
   m_Reset  = reset;
   m_Opaque = opaque;
 
-  m_ChannelCount  = channel_count;
-  m_SampleRate    = sample_rate;
-  m_BitsPerSample = bits_per_sample;
-  m_SampleSize    = m_BitsPerSample / 8;
-  m_LastBlock     = new ALubyte[m_SampleSize * m_ChannelCount];
-  memset(m_LastBlock, 0, m_SampleSize * m_ChannelCount);
+  m_SampleRate = sample_rate;
+  m_Format = format;
+  switch (format) {
+    case AL_FORMAT_MONO8:    m_SampleSize = 1; break;
+    case AL_FORMAT_MONO16:   m_SampleSize = 2; break;
+    case AL_FORMAT_STEREO8:  m_SampleSize = 2; break;
+    case AL_FORMAT_STEREO16: m_SampleSize = 4; break;
+  }
 
-  m_Buffers = buffers;
-  m_Sources = sources;
+  m_LastSample = new ALubyte[m_SampleSize];
+  memset(m_LastSample, 0, m_SampleSize);
+
+  m_ALSource = al_source;
+  m_Buffers  = buffers;
 
   m_IsPlaying = false;
   m_Volume    = ADR_VOLUME_MAX;
@@ -198,18 +209,8 @@ ALOutputStream::ALOutputStream(
 
   FillBuffers();
 
-  // initialize each source
-  for (int s = 0; s < m_ChannelCount; s++) {
-
-    // queue up this source's buffers
-    alSourceQueueBuffers(
-      m_Sources[s],
-      BUFFER_COUNT,
-      m_Buffers + s * BUFFER_COUNT
-    );
-
-    // position the source?
-  }
+  // queue up the source's buffers
+  alSourceQueueBuffers(m_ALSource, BUFFER_COUNT, m_Buffers);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -226,11 +227,10 @@ ALOutputStream::~ALOutputStream()
     ++i;
   }
 
-  alDeleteSources(m_ChannelCount, m_Sources);
-  delete[] m_Sources;
-  alDeleteBuffers(BUFFER_COUNT * m_ChannelCount, m_Buffers);
+  alDeleteSources(1, &m_ALSource);
+  alDeleteBuffers(BUFFER_COUNT, m_Buffers);
   delete[] m_Buffers;
-  delete[] m_LastBlock;
+  delete[] m_LastSample;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -239,130 +239,66 @@ void
 ALOutputStream::Update()
 {
   // are there any buffers that have been processed?
-  ALint processed_buffers = INT_MAX;
-  for (int i = 0; i < 1/*m_ChannelCount*/; i++) {
-    ALint buffers;
-    alGetSourceiv(m_Sources[i], AL_BUFFERS_PROCESSED, &buffers);
+  ALint processed_buffers;
+  alGetSourcei(m_ALSource, AL_BUFFERS_PROCESSED, &processed_buffers);
 
-    if (buffers < processed_buffers) {
-      processed_buffers = buffers;
-    }
-  }
-
-  // possibly bypass the rest of the processing
+  // don't do any allocations if we don't need to
   if (processed_buffers == 0) {
     return;
   }
 
-  int read_size_blocks = m_BufferLength;
-  int read_size_bytes = read_size_blocks * m_SampleSize * m_ChannelCount;
-  ALubyte* deinterleaved = new ALubyte[read_size_bytes];
-  ALubyte* interleaved   = new ALubyte[read_size_bytes];
-  ALuint* buffers = new ALuint[m_ChannelCount];
+  int read_size_samples = m_BufferLength;
+  int read_size_bytes = read_size_samples * m_SampleSize;
+  ALubyte* sample_buffer = new ALubyte[read_size_bytes];
 
-  // calculate the format of the data we'll stick in the AL buffers
-  ALenum format = (m_BitsPerSample == 16 ? AL_FORMAT_MONO16 : AL_FORMAT_MONO8);
-
-  int buffer_length_bytes = m_BufferLength * m_SampleSize;
+  int buffer_length_bytes = read_size_bytes;
   while (processed_buffers--) {
 
-    ReadDeinterleaved(deinterleaved, interleaved, read_size_blocks);
+    Read(sample_buffer, read_size_samples);
 
     // unqueue/refill/queue
-    for (int i = 0; i < 1/*m_ChannelCount*/; i++) {
-      alSourceUnqueueBuffers(m_Sources[i], 1, buffers + i);
+    ALuint buffer;
+    alSourceUnqueueBuffers(m_ALSource, 1, &buffer);
 
-      alBufferData(
-        buffers[0],
-        format,
-        deinterleaved + buffer_length_bytes * i,
-        buffer_length_bytes,
-        m_SampleRate
-      );
+    alBufferData(
+      buffer,
+      m_Format,
+      sample_buffer,
+      buffer_length_bytes,
+      m_SampleRate);
 
-      alSourceQueueBuffers(m_Sources[i], 1, buffers + i);
-    }
+    alSourceQueueBuffers(m_ALSource, 1, &buffer);
   }
 
-  delete[] buffers;
-  delete[] interleaved;
-  delete[] deinterleaved;
+  delete[] sample_buffer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-template<typename T>
-void deinterleave(
-  const T* interleaved,
-  T* out,
-  int channel_count,
-  int sample_count)
+int
+ALOutputStream::Read(void* samples, int sample_count)
 {
-  // deinterleave the samples
-  int c = channel_count;
+  // try to read from the stream
+  int samples_read = m_Source(m_Opaque, sample_count, samples);
+
+  // read the last sample
+  if (samples_read > 0) {
+    memcpy(
+      m_LastSample,
+      (ALubyte*)samples + (samples_read - 1) * m_SampleSize,
+      m_SampleSize
+    );
+  }
+
+  // fill the rest with silence
+  ALubyte* out = (ALubyte*)samples + m_SampleSize * samples_read;
+  int c = sample_count - samples_read;
   while (c--) {
-
-    const T* in = interleaved;
-
-    int n = sample_count;
-    while (n--) {
-      *out = *in;
-      in += channel_count;
-      out++;
-    }
-
-    interleaved++;
-  }
-}
-
-void
-ALOutputStream::ReadDeinterleaved(
-  void* deinterleaved,
-  void* interleaved,
-  int block_count)
-{
-  // samples are interleaved like: 01010101
-  // return data like:             00001111
-  
-  int block_size = m_SampleSize * m_ChannelCount;
-
-  // read samples
-  int blocks_read = m_Source(m_Opaque, block_count, interleaved);
-  if (blocks_read > 0) {
-    // store the last sample read
-    memcpy(m_LastBlock,
-           (ALubyte*)interleaved + (blocks_read - 1) * block_size,
-           block_size);
+    memcpy(out, m_LastSample, m_SampleSize);
+    out += m_SampleSize;
   }
 
-  // fill the rest of the empty space
-  int fill_left = block_count - blocks_read;
-  ALubyte* fill = (ALubyte*)interleaved + blocks_read * block_size;
-  while (fill_left--) {
-    memcpy(fill, m_LastBlock, block_size);
-    fill += block_size;
-  }
-
-
-  if (m_BitsPerSample == 16) {
-
-    deinterleave<ALushort>(
-      (ALushort*)interleaved,
-      (ALushort*)deinterleaved,
-      m_ChannelCount,
-      block_count
-    );
-
-  } else {  // m_BitsPerSample == 8
-    
-    deinterleave<ALubyte>(
-      (ALubyte*)interleaved,
-      (ALubyte*)deinterleaved,
-      m_ChannelCount,
-      block_count
-    );
-
-  }
+  return samples_read;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -370,24 +306,20 @@ ALOutputStream::ReadDeinterleaved(
 void
 ALOutputStream::FillBuffers()
 {
-  int block_count = m_BufferLength * BUFFER_COUNT;
-  int allocate = block_count * m_SampleSize * m_ChannelCount;
-  ALubyte* deinterleaved = new ALubyte[allocate];
-  ALubyte* interleaved   = new ALubyte[allocate];
-  ReadDeinterleaved(deinterleaved, interleaved, block_count);
+  int samples_to_read = m_BufferLength * BUFFER_COUNT;
+  int allocate = samples_to_read * m_SampleSize;
+  ALubyte* sample_buffer = new ALubyte[allocate];
+  Read(sample_buffer, samples_to_read);
    
-  // calculate the format of the data we'll stick in the AL buffers
-  ALenum format = (m_BitsPerSample == 16 ? AL_FORMAT_MONO16 : AL_FORMAT_MONO8);
-
   // stick the data into the buffers
-  ALubyte* samples = deinterleaved;
+  ALubyte* samples = sample_buffer;
   ALuint*  buffer  = m_Buffers;
 
-  for (int i = 0; i < BUFFER_COUNT * m_ChannelCount; i++) {
+  for (int i = 0; i < BUFFER_COUNT; i++) {
       
     alBufferData(
       *buffer,
-      format,
+      m_Format,
       samples,
       m_BufferLength * m_SampleSize,
       m_SampleRate
@@ -395,11 +327,9 @@ ALOutputStream::FillBuffers()
 
     samples += m_BufferLength * m_SampleSize;
     buffer++;
-
   }
 
-  delete[] deinterleaved;
-  delete[] interleaved;
+  delete[] sample_buffer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -407,8 +337,7 @@ ALOutputStream::FillBuffers()
 void
 ALOutputStream::Play()
 {
-//  alSourcePlayv(m_ChannelCount, m_Sources);
-  alSourcePlay(m_Sources[0]);
+  alSourcePlay(m_ALSource);
   m_IsPlaying = true;
 }
 
@@ -417,8 +346,7 @@ ALOutputStream::Play()
 void
 ALOutputStream::Stop()
 {
-//  alSourcePausev(m_ChannelCount, m_Sources);
-  alSourcePause(m_Sources[0]);
+  alSourcePause(m_ALSource);
   m_IsPlaying = false;
 }
 
@@ -461,9 +389,7 @@ ALOutputStream::SetVolume(int volume)
   m_Volume = volume;
 
   float v = (float)m_Volume / ADR_VOLUME_MAX;
-  for (int i = 0; i < m_ChannelCount; i++) {
-    alSourcef(m_Sources[i], AL_GAIN, v);
-  }
+  alSourcef(m_ALSource, AL_GAIN, v);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

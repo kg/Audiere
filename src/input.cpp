@@ -2,7 +2,7 @@
 #include <string.h>
 #include "debug.h"
 #include "default_file.h"
-#ifdef HAVE_MIKMOD
+#ifndef NO_MIKMOD
 #include "input_mod.h"
 #endif
 #include "input_ogg.h"
@@ -69,7 +69,7 @@ namespace audiere {
 
         TRY_SOURCE(OGGInputStream);
 
-#ifdef HAVE_MIKMOD
+#ifndef NO_MIKMOD
       } else if (end_is(filename, ".it") ||
           end_is(filename, ".xm") ||
           end_is(filename, ".s3m") ||
@@ -81,7 +81,7 @@ namespace audiere {
     }
 
     // autodetect otherwise, in decreasing order of possibility of failure
-#ifdef HAVE_MIKMOD
+#ifndef NO_MIKMOD
     TRY_SOURCE(MODInputStream);
 #endif
     TRY_SOURCE(WAVInputStream);

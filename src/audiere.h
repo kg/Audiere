@@ -582,15 +582,35 @@ namespace audiere {
   typedef RefPtr<OutputStream> OutputStreamPtr;
 
 
+  /// An integral code representing a specific type of event.
+  enum EventType {
+    ET_STOP, ///< See StopEvent and StopCallback
+  };
+
+
+  /// Base interface for event-specific data passed to callbacks.
+  class Event : public RefCounted {
+  protected:
+    ~Event() { }
+
+  public:
+    /// Returns the EventType code for this event.
+    virtual EventType ADR_CALL getType() = 0;
+  };
+  typedef RefPtr<Event> EventPtr;
+
+
   /**
    * An event object that gets passed to implementations of StopCallback
    * when a stream has stopped playing.
    */
-  class StopEvent : public RefCounted {
+  class StopEvent : public Event {
   protected:
     ~StopEvent() { }
 
   public:
+    EventType ADR_CALL getType() { return ET_STOP; }
+
     /// A code representing the reason the stream stopped playback.
     enum Reason {
       STOP_CALLED,  ///< stop() was called from an external source.
@@ -605,6 +625,29 @@ namespace audiere {
   };
   typedef RefPtr<StopEvent> StopEventPtr;
 
+
+  /**
+   * Base interface for all callbacks.  See specific callback implementations
+   * for descriptions.
+   */  
+  class Callback : public RefCounted {
+  protected:
+    ~Callback() { }
+
+  public:
+    /**
+     * Returns the event type that this callback knows how to handle.
+     */
+    virtual EventType ADR_CALL getType() = 0;
+
+    /**
+     * Actually executes the callback with event-specific data.  This is
+     * only called if event->getType() == this->getType().
+     */
+    virtual void ADR_CALL call(Event* event) = 0;
+  };
+  typedef RefPtr<Callback> CallbackPtr;
+
   
   /**
    * To listen for stream stopped events on a device, implement this interface
@@ -615,11 +658,16 @@ namespace audiere {
    * WARNING: StopCallback is called from another thread.  Make sure your
    * callback is thread-safe.
    */
-  class StopCallback : public RefCounted {
+  class StopCallback : public Callback {
   protected:
     ~StopCallback() { }
 
   public:
+    EventType ADR_CALL getType() { return ET_STOP; }
+    void ADR_CALL call(Event* event) {
+      streamStopped(static_cast<StopEvent*>(event));
+    }
+
     /**
      * Called when a stream has stopped.
      *
@@ -702,19 +750,19 @@ namespace audiere {
     virtual const char* ADR_CALL getName() = 0;
 
     /**
-     * Registers 'callback' to receive stop events.  Callbacks can be
+     * Registers 'callback' to receive events.  Callbacks can be
      * registered multiple times.
      */
-    virtual void ADR_CALL registerStopCallback(StopCallback* callback) = 0;
+    virtual void ADR_CALL registerCallback(Callback* callback) = 0;
     
     /**
      * Unregisters 'callback' once.  If it is registered multiple times,
      * each unregisterStopCallback call unregisters one of the instances.
      */
-    virtual void ADR_CALL unregisterStopCallback(StopCallback* callback) = 0;
+    virtual void ADR_CALL unregisterCallback(Callback* callback) = 0;
 
     /// Clears all of the callbacks from the device.
-    virtual void ADR_CALL clearStopCallbacks() = 0;
+    virtual void ADR_CALL clearCallbacks() = 0;
   };
   typedef RefPtr<AudioDevice> AudioDevicePtr;
 

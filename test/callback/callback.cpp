@@ -83,7 +83,7 @@ int main(int argc, const char** argv) {
   }
 
   g_callback = new MyStopCallback;
-  g_device->registerStopCallback(g_callback.get());
+  g_device->registerCallback(g_callback.get());
 
 #define LOAD_STREAMS() if (!loadStreams()) { return EXIT_FAILURE; }
 

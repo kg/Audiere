@@ -60,11 +60,11 @@ namespace audiere {
     }
   }
 
-  void AbstractDevice::registerStopCallback(StopCallback* callback) {
+  void AbstractDevice::registerCallback(Callback* callback) {
     m_callbacks.push_back(callback);
   }
 
-  void AbstractDevice::unregisterStopCallback(StopCallback* callback) {
+  void AbstractDevice::unregisterCallback(Callback* callback) {
     for (size_t i = 0; i < m_callbacks.size(); ++i) {
       if (m_callbacks[i] == callback) {
         m_callbacks.erase(m_callbacks.begin() + i);
@@ -73,7 +73,7 @@ namespace audiere {
     }
   }
 
-  void AbstractDevice::clearStopCallbacks() {
+  void AbstractDevice::clearCallbacks() {
     m_callbacks.clear();
   }
 
@@ -84,7 +84,7 @@ namespace audiere {
 
   void AbstractDevice::fireStopEvent(const StopEventPtr& event) {
     m_event_mutex.lock();
-    m_events.push(event);
+    m_events.push(event.get());
     m_event_mutex.unlock();
     m_events_available.notify();
   }
@@ -126,7 +126,7 @@ namespace audiere {
 
       // Process the events.
       while (!events.empty()) {
-        StopEventPtr event = events.front();
+        EventPtr event = events.front();
         events.pop();
         processEvent(event.get());
       }
@@ -134,9 +134,11 @@ namespace audiere {
     m_thread_exists = false;
   }
 
-  void AbstractDevice::processEvent(StopEvent* event) {
+  void AbstractDevice::processEvent(Event* event) {
     for (size_t i = 0; i < m_callbacks.size(); ++i) {
-      m_callbacks[i]->streamStopped(event);
+      if (event->getType() == m_callbacks[i]->getType()) {
+        m_callbacks[i]->call(event);
+      }
     }
   }
 
@@ -310,16 +312,16 @@ namespace audiere {
       return m_device->getName();
     }
 
-    void ADR_CALL registerStopCallback(StopCallback* callback) {
-      m_device->registerStopCallback(callback);
+    void ADR_CALL registerCallback(Callback* callback) {
+      m_device->registerCallback(callback);
     }
 
-    void ADR_CALL unregisterStopCallback(StopCallback* callback) {
-      m_device->unregisterStopCallback(callback);
+    void ADR_CALL unregisterCallback(Callback* callback) {
+      m_device->unregisterCallback(callback);
     }
 
-    void ADR_CALL clearStopCallbacks() {
-      m_device->clearStopCallbacks();
+    void ADR_CALL clearCallbacks() {
+      m_device->clearCallbacks();
     }
 
   private:

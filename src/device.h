@@ -38,9 +38,9 @@ namespace audiere {
     ~AbstractDevice();
 
   public:
-    void ADR_CALL registerStopCallback(StopCallback* callback);
-    void ADR_CALL unregisterStopCallback(StopCallback* callback);
-    void ADR_CALL clearStopCallbacks();
+    void ADR_CALL registerCallback(Callback* callback);
+    void ADR_CALL unregisterCallback(Callback* callback);
+    void ADR_CALL clearCallbacks();
 
   protected:
     void fireStopEvent(OutputStream* stream, StopEvent::Reason reason);
@@ -49,17 +49,17 @@ namespace audiere {
   private:
     static void eventThread(void* arg);
     void eventThread();
-    void processEvent(StopEvent* event);
+    void processEvent(Event* event);
 
     volatile bool m_thread_exists;
     volatile bool m_thread_should_die;
 
     Mutex m_event_mutex;
     CondVar m_events_available;
-    typedef std::queue<StopEventPtr> EventQueue;
+    typedef std::queue<EventPtr> EventQueue;
     EventQueue m_events;
 
-    std::vector<StopCallbackPtr> m_callbacks;
+    std::vector<CallbackPtr> m_callbacks;
   };
 
 }

@@ -1,5 +1,6 @@
 /*! \mainpage Audiere 1.9.0
 
-Audiere is a high-level audio API, somewhat analogous to FMOD.
+Audiere is a portable, high-level audio API, supporting several output
+devices and file formats.
 
 */

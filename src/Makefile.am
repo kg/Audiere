@@ -50,10 +50,16 @@ else
 DSOUND_DIST = $(DSOUND_SRC)
 endif
 
+if HAVE_WINMM
+WINMM_SOURCES = device_mm.cpp device_mm.h
+else
+WINMM_DIST    = device_mm.cpp device_mm.h
+endif
+
 
 EXTRA_DIST = \
 	$(FLAC_DIST) $(OGG_DIST) $(OPENAL_DIST) $(AL_DIST) $(OSS_DIST) \
-	$(DSOUND_DIST)
+	$(DSOUND_DIST) $(WINMM_DIST)
 
 libaudiere_la_SOURCES = \
 	debug.cpp \
@@ -68,6 +74,7 @@ libaudiere_la_SOURCES = \
 	$(OPENAL_SOURCES) \
 	$(AL_SOURCES) \
 	$(OSS_SOURCES) \
+	$(WINMM_SOURCES) \
 	file_ansi.cpp \
 	input.cpp \
 	$(FLAC_SOURCES) \

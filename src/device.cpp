@@ -36,6 +36,10 @@
   #include "device_ds.h"
 #endif
 
+#ifdef HAVE_WINMM
+  #include "device_mm.h"
+#endif
+
 
 namespace audiere {
 
@@ -51,6 +55,9 @@ namespace audiere {
 #endif
 #ifdef HAVE_DSOUND
       "directsound:DirectSound (high-performance)"  ";"
+#endif
+#ifdef HAVE_WINMM
+      "winmm:Windows Multimedia (compatible)"  ";"
 #endif
 #ifdef HAVE_OPENAL
       "openal:OpenAL"  ";"
@@ -123,6 +130,7 @@ namespace audiere {
         // in decreasing order of sound API quality
         TRY_GROUP("al");
         TRY_GROUP("directsound");
+        TRY_GROUP("winmm");
         TRY_GROUP("oss");
         TRY_GROUP("openal");
         return 0;
@@ -138,6 +146,13 @@ namespace audiere {
       #ifdef HAVE_DSOUND
         if (name == "directsound") {
           TRY_DEVICE(DSAudioDevice);
+          return 0;
+        }
+      #endif
+
+      #ifdef HAVE_WINMM
+        if (name == "winmm") {
+          TRY_DEVICE(MMAudioDevice);
           return 0;
         }
       #endif

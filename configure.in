@@ -138,6 +138,17 @@ AC_CHECK_HEADER(dsound.h,
     AC_MSG_RESULT(no))
 AM_CONDITIONAL(HAVE_DSOUND, test "x$HAVE_DSOUND" = "xtrue")
 
+AC_CHECK_HEADER(mmsystem.h,
+    HAVE_WINMM=true
+    AC_DEFINE(HAVE_WINMM)
+    LIBS="-lwinmm $LIBS"
+    EXTRA_LIBS="-lwinmm $EXTRA_LIBS"
+  ,
+    AC_MSG_RESULT(no)
+  ,
+    [#include <windows.h>])
+AM_CONDITIONAL(HAVE_WINMM, test "x$HAVE_WINMM" = "xtrue")
+
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 AC_C_BIGENDIAN

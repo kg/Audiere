@@ -20,6 +20,8 @@ namespace audiere {
     m_next_read     = 0;
     m_last_play     = 0;
 
+    m_is_playing = false;
+
     m_source = new RepeatableStream(source);
 
     int channel_count, sample_rate;
@@ -55,6 +57,7 @@ namespace audiere {
   DSOutputStream::play() {
     ADR_GUARD("DSOutputStream::play");
     m_buffer->Play(0, 0, DSBPLAY_LOOPING);
+    m_is_playing = true;
   }
 
 
@@ -62,14 +65,13 @@ namespace audiere {
   DSOutputStream::stop() {
     ADR_GUARD("DSOutputStream::stop");
     m_buffer->Stop();
+    m_is_playing = false;
   }
 
 
   bool
   DSOutputStream::isPlaying() {
-    DWORD status;
-    HRESULT rv = m_buffer->GetStatus(&status);
-    return (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING);
+    return m_is_playing;
   }
 
 
@@ -83,7 +85,7 @@ namespace audiere {
 
     // if we're playing, stop
     if (is_playing) {
-      m_buffer->Stop();
+      stop();
     }
 
     m_buffer->SetCurrentPosition(0);
@@ -97,7 +99,7 @@ namespace audiere {
 
     // if we were playing, restart
     if (is_playing) {
-      m_buffer->Play(0, 0, DSBPLAY_LOOPING);
+      play();
     }
   }
 
@@ -309,7 +311,7 @@ namespace audiere {
     if (m_total_written > m_total_read) {
       ADR_LOG("Stopping stream!");
 
-      m_buffer->Stop();
+      stop();
       m_buffer->SetCurrentPosition(0);
       m_last_play = 0;
 

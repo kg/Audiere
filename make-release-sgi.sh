@@ -11,6 +11,8 @@ FILE=$NAME.tar.bz2
 
 scons prefix=dist/$NAME dist/$NAME || die
 cd dist || die
+find . -name .sconsign | xargs rm -f
+rm -f $FILE || die
 /usr/freeware/bin/tar cfj $FILE $NAME || die
 
 echo

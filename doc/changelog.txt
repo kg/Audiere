@@ -2,6 +2,7 @@
 
   fixed bug where resetting an MP3 input stream would emit a short burst
     of static
+  fixed static between repeats in repeatable streams (thanks valgrind!)
 
 2003.05.27
 

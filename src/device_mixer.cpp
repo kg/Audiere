@@ -86,15 +86,12 @@ namespace audiere {
       // clamp each value in the buffer to the valid s16 range
       for (int i = 0; i < to_mix * 2; ++i) {
         s32 mixed = mix_buffer[i];
-        s16 o;
         if (mixed < -32768) {
-          o = -32768;
+          mixed = -32768;
         } else if (mixed > 32767) {
-          o = 32767;
-        } else {
-          o = mixed;
+          mixed = 32767;
         }
-        *out++ = o;
+        *out++ = mixed;
       }
 
       left -= to_mix;
@@ -242,48 +239,51 @@ namespace audiere {
   void
   MixerStream::read(int frame_count, s16* buffer) {
     unsigned read = m_source->read(frame_count, buffer);
+    s16* out = buffer;
 
     // if we are done with the sample source, stop and reset it
     if (read == 0) {
       m_is_playing = false;
       m_source->reset();
-    }
-
-    int l_volume, r_volume;
-    if (m_pan < 0) {
-      l_volume = 255;
-      r_volume = 255 + m_pan;
     } else {
-      l_volume = 255 - m_pan;
-      r_volume = 255;
+      // do panning and volume normalization
+      int l_volume, r_volume;
+      if (m_pan < 0) {
+        l_volume = 255;
+        r_volume = 255 + m_pan;
+      } else {
+        l_volume = 255 - m_pan;
+        r_volume = 255;
+      }
+
+      l_volume *= m_volume;
+      r_volume *= m_volume;
+
+      for (unsigned i = 0; i < read; ++i) {
+        *out = *out * l_volume / 255 / 255;
+        ++out;
+        *out = *out * r_volume / 255 / 255;
+        ++out;
+      }
     }
 
-    l_volume *= m_volume;
-    r_volume *= m_volume;
-
-    s16* out = buffer;
-    for (unsigned i = 0; i < read; ++i) {
-      *out = *out * l_volume / 255 / 255;
-      ++out;
-      *out = *out * r_volume / 255 / 255;
-      ++out;
-    }
-
-    int l = m_last_l;
-    int r = m_last_r;
-
+    // if we ready any frames, we can replace the old values
+    // for the last left and right channel states
+    int new_l = m_last_l;
+    int new_r = m_last_r;
     if (read > 0) {
-      l = out[-2];
-      r = out[-1];
+      new_l = out[-2];
+      new_r = out[-1];
     }
 
+    // and apply the last state to the rest of the buffer
     for (int i = read; i < frame_count; ++i) {
       *out++ = m_last_l;
       *out++ = m_last_r;
     }
 
-    m_last_l = l;
-    m_last_r = r;
+    m_last_l = new_l;
+    m_last_r = new_r;
   }
 
 }

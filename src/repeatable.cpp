@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "repeatable.h"
 #include "utility.h"
 
@@ -52,11 +53,12 @@ namespace audiere {
         // if we couldn't read anything, reset the stream and try again
         if (samples_read == 0) {
           m_source->reset();
-          samples_read = m_source->read(samples_left, buffer);
+          samples_read = m_source->read(samples_left, out);
         }
 
         // if we still can't read anything, we're done
         if (samples_read == 0) {
+          ADR_LOG("Can't read any samples even after reset");
           break;
         }
 

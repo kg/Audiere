@@ -111,16 +111,16 @@ WAVInputStream::Read(int sample_count, void* samples)
   const int bytes_to_read = samples_to_read * sample_size;
   
   const int read = m_file->Read(samples, bytes_to_read);
+  const int samples_read = read / sample_size;
 
   // assume that if we didn't get a full read, we're done
   if (read != bytes_to_read) {
     m_samples_left_in_chunk = 0;
-    return read / sample_size;
+    return samples_read;
   }
 
-  m_samples_left_in_chunk -= read / sample_size;
-
-  return sample_count;
+  m_samples_left_in_chunk -= samples_read;
+  return samples_read;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

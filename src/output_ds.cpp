@@ -83,7 +83,7 @@ DSOutputContext::Initialize(const char* parameters)
     if (i->first.c_str() == "buffer") {
       m_BufferLength = atoi(i->second.c_str());
       if (m_BufferLength == 0) {
-        m_BufferLength = 1000;
+        m_BufferLength = DS_DefaultBufferLength;
       }
     }
 
@@ -250,15 +250,10 @@ DSOutputContext::OpenStream(ISampleSource* source)
   ADR_LOG("CreateSoundBuffer succeeded");
 
   DSOutputStream* stream = new DSOutputStream(
-    this,
-    buffer,
-    sample_size,
-    buffer_length,
-    source);
+    this, buffer, sample_size, buffer_length, source);
 
   // add ourselves to the list of streams and return
   m_OpenStreams.push_back(stream);
-
   return stream;
 }
 
@@ -330,8 +325,7 @@ DSOutputStream::FillStream()
     &buffer_length,
     NULL,
     NULL,
-    0
-  );
+    0);
   if (FAILED(result) || !buffer) {
     ADR_LOG("FillStream failed!");
     return;
@@ -348,6 +342,8 @@ DSOutputStream::FillStream()
   int samples_read = StreamRead(samples_to_read, buffer);
   if (samples_read != samples_to_read) {
     m_NextRead = samples_read;
+  } else {
+    m_NextRead = 0;
   }
 
   // unlock
@@ -476,8 +472,7 @@ DSOutputStream::StreamRead(int sample_count, void* samples)
     memcpy(
       m_LastSample,
       (BYTE*)samples + (samples_read - 1) * m_SampleSize,
-      m_SampleSize
-    );
+      m_SampleSize);
   }
 
   // fill the rest with silence

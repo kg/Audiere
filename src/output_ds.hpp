@@ -81,18 +81,13 @@ private:
   DSOutputContext* m_Context;
 
   IDirectSoundBuffer* m_Buffer;
-  int m_NextRead;  // offset (in samples) where we will read next
   int m_BufferLength;  // in samples
+  int m_NextRead;  // offset (in samples) where we will read next
 
-  // input
   ISampleSource* m_Source;
+  int m_SampleSize;  // convenience: bits per sample * channel count / 8
 
-  // convenience
-  int m_SampleSize;  // bits per sample * channel count / 8
-
-  // state
   int m_Volume;
-
   BYTE* m_LastSample; // the last sample read (used for clickless silence)
 
   friend class DSOutputContext;

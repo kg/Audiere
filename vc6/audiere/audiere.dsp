@@ -172,11 +172,11 @@ SOURCE=..\..\src\device_null.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\dumb_resampler.cpp
+SOURCE=..\..\src\dumb_resample.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\dumb_resampler.h
+SOURCE=..\..\src\dumb_resample.h
 # End Source File
 # Begin Source File
 

@@ -13,6 +13,7 @@ sources = Split("""
     device_al.cpp
     device_mixer.cpp
     device_null.cpp
+    dumb_resample.cpp
     file_ansi.cpp
     input.cpp
     input_aiff.cpp

@@ -1,3 +1,9 @@
+2003.06.01
+
+  fixed short bursts of periodic static while decoding MP3s.  it
+    appears to be a result of the Visual C++ optimizer interacting
+    with the MP3 decoder code.
+
 2003.05.30
 
   fixed bug where resetting an MP3 input stream would emit a short burst

@@ -220,7 +220,7 @@ bool MP3_Reset(ACQ_STREAM stream)
 
 void ResampleFrame(MP3_INTERNAL* mp3_internal)
 {
-  mad_synth::mad_pcm& pcm = mp3_internal->synth.pcm;
+  mad_pcm& pcm = mp3_internal->synth.pcm;
 
   // if the sampling rate changed, reallocate the resampling engine
   if (pcm.samplerate != mp3_internal->source_rate) {

@@ -2,6 +2,14 @@
 #define ENDIAN_HPP
 
 
+// check for GNU autoconf definitions
+#ifdef WORDS_BIGENDIAN
+#  define BIG_ENDIAN
+#else
+#  define LITTLE_ENDIAN
+#endif
+
+
 #include "acq_internal.hpp"
 
 
@@ -34,7 +42,7 @@ inline acq_u32 SwapEndianness32(acq_u32 value) {
   }
 
 
-#elif BIG_ENDIAN
+#elif defined(BIG_ENDIAN)
 
 
   inline acq_u32 LittleToHost32(acq_u32 value) {

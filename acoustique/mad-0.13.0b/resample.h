@@ -31,13 +31,21 @@ struct resample_state {
   mad_fixed_t last;
 };
 
-MAD_EXTERN_C int resample_init(struct resample_state *, unsigned int,
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int resample_init(struct resample_state *, unsigned int,
                             unsigned int);
 
 # define resample_finish(state)  /* nothing */
 
-MAD_EXTERN_C unsigned int resample_block(struct resample_state *,
+unsigned int resample_block(struct resample_state *,
                             unsigned int nsamples,
 			    mad_fixed_t const *, mad_fixed_t *);
+
+#ifdef __cplusplus
+}
+#endif
 
 # endif

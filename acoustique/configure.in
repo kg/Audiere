@@ -1,0 +1,51 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(acoustique.h)
+
+MAJOR_VERSION=1
+MINOR_VERSION=0
+PATCH_VERSION=3
+VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
+PACKAGE="acoustique"
+
+AC_SUBST(MAJOR_VERSION)
+AC_SUBST(MINOR_VERSION)
+AC_SUBST(PATCH_VERSION)
+AC_SUBST(VERSION)
+AC_SUBST(PACKAGE)
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+
+dnl Checks for programs.
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_CXX
+AC_PROG_CXXCPP
+AC_PROG_MAKE_SET
+AC_PROG_LIBTOOL
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+AC_HEADER_STDC
+
+AC_CHECK_HEADER(mad.h,,AC_MSG_RESULT(no)
+    AC_MSG_ERROR(could not find mad library))
+AC_CHECK_LIB(vorbisfile.h,,AC_MSG_RESULT(no)
+    AC_MSG_ERROR(could not find vorbisfile library),-logg -lvorbis)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
+
+dnl Checks for library functions.
+
+AC_SUBST(WORDS_BIGENDIAN)
+AC_OUTPUT(
+	Makefile
+	mikmod/Makefile
+	mikmod/mikmod/Makefile
+	mikmod/mikmod/loaders/Makefile
+	mikmod/mikmod/virtch/Makefile
+	mikmod/mikmod/virtch/resfilter/Makefile
+	mikmod/mmio/Makefile
+)

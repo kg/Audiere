@@ -101,5 +101,77 @@ SOURCE=..\..\examples\wxPlayer\wxPlayer.cpp
 SOURCE=..\..\examples\wxPlayer\wxPlayer.rc
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\blank.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\bullseye.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\error.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\hand.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\info.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\magnif1.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\noentry.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\pbrush.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\pencil.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\pntleft.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\pntright.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\query.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\question.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\roller.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\size.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\tip.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\warning.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\watch1.cur
+# End Source File
 # End Target
 # End Project

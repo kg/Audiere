@@ -78,6 +78,15 @@ namespace audiere {
   }
 
 
+  inline int GetFileLength(File* file) {
+    int pos = file->tell();
+    file->seek(0, File::END);
+    int length = file->tell();
+    file->seek(pos, File::BEGIN);
+    return length;
+  }
+
+
   class UnseekableSource : public RefImplementation<SampleSource> {
   public:
     bool ADR_CALL isSeekable()                  { return false; }
@@ -100,10 +109,10 @@ namespace audiere {
   class QueueBuffer {
   public:
     QueueBuffer() {
-      m_buffer_capacity = 256;
-      m_buffer_size = 0;
+      m_capacity = 256;
+      m_size = 0;
 
-      m_buffer = (u8*)malloc(m_buffer_capacity);
+      m_buffer = (u8*)malloc(m_capacity);
     }
 
     ~QueueBuffer() {
@@ -111,36 +120,80 @@ namespace audiere {
     }
 
     int getSize() {
-      return m_buffer_size;
+      return m_size;
     }
 
     void write(void* buffer, int size) {
       bool need_realloc = false;
-      while (size + m_buffer_size > m_buffer_capacity) {
-        m_buffer_capacity *= 2;
+      while (size + m_size > m_capacity) {
+        m_capacity *= 2;
         need_realloc = true;
       }
 
       if (need_realloc) {
-        m_buffer = (u8*)realloc(m_buffer, m_buffer_capacity);
+        m_buffer = (u8*)realloc(m_buffer, m_capacity);
       }
 
-      memcpy(m_buffer + m_buffer_size, buffer, size);
-      m_buffer_size += size;
+      memcpy(m_buffer + m_size, buffer, size);
+      m_size += size;
     }
 
     int read(void* buffer, int size) {
-      int to_read = std::min(size, m_buffer_size);
+      int to_read = std::min(size, m_size);
       memcpy(buffer, m_buffer, to_read);
-      memmove(m_buffer, m_buffer + to_read, m_buffer_size - to_read);
-      m_buffer_size -= to_read;
+      memmove(m_buffer, m_buffer + to_read, m_size - to_read);
+      m_size -= to_read;
       return to_read;
+    }
+
+    void clear() {
+      m_size = 0;
     }
 
   private:
     u8* m_buffer;
-    int m_buffer_capacity;
-    int m_buffer_size;
+    int m_capacity;
+    int m_size;
+
+    // private and unimplemented to prevent their use
+    QueueBuffer(const QueueBuffer&);
+    QueueBuffer& operator=(const QueueBuffer&);
+  };
+
+
+  class SizedBuffer {
+  public:
+    SizedBuffer() {
+      m_capacity = 256;
+      m_buffer = malloc(m_capacity);
+    }
+
+    ~SizedBuffer() {
+      m_buffer = realloc(m_buffer, 0);
+    }
+
+    void ensureSize(int size) {
+      bool need_realloc = false;
+      while (m_capacity < size) {
+        m_capacity *= 2;
+        need_realloc = true;
+      }
+      if (need_realloc) {
+        m_buffer = realloc(m_buffer, m_capacity);
+      }
+    }
+
+    void* get() {
+      return m_buffer;
+    }
+
+  private:
+    void* m_buffer;
+    int m_capacity;
+
+    // private and unimplemented to prevent their use
+    SizedBuffer(const SizedBuffer&);
+    SizedBuffer& operator=(const SizedBuffer&);
   };
 
 }

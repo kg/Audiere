@@ -2,6 +2,7 @@
 #include <string.h>
 #include "debug.h"
 #include "default_file.h"
+#include "input_flac.h"
 #ifndef NO_MIKMOD
 #include "input_mod.h"
 #endif
@@ -82,6 +83,10 @@ namespace audiere {
 
         TRY_SOURCE(MP3InputStream);
 
+      } else if (end_is(filename, ".flac")) {
+
+        TRY_SOURCE(FLACInputStream);
+
       }
     }
 
@@ -92,6 +97,7 @@ namespace audiere {
     TRY_SOURCE(WAVInputStream);
     TRY_SOURCE(OGGInputStream);
     TRY_SOURCE(MP3InputStream);
+    TRY_SOURCE(FLACInputStream);
 
     return 0;
   }

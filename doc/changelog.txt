@@ -2,6 +2,7 @@
 
   use the mpegsound library instead of mpglib because it sounds and
     works a lot better
+  FLAC support, thanks to Jacky Chong and Chad  :)
 
 2002.10.02
 

@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\src\mpegsound" /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "LAYER1" /D "LAYER2" /D "LAYER3" /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "..\..\src\flac-1.0.4\include" /I "..\..\src\flac-1.0.4\src\libFLAC\include" /I "..\..\src\flac-1.0.4\src\libFLAC++\include" /I "..\..\src\mpegsound" /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D VERSION="\"1.0.4\"" /D "FLAC__NO_ASM" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\src\mpegsound" /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "LAYER1" /D "LAYER2" /D "LAYER3" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "..\..\src\flac-1.0.4\include" /I "..\..\src\flac-1.0.4\src\libFLAC\include" /I "..\..\src\flac-1.0.4\src\libFLAC++\include" /I "..\..\src\mpegsound" /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D VERSION="\"1.0.4\"" /D "FLAC__NO_ASM" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -171,6 +171,14 @@ SOURCE=..\..\src\file_ansi.cpp
 # Begin Source File
 
 SOURCE=..\..\src\input.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\input_flac.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\input_flac.h
 # End Source File
 # Begin Source File
 
@@ -816,6 +824,118 @@ SOURCE=..\..\src\mpegsound\xingheader.cpp
 
 SOURCE=..\..\src\mpegsound\xingheader.h
 # End Source File
+# End Group
+# Begin Group "FLAC"
+
+# PROP Default_Filter ""
+# Begin Group "libFLAC"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\bitbuffer.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\bitmath.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\cpu.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\crc.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\file_decoder.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\file_encoder.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\fixed.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\format.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\lpc_flac.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\md5.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\memory.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\metadata_iterators.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\metadata_object.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\seekable_stream_decoder.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\seekable_stream_encoder.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\stream_decoder.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\stream_encoder.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC\stream_encoder_framing.c"
+# End Source File
+# End Group
+# Begin Group "libFLAC++"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_file_decoder.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_file_encoder.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_metadata.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_seekable_stream_decoder.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_seekable_stream_encoder.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_stream_decoder.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_stream_encoder.cpp"
+# End Source File
+# End Group
 # End Group
 # End Target
 # End Project

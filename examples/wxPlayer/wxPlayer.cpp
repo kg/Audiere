@@ -290,8 +290,8 @@ public:
   wxString GetSoundFile() {
     return wxFileSelector(
       "Select a sound file", "", "", "",
-      "Sound Files (*.mp3,*.wav,*.ogg,*.mod,*.it,*.xm,*.s3m)|"  \
-      "*.mp3;*.wav;*.ogg;*.mod;*.it;*.xm;*.s3m",
+      "Sound Files (*.mp3,*.wav,*.flac,*.ogg,*.mod,*.it,*.xm,*.s3m)|"  \
+      "*.mp3;*.wav;*.flac;*.ogg;*.mod;*.it;*.xm;*.s3m",
       wxOPEN, this);
   }
 

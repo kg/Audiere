@@ -71,5 +71,4 @@ AC_OUTPUT(
         src/mikmod/mmio/Makefile
         examples/Makefile
         examples/simple/Makefile
-        examples/wxPlayer/Makefile
 )

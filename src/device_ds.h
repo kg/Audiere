@@ -38,11 +38,20 @@ namespace audiere {
       IDirectSound* direct_sound);
     ~DSAudioDevice();
 
+public:
     void ADR_CALL update();
     OutputStream* ADR_CALL openStream(SampleSource* source);
     OutputStream* ADR_CALL openBuffer(
       void* samples, int sample_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
+
+    /**
+     * DirectSound treats volumes and pan levels as decibels (exponential
+     * growth like the Richter scale).  We want a linear ramp.  Do
+     * the conversion!
+     */
+    static int Volume_AudiereToDirectSound(float volume);
+    static int Pan_AudiereToDirectSound(float pan);
 
   private:
     typedef std::list<DSOutputStream*> StreamList;

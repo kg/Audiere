@@ -2,8 +2,12 @@
 #define DEVICE_DS_STREAM_H
 
 
+#include <windows.h>
+#include <mmreg.h>
+#include <dsound.h>
 #include "audiere.h"
 #include "repeatable.h"
+#include "utility.h"
 
 
 namespace audiere {
@@ -11,6 +15,7 @@ namespace audiere {
   class DSAudioDevice;
 
   class DSOutputStream : public RefImplementation<OutputStream> {
+  public:
     DSOutputStream(
       DSAudioDevice* device,
       IDirectSoundBuffer* buffer,

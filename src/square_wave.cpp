@@ -1,15 +1,12 @@
-#include <math.h>
 #include "internal.h"
 #include "utility.h"
 #include "types.h"
 
 namespace audiere {
 
-  static const double PI = 3.14159265358979323846;
-
-  class SineWave : public UnseekableSource {
+  class SquareWave : public UnseekableSource {
   public:
-    SineWave(double frequency) {
+    SquareWave(double frequency) {
       m_frequency = frequency;
       doReset(); // not supposed to call virtual functions in constructors
     }
@@ -33,8 +30,8 @@ namespace audiere {
 
       s16* out = (s16*)buffer;
       for (int i = 0; i < frame_count; ++i) {
-        double h = sin(2 * PI * m_frequency / 44100 * elapsed++);
-        out[i] = normal_to_s16(h);
+        int value = (int)(elapsed++ * m_frequency / 44100);
+        *out++ = (value % 2 ? -32678 : 32767);
       }
       return frame_count;
     }
@@ -48,18 +45,13 @@ namespace audiere {
       elapsed = 0;
     }
 
-    s16 normal_to_s16(double d) {
-      d = (d + 1) / 2; // convert from [-1, 1] to [0, 1]
-      return s16(d * 32767 - 16384);
-    }
-
     double m_frequency;
     long elapsed;
   };
 
 
-  ADR_EXPORT(SampleSource*, AdrCreateTone)(double frequency) {
-    return new SineWave(frequency);
+  ADR_EXPORT(SampleSource*, AdrCreateSquareWave)(double frequency) {
+    return new SquareWave(frequency);
   }
 
 }

@@ -505,6 +505,7 @@ namespace audiere {
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSource)(const char* filename);
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSourceFromFile)(File* file);
     ADR_FUNCTION(SampleSource*, AdrCreateTone)(double frequency);
+    ADR_FUNCTION(SampleSource*, AdrCreateSquareWave)(double frequency);
 
     ADR_FUNCTION(OutputStream*, AdrOpenSound)(
       AudioDevice* device,
@@ -597,6 +598,17 @@ namespace audiere {
    */
   inline SampleSource* CreateTone(double frequency) {
     return hidden::AdrCreateTone(frequency);
+  }
+
+  /**
+   * Create a square wave with the specified frequency.
+   *
+   * @param  frequency  Frequency of the wave in Hz.
+   *
+   * @return  wave sample source
+   */
+  inline SampleSource* CreateSquareWave(double frequency) {
+    return hidden::AdrCreateSquareWave(frequency);
   }
 
   /**

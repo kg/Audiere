@@ -17,6 +17,7 @@ enum {
   DEVICE_OPEN_STREAM,
   DEVICE_OPEN_SOUND,
   DEVICE_CREATE_TONE,
+  DEVICE_CREATE_SQUARE_WAVE,
   DEVICE_CLOSE,
 
   STREAM_PLAY,
@@ -189,13 +190,14 @@ public:
     m_device = device;
 
     wxMenu* fileMenu = new wxMenu();
-    fileMenu->Append(DEVICE_NEW_DEVICE,  "&New Device...");
+    fileMenu->Append(DEVICE_NEW_DEVICE,         "&New Device...");
     fileMenu->AppendSeparator();
-    fileMenu->Append(DEVICE_OPEN_STREAM, "&Open Stream...");
-    fileMenu->Append(DEVICE_OPEN_SOUND,  "Open &Sound...");
-    fileMenu->Append(DEVICE_CREATE_TONE, "Create &Tone...");
+    fileMenu->Append(DEVICE_OPEN_STREAM,        "&Open Stream...");
+    fileMenu->Append(DEVICE_OPEN_SOUND,         "Open &Sound...");
+    fileMenu->Append(DEVICE_CREATE_TONE,        "Create &Tone...");
+    fileMenu->Append(DEVICE_CREATE_SQUARE_WAVE, "Create S&quare Wave...");
     fileMenu->AppendSeparator();
-    fileMenu->Append(DEVICE_CLOSE,       "&Close Device");
+    fileMenu->Append(DEVICE_CLOSE,              "&Close Device");
 
     wxMenuBar* menuBar = new wxMenuBar();
     menuBar->Append(fileMenu, "&Device");
@@ -287,6 +289,24 @@ public:
     }
   }
 
+  void OnDeviceCreateSquareWave() {
+    int frequency = wxGetNumberFromUser(
+      "Value must be between 1 and 30000.", "Enter frequency in Hz",
+      "Create Square Wave", 256, 1, 30000, this);
+    if (frequency != -1) {
+      OutputStream* stream = m_device->openStream(CreateSquareWave(frequency));
+      if (!stream) {
+        wxMessageBox(
+          "Could not open output stream",
+          "Create Square Wave", wxOK | wxCENTRE, this);
+      } else {
+        wxString title;
+        title.sprintf("Square Wave: %d Hz", frequency);
+        new StreamFrame(this, title, stream);
+      }
+    }
+  }
+
   void OnDeviceClose() {
     Close();
   }
@@ -299,11 +319,12 @@ private:
 
 
 BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
-  EVT_MENU(DEVICE_NEW_DEVICE,  DeviceFrame::OnDeviceNewDevice)
-  EVT_MENU(DEVICE_OPEN_STREAM, DeviceFrame::OnDeviceOpenStream)
-  EVT_MENU(DEVICE_OPEN_SOUND,  DeviceFrame::OnDeviceOpenSound)
-  EVT_MENU(DEVICE_CREATE_TONE, DeviceFrame::OnDeviceCreateTone)
-  EVT_MENU(DEVICE_CLOSE,       DeviceFrame::OnDeviceClose)
+  EVT_MENU(DEVICE_NEW_DEVICE,         DeviceFrame::OnDeviceNewDevice)
+  EVT_MENU(DEVICE_OPEN_STREAM,        DeviceFrame::OnDeviceOpenStream)
+  EVT_MENU(DEVICE_OPEN_SOUND,         DeviceFrame::OnDeviceOpenSound)
+  EVT_MENU(DEVICE_CREATE_TONE,        DeviceFrame::OnDeviceCreateTone)
+  EVT_MENU(DEVICE_CREATE_SQUARE_WAVE, DeviceFrame::OnDeviceCreateSquareWave)
+  EVT_MENU(DEVICE_CLOSE,              DeviceFrame::OnDeviceClose)
 END_EVENT_TABLE()
 
 

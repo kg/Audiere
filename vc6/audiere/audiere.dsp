@@ -226,6 +226,10 @@ SOURCE=..\..\src\sound.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\square_wave.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\threads.h
 # End Source File
 # Begin Source File

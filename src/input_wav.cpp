@@ -78,18 +78,29 @@ namespace audiere {
     }
 
     const int samples_to_read = std::min(sample_count, m_samples_left_in_chunk);
-    const int sample_size =
+    const int frame_size =
       m_channel_count * GetSampleSize(m_sample_format);
-    const int bytes_to_read = samples_to_read * sample_size;
+    const int bytes_to_read = samples_to_read * frame_size;
   
     const int read = m_file->read(samples, bytes_to_read);
-    const int samples_read = read / sample_size;
+    const int samples_read = read / frame_size;
 
     // assume that if we didn't get a full read, we're done
     if (read != bytes_to_read) {
       m_samples_left_in_chunk = 0;
       return samples_read;
     }
+
+#if WORDS_BIGENDIAN
+    if (m_sample_format == SF_S16) {
+      // make little endian into host endian
+      u8* out = (u8*)samples;
+      for (int i = 0; i < samples_read * m_channel_count; ++i) {
+        std::swap(out[0], out[1]);
+        out += 2;
+      }
+    }
+#endif
 
     m_samples_left_in_chunk -= samples_read;
     return samples_read;

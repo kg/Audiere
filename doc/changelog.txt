@@ -1,3 +1,8 @@
+2004.04.29
+
+  Fix a bug in CondVar::wait that causes 100% CPU usage on posix
+  systems.  (Richard Schaaf)
+
 2004.04.09
 
   Moved callback system to be processed within another thread.  This

@@ -1,5 +1,7 @@
+#include <math.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <sys/time.h>
 #include "threads.h"
 #include "utility.h"
 
@@ -134,9 +136,15 @@ namespace audiere {
   }
 
   void CondVar::wait(Mutex& mutex, float seconds) {
+    double ds = seconds;  // May need greater than float precision.
+    
+    timeval tv;
+    gettimeofday(&tv, 0);
+    ds += tv.tv_sec + tv.tv_usec / 1000000000.0;
+    
     timespec ts;
-    ts.tv_sec  = int(seconds);
-    ts.tv_nsec = int((seconds - ts.tv_sec) * 1000000000);
+    ts.tv_sec  = int(ds);
+    ts.tv_nsec = int((ds - floor(ds)) * 1000000000);
     pthread_cond_timedwait(&m_impl->cond, &mutex.m_impl->mutex, &ts);
   }
 

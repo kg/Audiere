@@ -1,8 +1,7 @@
-/*
+/**
  * Internal platform-specific threads
  *
  * AI namespace = Audiere Internal
- *
  */
 
 

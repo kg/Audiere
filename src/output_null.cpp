@@ -99,6 +99,7 @@ NullOutputStream::~NullOutputStream()
 void
 NullOutputStream::Play()
 {
+  ADR_GUARD("NullOutputStream::Play");
   m_is_playing = true;
   ResetTimer();
 }
@@ -156,16 +157,34 @@ NullOutputStream::ResetTimer()
 void
 NullOutputStream::Update()
 {
+  ADR_GUARD("NullOutputStream::Update");
+
   if (m_is_playing) {
+    ADR_LOG("Null output stream is playing");
+
     // get number of milliseconds elapsed since last playing update
     // so we can read that much time worth of samples
     adr_u64 now = GetNow();
     adr_u64 elapsed = now - m_last_update;
 
-    int samples_to_read = m_sample_rate * int(elapsed / 1000000);
+    ADR_IF_DEBUG {
+      char str[100];
+      sprintf(str, "Elapsed: %I64d", elapsed);
+      ADR_LOG(str);
+    }
+
+    int samples_to_read = int(m_sample_rate * elapsed / 1000000);
+
+    ADR_IF_DEBUG {
+      char str[100];
+      sprintf(str, "Samples to read: %d", samples_to_read);
+      ADR_LOG(str);
+    }
+
     int samples_read = DummyRead(samples_to_read);
 
     if (samples_read != samples_to_read) {
+      ADR_LOG("Stopping null output stream");
       m_source->Reset();
       Stop();
     }

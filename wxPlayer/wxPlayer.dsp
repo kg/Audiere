@@ -95,13 +95,5 @@ LINK32=link.exe
 SOURCE=.\wxPlayer.cpp
 # End Source File
 # End Group
-# Begin Group "audiere"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\audiere.h
-# End Source File
-# End Group
 # End Target
 # End Project

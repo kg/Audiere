@@ -111,13 +111,18 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  auto_ptr<OutputStream> stream1(device->openStream(new ToneBuffer(256)));
-  auto_ptr<OutputStream> stream2(device->openStream(new ToneBuffer(512)));
-  auto_ptr<OutputStream> stream3(device->openStream(new ToneBuffer(515)));
+  auto_ptr<OutputStream> s1(OpenSound(device.get(), new ToneBuffer(256)));
+  auto_ptr<OutputStream> s2(OpenSound(device.get(), new ToneBuffer(512)));
+  auto_ptr<OutputStream> s3(OpenSound(device.get(), new ToneBuffer(515)));
 
-  stream1->play();
-  stream2->play();
-  stream3->play();
+  if (!s1.get() || !s2.get() || !s3.get()) {
+    cerr << "OpenSound() failed" << endl;
+    return EXIT_FAILURE;
+  }
+
+  s1->play();
+  s2->play();
+  s3->play();
 
   // wait for five seconds
   PassOut(5);

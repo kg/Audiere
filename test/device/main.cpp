@@ -40,6 +40,11 @@ int main(int argc, char** argv) {
   auto_ptr<OutputStream> stream2(device->openStream(CreateTone(512)));
   auto_ptr<OutputStream> stream3(device->openStream(CreateTone(515)));
 
+  if (!stream1.get() || !stream2.get() || !stream3.get()) {
+    cerr << "openStream() failed" << endl;
+    return EXIT_FAILURE;
+  }
+
   stream1->play();
   stream2->play();
   stream3->play();

@@ -311,6 +311,13 @@ namespace audiere {
     addTag("year",    year,    "ID3v1");
     addTag("comment", comment, "ID3v1");
     addTag("genre",   genre,   "ID3v1");
+
+    // This is the ID3v1.1 part.
+    if (buffer[97 + 28] == 0 && buffer[97 + 29] != 0) {
+      char track[20];
+      sprintf(track, "%d", int(buffer[97 + 29]));
+      addTag("track", track, "ID3v1.1");
+    }
   }
 
   

@@ -3,7 +3,8 @@
   Added support for reading metadata tags from Ogg Vorbis files.
   Interface designed with help from Brian Robb and Andy Friesen.
 
-  Added ID3v1 support.  (Original code written by Brian Robb.)
+  Added ID3v1 and ID3v1.1 support.  (Original code written by Brian
+  Robb.)
 
 2003.09.04
 

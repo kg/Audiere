@@ -46,12 +46,13 @@ case $host in
     ;;
 esac
 
-dnl If building with gcc, build with all warnings
+dnl If building with gcc, build with all warnings except "class has virtual
+dnl functions but non-virtual destructor".
 if [[ "x$GXX" = "xyes" ]]; then
-   CXXFLAGS="$CXXFLAGS -Wall"
+   CXXFLAGS="$CXXFLAGS -Wall -Wno-non-virtual-dtor"
 fi
 if [[ "x$GCC" = "xyes" ]]; then
-   CFLAGS="$CFLAGS -Wall"
+   CFLAGS="$CFLAGS -Wall -Wno-non-virtual-dtor"
 fi
 
 dnl Look for pthreads

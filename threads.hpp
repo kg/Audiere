@@ -10,37 +10,72 @@
 #define THREADS_HPP
 
 
-// threads
+#include "Debug.hpp"
+
+
 typedef void (*AI_ThreadRoutine)(void* opaque);
-extern bool AI_CreateThread(AI_ThreadRoutine routine, void* opaque, int priority = 0);
 
-// waiting
-extern void AI_Sleep(unsigned milliseconds);
-
-// critical section
 struct AI_CriticalSectionStruct;
 typedef AI_CriticalSectionStruct* AI_CriticalSection;
 
-extern AI_CriticalSection AI_CreateCriticalSection();
-extern void AI_DestroyCriticalSection(AI_CriticalSection cs);
-extern void AI_EnterCriticalSection(AI_CriticalSection cs);
-extern void AI_LeaveCriticalSection(AI_CriticalSection cs);
+
+// threads
+bool AI_CreateThread(AI_ThreadRoutine routine, void* opaque, int priority = 0);
+
+// waiting
+void AI_Sleep(unsigned milliseconds);
+
+// critical section
+AI_CriticalSection AI_CreateCriticalSection();
+void AI_DestroyCriticalSection(AI_CriticalSection cs);
+void AI_EnterCriticalSection(AI_CriticalSection cs);
+void AI_LeaveCriticalSection(AI_CriticalSection cs);
 
 
-class AI_Lock
-{
+class Synchronized {
 public:
-  AI_Lock(AI_CriticalSection cs) {
-    m_cs = cs;
-    AI_EnterCriticalSection(m_cs);
+  Synchronized() {
+    m_cs = AI_CreateCriticalSection();
+    // if it fails...  shit
   }
 
-  ~AI_Lock() {
+  ~Synchronized() {
+    AI_DestroyCriticalSection(m_cs);
+  }
+
+  void Lock() {
+    std::string s(name());
+    ADR_LOG(("--> Trying to lock   " + s).c_str());
+    AI_EnterCriticalSection(m_cs);
+    ADR_LOG(("-->:: LOCKED ::   " + s).c_str());
+  }
+
+  void Unlock() {
+    std::string s(name());
+    ADR_LOG(("<-- Unlocking...   " + s).c_str());
     AI_LeaveCriticalSection(m_cs);
   }
 
+  virtual const char* name() = 0;  // for debugging
+
 private:
   AI_CriticalSection m_cs;
+};
+
+
+class AI_Lock {
+public:
+  AI_Lock(Synchronized* object)
+  : m_object(object) {
+    object->Lock();
+  }
+
+  ~AI_Lock() {
+    m_object->Unlock();
+  }
+
+private:
+  Synchronized* m_object;
 };
 
 

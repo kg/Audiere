@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /ZI /Od /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FR /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FR /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -98,7 +98,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /O2 /I "libogg-1.0beta4/include" /I "mad-0.13.0b/libmad" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "FPM_64BIT" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "WITH_MP3" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -152,6 +152,14 @@ SOURCE=.\acq_ogg.cpp
 # Begin Source File
 
 SOURCE=.\acq_wav.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\debug.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\debug.hpp
 # End Source File
 # Begin Source File
 

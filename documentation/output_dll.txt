@@ -1,6 +1,6 @@
 Audiere Audio DLL Specification
 Chad Austin
-2001.09.25
+2002.01.14
 
 
 In order for a DLL to qualify as an Audiere audio driver, it must contain
@@ -178,3 +178,10 @@ int AO_GetVolume(AO_STREAM stream)
   returns current volume of stream
 
 ------------------------------------------------------------------------------
+
+
+== Synchronization Issues ====================================================
+
+Audiere does synchronization for you.  You can assume that no two of these
+calls will occur simultaneously.
+

@@ -1,5 +1,6 @@
 #include <string.h>
 #include "output.hpp"
+#include "debug.hpp"
 #include "output_null.hpp"
 
 #ifdef _WIN32
@@ -22,6 +23,8 @@
 
 IOutputContext* OpenContext(const char* device, const char* parameters)
 {
+  ADR_GUARD("OpenContext");
+
   IOutputContext* context;
 
   #define TRY_CONTEXT(context_type)            \

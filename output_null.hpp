@@ -20,6 +20,7 @@ public:
   void Play();
   void Stop();
   void Reset();
+  void ResetInputAndOutput();
   bool IsPlaying();
   void SetVolume(int volume);
   int  GetVolume();

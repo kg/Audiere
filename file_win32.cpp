@@ -80,11 +80,7 @@ int ADR_CALL DefaultFileRead(ADR_FILE file, void* buffer, int size)
 {
   DWORD read;
   BOOL result = ReadFile(file->handle, buffer, size, &read, NULL);
-  if (!result) {
-    return 0;
-  } else {
-    return read;
-  }
+  return (result ? read : 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +88,7 @@ int ADR_CALL DefaultFileRead(ADR_FILE file, void* buffer, int size)
 int ADR_CALL DefaultFileSeek(ADR_FILE file, int destination)
 {
   int d = SetFilePointer(file->handle, destination, NULL, FILE_BEGIN);
-  return (d == destination);
+  return (d != destination);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

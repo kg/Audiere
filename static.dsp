@@ -97,7 +97,15 @@ SOURCE=.\audiere.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\default_io.hpp
+SOURCE=.\context.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\debug.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\debug.hpp
 # End Source File
 # Begin Source File
 
@@ -105,7 +113,7 @@ SOURCE=.\file.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\file_win32.cpp
+SOURCE=.\file_ansi.cpp
 # End Source File
 # Begin Source File
 
@@ -150,6 +158,10 @@ SOURCE=.\output_null.cpp
 # Begin Source File
 
 SOURCE=.\output_null.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\stream.cpp
 # End Source File
 # Begin Source File
 

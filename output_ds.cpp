@@ -20,6 +20,7 @@
 
 #include <math.h>
 #include "output_ds.hpp"
+#include "debug.hpp"
 
 
 static const int DS_DefaultBufferLength = 1000;  // one second
@@ -48,19 +49,14 @@ DSOutputContext::DSOutputContext()
 
 DSOutputContext::~DSOutputContext()
 {
+  ADR_ASSERT(m_OpenStreams.size() == 0,
+    "DirectSound output context should not die with open streams");
+
   // if the anonymous window is open, close it
   if (m_AnonymousWindow) {
     DestroyWindow(m_AnonymousWindow);
     m_AnonymousWindow = NULL;
   }
-
-  // close any open streams
-  StreamList::iterator i = m_OpenStreams.begin();
-  while (i != m_OpenStreams.end()) {
-    delete (*i);
-    ++i;
-  }
-  m_OpenStreams.clear();
 
   // shut down DirectSound
   if (m_DirectSound) {
@@ -83,6 +79,8 @@ static LRESULT CALLBACK WindowProc(
 bool
 DSOutputContext::Initialize(const char* parameters)
 {
+  ADR_GUARD("DSOutputContext::Initialize");
+
   // parse the parameter list
   ParameterList pl;
   ParseParameters(parameters, pl);
@@ -118,6 +116,8 @@ DSOutputContext::Initialize(const char* parameters)
   wc.lpszClassName  = "AudiereHiddenWindow";
   RegisterClass(&wc);
 
+  ADR_LOG("CreateWindow");
+
   // create anonymous window
   m_AnonymousWindow = CreateWindow(
     "AudiereHiddenWindow", "", WS_POPUP,
@@ -140,6 +140,8 @@ DSOutputContext::Initialize(const char* parameters)
     return false;
   }
 
+  ADR_LOG("Created DS object");
+
   // initialize the DirectSound device
   rv = m_DirectSound->Initialize(NULL);
   if (FAILED(rv)) {
@@ -149,6 +151,8 @@ DSOutputContext::Initialize(const char* parameters)
     m_DirectSound = NULL;
     return false;
   }
+
+  ADR_LOG("Initialized DS object");
 
   // set the cooperative level
   rv = m_DirectSound->SetCooperativeLevel(
@@ -162,7 +166,9 @@ DSOutputContext::Initialize(const char* parameters)
     return false;
   }
 
-  if (!CreatePrimarySoundBuffer()) {
+  ADR_LOG("Set cooperative level");
+
+  if (!CreatePrimarySoundBuffer(m_DirectSound)) {
     DestroyWindow(m_AnonymousWindow);
     m_AnonymousWindow = NULL;
     m_DirectSound->Release();
@@ -178,6 +184,8 @@ DSOutputContext::Initialize(const char* parameters)
 void
 DSOutputContext::Update()
 {
+  ADR_GUARD("DSOutputContext::Update");
+
   // enumerate all open streams
   StreamList::iterator i = m_OpenStreams.begin();
   while (i != m_OpenStreams.end()) {
@@ -193,9 +201,9 @@ DSOutputContext::Update()
 IOutputStream*
 DSOutputContext::OpenStream(ISampleSource* source)
 {
-  int channel_count;
-  int sample_rate;
-  int bits_per_sample;
+  ADR_GUARD("DSOutputContext::OpenStream");
+
+  int channel_count, sample_rate, bits_per_sample;
   source->GetFormat(channel_count, sample_rate, bits_per_sample);
 
   int sample_size = channel_count * bits_per_sample / 8;
@@ -227,20 +235,30 @@ DSOutputContext::OpenStream(ISampleSource* source)
   IDirectSoundBuffer* buffer;
   HRESULT result = m_DirectSound->CreateSoundBuffer(&dsbd, &buffer, NULL);
   if (FAILED(result) || !buffer) {
-    return NULL;
+    return 0;
   }
+
+  ADR_LOG("CreateSoundBuffer succeeded");
 
   DSOutputStream* stream = new DSOutputStream(
     this,
     buffer,
     sample_size,
     buffer_length,
-    source
-  );
+    source);
 
   // add ourselves to the list of streams and return
   m_OpenStreams.push_back(stream);
+
   return stream;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void
+DSOutputContext::RemoveStream(DSOutputStream* stream)
+{
+  m_OpenStreams.remove(stream);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -272,15 +290,7 @@ DSOutputStream::DSOutputStream(
 
 DSOutputStream::~DSOutputStream()
 {
-  // remove ourself from the list
-  DSOutputContext::StreamList::iterator i = m_Context->m_OpenStreams.begin();
-  while (i != m_Context->m_OpenStreams.end()) {
-    if (*i == this) {
-      m_Context->m_OpenStreams.erase(i);
-      break;
-    }
-    ++i;
-  }
+  m_Context->RemoveStream(this);
 
   // destroy the sound buffer interface
   m_Buffer->Release();
@@ -292,6 +302,8 @@ DSOutputStream::~DSOutputStream()
 void
 DSOutputStream::FillStream()
 {
+  ADR_GUARD("DSOutputStream::FillStream");
+
   // we know the stream is stopped, so just lock the buffer and fill it
 
   void* buffer = NULL;
@@ -327,6 +339,8 @@ DSOutputStream::FillStream()
 void
 DSOutputStream::Update()
 {
+  ADR_GUARD("DSOutputStream::Update");
+
   // if it's not playing, don't do anything
   if (!IsPlaying()) {
     return;
@@ -385,12 +399,6 @@ DSOutputStream::Update()
 
   int old_next_read = m_NextRead;
   m_NextRead = (m_NextRead + read1 + read2) % m_BufferLength;
-
-//  char buf[1024];
-//  sprintf(buf, "rl1 (%d/%d) rl2 (%d/%d)  old/new pos (%d/%d)\n",
-//          read1, length1, read2, length2,
-//          old_next_read, m_NextRead);
-//  OutputDebugString(buf);
 
   // unlock
   m_Buffer->Unlock(buffer1, buffer1_length, buffer2, buffer2_length);

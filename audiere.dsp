@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "acoustique" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "USE_DIRECTX8" /D for="if (0) ; else for" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "acoustique" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D for="if (0) ; else for" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "acoustique" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "USE_DIRECTX8" /D for="if (0) ; else for" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "acoustique" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D for="if (0) ; else for" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -104,7 +104,19 @@ SOURCE=.\audiere.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\default_io.hpp
+SOURCE=.\context.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\context.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\debug.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\debug.hpp
 # End Source File
 # Begin Source File
 
@@ -112,7 +124,7 @@ SOURCE=.\file.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\file_win32.cpp
+SOURCE=.\file_ansi.cpp
 # End Source File
 # Begin Source File
 
@@ -157,6 +169,14 @@ SOURCE=.\output_null.cpp
 # Begin Source File
 
 SOURCE=.\output_null.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\stream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\stream.hpp
 # End Source File
 # Begin Source File
 

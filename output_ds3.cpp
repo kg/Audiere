@@ -1,5 +1,13 @@
 #include "output_ds3.hpp"
+#include "debug.hpp"
 
+
+////////////////////////////////////////////////////////////////////////////////
+
+DS3OutputContext::DS3OutputContext()
+{
+  m_PrimaryBuffer = 0;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -14,17 +22,21 @@ DS3OutputContext::~DS3OutputContext()
 ////////////////////////////////////////////////////////////////////////////////
 
 bool
-DS3OutputContext::CreatePrimarySoundBuffer()
+DS3OutputContext::CreatePrimarySoundBuffer(IDirectSound* ds)
 {
+  ADR_GUARD("DS3OutputContext::CreatePrimarySoundBuffer");
+
   // create a primary sound buffer
   DSBUFFERDESC dsbd;
   memset(&dsbd, 0, sizeof(dsbd));
   dsbd.dwSize = sizeof(dsbd);
   dsbd.dwFlags = DSBCAPS_PRIMARYBUFFER;
-  HRESULT rv = m_DirectSound->CreateSoundBuffer(&dsbd, &m_PrimaryBuffer, NULL);
+  HRESULT rv = ds->CreateSoundBuffer(&dsbd, &m_PrimaryBuffer, NULL);
   if (FAILED(rv)) {
     return false;
   }
+
+  ADR_LOG("CreateSoundBuffer succeeded");
 
   // set our maximum output format to 44100, 16, stereo
   // we don't really care about this
@@ -41,6 +53,8 @@ DS3OutputContext::CreatePrimarySoundBuffer()
   if (FAILED(rv)) {
     return false;
   }
+
+  ADR_LOG("SetFormat succeeded");
 
   return true;
 }

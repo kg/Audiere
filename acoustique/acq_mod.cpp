@@ -35,6 +35,7 @@
 #include <uniform.h> // mikmod headers
 #include <mplayer.h> //
 #include "acq_internal.hpp"
+#include "debug.hpp"
 
 
 static const int SAMPLE_BUFFER_SIZE = 4096;
@@ -163,9 +164,13 @@ static MD_DEVICE drv_acq =
 
 bool MOD_Open(ACQ_STREAM stream)
 {
+  ACQ_GUARD("MOD_Open");
+
   // first time we run, initialize MikMod
   static bool initialized = false;
   if (!initialized) {
+    ACQ_GUARD("Initializing MikMod");
+
     Mikmod_RegisterLoader(load_it);
     Mikmod_RegisterLoader(load_xm);
     Mikmod_RegisterLoader(load_s3m);
@@ -219,6 +224,8 @@ bool MOD_Open(ACQ_STREAM stream)
     return false;
   }
 
+  ACQ_LOG("Mikmod_Init succeeded");
+
   // load the song
   mod_internal->module = Unimod_LoadFP(
     mod_internal->driver,
@@ -232,6 +239,8 @@ bool MOD_Open(ACQ_STREAM stream)
     return false;
   }
 
+  ACQ_LOG("Unimod_LoadFP succeeded");
+
   // load the samples (???)
   if (SL_LoadSamples(mod_internal->driver)) {
     Unimod_Free(mod_internal->module);
@@ -239,6 +248,8 @@ bool MOD_Open(ACQ_STREAM stream)
     delete mod_internal;
     return false;
   }
+
+  ACQ_LOG("SL_LoadSamples succeeded");
 
   // create a player
   mod_internal->player = Player_InitSong(mod_internal->module, NULL, 0, 64);
@@ -249,9 +260,13 @@ bool MOD_Open(ACQ_STREAM stream)
     return false;
   }
 
+  ACQ_LOG("Player_InitSong succeeded");
+
   // start playback of the module
   // we won't actually get samples until the update call
   Player_Start(mod_internal->player);
+
+  ACQ_LOG("Player_Start succeeded");
 
   return true;
 }
@@ -260,6 +275,8 @@ bool MOD_Open(ACQ_STREAM stream)
 
 void MOD_Close(ACQ_STREAM stream)
 {
+  ACQ_GUARD("MOD_Close");
+
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)stream->internal;
 
   Player_Free(mod_internal->player);
@@ -281,6 +298,8 @@ void MOD_Close(ACQ_STREAM stream)
 
 int MOD_Read(ACQ_STREAM stream, void* samples, int sample_count)
 {
+  ACQ_GUARD("MOD_Read");
+
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)stream->internal;
 
   acq_u32* out = (acq_u32*)samples;
@@ -321,6 +340,8 @@ int MOD_Read(ACQ_STREAM stream, void* samples, int sample_count)
 
 bool MOD_Reset(ACQ_STREAM stream)
 {
+  ACQ_GUARD("MOD_Reset");
+
   // XXX possible optimization: keep data pages that we've already loaded
   MOD_Close(stream);
   stream->reset(stream->opaque);
@@ -338,6 +359,8 @@ BOOL ACQ_IsThere()
 
 BOOL ACQ_Init(MDRIVER* md, uint latency, void* optstr)
 {
+  ACQ_GUARD("ACQ_Init");
+
   md->device.vc = VC_Init();
   if (!md->device.vc) {
     return 1;
@@ -351,6 +374,8 @@ BOOL ACQ_Init(MDRIVER* md, uint latency, void* optstr)
 
 void ACQ_Exit(MDRIVER* md)
 {
+  ACQ_GUARD("ACQ_Exit");
+
   VC_Exit(md->device.vc);
 }
 
@@ -358,6 +383,8 @@ void ACQ_Exit(MDRIVER* md)
 
 void ACQ_Update(MDRIVER* md)
 {
+  ACQ_GUARD("ACQ_Update");
+
   MOD_INTERNAL* mod_internal = (MOD_INTERNAL*)md->device.local;
 
   // we should only write into the buffer if it's empty

@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include "acoustique.h"
 #include "acq_internal.hpp"
+#include "debug.hpp"
 
 
 #define ACQ_VERSION "1.0.3"
@@ -21,6 +22,8 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
   ACQ_RESET_CALLBACK reset,
   int stream_format)
 {
+  ACQ_GUARD("AcqOpenStream");
+
   // if callbacks are invalid, return failure
   if (!read || !reset) {
     return NULL;
@@ -101,11 +104,15 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
     }
   }
 
+  ACQ_LOG("Initializing stream");
+
   // initialize the stream
   if (!stream->stream_open(stream)) {
     delete stream;
     return NULL;
   }
+
+  ACQ_LOG("Stream opened successfully");
 
   return stream;
 }
@@ -114,6 +121,8 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
 
 void ACQ_CALL AcqCloseStream(ACQ_STREAM stream)
 {
+  ACQ_GUARD("AcqCloseStream");
+
   stream->stream_close(stream);
   delete stream;
 }
@@ -135,6 +144,8 @@ void ACQ_CALL AcqGetStreamInformation(
 
 int ACQ_CALL AcqReadStream(ACQ_STREAM stream, void* samples, int sample_count)
 {
+  ACQ_GUARD("AcqReadStream");
+
   if (sample_count <= 0) {
     return 0;
   }
@@ -146,6 +157,8 @@ int ACQ_CALL AcqReadStream(ACQ_STREAM stream, void* samples, int sample_count)
 
 ACQ_BOOL ACQ_CALL AcqResetStream(ACQ_STREAM stream)
 {
+  ACQ_GUARD("AcqResetStream");
+
   return (stream->stream_reset(stream) != true);
 }
 

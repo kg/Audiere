@@ -29,10 +29,13 @@ public:
   void Update();
   IOutputStream* OpenStream(ISampleSource* source);
 
-protected:
+private:
   typedef std::list<DSOutputStream*> StreamList;
 
-protected:
+private:
+  void RemoveStream(DSOutputStream* stream);
+
+private:
   IDirectSound* m_DirectSound;
   StreamList    m_OpenStreams;
 
@@ -40,12 +43,12 @@ protected:
 
   HWND m_AnonymousWindow;
 
-  friend DSOutputStream;
-
 private:  // these must be overridden
   virtual REFCLSID GetCLSID() = 0;
   virtual DWORD GetCooperativeLevel() = 0;
-  virtual bool CreatePrimarySoundBuffer() = 0;
+  virtual bool CreatePrimarySoundBuffer(IDirectSound* ds) = 0;
+
+  friend DSOutputStream;
 };
 
 
@@ -55,6 +58,7 @@ class DSOutputStream : public IOutputStream
   void Play();
   void Stop();
   void Reset();
+  void ResetInput();
   bool IsPlaying();
   void SetVolume(int volume);
   int  GetVolume();

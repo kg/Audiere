@@ -135,6 +135,14 @@ SOURCE=.\acq_wav.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\debug.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\debug.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\endian.hpp
 # End Source File
 # End Group

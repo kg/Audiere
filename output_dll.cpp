@@ -96,16 +96,16 @@ DLLOutputContext::Initialize(const char* parameters)
   ASSIGN(AO_GetVolume);
 
   // if any of the functions are NULL, we failed
-  if (!AO_OpenDriver      ||
-      !AO_CloseDriver     ||
-      !AO_Update          ||
-      !AO_OpenStream      ||
-      !AO_CloseStream     ||
-      !AO_PlayStream      ||
-      !AO_StopStream      ||
-      !AO_ResetStream     ||
-      !AO_IsStreamPlaying ||
-      !AO_SetVolume       ||
+  if (!AO_OpenDriver       ||  
+      !AO_CloseDriver      ||  
+      !AO_Update           ||  
+      !AO_OpenStream       ||  
+      !AO_CloseStream      ||  
+      !AO_PlayStream       ||  
+      !AO_StopStream       ||  
+      !AO_ResetStream      ||  
+      !AO_IsStreamPlaying  ||
+      !AO_SetVolume        ||
       !AO_GetVolume) {
     
     FreeLibrary(m_DLL);

@@ -1,0 +1,21 @@
+import os
+
+INTERFACES = [
+    'mozIAudioContext',
+    'mozIAudioService',
+    'mozIAudioStream']
+
+TypeLib = Builder(action = '${XPIDL} -m typelib $XPIDLFLAGS $SOURCE')
+Header  = Builder(action = '${XPIDL} -m header $XPIDLFLAGS $SOURCE')
+
+env = Environment(
+    ENV = os.environ,
+    BUILDERS = { 'TypeLib' : TypeLib, 'Header' : Header },
+    XPIDL = 'xpidl',
+    XPIDLFLAGS = '-ID:/mozilla/mozilla/dist/idl')
+
+for i in INTERFACES:
+    env.TypeLib(i + '.xpt', i + '.idl')
+    env.Header(i + '.h', i + '.idl')
+
+Default('.')

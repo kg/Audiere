@@ -12,9 +12,12 @@
 #include "utility.h"
 #include "debug.h"
 
-#define MP3_IN_BUFFER_SIZE (8192*4)
-#define MP3_OUT_BUFFER_SIZE (8192*4)
-#define MP3_BUFFER_SIZE (8192)
+
+// The number of MP3 frame that are processed at a time.  If this value
+// is smaller, the decoder should take less memory.  However, it may
+// skip on corrupt MP3s.
+static const int FRAME_COUNT = 10;
+
 
 namespace audiere {
 
@@ -122,7 +125,7 @@ namespace audiere {
     m_decoder->initialize("");
 
     // this should call setsoundtype with the format of the stream
-    if (!m_decoder->run(1)) {
+    if (!m_decoder->run(FRAME_COUNT)) {
       return false;
     }
 
@@ -153,7 +156,7 @@ namespace audiere {
 
       // no more samples?  ask the MP3 for more
       if (m_buffer.getSize() < frame_size) {
-        if (!m_decoder->run(1)) {
+        if (!m_decoder->run(FRAME_COUNT)) {
           // done decoding?
           return frames_read;
         }
@@ -196,7 +199,7 @@ namespace audiere {
     m_decoder->initialize("");
 
     // this should call setsoundtype with the format of the stream
-    if (!m_decoder->run(1)) {
+    if (!m_decoder->run(FRAME_COUNT)) {
       return;
     }
   }

@@ -76,8 +76,10 @@ if [[ "$WX_CONFIG" = "no" ]] ; then
 else
    HAVE_WXWINDOWS=true
    AC_DEFINE(HAVE_WXWINDOWS)
-   LIBS="$LIBS `$WX_CONFIG --libs`"
-   CPPFLAGS="$CPPFLAGS `$WX_CONFIG --cxxflags`"
+   WX_LIBS=`$WX_CONFIG --libs`
+   WX_CPPFLAGS=`$WX_CONFIG --cxxflags`
+   AC_SUBST(WX_LIBS)
+   AC_SUBST(WX_CPPFLAGS)
 fi
 
 AM_CONDITIONAL(HAVE_WXWINDOWS, test "x$HAVE_WXWINDOWS" = "xtrue")

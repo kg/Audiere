@@ -1,7 +1,7 @@
 #ifndef INPUT_MP3_H
 #define INPUT_MP3_H
 
-#include <mpaudec/mpaudec.h>
+#include "mpaudec/mpaudec.h"
 #include "audiere.h"
 #include "basic_source.h"
 #include "types.h"

@@ -50,7 +50,7 @@ public:
     delete[] m_buffer;
   }
 
-  void getFormat(
+  void ADR_CALL getFormat(
     int& channel_count,
     int& sample_rate,
     SampleFormat& sample_format)
@@ -60,7 +60,7 @@ public:
     sample_format = m_sample_format;
   }
 
-  int read(int sample_count, void* samples) {
+  int ADR_CALL read(int sample_count, void* samples) {
     int to_read = Min(sample_count, m_buffer_length - m_position);
     memcpy(
       samples,
@@ -70,23 +70,23 @@ public:
     return to_read;
   }
 
-  void reset() {
+  void ADR_CALL reset() {
     setPosition(0);
   }
 
-  bool isSeekable() {
+  bool ADR_CALL isSeekable() {
     return true;
   }
 
-  int getLength() {
+  int ADR_CALL getLength() {
     return m_buffer_length;
   }
 
-  void setPosition(int position) {
+  void ADR_CALL setPosition(int position) {
     m_position = position;
   }
 
-  int getPosition() {
+  int ADR_CALL getPosition() {
     return m_position;
   }
 

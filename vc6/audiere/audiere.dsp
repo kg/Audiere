@@ -92,10 +92,6 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\src\audiere.def
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\audiere.h
 # End Source File
 # Begin Source File

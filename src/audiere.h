@@ -35,8 +35,22 @@
   #endif
 #endif
 
+// Export functions from the DLL
+#ifndef ADR_DECL
+#  if defined(WIN32) || defined(_WIN32)
+#    ifdef AUDIERE_EXPORTS
+#      define ADR_DECL __declspec(dllexport)
+#    else
+#      define ADR_DECL __declspec(dllimport)
+#    endif
+#  else
+#    define ADR_DECL
+#  endif
+#endif
 
-#define ADR_FUNCTION(ret, name) extern "C" ret ADR_CALL name
+
+
+#define ADR_FUNCTION(ret, name) extern "C" ADR_DECL ret ADR_CALL name
 
 
 namespace audiere {

@@ -740,6 +740,77 @@ namespace audiere {
   typedef RefPtr<SoundEffect> SoundEffectPtr;
 
 
+  /**
+   * Represents a device capable of playing CD audio. Internally, this
+   * uses the MCI subsystem in windows and libcdaudio on other platforms.
+   * MCI subsystem: http://msdn.microsoft.com/library/default.asp?url=/library/en-us/multimed/htm/_win32_multimedia_command_strings.asp
+   * libcdaudio: http://cdcd.undergrid.net/libcdaudio/
+   */
+  class CDDevice : public RefCounted {
+  protected:
+    virtual ~CDDevice() { }
+
+  public:
+    /**
+     * Returns the name of this CD Device, often just the device name
+     * it was created with.
+     */
+    virtual const char* getName() = 0;
+
+    /**
+     * Returns the number of audio tracks on the disc.
+     */
+    virtual int getTrackCount() = 0;
+
+    /**
+     * Starts playback of the given track. If another track was
+     * already playing, the previous track is stopped.  IMPORTANT: Tracks are
+     * indexed from 0 to getTrackCount() - 1.
+     */
+    virtual void play(int track) = 0;
+
+    /**
+     * Stops the playback, if the playback was already stopped, this
+     * does nothing.
+     */
+    virtual void stop() = 0;
+    
+    /**
+     * pauses playback of the track that is currently playing (if any)
+     * This does nothing if no track is playing
+     */
+    virtual void pause() = 0;
+
+    /**
+     * Resumes playback of the track that is currently paused (if any).
+     * This does nothing if no track is paused.
+     */
+    virtual void resume() = 0;
+
+    /**
+     * Returns true if the CD is currently playing a sound, this could
+     * be through us, or through some other program.
+     */
+    virtual bool isPlaying() = 0;
+
+    /**
+     * Returns true if the drive contains a cd. This might be slow
+     * on some systems, use with care.
+     */
+    virtual bool containsCD() = 0;
+
+    /// Returns true if the door is open.
+    virtual bool isDoorOpen() = 0;
+
+    /// Opens this device's door.
+    virtual void openDoor() = 0;
+
+    /// Closes this device's door.
+    virtual void closeDoor() = 0;
+  };
+  typedef RefPtr<CDDevice> CDDevicePtr;
+
+
   /// PRIVATE API - for internal use only
   namespace hidden {
 
@@ -813,10 +884,17 @@ namespace audiere {
     ADR_FUNCTION(File*) AdrCreateMemoryFile(
       const void* buffer,
       int size);
+
+    ADR_FUNCTION(const char*) AdrEnumerateCDDevices();
+
+    ADR_FUNCTION(CDDevice*) AdrOpenCDDevice(
+      const char* name);
   }
 
 
-  /* PUBLIC API */
+
+
+  /*-------- PUBLIC API FUNCTIONS --------*/
 
 
   /**
@@ -1213,6 +1291,40 @@ namespace audiere {
   inline File* CreateMemoryFile(const void* buffer, int size) {
     return hidden::AdrCreateMemoryFile(buffer, size);
   }
+
+  /**
+   * Generates a list of available CD device names.
+   *
+   * @param devices A vector of strings to be filled.
+   */
+  inline void EnumerateCDDevices(std::vector<std::string>& devices) {
+    const char* d = hidden::AdrEnumerateCDDevices();
+    while (*d) {
+      devices.push_back(d);
+      d += strlen(d) + 1;
+    }
+  }
+
+  /**
+   * Opens the specified CD playback device.
+   * 
+   * @param device  The filesystem device to be played.
+   *                e.g. Linux: "/dev/cdrom", Windows: "D:"
+   *
+   * @return  0 if opening device failed, valid CDDrive object otherwise.
+   */
+  inline CDDevice* OpenCDDevice(const char* name) {
+    return hidden::AdrOpenCDDevice(name);
+  }
+
+
+
+
+
+
+
+
+  // Stuff below here needs to be hacked up.
     
   namespace events
   {
@@ -1307,99 +1419,6 @@ namespace audiere {
       };
   } // end namespace events
 
-#if defined(WIN32) || defined(_WIN32)
-#define CDAUDIO_WINDOWS
-#endif
-
-  /**
-   * represents a drive capable of playing CD audio. Internally, this
-   * uses the MCI subsystem in windows and libcdaudio on other platforms.
-   * MCI subsystem: http://msdn.microsoft.com/library/default.asp?url=/library/en-us/multimed/htm/_win32_multimedia_command_strings.asp
-   * libcdaudio: http://cdcd.undergrid.net/libcdaudio/
-   */
-  class CDDrive {
-    public:
-        /**
-         * constructor, the device is the file system device
-         * (for example /dev/cdrom for linux). For windows pass the
-         * drive letter only (i.e. "d" not "d:\")
-         */
-        CDDrive(const std::string& device);
-
-        virtual ~CDDrive();
-
-        /**
-         * stops the playback, if the playback was already stopped, this
-         * does nothing
-         */
-        virtual void stop();
-        /**
-         * starts playback of the given track. If another track was
-         * already playing, the previous track is stopped
-         */
-        virtual void play(long track);
-        /**
-         * pauses playback of the track that is currently playing (if any)
-         * This does nothing if no track is playing
-         */
-        virtual void pause();
-        /**
-         * resumes playback of the track that is currently paused (if any)
-         * This does nothing if no track is paused
-         */
-        virtual void resume();
-        /**
-         * returns true if the CD is currently playing a sound, this could
-         * be through us, or through some other program */
-        virtual bool isPlaying();
-
-        /**
-         * returns true if the drive contains a cd. This might be slow
-         * on some systems, use with care */
-        bool containsCD();	
-
-    protected:
-#ifndef CDAUDIO_WINDOWS
-        int desc;
-#endif
-        std::string deviceName;
-  };
-
- /**
-   * Stream used to play an audio cd track.
-   * This stream type is extremely basic at this point in time, it is
-   * not seekable, volume changes are not supported, panning isn't and
-   * pitch shifts aren't.
-   * Use OpenCDSound to create a CDAudioStream, do not create one directly
-   */
-  class CDAudioStream: public RefImplementation<OutputStream> {
-    public:
-       CDAudioStream(CDDrive* device, int track);
-  
-       void ADR_CALL play();
-       void ADR_CALL stop();
-       void ADR_CALL pause();
-       void ADR_CALL resume();
-       bool ADR_CALL isPlaying();
-       void ADR_CALL reset();
-       void ADR_CALL setRepeat(bool repeat);
-       bool ADR_CALL getRepeat();
-       void ADR_CALL setVolume(float volume);
-       float ADR_CALL getVolume();
-       void ADR_CALL setPan(float pan);
-       float ADR_CALL getPan();
-       void ADR_CALL setPitchShift(float pan);
-       float ADR_CALL getPitchShift();
-       bool ADR_CALL isSeekable();
-       int ADR_CALL getLength();
-       void ADR_CALL setPosition(int position);
-       int ADR_CALL getPosition();
-    private:
-      CDDrive* theDrive;
-      int trackNum;
-  };
-  
-  CDAudioStream* OpenCDSound(CDDrive* theDrive, int track);
 }
 
 

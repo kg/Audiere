@@ -108,6 +108,10 @@ SOURCE=..\..\src\basic_source.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\cd_win32.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\debug.cpp
 # End Source File
 # Begin Source File
@@ -261,6 +265,10 @@ SOURCE=..\..\src\memory_file.h
 # Begin Source File
 
 SOURCE=..\..\src\noise.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\pubsub.cpp
 # End Source File
 # Begin Source File
 

@@ -95,6 +95,22 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\examples\wxPlayer\CDDeviceDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\CDDeviceDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\CDDeviceFrame.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\CDDeviceFrame.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\examples\wxPlayer\Commands.h
 # End Source File
 # Begin Source File

@@ -12,6 +12,7 @@ namespace audiere {
   class Log {
   public:
     static void Write(const char* str);
+    static void Write(const std::string& str) { Write(str.c_str()); }
     static void IncrementIndent() { ++indent_count; }
     static void DecrementIndent() { --indent_count; }
 

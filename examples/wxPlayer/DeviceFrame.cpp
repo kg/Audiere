@@ -8,7 +8,6 @@
 #include <vector>
 #include "Commands.h"
 #include "DeviceFrame.h"
-#include "NewDeviceDialog.h"
 #include "SoundEffectFrame.h"
 #include "StreamFrame.h"
 #include "wxPlayer.h"
@@ -38,6 +37,7 @@ std::string Join(
 
 BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
   EVT_MENU(DEVICE_NEW_DEVICE,           DeviceFrame::OnDeviceNewDevice)
+  EVT_MENU(DEVICE_NEW_CDDEVICE,         DeviceFrame::OnDeviceNewCDDevice)
   EVT_MENU(DEVICE_OPEN_STREAM,          DeviceFrame::OnDeviceOpenStream)
   EVT_MENU(DEVICE_OPEN_SOUND,           DeviceFrame::OnDeviceOpenSound)
   EVT_MENU(DEVICE_CREATE_TONE,          DeviceFrame::OnDeviceCreateTone)
@@ -57,29 +57,30 @@ DeviceFrame::DeviceFrame(audiere::AudioDevice* device)
 {
   m_device = device;
 
-  wxMenu* fileMenu = new wxMenu();
-  fileMenu->Append(DEVICE_NEW_DEVICE,           "&New Device...");
-  fileMenu->AppendSeparator();
-  fileMenu->Append(DEVICE_OPEN_STREAM,          "&Open Stream...");
-  fileMenu->Append(DEVICE_OPEN_SOUND,           "Open &Sound...");
-  fileMenu->AppendSeparator();
-  fileMenu->Append(DEVICE_CREATE_TONE,          "Create &Tone...");
-  fileMenu->Append(DEVICE_CREATE_SQUARE_WAVE,   "Create S&quare Wave...");
-  fileMenu->Append(DEVICE_CREATE_WHITE_NOISE,   "Create &White Noise");
-  fileMenu->Append(DEVICE_CREATE_PINK_NOISE,    "Create &Pink Noise");
-  fileMenu->AppendSeparator();
-  fileMenu->Append(DEVICE_OPEN_SINGLE_EFFECT,   "Open &Effect (Single)...");
-  fileMenu->Append(DEVICE_OPEN_MULTIPLE_EFFECT, "Open Effect (&Multiple)...");
-  fileMenu->AppendSeparator();
-  fileMenu->Append(DEVICE_CLOSE_WINDOW,         "Close C&urrent Window");
-  fileMenu->Append(DEVICE_CLOSE,                "&Close Device");
+  wxMenu* deviceMenu = new wxMenu();
+  deviceMenu->Append(DEVICE_NEW_DEVICE,           "&New Device...");
+  deviceMenu->Append(DEVICE_NEW_CDDEVICE,         "New C&D Device...");
+  deviceMenu->AppendSeparator();
+  deviceMenu->Append(DEVICE_OPEN_STREAM,          "&Open Stream...");
+  deviceMenu->Append(DEVICE_OPEN_SOUND,           "Open &Sound...");
+  deviceMenu->AppendSeparator();
+  deviceMenu->Append(DEVICE_CREATE_TONE,          "Create &Tone...");
+  deviceMenu->Append(DEVICE_CREATE_SQUARE_WAVE,   "Create S&quare Wave...");
+  deviceMenu->Append(DEVICE_CREATE_WHITE_NOISE,   "Create &White Noise");
+  deviceMenu->Append(DEVICE_CREATE_PINK_NOISE,    "Create &Pink Noise");
+  deviceMenu->AppendSeparator();
+  deviceMenu->Append(DEVICE_OPEN_SINGLE_EFFECT,   "Open &Effect (Single)...");
+  deviceMenu->Append(DEVICE_OPEN_MULTIPLE_EFFECT, "Open Effect (&Multiple)...");
+  deviceMenu->AppendSeparator();
+  deviceMenu->Append(DEVICE_CLOSE_WINDOW,         "Close C&urrent Window");
+  deviceMenu->Append(DEVICE_CLOSE,                "&Close Device");
 
   wxMenu* helpMenu = new wxMenu();
   helpMenu->Append(HELP_ABOUT, "&About...");
 
   wxMenuBar* menuBar = new wxMenuBar();
-  menuBar->Append(fileMenu, "&Device");
-  menuBar->Append(helpMenu, "&Help");
+  menuBar->Append(deviceMenu, "&Device");
+  menuBar->Append(helpMenu,   "&Help");
   SetMenuBar(menuBar);
 
   SetFocus();
@@ -87,16 +88,12 @@ DeviceFrame::DeviceFrame(audiere::AudioDevice* device)
 
 
 void DeviceFrame::OnDeviceNewDevice() {
-  NewDeviceDialog dialog(this);
-  if (dialog.ShowModal() == wxID_OK) {
-    bool result = wxGetApp().TryDevice(
-      dialog.getDevice().c_str(),
-      dialog.getParameters().c_str());
-    if (!result) {
-      wxMessageBox("Error opening new device", "New Device",
-                   wxOK | wxICON_ERROR, this);
-    }
-  }
+  wxGetApp().OnNewDevice(this);
+}
+
+
+void DeviceFrame::OnDeviceNewCDDevice() {
+  wxGetApp().OnNewCDDevice(this);
 }
 
 
@@ -340,10 +337,5 @@ void DeviceFrame::OnDeviceClose() {
 
 
 void DeviceFrame::OnHelpAbout() {
-  wxString message =
-    "wxPlayer\n"
-    "Copyright (c) Chad Austin 2002-2003\n\n"
-    "Audiere Version: ";
-  message += audiere::GetVersion();
-  wxMessageBox(message, "About wxPlayer", wxOK | wxCENTRE, this);
+  wxGetApp().ShowAboutDialog(this);
 }

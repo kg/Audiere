@@ -1,3 +1,8 @@
+2004.04.05
+
+  Added CD audio support through the CDDevice interface.  (Chad Austin
+  and Richard Schaaf)
+
 2004.02.02
 
   Fixed: Speex decoder never actually released its file handle.

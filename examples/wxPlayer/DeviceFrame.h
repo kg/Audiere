@@ -11,6 +11,7 @@ public:
   DeviceFrame(audiere::AudioDevice* device);
   
   void OnDeviceNewDevice();
+  void OnDeviceNewCDDevice();
   wxString GetSoundFile();
   void OnDeviceOpenStream();
   void OnDeviceOpenSound();

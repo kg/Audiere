@@ -464,7 +464,8 @@ namespace audiere {
 
     ADR_FUNCTION(OutputStream*, AdrOpenSound)(
       AudioDevice* device,
-      SampleSource* source);
+      SampleSource* source,
+      bool streaming);
   }
 
 
@@ -563,24 +564,36 @@ namespace audiere {
    *
    * @return  new output stream if successful, 0 otherwise
    */
-  inline OutputStream* OpenSound(AudioDevice* device, SampleSource* source) {
-    return hidden::AdrOpenSound(device, source);
+  inline OutputStream* OpenSound(
+    AudioDevice* device,
+    SampleSource* source,
+    bool streaming = false)
+  {
+    return hidden::AdrOpenSound(device, source, streaming);
   }
 
   /**
    * Calls OpenSound(AudioDevice*, SampleSource*) with a sample source
    * created via OpenSampleSource(const char*).
    */
-  inline OutputStream* OpenSound(AudioDevice* device, const char* filename) {
-    return OpenSound(device, OpenSampleSource(filename));
+  inline OutputStream* OpenSound(
+    AudioDevice* device,
+    const char* filename,
+    bool streaming = false)
+  {
+    return OpenSound(device, OpenSampleSource(filename), streaming);
   }
 
   /**
    * Calls OpenSound(AudioDevice*, SampleSource*) with a sample source
    * created via OpenSampleSource(File* file).
    */
-  inline OutputStream* OpenSound(AudioDevice* device, File* file) {
-    return OpenSound(device, OpenSampleSource(file));
+  inline OutputStream* OpenSound(
+    AudioDevice* device,
+    File* file,
+    bool streaming = false)
+  {
+    return OpenSound(device, OpenSampleSource(file), streaming);
   }
 }
 

@@ -8,15 +8,17 @@ namespace audiere {
 
   ADR_EXPORT(OutputStream*, AdrOpenSound)(
     AudioDevice* device,
-    SampleSource* source)
+    SampleSource* source,
+    bool streaming)
   {
     if (!device || !source) {
       return 0;
     }
 
-    // if the stream is not seekable, we cannot know how big of a buffer
-    // to allocate, so try to stream it
-    if (!source->isSeekable()) {
+    // If the stream is not seekable, we cannot know how big of a buffer
+    // to allocate, so try to stream it.  Also, if the user wants to stream
+    // then let him.  ;)
+    if (!source->isSeekable() && streaming) {
       return device->openStream(source);
     }
 

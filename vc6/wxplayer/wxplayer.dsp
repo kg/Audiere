@@ -116,7 +116,19 @@ SOURCE=..\..\examples\wxPlayer\wx\msw\cdrom.ico
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\examples\wxPlayer\wx\msw\colours.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\examples\wxPlayer\wx\msw\computer.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\csquery.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx\msw\disable.bmp
 # End Source File
 # Begin Source File
 
@@ -153,6 +165,10 @@ SOURCE=..\..\examples\wxPlayer\wx\msw\info.ico
 # Begin Source File
 
 SOURCE=..\..\examples\wxPlayer\wx\msw\magnif1.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\main.ico
 # End Source File
 # Begin Source File
 

@@ -5,6 +5,8 @@
   sources with non-standard looping functionality, such as loop points
   within MOD or AIFF files.
 
+  Gave wxPlayer a crappy icon.  A better one would be welcome.  :)
+
 2003.06.13
 
   Fixed some unaligned reads in the MP3 decoder code, which caused

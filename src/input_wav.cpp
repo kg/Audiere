@@ -84,12 +84,6 @@ namespace audiere {
     const int read = m_file->read(buffer, bytes_to_read);
     const int frames_read = read / frame_size;
 
-    // assume that if we didn't get a full read, we're done
-    if (read != bytes_to_read) {
-      m_frames_left_in_chunk = 0;
-      return frames_read;
-    }
-
 #if WORDS_BIGENDIAN
     if (m_sample_format == SF_S16) {
       // make little endian into host endian
@@ -101,6 +95,12 @@ namespace audiere {
     }
 #endif
 
+    // assume that if we didn't get a full read, we're done
+    if (read != bytes_to_read) {
+      m_frames_left_in_chunk = 0;
+      return frames_read;
+    }
+
     m_frames_left_in_chunk -= frames_read;
     return frames_read;
   }
@@ -111,6 +111,32 @@ namespace audiere {
     // seek to the beginning of the data chunk
     m_frames_left_in_chunk = m_data_chunk_length;
     m_file->seek(m_data_chunk_location, File::BEGIN);
+  }
+
+
+  bool
+  WAVInputStream::isSeekable() {
+    return true;
+  }
+
+
+  int
+  WAVInputStream::getLength() {
+    return m_data_chunk_length;
+  }
+
+
+  void
+  WAVInputStream::setPosition(int position) {
+    int frame_size = m_channel_count * GetSampleSize(m_sample_format);
+    m_frames_left_in_chunk = m_data_chunk_length - position;
+    m_file->seek(m_data_chunk_location + position * frame_size, File::BEGIN);
+  }
+
+
+  int
+  WAVInputStream::getPosition() {
+    return m_data_chunk_length - m_frames_left_in_chunk;
   }
 
 

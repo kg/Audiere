@@ -9,7 +9,7 @@
 
 namespace audiere {
 
-  class WAVInputStream : public UnseekableSource {
+  class WAVInputStream : public RefImplementation<SampleSource> {
   public:
     WAVInputStream();
 
@@ -21,6 +21,11 @@ namespace audiere {
       SampleFormat& sample_format);
     int ADR_CALL read(int frame_count, void* samples);
     void ADR_CALL reset();
+
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
 
   private:
     bool FindFormatChunk();

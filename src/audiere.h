@@ -647,7 +647,6 @@ namespace audiere {
     return OpenSound(device, OpenSampleSource(file), streaming);
   }
 
-
   /**
    * Create a SampleBuffer object using the specified samples and formats.
    *

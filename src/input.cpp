@@ -2,7 +2,9 @@
 #include <string.h>
 #include "debug.h"
 #include "default_file.h"
+#ifdef HAVE_MIKMOD
 #include "input_mod.h"
+#endif
 #include "input_ogg.h"
 #include "input_wav.h"
 #include "internal.h"
@@ -59,14 +61,7 @@ namespace audiere {
 
     // if filename is available, use it as a hint
     if (filename) {
-      if (end_is(filename, ".it") ||
-          end_is(filename, ".xm") ||
-          end_is(filename, ".s3m") ||
-          end_is(filename, ".mod")) {
-
-        TRY_SOURCE(MODInputStream);
-
-      } else if (end_is(filename, ".wav")) {
+      if (end_is(filename, ".wav")) {
 
         TRY_SOURCE(WAVInputStream);
 
@@ -74,11 +69,21 @@ namespace audiere {
 
         TRY_SOURCE(OGGInputStream);
 
+#ifdef HAVE_MIKMOD
+      } else if (end_is(filename, ".it") ||
+          end_is(filename, ".xm") ||
+          end_is(filename, ".s3m") ||
+          end_is(filename, ".mod")) {
+
+        TRY_SOURCE(MODInputStream);
+#endif
       }
     }
 
     // autodetect otherwise, in decreasing order of possibility of failure
+#ifdef HAVE_MIKMOD
     TRY_SOURCE(MODInputStream);
+#endif
     TRY_SOURCE(WAVInputStream);
     TRY_SOURCE(OGGInputStream);
 

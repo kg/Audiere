@@ -1,25 +1,22 @@
 import os
 
-MOZILLA_BASE = 'D:/mozilla/mozilla'
+XPCOM_BASE = 'D:/libraries/gecko-sdk-win32-1.4/xpcom'
+XPIDL = os.path.join(XPCOM_BASE, 'bin', 'xpidl')
+
+TypeLib = Builder(action = '${XPIDL} -m typelib $XPIDLFLAGS $SOURCE')
+Header  = Builder(action = '${XPIDL} -m header $XPIDLFLAGS $SOURCE')
+
+env = Environment(
+    ENV = os.environ,
+    BUILDERS = { 'TypeLib' : TypeLib, 'Header' : Header },
+    XPIDL = XPIDL,
+    XPIDLFLAGS = '-I%s' % os.path.join(XPCOM_BASE, 'idl'))
 
 INTERFACES = [
     'adrIAudiereService',
     'adrIAudioDevice',
     'adrIOutputStream']
 
-TypeLib = Builder(action = '${XPIDL} -m typelib $XPIDLFLAGS $SOURCE')
-Header  = Builder(action = '${XPIDL} -m header $XPIDLFLAGS $SOURCE')
-
-XPIDL = os.path.join(MOZILLA_BASE, 'dist', 'bin', 'xpidl')
-
-env = Environment(
-    ENV = os.environ,
-    BUILDERS = { 'TypeLib' : TypeLib, 'Header' : Header },
-    XPIDL = XPIDL,
-    XPIDLFLAGS = '-I%s' % os.path.join(MOZILLA_BASE, 'dist', 'idl'))
-
 for i in INTERFACES:
     env.TypeLib(i + '.xpt', i + '.idl')
     env.Header(i + '.h', i + '.idl')
-
-Default('.')

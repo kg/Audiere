@@ -16,7 +16,7 @@ How do I use it?
 import audiere                            # brings in the Audiere module
 print audiere.get_version()               # print the version information
 device = audiere.open_device()            # open the default AudioDevice
-song = context.open_sound("song.ogg", 1)  # opens a song in streaming mode
+song = device.open_sound("song.ogg", 1)   # opens a song in streaming mode
 song.playing = 1                          # begins playback
 
 

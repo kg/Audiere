@@ -1,5 +1,8 @@
-// we need to include windows.h to use Windows common controls without
-// crashing?  what the heck...
+// We need to include windows.h to use Windows common controls without
+// crashing?  What the heck...
+//
+// part #2: something to do with wxSlider's vtable generation.  VS.NET crashes
+// as well.  Stupid wxWindows...  :P
 #ifdef WIN32
 #include <windows.h>
 #endif

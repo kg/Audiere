@@ -3,6 +3,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audiere", "audiere\audiere.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "interactive", "interactive\interactive.vcproj", "{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxplayer", "wxplayer\wxplayer.vcproj", "{3B51D58C-BCFC-4862-A42F-054410B3AAE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -10,6 +12,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectDependencies) = postSolution
 		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.0 = {31F3D9BD-DB00-418B-A86E-D643D323AB0D}
+		{3B51D58C-BCFC-4862-A42F-054410B3AAE4}.0 = {31F3D9BD-DB00-418B-A86E-D643D323AB0D}
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{31F3D9BD-DB00-418B-A86E-D643D323AB0D}.Debug.ActiveCfg = Debug|Win32
@@ -20,6 +23,10 @@ Global
 		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.Debug.Build.0 = Debug|Win32
 		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.Release.ActiveCfg = Release|Win32
 		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.Release.Build.0 = Release|Win32
+		{3B51D58C-BCFC-4862-A42F-054410B3AAE4}.Debug.ActiveCfg = Debug|Win32
+		{3B51D58C-BCFC-4862-A42F-054410B3AAE4}.Debug.Build.0 = Debug|Win32
+		{3B51D58C-BCFC-4862-A42F-054410B3AAE4}.Release.ActiveCfg = Release|Win32
+		{3B51D58C-BCFC-4862-A42F-054410B3AAE4}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -26,10 +26,6 @@ namespace audiere {
               alGetErrorString(oserror()));
     }
 
-    // find the output rate
-    ALpv pv;
-    pv.param = AL_RATE;
-
     ALconfig config = alNewConfig();
     if (!config) {
       fprintf(stderr, "Couldn't create ALconfig: %s\n",

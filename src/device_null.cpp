@@ -217,12 +217,6 @@ namespace audiere {
       u64 now = GetNow();
       u64 elapsed = now - m_last_update;
 
-      ADR_IF_DEBUG {
-        char str[100];
-        sprintf(str, "Elapsed: %I64d", elapsed);
-        ADR_LOG(str);
-      }
-
       int samples_to_read = int(m_sample_rate * elapsed / 1000000);
 
       ADR_IF_DEBUG {

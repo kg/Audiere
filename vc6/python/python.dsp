@@ -116,6 +116,10 @@ SOURCE=..\..\bindings\python\pyAudiere.cpp
 
 SOURCE=..\..\bindings\python\pyAudiere.def
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\bindings\python\pyAudiere.txt
+# End Source File
 # End Group
 # End Target
 # End Project

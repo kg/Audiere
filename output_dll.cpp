@@ -5,8 +5,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 // this is useful to prevent compiler warnings
-template<typename T>
-void assign(T& dest, FARPROC src) {
+template<typename T, typename S>
+void assign(T& dest, S src) {
   dest = reinterpret_cast<T>(src);
 }
 
@@ -61,7 +61,7 @@ DLLOutputContext::Initialize(const char* parameters)
   ParameterList pl;
   ParseParameters(parameters, pl);
 
-  adr::string dll_name;
+  std::string dll_name;
 
   ParameterList::iterator i = pl.begin();
   while (i != pl.end()) {

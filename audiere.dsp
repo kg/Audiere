@@ -104,14 +104,6 @@ SOURCE=.\audiere.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\data_types.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\data_types.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\default_io.hpp
 # End Source File
 # Begin Source File

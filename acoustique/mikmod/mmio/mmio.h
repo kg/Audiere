@@ -1,19 +1,7 @@
 #ifndef _MMIO_H_
 #define _MMIO_H_
 
-#ifdef WIN32
-#ifndef MMEXPORT
-#ifdef MM_DLL_EXPORT
-#define MMEXPORT  extern __declspec( dllexport )
-#elif MIKMOD_STATIC
-#define MMEXPORT  extern
-#else
-#define MMEXPORT  extern __declspec( dllimport )
-#endif
-#endif
-#else
 #define MMEXPORT extern
-#endif
 
 // #ifndef __VECTORC
 #define restrict

@@ -77,7 +77,7 @@ typedef char            CHAR;
 // Already defined on my copy of Linux GCC. Seems to be
 // a BSD thing. [JEL]
 
-#ifdef WIN32
+//#ifdef WIN32
 #ifndef uint
 typedef unsigned int    uint;    // must be at least 16 bits!
 #endif
@@ -85,7 +85,7 @@ typedef unsigned int    uint;    // must be at least 16 bits!
 #ifndef ulong
 typedef unsigned long   ulong;   // must be at least 32 bits!
 #endif
-#endif
+//#endif
 
 #ifndef TRUE
 #define TRUE 1

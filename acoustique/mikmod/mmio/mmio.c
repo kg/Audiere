@@ -256,8 +256,8 @@ static UBYTE  _mm_cpybuf[COPY_BUFSIZE];
     BOOL _mm_feof(MMSTREAM *stream)
 // =====================================================================================
 {
-    // Yeah, VC++ sucks again  :(
-    #ifdef _MSC_VER
+    // ugh
+    #ifdef feof
     #undef feof
     #endif
 

@@ -30,9 +30,7 @@
 #include "mikmod.h"
 #include "itshare.h"
 
-#ifndef WIN32
-#include <ctype.h>
-void strlwr(char *z)
+void do_strlwr(char *z)
 {
   while(*z)
     {
@@ -40,10 +38,6 @@ void strlwr(char *z)
       z++;
     }
 }
-#endif
-
-/* strlwr seems to be a Win32 library function; Mingw32 has it, but not
-   Linux glibc. */
 
 typedef struct STMNOTE
 {   UBYTE note,insvol,volcmd,cmdinf;
@@ -98,7 +92,7 @@ static CHAR  STM_Version[] = "Screamtracker 2";
 
    _mm_fseek(mmfile,21,SEEK_SET);
    _mm_read_UBYTES(str,9,mmfile);
-   str[8]=0; strlwr(str);
+   str[8]=0; do_strlwr(str);
    filetype = _mm_read_UBYTE(mmfile);
    if(!memcmp(str,"!scream!",8) || (filetype!=2)) // STM Module = filetype 2
       return 0;

@@ -17,6 +17,8 @@ namespace audiere {
 
 
   NullAudioDevice::~NullAudioDevice() {
+    ADR_GUARD("~NullAudioDevice");
+
     ADR_ASSERT(m_streams.size() == 0,
       "Null output context should not die with open streams");
   }
@@ -30,6 +32,8 @@ namespace audiere {
 
   void
   NullAudioDevice::update() {
+    ADR_GUARD("NullAudioDevice::update");
+
     Lock l__(this);
 
     /*

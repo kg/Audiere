@@ -6,11 +6,13 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include "audiere.h"
+#include "internal.h"
 
 
 namespace audiere {
 
   class ALOutputStream;
+
 
   class ALAudioDevice : public RefCountedImplementation<AudioDevice> {
   public:

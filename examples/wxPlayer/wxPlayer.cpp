@@ -82,7 +82,7 @@ public:
     sizer->Add(m_length_pos_label, 1, wxEXPAND | wxALL, 4);
     sizer->Add(m_pos,              1, wxEXPAND | wxALL, 4);
 
-    if (m_stream_is_seekable) {
+    if (!m_stream_is_seekable) {
       m_pos->Enable(false);
     }
 
@@ -137,13 +137,14 @@ public:
   }
 
   void OnChangePos() {
-    int pos = m_pos->GetValue() * m_stream->getLength() / 1000;
-    m_stream->setPosition(pos);
+    float pos = float(m_pos->GetValue()) / 1000;
+    m_stream->setPosition(pos * m_stream_length);
   }
 
   void OnUpdateStatus() {
     if (m_stream_is_seekable) {
-      m_pos->SetValue(1000 * m_stream->getPosition() / m_stream_length);
+      float pos = float(m_stream->getPosition()) / m_stream_length;
+      m_pos->SetValue(int(1000 * pos));
     }
     UpdateLengthPosLabel();
 

@@ -47,9 +47,18 @@ namespace audiere {
   }
 
   std::string
-  ParameterList::getValue(std::string key, std::string defaultValue) const {
+  ParameterList::getValue(
+    const std::string& key,
+    const std::string& defaultValue) const
+  {
     std::map<std::string, std::string>::const_iterator i = m_values.find(key);
     return (i == m_values.end() ? defaultValue : i->second);
+  }
+
+  bool
+  ParameterList::getBoolean(const std::string& key, bool def) const {
+    std::string value = getValue(key, (def ? "true" : "false"));
+    return (value == "true" || atoi(value.c_str()) != 0);
   }
 
 

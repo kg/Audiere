@@ -16,9 +16,10 @@ namespace audiere {
     ADR_GUARD("DSAudioDevice::create");
 
     int buffer_length = atoi(parameters.getValue("buffer", "").c_str());
-    if (buffer_length == 0) {
+    if (buffer_length <= 0) {
       buffer_length = DEFAULT_BUFFER_LENGTH;
     }
+    bool global_focus = parameters.getBoolean("global", true);
 
     // initialize COM
     HRESULT rv = CoInitialize(NULL);
@@ -89,15 +90,18 @@ namespace audiere {
 
     ADR_LOG("Set cooperative level");
 
-    return new DSAudioDevice(buffer_length, anonymous_window, direct_sound);
+    return new DSAudioDevice(
+      global_focus, buffer_length, anonymous_window, direct_sound);
   }
 
 
   DSAudioDevice::DSAudioDevice(
+    bool global_focus,
     int buffer_length,
     HWND anonymous_window,
     IDirectSound* direct_sound)
   {
+    m_global_focus     = global_focus;
     m_buffer_length    = buffer_length;
     m_anonymous_window = anonymous_window;
     m_direct_sound     = direct_sound;
@@ -171,8 +175,10 @@ namespace audiere {
     memset(&dsbd, 0, sizeof(dsbd));
     dsbd.dwSize        = sizeof(dsbd);
     dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
-                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |
-                         DSBCAPS_GLOBALFOCUS;
+                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
+    if (m_global_focus) {
+      dsbd.dwFlags |= DSBCAPS_GLOBALFOCUS;
+    }
     dsbd.dwBufferBytes = frame_size * buffer_length;
     dsbd.lpwfxFormat   = &wfx;
 
@@ -221,7 +227,10 @@ namespace audiere {
     dsbd.dwSize        = sizeof(dsbd);
     dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
                          DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |
-                         DSBCAPS_GLOBALFOCUS | DSBCAPS_STATIC;
+                         DSBCAPS_STATIC;
+    if (m_global_focus) {
+      dsbd.dwFlags |= DSBCAPS_GLOBALFOCUS;
+    }
     dsbd.dwBufferBytes = buffer_size;
     dsbd.lpwfxFormat   = &wfx;
 

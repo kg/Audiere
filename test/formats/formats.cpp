@@ -7,7 +7,9 @@ using namespace audiere;
 
 int main(int argc, char** argv) {
 
-  cout << endl << "File formats supported by Audiere:" << endl << endl;
+  cout << endl;
+  cout << "File formats supported by this compile of Audiere:" << endl;
+  cout << endl;
 
   vector<FileFormatDesc> ffd;
   GetSupportedFileFormats(ffd);

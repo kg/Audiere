@@ -18,7 +18,7 @@ inline ADR_STREAM  ExportStream(Stream* s)   { return reinterpret_cast<ADR_STREA
 
 const char* ADR_CALL AdrGetVersion()
 {
-  return "1.0.4";
+  return "1.2.0";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

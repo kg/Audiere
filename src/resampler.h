@@ -12,7 +12,6 @@ namespace audiere {
   class Resampler : public UnseekableSource {
   public:
     Resampler(SampleSource* source);
-    ~Resampler();
 
     // for now, resamplers always return (2, 44100, 16LE)
     void getFormat(
@@ -28,7 +27,7 @@ namespace audiere {
     void resetState();
 
   private:
-    SampleSource* m_source;
+    RefPtr<SampleSource> m_source;
     int m_native_channel_count;
     int m_native_sample_rate;
     SampleFormat m_native_sample_format;

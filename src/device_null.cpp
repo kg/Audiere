@@ -14,7 +14,7 @@
 namespace audiere {
 
   NullAudioDevice*
-  NullAudioDevice::create(ParameterList& /*parameters*/) {
+  NullAudioDevice::create(const ParameterList& /*parameters*/) {
     return new NullAudioDevice;
   }
 

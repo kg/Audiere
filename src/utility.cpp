@@ -47,8 +47,9 @@ namespace audiere {
   }
 
   std::string
-  ParameterList::getValue(std::string key, std::string defaultValue) {
-    return (m_values.count(key) ? m_values[key] : defaultValue);
+  ParameterList::getValue(std::string key, std::string defaultValue) const {
+    std::map<std::string, std::string>::const_iterator i = m_values.find(key);
+    return (i == m_values.end() ? defaultValue : i->second);
   }
 
 

@@ -8,43 +8,22 @@ static const int BUFFER_MILLISECONDS = 250;
 
 namespace audiere {
 
-  ALAudioDevice::ALAudioDevice() {
-    m_device = 0;
-    m_context = 0;
-  }
-
-
-  ALAudioDevice::~ALAudioDevice() {
-    if (m_context) {
-      alcMakeContextCurrent(0);
-      alcDestroyContext(m_context);
-      m_context = 0;
-    }
-
-    if (m_device) {
-      alcCloseDevice(m_device);
-      m_device = 0;
-    }
-  }
-
-
-  bool
-  ALAudioDevice::initialize(const char* parameters) {
+  ALAudioDevice*
+  ALAudioDevice::create(const ParameterList& parameters) {
     // open an output device
-    m_device = alcOpenDevice(0);
-    if (!m_device) {
-      return false;
+    ALCdevice* device = alcOpenDevice(0);
+    if (!device) {
+      return 0;
     }
 
     // create a rendering context
-    m_context = alcCreateContext(m_device, 0);
-    if (!m_context) {
-      alcCloseDevice(m_device);
-      m_device = 0;
+    ALCcontext* context = alcCreateContext(device, 0);
+    if (!context) {
+      alcCloseDevice(device);
       return false;
     }
 
-    alcMakeContextCurrent(m_context);
+    alcMakeContextCurrent(context);
 
     // define the listener state
     ALfloat position[]    = { 0.0, 0.0, 0.0 };
@@ -71,14 +50,32 @@ namespace audiere {
     // if we failed, go home
     if (!success) {
       alcMakeContextCurrent(0);
-      alcDestroyContext(m_context);
-      m_context = 0;
-      alcCloseDevice(m_device);
-      m_device = 0;
-      return false;
+      alcDestroyContext(context);
+      alcCloseDevice(device);
+      return 0;
     }
 
-    return (m_device != 0);
+    return new ALAudioDevice(device, context);
+  }
+
+
+  ALAudioDevice::ALAudioDevice(ALCdevice* device, ALCcontext* context) {
+    m_device  = device;
+    m_context = context;
+  }
+
+
+  ALAudioDevice::~ALAudioDevice() {
+    if (m_context) {
+      alcMakeContextCurrent(0);
+      alcDestroyContext(m_context);
+      m_context = 0;
+    }
+
+    if (m_device) {
+      alcCloseDevice(m_device);
+      m_device = 0;
+    }
   }
 
 
@@ -168,7 +165,6 @@ namespace audiere {
     int sample_rate)
   {
     m_device = device;
-    m_device->ref();
 
     m_source = source;
 
@@ -202,14 +198,11 @@ namespace audiere {
 
   ALOutputStream::~ALOutputStream() {
     m_device->removeStream(this);
-    m_device->unref();
 
     alDeleteSources(1, &m_ALsource);
     alDeleteBuffers(BUFFER_COUNT, m_buffers);
     delete[] m_buffers;
     delete[] m_last_sample;
-
-    delete m_source;
   }
 
 

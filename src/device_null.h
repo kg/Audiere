@@ -20,7 +20,7 @@ namespace audiere {
     , public Synchronized
   {
   public:
-    static NullAudioDevice* create(ParameterList& parameters);
+    static NullAudioDevice* create(const ParameterList& parameters);
 
   private:
     NullAudioDevice();

@@ -12,8 +12,53 @@
 
 namespace audiere {
 
-  OSSAudioDevice::OSSAudioDevice() {
-    m_output_device = -1;
+  OSSAudioDevice*
+  OSSAudioDevice::create(const ParameterList& parameters) {
+    std::string device = parameters.getValue("device", "/dev/dsp");
+
+    // attempt to open output device
+    int output_device = open(device.c_str(), O_WRONLY);
+    if (output_device == -1) {
+      perror(device.c_str());
+      return 0;
+    }
+
+    int format = AFMT_S16_LE;
+    if (ioctl(output_device, SNDCTL_DSP_SETFMT, &format) == -1) {
+      perror("SNDCTL_DSP_SETFMT");
+      return 0;
+    }
+    if (format != AFMT_S16_LE) {
+      // unsupported format
+      return 0;
+    }
+
+    int stereo = 1;
+    if (ioctl(output_device, SNDCTL_DSP_STEREO, &stereo) == -1) {
+      perror("SNDCTL_DSP_STEREO");
+      return 0;
+    }
+    if (stereo != 1) {
+      // unsupported channel number
+      return 0;
+    }
+
+    int speed = 44100;
+    if (ioctl(output_device, SNDCTL_DSP_SPEED, &speed) == -1) {
+      perror("SNDCTL_DSP_SPEED");
+      return 0;
+    }
+    if (abs(44100 - speed) > 2205) {
+      // unsupported sampling rate
+      return 0;
+    }
+
+    return new OSSAudioDevice(output_device);
+  }
+
+
+  OSSAudioDevice::OSSAudioDevice(int output_device) {
+    m_output_device = output_device;
   }
 
 
@@ -23,60 +68,6 @@ namespace audiere {
     if (m_output_device != -1) {
       close(m_output_device);
     }
-  }
-
-
-  bool
-  OSSAudioDevice::initialize(const char* parameters) {
-    ParameterList pl(ParseParameters(parameters));
-
-    std::string device = "/dev/dsp";  // default device
-
-    ParameterList::iterator i;
-    for (i = pl.begin(); i != pl.end(); ++i) {
-      if (i->first == "device") {
-        device = i->second;
-      }
-    }
-
-    // attempt to open output device
-    m_output_device = open(device.c_str(), O_WRONLY);
-    if (m_output_device == -1) {
-      perror(device.c_str());
-      return false;
-    }
-
-    int format = AFMT_S16_LE;
-    if (ioctl(m_output_device, SNDCTL_DSP_SETFMT, &format) == -1) {
-      perror("SNDCTL_DSP_SETFMT");
-      return false;
-    }
-    if (format != AFMT_S16_LE) {
-      // unsupported format
-      return false;
-    }
-
-    int stereo = 1;
-    if (ioctl(m_output_device, SNDCTL_DSP_STEREO, &stereo) == -1) {
-      perror("SNDCTL_DSP_STEREO");
-      return false;
-    }
-    if (stereo != 1) {
-      // unsupported channel number
-      return false;
-    }
-
-    int speed = 44100;
-    if (ioctl(m_output_device, SNDCTL_DSP_SPEED, &speed) == -1) {
-      perror("SNDCTL_DSP_SPEED");
-      return false;
-    }
-    if (abs(44100 - speed) > 2205) {
-      // unsupported sampling rate
-      return false;
-    }
-
-    return true;
   }
 
 
@@ -109,7 +100,7 @@ namespace audiere {
 
   OutputStream*
   OSSAudioDevice::openStream(SampleSource* source) {
-    return new OSSOutputStream(&m_mixer, source);
+    return new OSSOutputStream(this, source);
   }
 
 
@@ -124,34 +115,37 @@ namespace audiere {
   }
 
 
-  OSSOutputStream::OSSOutputStream(Mixer* mixer, SampleSource* source) {
-    m_mixer      = mixer;
-    m_source     = source;
+  OSSOutputStream::OSSOutputStream(
+    OSSAudioDevice* device,
+    SampleSource* source)
+  {
+    m_device = device;
+    m_source = source;
 
-    m_mixer->addSource(source);
+    getMixer().addSource(m_source.get());
   }
 
 
   OSSOutputStream::~OSSOutputStream() {
-    m_mixer->removeSource(m_source);
+    getMixer().removeSource(m_source.get());
   }
 
 
   void
   OSSOutputStream::play() {
-    m_mixer->setPlaying(m_source, true);
+    getMixer().setPlaying(m_source.get(), true);
   }
 
 
   void
   OSSOutputStream::stop() {
-    m_mixer->setPlaying(m_source, false);
+    getMixer().setPlaying(m_source.get(), false);
   }
 
 
   bool
   OSSOutputStream::isPlaying() {
-    return m_mixer->isPlaying(m_source);
+    return getMixer().isPlaying(m_source.get());
   }
 
 
@@ -176,7 +170,7 @@ namespace audiere {
   void
   OSSOutputStream::setVolume(float volume) {
     m_volume = volume;
-    m_mixer->setVolume(m_source, m_volume);
+    getMixer().setVolume(m_source.get(), m_volume);
   }
 
 
@@ -222,6 +216,12 @@ namespace audiere {
   OSSOutputStream::getPosition() {
     /// @todo  implement OSSOutputStream::getPosition
     return 0;
+  }
+
+
+  Mixer&
+  OSSOutputStream::getMixer() {
+    return m_device->m_mixer;
   }
 
 }

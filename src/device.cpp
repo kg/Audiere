@@ -50,7 +50,7 @@ namespace audiere {
 
   AudioDevice* DoOpenDevice(
     const std::string& name,
-    ParameterList& parameters)
+    const ParameterList& parameters)
   {
     ADR_GUARD("DoOpenDevice");
 

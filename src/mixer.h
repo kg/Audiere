@@ -14,7 +14,6 @@ namespace audiere {
   class Mixer : public UnseekableSource {
   public:
     Mixer();
-    ~Mixer();
 
     void getFormat(
       int& channel_count,
@@ -35,7 +34,7 @@ namespace audiere {
   private:
     struct SourceAttributes {
       // immutable
-      SampleSource* resampler;
+      RefPtr<SampleSource> resampler;
       s16 last_l;  // left
       s16 last_r;  // right
 

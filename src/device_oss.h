@@ -9,12 +9,15 @@
 
 namespace audiere {
 
-  class OSSAudioDevice : public DLLImplementation<AudioDevice> {
+  class OSSAudioDevice : public RefImplementation<AudioDevice> {
   public:
-    OSSAudioDevice();
+    static OSSAudioDevice* create(const ParameterList& parameters);
+
+  private:
+    OSSAudioDevice(int output_device);
     ~OSSAudioDevice();
 
-    bool initialize(const char* parameters);
+  public:
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(
@@ -25,12 +28,14 @@ namespace audiere {
     int m_output_device;
 
     Mixer m_mixer;
+
+    friend class OSSOutputStream;
   };
 
 
-  class OSSOutputStream : public DLLImplementation<OutputStream> {
+  class OSSOutputStream : public RefImplementation<OutputStream> {
   private:
-    OSSOutputStream(Mixer* mixer, SampleSource* source);
+    OSSOutputStream(OSSAudioDevice* device, SampleSource* source);
     ~OSSOutputStream();
 
   public:
@@ -52,8 +57,10 @@ namespace audiere {
     int  getPosition();
 
   private:
-    Mixer* m_mixer;
-    SampleSource* m_source;
+    Mixer& getMixer();
+
+    RefPtr<OSSAudioDevice> m_device;
+    RefPtr<SampleSource> m_source;
     float m_volume;
 
     friend class OSSAudioDevice;

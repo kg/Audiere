@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 
   cerr << "initializing..." << endl;
 
-  auto_ptr<AudioDevice> device(OpenDevice());
+  RefPtr<AudioDevice> device(OpenDevice());
   if (!device.get()) {
     cerr << "OpenDevice() failed" << endl;
     return EXIT_FAILURE;
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 
   cerr << "created context" << endl;
 
-  auto_ptr<OutputStream> sound(OpenSound(device.get(), argv[1]));
+  RefPtr<OutputStream> sound(OpenSound(device.get(), argv[1]));
   if (!sound.get()) {
     cerr << "OpenSound() failed" << endl;
     return EXIT_FAILURE;

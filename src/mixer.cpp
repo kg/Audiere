@@ -10,11 +10,6 @@ namespace audiere {
   }
 
 
-  Mixer::~Mixer() {
-    // assume all streams have been removed
-  }
-
-
   void
   Mixer::getFormat(
     int& channel_count,
@@ -102,7 +97,6 @@ namespace audiere {
 
   void
   Mixer::removeSource(SampleSource* source) {
-    delete m_sources[source].resampler;
     m_sources.erase(source);
   }
 

@@ -7,6 +7,7 @@
 #include <AL/alc.h>
 #include "audiere.h"
 #include "internal.h"
+#include "utility.h"
 
 
 namespace audiere {
@@ -14,12 +15,15 @@ namespace audiere {
   class ALOutputStream;
 
 
-  class ALAudioDevice : public RefCountedImplementation<AudioDevice> {
+  class ALAudioDevice : public RefImplementation<AudioDevice> {
   public:
-    ALAudioDevice();
+    static ALAudioDevice* create(const ParameterList& list);
+
+  private:
+    ALAudioDevice(ALCdevice* device, ALCcontext* context);
     ~ALAudioDevice();
 
-    bool initialize(const char* parameters);
+  public:
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(
@@ -39,7 +43,7 @@ namespace audiere {
   };
 
 
-  class ALOutputStream : public DLLImplementation<OutputStream> {
+  class ALOutputStream : public RefImplementation<OutputStream> {
   public:
     void  play();
     void  stop();
@@ -72,10 +76,8 @@ namespace audiere {
     void fillBuffers();
 
   private:
-    ALAudioDevice* m_device;
-
-    // sample stream
-    SampleSource* m_source;
+    RefPtr<ALAudioDevice> m_device;
+    RefPtr<SampleSource> m_source;
 
     // informational (convenience)
     ALenum m_format;

@@ -14,9 +14,6 @@ namespace audiere {
     resetState();
   }
 
-  Resampler::~Resampler() {
-  }
-
   void
   Resampler::getFormat(
     int& channel_count,

@@ -52,7 +52,7 @@ namespace audiere {
   class ParameterList {
   public:
     ParameterList(const char* parameters);
-    std::string getValue(std::string key, std::string defValue);
+    std::string getValue(std::string key, std::string defValue) const;
 
   private:
     std::map<std::string, std::string> m_values;

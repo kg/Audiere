@@ -275,10 +275,12 @@ namespace audiere {
 
   int
   DSAudioDevice::Volume_AudiereToDirectSound(float volume) {
-    // The proper math doesn't sound right at all, so here is something that
-    // sounds about right.
-    double attenuate = pow(1 - volume, 3);
-    return int(-10000 * attenuate);
+    if (volume == 0) {
+      return -10000;
+    } else {
+      double attenuate = 1000 * log(1 / volume);
+      return int(-attenuate);
+    }
   }
 
 

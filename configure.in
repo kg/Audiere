@@ -76,7 +76,7 @@ AC_CHECK_LIB(FLAC, FLAC__seekable_stream_decoder_process_single,
     LIBS="-lFLAC++ -lFLAC -lm $LIBS"
     EXTRA_LIBS="-lFLAC++ -lFLAC -lm $EXTRA_LIBS"
   ,
-    AC_MSG_ERROR([libFLAC not found.  Install FLAC from http://flac.sourceforge.net/]),
+    AC_MSG_ERROR([libFLAC not found.  Install FLAC from http://flac.sourceforge.net/])
   ,
     -lm)
 

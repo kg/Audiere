@@ -7,6 +7,7 @@ mpegsoundSources = map(
     SConscript('mpegsound/SConscript'))
 
 sources = Split("""
+    basic_source.cpp
     debug.cpp
     device.cpp
     device_al.cpp
@@ -14,13 +15,14 @@ sources = Split("""
     device_null.cpp
     file_ansi.cpp
     input.cpp
+    input_aiff.cpp
     input_flac.cpp
     input_mp3.cpp
     input_ogg.cpp
     input_wav.cpp
+    loop_point_source.cpp
     memory_file.cpp
     noise.cpp
-    repeatable.cpp
     resampler.cpp
     sample_buffer.cpp
     sound_effect.cpp

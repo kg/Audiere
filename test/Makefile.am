@@ -1,1 +1,1 @@
-SUBDIRS = device interactive
+SUBDIRS = buffer device interactive

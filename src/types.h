@@ -1,5 +1,5 @@
-#ifndef AUDIERE_CONFIG_H
-#define AUDIERE_CONFIG_H
+#ifndef AUDIERE_TYPES_H
+#define AUDIERE_TYPES_H
 
 namespace audiere {
 

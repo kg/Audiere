@@ -1,5 +1,5 @@
-#ifndef AUDIERE_INTERNAL_HPP
-#define AUDIERE_INTERNAL_HPP
+#ifndef AUDIERE_INTERNAL_H
+#define AUDIERE_INTERNAL_H
 
 
 #include "audiere.h"

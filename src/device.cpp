@@ -54,29 +54,20 @@ namespace audiere {
 
 
   AudioDevice* DoOpenDevice(
-    const char* name,
-    const char* parameters)
+    const std::string& name,
+    ParameterList& parameters)
   {
     ADR_GUARD("DoOpenDevice");
 
-    if (!name) {
-      name = "";
-    }
-    if (!parameters) {
-      parameters = "";
-    }
-
-    std::string dev(name);
-
     #ifdef WIN32
 
-      if (dev == "" || dev == "autodetect") {
+      if (name == "" || name == "autodetect") {
         TRY_GROUP("directsound");
         TRY_GROUP("openal");
         return 0;
       }
 
-      if (dev == "directsound") {
+      if (name == "directsound") {
         #if DIRECTSOUND_VERSION >= 0x0800
           TRY_DEVICE(DS8AudioDevice);
         #endif
@@ -85,40 +76,40 @@ namespace audiere {
       }
 
       #ifdef HAVE_OPENAL
-        if (dev == "openal") {
+        if (name == "openal") {
           TRY_DEVICE(ALAudioDevice);
           return 0;
         }
       #endif
 
-      if (dev == "null") {
+      if (name == "null") {
         TRY_DEVICE(NullAudioDevice);
         return 0;
       }
 
     #else  // not Win32 - assume autoconf UNIX
 
-      if (dev == "" || dev == "autodetect") {
+      if (name == "" || name == "autodetect") {
         TRY_GROUP("oss");
         TRY_GROUP("openal");
         return 0;
       }
 
       #ifdef HAVE_OSS
-        if (dev == "oss") {
+        if (name == "oss") {
           TRY_DEVICE(OSSAudioDevice);
           return 0;
         }
       #endif
 
       #ifdef HAVE_OPENAL
-        if (dev == "openal") {
+        if (name == "openal") {
           TRY_DEVICE(ALAudioDevice);
           return 0;
         }
       #endif
 
-      if (dev == "null") {
+      if (name == "null") {
         TRY_DEVICE(NullAudioDevice);
         return 0;
       }
@@ -194,8 +185,17 @@ namespace audiere {
   {
     ADR_GUARD("AdrOpenDevice");
 
+    if (!name) {
+      name = "";
+    }
+    if (!parameters) {
+      parameters = "";
+    }
+
     // first, we need an unthreaded audio device
-    AudioDevice* device = DoOpenDevice(name, parameters);
+    AudioDevice* device = DoOpenDevice(
+      std::string(name),
+      ParameterList(parameters));
     if (!device) {
       return 0;
     }

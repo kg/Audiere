@@ -1,5 +1,5 @@
-#ifndef INPUT_MOD_HPP
-#define INPUT_MOD_HPP
+#ifndef INPUT_MOD_H
+#define INPUT_MOD_H
 
 
 #include <mikmod.h>  // 

@@ -1,5 +1,5 @@
-#ifndef DEBUG_HPP
-#define DEBUG_HPP
+#ifndef DEBUG_H
+#define DEBUG_H
 
 
 #include <assert.h>

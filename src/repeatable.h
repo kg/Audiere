@@ -1,5 +1,5 @@
-#ifndef REPEATABLE_HPP
-#define REPEATABLE_HPP
+#ifndef REPEATABLE_H
+#define REPEATABLE_H
 
 
 #include "audiere.h"

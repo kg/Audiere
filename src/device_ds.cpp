@@ -55,23 +55,12 @@ namespace audiere {
 
 
   bool
-  DSAudioDevice::initialize(const char* parameters) {
+  DSAudioDevice::initialize(ParameterList& parameters) {
     ADR_GUARD("DSAudioDevice::initialize");
 
-    // parse the parameter list
-    ParameterList pl(ParseParameters(parameters));
-
-    ParameterList::iterator i = pl.begin();
-    while (i != pl.end()) {
-    
-      if (i->first.c_str() == "buffer") {
-        m_buffer_length = atoi(i->second.c_str());
-        if (m_buffer_length == 0) {
-          m_buffer_length = DS_DefaultBufferLength;
-        }
-      }
-
-      ++i;
+    m_buffer_length = atoi(parameters.getValue("buffer", "").c_str());
+    if (m_buffer_length == 0) {
+      m_buffer_length = DS_DefaultBufferLength;
     }
 
     // initialize COM
@@ -216,11 +205,11 @@ namespace audiere {
       DSBUFFERDESC dsbd;
     #endif
     memset(&dsbd, 0, sizeof(dsbd));
-    dsbd.dwSize          = sizeof(dsbd);
-    dsbd.dwFlags         = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
-                           DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS;
-    dsbd.dwBufferBytes   = sample_size * buffer_length;
-    dsbd.lpwfxFormat     = &wfx;
+    dsbd.dwSize        = sizeof(dsbd);
+    dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
+                         DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS;
+    dsbd.dwBufferBytes = sample_size * buffer_length;
+    dsbd.lpwfxFormat   = &wfx;
 
     // create the DirectSound buffer
     IDirectSoundBuffer* buffer;
@@ -235,7 +224,7 @@ namespace audiere {
     ADR_LOG("CreateSoundBuffer succeeded");
 
     DSOutputStream* stream = new DSOutputStream(
-      this, buffer, sample_size, buffer_length, source);
+      this, buffer, buffer_length, source);
 
     // add ourselves to the list of streams and return
     m_open_streams.push_back(stream);
@@ -265,7 +254,6 @@ namespace audiere {
   DSOutputStream::DSOutputStream(
     DSAudioDevice* device,
     IDirectSoundBuffer* buffer,
-    int sample_size,
     int buffer_length,
     SampleSource* source)
   {
@@ -281,12 +269,15 @@ namespace audiere {
 
     m_source = new RepeatableStream(source, false);
 
-    m_sample_size = sample_size;
+    int channel_count, sample_rate;
+    SampleFormat sample_format;
+    source->getFormat(channel_count, sample_rate, sample_format);
+    m_sample_size = GetSampleSize(sample_format) * channel_count;
 
     m_total_read    = 0;
     m_total_written = 0;
 
-    m_last_sample = new BYTE[sample_size];
+    m_last_sample = new BYTE[m_sample_size];
 
     setVolume(1);
     setPan(0);
@@ -607,16 +598,6 @@ namespace audiere {
 
     m_total_read += samples_read;
     return samples_read;
-  }
-
-
-  bool
-  DSOutputStream::isBetween(int position, int start, int end) {
-    if (start < end) {
-      return (position >= start && position < end);
-    } else {
-      return (position >= start || position < end);
-    }
   }
 
 }

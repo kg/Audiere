@@ -1,5 +1,5 @@
-#ifndef INPUT_OGG_HPP
-#define INPUT_OGG_HPP
+#ifndef INPUT_OGG_H
+#define INPUT_OGG_H
 
 
 #include <vorbis/vorbisfile.h>

@@ -1,5 +1,5 @@
-#ifndef INPUT_WAV_HPP
-#define INPUT_WAV_HPP
+#ifndef INPUT_WAV_H
+#define INPUT_WAV_H
 
 
 #include "audiere.h"

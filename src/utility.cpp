@@ -10,16 +10,14 @@
 
 namespace audiere {
 
-  ParameterList ParseParameters(const char* parameter_string) {
-    ParameterList theList;
-
+  ParameterList::ParameterList(const char* parameters) {
     std::string key;
     std::string value;
 
     std::string* current_string = &key;
 
     // walk the string and generate the parameter list
-    const char* p = parameter_string;
+    const char* p = parameters;
     while (*p) {
 
       if (*p == '=') {
@@ -29,7 +27,7 @@ namespace audiere {
       } else if (*p == ',') {
 
         if (key.length() && value.length()) {
-          theList.push_back(Parameter(key, value));
+          m_values[key] = value;
         }
         key   = "";
         value = "";
@@ -44,10 +42,13 @@ namespace audiere {
 
     // is there one more parameter without a trailing comma?
     if (key.length() && value.length()) {
-      theList.push_back(Parameter(key, value));
+      m_values[key] = value;
     }
+  }
 
-    return theList;
+  std::string
+  ParameterList::getValue(std::string key, std::string defaultValue) {
+    return (m_values.count(key) ? m_values[key] : defaultValue);
   }
 
 

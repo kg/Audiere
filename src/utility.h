@@ -1,8 +1,13 @@
-#ifndef UTILITY_HPP
-#define UTILITY_HPP
+#ifndef UTILITY_H
+#define UTILITY_H
 
 
-#include <list>
+#ifdef _MSC_VER
+#pragma warning(disable : 4786)
+#endif
+
+
+#include <map>
 #include <string>
 #include <utility>
 #include "audiere.h"
@@ -44,11 +49,14 @@
 
 namespace audiere {
 
+  class ParameterList {
+  public:
+    ParameterList(const char* parameters);
+    std::string getValue(std::string key, std::string defValue);
 
-  typedef std::pair<std::string, std::string> Parameter;
-  typedef std::list<Parameter> ParameterList;
-
-  ParameterList ParseParameters(const char* parameters_string);
+  private:
+    std::map<std::string, std::string> m_values;
+  };
 
   int strcmp_case(const char* a, const char* b);
 

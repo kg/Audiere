@@ -1,5 +1,5 @@
-#ifndef DEFAULT_FILE_HPP
-#define DEFAULT_FILE_HPP
+#ifndef DEFAULT_FILE_H
+#define DEFAULT_FILE_H
 
 
 #include "audiere.h"

@@ -4,8 +4,8 @@
  * Internal platform-specific threads
  */
 
-#ifndef THREADS_HPP
-#define THREADS_HPP
+#ifndef THREADS_H
+#define THREADS_H
 
 
 #include "debug.h"

@@ -1,5 +1,5 @@
-#ifndef DEVICE_NULL_HPP
-#define DEVICE_NULL_HPP
+#ifndef DEVICE_NULL_H
+#define DEVICE_NULL_H
 
 
 #include <set>
@@ -8,6 +8,7 @@
 #include "repeatable.h"
 #include "threads.h"
 #include "types.h"
+#include "utility.h"
 
 
 namespace audiere {
@@ -22,7 +23,7 @@ namespace audiere {
     NullAudioDevice();
     ~NullAudioDevice();
 
-    bool initialize(const char* parameters);
+    bool initialize(ParameterList& parameters);
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(

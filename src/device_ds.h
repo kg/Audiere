@@ -1,5 +1,5 @@
-#ifndef DEVICE_DS_HPP
-#define DEVICE_DS_HPP
+#ifndef DEVICE_DS_H
+#define DEVICE_DS_H
 
 
 // disable 'identifier too long' warning
@@ -16,11 +16,13 @@
 #include "internal.h"
 #include "repeatable.h"
 #include "threads.h"
+#include "utility.h"
 
 
 namespace audiere {
 
   class DSOutputStream;
+  class DSOutputBuffer;
 
   class DSAudioDevice
     : public RefCountedImplementation<AudioDevice>
@@ -30,7 +32,7 @@ namespace audiere {
     DSAudioDevice();
     ~DSAudioDevice();
 
-    bool initialize(const char* parameters);
+    bool initialize(ParameterList& parameters);
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(
@@ -39,13 +41,17 @@ namespace audiere {
 
   private:
     typedef std::list<DSOutputStream*> StreamList;
+    typedef std::list<DSOutputBuffer*> BufferList;
 
     void removeStream(DSOutputStream* stream);
+    void removeBuffer(DSOutputBuffer* buffer);
 
     IDirectSound* m_direct_sound;
     StreamList    m_open_streams;
+    BufferList    m_open_buffers;
 
-    int m_buffer_length;  // in milliseconds
+    /// length of streaming buffer in milliseconds
+    int m_buffer_length;
 
     HWND m_anonymous_window;
 
@@ -64,7 +70,6 @@ namespace audiere {
     DSOutputStream(
       DSAudioDevice* device,
       IDirectSoundBuffer* buffer,
-      int sample_size,   // in bytes
       int buffer_length, // in samples
       SampleSource* source);
     ~DSOutputStream();
@@ -90,15 +95,10 @@ namespace audiere {
     int  getPosition();
 
   private:
-
     void fillStream();
     void update();
     int streamRead(int samples_to_read, void* buffer);
   
-    // returns true if |position| is between |start| (inclusive) and
-    // |end| (exclusive) in the buffer
-    bool isBetween(int position, int start, int end);
-
   private:
     DSAudioDevice* m_device;
 
@@ -118,6 +118,39 @@ namespace audiere {
     ::BYTE* m_last_sample; // the last sample read (used for clickless silence)
 
     friend class DSAudioDevice;
+  };
+
+
+  class DSOutputBuffer : public DLLImplementation<SampleSource> {
+  private:
+/*
+    DSOutputStream(
+      DSAudioDevice* device,
+      IDirectSoundBuffer* buffer,
+      void* samples, int sample_count,
+*/
+  public:
+    void play();
+    void stop();
+    bool isPlaying();
+    void reset();
+
+    void setRepeat(bool repeat);
+    bool getRepeat();
+
+    void  setVolume(float volume);
+    float getVolume();
+
+    void  setPan(float pan);
+    float getPan();
+
+    bool isSeekable();
+    int  getLength();
+    void setPosition(int position);
+    int  getPosition();
+
+  private:
+    
   };
 
 }

@@ -26,7 +26,7 @@ namespace audiere {
 
 
   bool
-  NullAudioDevice::initialize(const char* /*parameters*/) {
+  NullAudioDevice::initialize(ParameterList& /*parameters*/) {
     return true;
   }
 

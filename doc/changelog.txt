@@ -1,3 +1,92 @@
+2002.09.06
+
+  updated Java bindings
+  upgraded to Ogg Vorbis 1.0
+  don't force usage of DirectSound 8...  use whatever DirectSound is available
+
+2002.09.05
+
+  updated XPCOM bindings
+  updated Python bindings
+  better version string from audiere::GetVersion()
+
+2002.09.04
+
+  support for seeking within Ogg Vorbis input streams
+
+2002.09.03
+
+  major performance improvement in DSOutputStream::isPlaying
+  made the Ogg Vorbis decoder work properly on big-endian architectures
+  added a glossary
+
+2002.09.02
+
+  converted the Mixer into a MixerDevice framework, which lets many
+    similar output devices share most of their code, and reduces the
+    size of the DLL
+  SampleBuffer object implementation...  you can load a sound once and
+    play it multiple times
+
+2002.09.01
+
+  added native support for buffered audio in the DirectSound
+    driver...  it works really well
+  better seeking support in the DirectSound audio device
+
+2002.08.23
+
+  add support for seeking within WAV files
+
+2002.08.22
+
+  added SCons build system for MIPSPro on IRIX: does not support any
+    other compilers, nor does it build mikmod support
+
+2002.08.21
+
+  make interfaces use __stdcall on Windows so they are compliant with
+    COM (and thus, Delphi)
+
+
+2002.08.20
+
+  started renaming internal variables and arguments to use a better
+    nomenclature: sample, channel, and frame (just like SGI AL)
+  added support for building with MIPSPro on IRIX
+
+2002.08.19
+
+  SGI AL output support
+  support for big-endian architectures
+
+2002.08.18
+
+  completely new wxPlayer: it uses an MDI window for each device, and
+    each sound has its own child window.  it also works on UNIX if
+    wxWindows is installed
+
+2002.08.17
+
+  created a WinMM audio device
+  refcounted the Audiere interfaces/objects
+  fixed bug on Linux where the more streams were playing, the lower
+    the overall volume would be
+
+2002.08.09
+
+  implemented the REAL fix for the DirectSound stream-repeating
+    bug...  the DirectSound device is a lot more robust with this fix
+
+2002.08.07
+
+  added support for buffered audio
+
+2002.08.06
+
+  Support low-pass filters on .it files again (enabled DMODE_RESONANCE
+    in mikmod)
+
 2002.08.05
 
   added stereo panning support again
@@ -7,6 +96,18 @@
   completely new API, with AudioDevice, OutputStream, SampleSource, File,
     Sound...
   switched volume to normalized floats instead of [0, 255]
+
+2002.07.29
+
+  added a tone generator sample source
+
+2002.07.28
+
+  converted 'bits per sample' into an enum of possible sample formats
+
+2002.06.10
+
+  1.0.4 release
 
 2002.06.04
 

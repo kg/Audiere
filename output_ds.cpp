@@ -18,22 +18,36 @@
 */
 
 
-#include "output_ds8.hpp"
-#include "ds_utility.hpp"
+#include <math.h>
+#include "output_ds.hpp"
+
+
+static const int DS_DefaultBufferLength = 1000;  // one second
+
+
+// DirectSound treats volumes as decibels (exponential growth like the Richter
+// scale).  We want a linear ramp.  Do the conversion!
+inline int Volume_AudiereToDirectSound(int volume) {
+  // I can't figure out the proper math, and this comes close enough...
+  double fv = volume / 255.0;  // range: 0-1
+  double attenuate = pow(1 - fv, 3);
+  return int(-10000 * attenuate);
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-DS8OutputContext::DS8OutputContext()
+DSOutputContext::DSOutputContext()
 {
   m_DirectSound     = NULL;
+  m_PrimaryBuffer   = NULL;
   m_BufferLength    = DS_DefaultBufferLength;
   m_AnonymousWindow = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-DS8OutputContext::~DS8OutputContext()
+DSOutputContext::~DSOutputContext()
 {
   // if the anonymous window is open, close it
   if (m_AnonymousWindow) {
@@ -48,6 +62,11 @@ DS8OutputContext::~DS8OutputContext()
     ++i;
   }
   m_OpenStreams.clear();
+
+  if (m_PrimaryBuffer) {
+    m_PrimaryBuffer->Release();
+    m_PrimaryBuffer = NULL;
+  }
 
   // shut down DirectSound
   if (m_DirectSound) {
@@ -68,7 +87,7 @@ static LRESULT CALLBACK WindowProc(
 }
 
 bool
-DS8OutputContext::Initialize(const char* parameters)
+DSOutputContext::Initialize(const char* parameters)
 {
   // parse the parameter list
   ParameterList pl;
@@ -116,19 +135,18 @@ DS8OutputContext::Initialize(const char* parameters)
 
   // create the DirectSound object
   rv = CoCreateInstance(
-    CLSID_DirectSound8,
+    GetCLSID(),
     NULL,
     CLSCTX_INPROC_SERVER,
-    IID_IDirectSound8,
-    (void**)&m_DirectSound
-  );
+    IID_IDirectSound,
+    (void**)&m_DirectSound);
   if (FAILED(rv) || !m_DirectSound) {
     DestroyWindow(m_AnonymousWindow);
     m_AnonymousWindow = NULL;
     return false;
   }
 
-  // initialize the DS8 device
+  // initialize the DirectSound device
   rv = m_DirectSound->Initialize(NULL);
   if (FAILED(rv)) {
     DestroyWindow(m_AnonymousWindow);
@@ -139,7 +157,9 @@ DS8OutputContext::Initialize(const char* parameters)
   }
 
   // set the cooperative level
-  rv = m_DirectSound->SetCooperativeLevel(m_AnonymousWindow, DSSCL_NORMAL);
+  rv = m_DirectSound->SetCooperativeLevel(
+    m_AnonymousWindow,
+    GetCooperativeLevel());
   if (FAILED(rv)) {
     DestroyWindow(m_AnonymousWindow);
     m_AnonymousWindow = NULL;
@@ -148,18 +168,18 @@ DS8OutputContext::Initialize(const char* parameters)
     return false;
   }
 
-  return true;
+  return CreatePrimarySoundBuffer();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-DS8OutputContext::Update()
+DSOutputContext::Update()
 {
   // enumerate all open streams
   StreamList::iterator i = m_OpenStreams.begin();
   while (i != m_OpenStreams.end()) {
-    DS8OutputStream* s = *i++;
+    DSOutputStream* s = *i++;
     s->Update();
   }
 
@@ -169,7 +189,7 @@ DS8OutputContext::Update()
 ////////////////////////////////////////////////////////////////////////////////
 
 IOutputStream*
-DS8OutputContext::OpenStream(ISampleSource* source)
+DSOutputContext::OpenStream(ISampleSource* source)
 {
   int channel_count;
   int sample_rate;
@@ -196,11 +216,10 @@ DS8OutputContext::OpenStream(ISampleSource* source)
   DSBUFFERDESC dsbd;
   memset(&dsbd, 0, sizeof(dsbd));
   dsbd.dwSize          = sizeof(dsbd);
-  dsbd.dwFlags         = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME |
-                         DSBCAPS_GLOBALFOCUS;
+  dsbd.dwFlags         = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
+                         DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS;
   dsbd.dwBufferBytes   = sample_size * buffer_length;
   dsbd.lpwfxFormat     = &wfx;
-  dsbd.guid3DAlgorithm = GUID_NULL;
 
   // create the DirectSound buffer
   IDirectSoundBuffer* buffer;
@@ -209,7 +228,7 @@ DS8OutputContext::OpenStream(ISampleSource* source)
     return NULL;
   }
 
-  DS8OutputStream* stream = new DS8OutputStream(
+  DSOutputStream* stream = new DSOutputStream(
     this,
     buffer,
     sample_size,
@@ -224,8 +243,8 @@ DS8OutputContext::OpenStream(ISampleSource* source)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-DS8OutputStream::DS8OutputStream(
-  DS8OutputContext* context,
+DSOutputStream::DSOutputStream(
+  DSOutputContext* context,
   IDirectSoundBuffer* buffer,
   int sample_size,
   int buffer_length,
@@ -235,11 +254,11 @@ DS8OutputStream::DS8OutputStream(
   m_Buffer = buffer;
   m_NextRead = 0;
   m_BufferLength = buffer_length;
-  
+
   m_Source = source;
 
   m_SampleSize = sample_size;
-  m_LastSample = new BYTE[m_SampleSize];
+  m_LastSample = new BYTE[sample_size];
 
   SetVolume(ADR_VOLUME_MAX);
 
@@ -249,10 +268,10 @@ DS8OutputStream::DS8OutputStream(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-DS8OutputStream::~DS8OutputStream()
+DSOutputStream::~DSOutputStream()
 {
   // remove ourself from the list
-  DS8OutputContext::StreamList::iterator i = m_Context->m_OpenStreams.begin();
+  DSOutputContext::StreamList::iterator i = m_Context->m_OpenStreams.begin();
   while (i != m_Context->m_OpenStreams.end()) {
     if (*i == this) {
       m_Context->m_OpenStreams.erase(i);
@@ -269,7 +288,7 @@ DS8OutputStream::~DS8OutputStream()
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-DS8OutputStream::FillStream()
+DSOutputStream::FillStream()
 {
   // we know the stream is stopped, so just lock the buffer and fill it
 
@@ -304,7 +323,7 @@ DS8OutputStream::FillStream()
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-DS8OutputStream::Update()
+DSOutputStream::Update()
 {
   // if it's not playing, don't do anything
   if (!IsPlaying()) {
@@ -365,6 +384,12 @@ DS8OutputStream::Update()
   int old_next_read = m_NextRead;
   m_NextRead = (m_NextRead + read1 + read2) % m_BufferLength;
 
+//  char buf[1024];
+//  sprintf(buf, "rl1 (%d/%d) rl2 (%d/%d)  old/new pos (%d/%d)\n",
+//          read1, length1, read2, length2,
+//          old_next_read, m_NextRead);
+//  OutputDebugString(buf);
+
   // unlock
   m_Buffer->Unlock(buffer1, buffer1_length, buffer2, buffer2_length);
 
@@ -392,7 +417,7 @@ DS8OutputStream::Update()
 
 // read as much as possible from the stream source, fill the rest with 0
 int
-DS8OutputStream::StreamRead(int sample_count, void* samples)
+DSOutputStream::StreamRead(int sample_count, void* samples)
 {
   // try to read from the stream
   int samples_read = m_Source->Read(sample_count, samples);
@@ -420,7 +445,7 @@ DS8OutputStream::StreamRead(int sample_count, void* samples)
 ////////////////////////////////////////////////////////////////////////////////
 
 bool
-DS8OutputStream::IsBetween(int position, int start, int end)
+DSOutputStream::IsBetween(int position, int start, int end)
 {
   if (start < end) {
     return (position >= start && position < end);
@@ -432,7 +457,7 @@ DS8OutputStream::IsBetween(int position, int start, int end)
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-DS8OutputStream::Play()
+DSOutputStream::Play()
 {
   m_Buffer->Play(0, 0, DSBPLAY_LOOPING);
 }
@@ -440,7 +465,7 @@ DS8OutputStream::Play()
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-DS8OutputStream::Stop()
+DSOutputStream::Stop()
 {
   m_Buffer->Stop();
 }
@@ -448,7 +473,7 @@ DS8OutputStream::Stop()
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-DS8OutputStream::Reset()
+DSOutputStream::Reset()
 {
   // figure out if we're playing or not
   bool is_playing = false;
@@ -481,17 +506,17 @@ DS8OutputStream::Reset()
 ////////////////////////////////////////////////////////////////////////////////
 
 bool
-DS8OutputStream::IsPlaying()
+DSOutputStream::IsPlaying()
 {
   DWORD status;
   HRESULT rv = m_Buffer->GetStatus(&status);
-  return (SUCCEEDED(rv) && (status & DSBSTATUS_PLAYING));
+  return (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-DS8OutputStream::SetVolume(int volume)
+DSOutputStream::SetVolume(int volume)
 {
   m_Volume = volume;
   m_Buffer->SetVolume(Volume_AudiereToDirectSound(volume));
@@ -500,7 +525,7 @@ DS8OutputStream::SetVolume(int volume)
 ////////////////////////////////////////////////////////////////////////////////
 
 int
-DS8OutputStream::GetVolume()
+DSOutputStream::GetVolume()
 {
   return m_Volume;
 }

@@ -3,6 +3,8 @@
 
 
 #include "audiere.h"
+#include "debug.h"
+#include "dumb_resample.h"
 #include "types.h"
 #include "utility.h"
 
@@ -39,7 +41,7 @@ namespace audiere {
     float getPitchShift();
 
   private:
-    void fillBuffer();
+    void fillBuffers();
     void resetState();
 
   private:
@@ -49,16 +51,14 @@ namespace audiere {
     int m_native_sample_rate;
     SampleFormat m_native_sample_format;
 
-    enum { NATIVE_BUFFER_SIZE = 4096 };
-    s16 m_native_buffer[NATIVE_BUFFER_SIZE * 2];
-    s16* m_position;
-    unsigned m_samples_left;  // number of samples left to consume
+    enum { BUFFER_SIZE = 4096 };
+    sample_t m_native_buffer_l[BUFFER_SIZE];
+    sample_t m_native_buffer_r[BUFFER_SIZE];
+    DUMB_RESAMPLER m_resampler_l;
+    DUMB_RESAMPLER m_resampler_r;
+    int m_buffer_length; // number of samples read into each buffer
 
     float m_shift;
-
-    unsigned m_time;
-    s16 m_sl; // left channel
-    s16 m_sr; // right channel
   };
 
 }

@@ -79,6 +79,8 @@ libaudiere_la_SOURCES = \
 	$(AL_SOURCES) \
 	$(OSS_SOURCES) \
 	$(WINMM_SOURCES) \
+	dumb_resample.cpp \
+	dumb_resample.h \
 	file_ansi.cpp \
 	input.cpp \
 	input_aiff.cpp \

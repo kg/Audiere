@@ -172,6 +172,14 @@ SOURCE=..\..\src\device_null.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\dumb_resampler.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\dumb_resampler.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\file_ansi.cpp
 # End Source File
 # Begin Source File

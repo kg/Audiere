@@ -13,7 +13,7 @@ namespace audiere {
 
     m_shift = 1;
 
-    fillBuffer();
+    fillBuffers();
     resetState();
   }
 
@@ -30,42 +30,46 @@ namespace audiere {
 
   int
   Resampler::read(const int frame_count, void* buffer) {
-    u16* out = (u16*)buffer;
-
+    s16* out = (s16*)buffer;
     int left = frame_count;
-
-    // if we didn't finish resampling last time...
-    while (m_time > unsigned(m_native_sample_rate) && left > 0) {
-      m_time -= m_native_sample_rate;
-      *out++ = m_sl;
-      *out++ = m_sr;
-      --left;
-    }
-
+    sample_t tmp_l[BUFFER_SIZE];
+    sample_t tmp_r[BUFFER_SIZE];
+    float delta = m_shift * m_native_sample_rate / m_rate;
     while (left > 0) {
-
-      if (m_samples_left == 0) {
-        // try to fill the native buffer
-        fillBuffer();
-
-        // could we read any more?
-        if (m_samples_left == 0) {
+      int transfer = std::min(left, int(BUFFER_SIZE));
+      memset(tmp_l, 0, transfer * sizeof(sample_t));
+      int rv = dumb_resample(&m_resampler_l, tmp_l, transfer, 1.0, delta);
+      if (rv == 0) {
+        fillBuffers();
+        if (m_buffer_length == 0) {
           return frame_count - left;
+        } else {
+          m_resampler_l.pos = m_resampler_l.subpos = m_resampler_l.start = 0;
+          m_resampler_l.end = m_buffer_length;
+          m_resampler_l.dir = 1;
+          m_resampler_r.pos = m_resampler_r.subpos = m_resampler_r.start = 0;
+          m_resampler_r.end = m_buffer_length;
+          m_resampler_r.dir = 1;
+          continue;
         }
       }
-
-      m_sl = *m_position++;
-      m_sr = *m_position++;
-      --m_samples_left;
-
-      m_time += unsigned(m_rate / m_shift);
-      while (m_time > unsigned(m_native_sample_rate) && left > 0) {
-        m_time -= m_native_sample_rate;
-        *out++ = m_sl;
-        *out++ = m_sr;
-        --left;
+      if (m_native_channel_count == 2) {
+        memset(tmp_r, 0, transfer * sizeof(sample_t));
+        int rv2 = dumb_resample(&m_resampler_r, tmp_r, transfer, 1.0,
+                                delta);
+        ADR_ASSERT(rv == rv2, "resamplers returned different sample counts");
+        for (int i = 0; i < rv; i++) {
+          *out++ = clamp(-32768, tmp_l[i], 32767);
+          *out++ = clamp(-32768, tmp_r[i], 32767);
+        }
+      } else {
+        for (int i = 0; i < rv; i++) {
+          s16 sample = clamp(-32768, tmp_l[i], 32767);
+          *out++ = sample;
+          *out++ = sample;
+        }
       }
-
+      left -= rv;
     }
     return frame_count;
   }
@@ -73,7 +77,7 @@ namespace audiere {
   void
   Resampler::reset() {
     m_source->reset();
-    fillBuffer();
+    fillBuffers();
     resetState();
   }
 
@@ -83,12 +87,13 @@ namespace audiere {
   }
 
   void
-  Resampler::fillBuffer() {
+  Resampler::fillBuffers() {
     // we only support channels in [1, 2] and bits in [8, 16] now
-    u8 initial_buffer[NATIVE_BUFFER_SIZE * 4];
-    unsigned read = m_source->read(NATIVE_BUFFER_SIZE, initial_buffer);
+    u8 initial_buffer[BUFFER_SIZE * 4];
+    unsigned read = m_source->read(BUFFER_SIZE, initial_buffer);
 
-    s16* out = m_native_buffer;
+    sample_t* out_l = m_native_buffer_l;
+    sample_t* out_r = m_native_buffer_r;
 
     if (m_native_channel_count == 1) {
       if (m_native_sample_format == SF_U8) {
@@ -97,8 +102,7 @@ namespace audiere {
         u8* in = initial_buffer;
         for (unsigned i = 0; i < read; ++i) {
           s16 sample = u8tos16(*in++);
-          *out++ = sample;
-          *out++ = sample;
+          *out_l++ = sample;
         }
 
       } else {
@@ -107,8 +111,7 @@ namespace audiere {
         s16* in = (s16*)initial_buffer;
         for (unsigned i = 0; i < read; ++i) {
           s16 sample = *in++;
-          *out++ = sample;
-          *out++ = sample;
+          *out_l++ = sample;
         }
 
       }
@@ -118,8 +121,8 @@ namespace audiere {
         // channels = 2, bits = 8
         u8* in = initial_buffer;
         for (unsigned i = 0; i < read; ++i) {
-          *out++ = u8tos16(*in++);
-          *out++ = u8tos16(*in++);
+          *out_l++ = u8tos16(*in++);
+          *out_r++ = u8tos16(*in++);
         }
 
       } else {
@@ -127,22 +130,24 @@ namespace audiere {
         // channels = 2, bits = 16
         s16* in = (s16*)initial_buffer;
         for (unsigned i = 0; i < read; ++i) {
-          *out++ = *in++;
-          *out++ = *in++;
+          *out_l++ = *in++;
+          *out_r++ = *in++;
         }
       
       }
     }
 
-    m_position = m_native_buffer;
-    m_samples_left = read;
+    m_buffer_length = read;
   }
 
   void
   Resampler::resetState() {
-    m_time = 0;
-    m_sl = 0;
-    m_sr = 0;
+    dumb_reset_resampler(&m_resampler_l, m_native_buffer_l, 0, 0,
+                         m_buffer_length);
+    if (m_native_channel_count == 2) {
+      dumb_reset_resampler(&m_resampler_r, m_native_buffer_r, 0, 0,
+                           m_buffer_length);
+    }
   }
 
   bool
@@ -158,13 +163,14 @@ namespace audiere {
   void
   Resampler::setPosition(int position) {
     m_source->setPosition(position);
-    fillBuffer();
+    fillBuffers();
     resetState();
   }
 
   int
   Resampler::getPosition() {
-    int position = m_source->getPosition() - m_samples_left;
+    int position = m_source->getPosition() - m_buffer_length +
+                   m_resampler_l.pos;
     while (position < 0) {
       position += m_source->getLength();
     }

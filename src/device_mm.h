@@ -25,10 +25,10 @@ namespace audiere {
     void ADR_CALL update();
 
   private:
-    // 8 buffers of 1000 frames is 4000 frames at 44100 Hz is about
-    // 182 milliseconds of audio
+    // 16 buffers of 1000 frames is 4000 frames at 44100 Hz is about
+    // 364 milliseconds of audio
     enum {
-      BUFFER_COUNT  = 8,
+      BUFFER_COUNT  = 16,
       BUFFER_LENGTH = 1000 * 4, // 1000 samples, 4000 bytes
     };
 

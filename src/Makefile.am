@@ -59,18 +59,39 @@ else
 WINMM_DIST    = device_mm.cpp device_mm.h
 endif
 
+# Automake blows.
+if HAVE_LIBCDAUDIO
+LIBCDAUDIO_SOURCES  = cd_unix.cpp
+WINCDAUDIO_DIST     = cd_win32.cpp
+NULLCDAUDIO_DIST    = cd_null.cpp
+else
+LIBCDAUDIO_DIST     = cd_unix.cpp
+if HAVE_WINMM
+WINCDAUDIO_SOURCES  = cd_win32.cpp
+NULLCDAUDIO_DIST    = cd_null.cpp
+else
+NULLCDAUDIO_SOURCES = cd_null.cpp
+WINCDAUDIO_DIST     = cd_win32.cpp
+endif
+endif
+
 
 EXTRA_DIST = \
+	$(LIBCDAUDIO_DIST) $(WINCDAUDIO_DIST) $(NULLCDAUDIO_DIST) \
 	$(FLAC_DIST) $(DUMB_DIST) $(OGG_DIST) $(SPEEX_DIST) $(AL_DIST) \
 	$(OSS_DIST) $(DSOUND_DIST) $(WINMM_DIST)
 
 libaudiere_la_SOURCES = \
 	basic_source.cpp \
 	basic_source.h \
+	$(LIBCDAUDIO_SOURCES) \
+	$(WINCDAUDIO_SOURCES) \
+	$(NULLCDAUDIO_SOURCES) \
 	debug.cpp \
 	debug.h \
 	default_file.h \
 	device.cpp \
+	device.h \
 	$(DSOUND_SOURCES) \
 	device_mixer.cpp \
 	device_mixer.h \
@@ -98,7 +119,6 @@ libaudiere_la_SOURCES = \
 	memory_file.cpp \
 	memory_file.h \
 	noise.cpp \
-	pubsub.cpp \
 	resampler.cpp \
 	resampler.h \
 	sample_buffer.cpp \

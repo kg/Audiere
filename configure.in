@@ -89,6 +89,16 @@ AC_CHECK_LIB(dumb, duh_start_renderer,
     AC_DEFINE(NO_DUMB))
 AM_CONDITIONAL(HAVE_DUMB, test "x$HAVE_DUMB" = "xtrue")
 
+dns Look for libcdaudio
+AC_CHECK_LIB(cdaudio, cd_init_device,
+    LIBS="-lcdaudio $LIBS"
+    EXTRA_LIBS="-lcdaudio $EXTRA_LIBS"
+    HAVE_LIBCDAUDIO=true
+  ,
+    AC_MSG_WARN([libcdaudio not found.  Install it from http://libcdaudio.sf.net/])
+    AC_MSG_WARN([CD audio support might still be possible through another means such as winmm.]))
+AM_CONDITIONAL(HAVE_LIBCDAUDIO, test "x$HAVE_LIBCDAUDIO" = "xtrue")
+
 dnl Look for the POSIX realtime clock
 AC_SEARCH_LIBS(clock_gettime, rt,
     AC_DEFINE(HAVE_CLOCK_GETTIME))
@@ -210,6 +220,7 @@ AC_OUTPUT(
         src/mpegsound/Makefile
         test/Makefile
         test/buffer/Makefile
+	test/callback/Makefile
         test/device/Makefile
 	test/formats/Makefile
         test/interactive/Makefile

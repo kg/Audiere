@@ -12,11 +12,6 @@ namespace audiere {
   };
 
 
-  struct AI_CriticalSectionStruct {
-    pthread_mutex_t mutex;
-  };
-
-
   void* ThreadRoutine(void* arg) {
     ThreadInternal* ti = (ThreadInternal*)arg;
     ti->routine(ti->opaque);
@@ -89,27 +84,64 @@ namespace audiere {
   }
 
 
-  AI_CriticalSection AI_CreateCriticalSection() {
-    AI_CriticalSectionStruct* cs = new AI_CriticalSectionStruct;
-    int result = pthread_mutex_init(&cs->mutex, 0);
+  struct Mutex::Impl {
+    pthread_mutex_t mutex;
+  };
+
+  Mutex::Mutex() {
+    m_impl = new Impl;
+    int result = pthread_mutex_init(&m_impl->mutex, 0);
     if (result != 0) {
-      delete cs;
-      return NULL;
+      delete m_impl;
+      m_impl = 0;
+      ADR_LOG("pthread_mutex_init() failed in Mutex::Mutex()");
+      abort();
     }
-
-    return cs;
   }
 
-  void AI_DestroyCriticalSection(AI_CriticalSection cs) {
-    pthread_mutex_destroy(&cs->mutex);
+  Mutex::~Mutex() {
+    pthread_mutex_destroy(&m_impl->mutex);
+    delete m_impl;
   }
 
-  void AI_EnterCriticalSection(AI_CriticalSection cs) {
-    pthread_mutex_lock(&cs->mutex);
+  void Mutex::lock() {
+    pthread_mutex_lock(&m_impl->mutex);
   }
 
-  void AI_LeaveCriticalSection(AI_CriticalSection cs) {
-    pthread_mutex_unlock(&cs->mutex);
+  void Mutex::unlock() {
+    pthread_mutex_unlock(&m_impl->mutex);
+  }
+
+
+  struct CondVar::Impl {
+    pthread_cond_t cond;
+  };
+
+  CondVar::CondVar() {
+    m_impl = new Impl;
+    int result = pthread_cond_init(&m_impl->cond, 0);
+    if (result != 0) {
+        delete m_impl;
+        m_impl = 0;
+        ADR_LOG("pthread_cond_init() failed in CondVar::CondVar()");
+        abort();
+    }
+  }
+
+  CondVar::~CondVar() {
+    pthread_cond_destroy(&m_impl->cond);
+    delete m_impl;
+  }
+
+  void CondVar::wait(Mutex& mutex, float seconds) {
+    timespec ts;
+    ts.tv_sec  = int(seconds);
+    ts.tv_nsec = int((seconds - ts.tv_sec) * 1000000000);
+    pthread_cond_timedwait(&m_impl->cond, &mutex.m_impl->mutex, &ts);
+  }
+
+  void CondVar::notify() {
+    pthread_cond_signal(&m_impl->cond);
   }
 
 }

@@ -1,6 +1,10 @@
 INCLUDES = -I $(top_srcdir)/src
 
 SRC = \
+	CDDeviceDialog.cpp \
+	CDDeviceDialog.h \
+	CDDeviceFrame.cpp \
+	CDDeviceFrame.h \
 	Commands.h \
 	DeviceFrame.cpp \
 	DeviceFrame.h \

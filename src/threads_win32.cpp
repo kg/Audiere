@@ -107,6 +107,10 @@ namespace audiere {
   }
 
 
+  // This probably isn't a safe way to implement a condition variable.  I suspect
+  // wait() isn't totally thread-safe, i.e. multiple threads waiting on a cvar could
+  // unlock the mutex at bad times.
+
   struct CondVar::Impl {
     HANDLE event;
   };

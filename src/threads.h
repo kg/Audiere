@@ -15,10 +15,6 @@ namespace audiere {
 
   typedef void (*AI_ThreadRoutine)(void* opaque);
 
-  struct AI_CriticalSectionStruct;
-  typedef AI_CriticalSectionStruct* AI_CriticalSection;
-
-
   // threads
   bool AI_CreateThread(AI_ThreadRoutine routine, void* opaque, int priority = 0);
 
@@ -37,6 +33,8 @@ namespace audiere {
   private:
     struct Impl;
     Impl* m_impl;
+
+    friend class CondVar;
   };
 
 

@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /O2 /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FD /c
+# ADD CPP /nologo /MD /W3 /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /ZI /Od /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/mikmod" /I "mikmod/mmio" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FR /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /ZI /Od /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FR /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -98,7 +98,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /O2 /I "libogg-1.0beta4/include" /I "mad-0.13.0b/libmad" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "FPM_64BIT" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /O2 /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FD /c
+# ADD CPP /nologo /MD /W3 /O2 /I "mad-0.14.1b/libmad" /I "resample" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ACOUSTIQUE_EXPORTS" /D "WIN32" /D "_MBCS" /D "HAVE_CONFIG_H" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -163,127 +163,127 @@ SOURCE=.\endian.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\bit.c"
+SOURCE=".\mad-0.14.1b\libmad\bit.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\bit.h"
+SOURCE=".\mad-0.14.1b\libmad\bit.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\D.dat"
+SOURCE=".\mad-0.14.1b\libmad\config.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\extern.h"
+SOURCE=".\mad-0.14.1b\libmad\D.dat"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\fixed.c"
+SOURCE=".\mad-0.14.1b\libmad\decoder.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\fixed.h"
+SOURCE=".\mad-0.14.1b\libmad\decoder.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\frame.c"
+SOURCE=".\mad-0.14.1b\libmad\fixed.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\frame.h"
+SOURCE=".\mad-0.14.1b\libmad\fixed.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\global.h"
+SOURCE=".\mad-0.14.1b\libmad\frame.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\global.h"
+SOURCE=".\mad-0.14.1b\libmad\frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\huffman.c"
+SOURCE=".\mad-0.14.1b\libmad\global.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\huffman.h"
+SOURCE=".\mad-0.14.1b\libmad\huffman.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\imdct_s.dat"
+SOURCE=".\mad-0.14.1b\libmad\huffman.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\layer12.c"
+SOURCE=".\mad-0.14.1b\libmad\imdct_s.dat"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\layer12.h"
+SOURCE=".\mad-0.14.1b\libmad\layer12.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\layer3.c"
+SOURCE=".\mad-0.14.1b\libmad\layer12.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\layer3.h"
+SOURCE=".\mad-0.14.1b\libmad\layer3.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\mad.h"
+SOURCE=".\mad-0.14.1b\libmad\layer3.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\qc_table.dat"
+SOURCE=".\mad-0.14.1b\libmad\mad.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\resample.c"
+SOURCE=".\mad-0.14.1b\libmad\qc_table.dat"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\resample.h"
+SOURCE=.\resample\resample.c
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\rq_table.dat"
+SOURCE=.\resample\resample.h
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\sf_table.dat"
+SOURCE=".\mad-0.14.1b\libmad\rq_table.dat"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\stream.c"
+SOURCE=".\mad-0.14.1b\libmad\sf_table.dat"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\stream.h"
+SOURCE=".\mad-0.14.1b\libmad\stream.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\synth.c"
+SOURCE=".\mad-0.14.1b\libmad\stream.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\synth.h"
+SOURCE=".\mad-0.14.1b\libmad\synth.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\timer.c"
+SOURCE=".\mad-0.14.1b\libmad\synth.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\timer.h"
+SOURCE=".\mad-0.14.1b\libmad\timer.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\version.c"
+SOURCE=".\mad-0.14.1b\libmad\timer.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\mad-0.13.0b\libmad\version.h"
+SOURCE=".\mad-0.14.1b\libmad\version.c"
 # End Source File
 # End Group
 # Begin Group "mikmod"
@@ -292,6 +292,10 @@ SOURCE=".\mad-0.13.0b\libmad\version.h"
 # Begin Group "loaders"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\mikmod\mikmod\loaders\itshare.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\mikmod\mikmod\loaders\Load_it.c
@@ -331,6 +335,10 @@ SOURCE=.\mikmod\mikmod\virtch\resfilter\16.c
 
 SOURCE=.\mikmod\mikmod\virtch\resfilter\8.c
 # End Source File
+# Begin Source File
+
+SOURCE=.\mikmod\mikmod\virtch\resfilter\resshare.h
+# End Source File
 # End Group
 # Begin Source File
 
@@ -343,6 +351,10 @@ SOURCE=.\mikmod\mikmod\virtch\nc8.c
 # Begin Source File
 
 SOURCE=.\mikmod\mikmod\virtch\placebo.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\mikmod\mikmod\virtch\stdmix.h
 # End Source File
 # Begin Source File
 
@@ -362,7 +374,15 @@ SOURCE=.\mikmod\mikmod\virtch\wrap16.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\mikmod\mikmod\virtch\wrap16.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\mikmod\mikmod\virtch\wrap8.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\mikmod\mikmod\virtch\wrap8.h
 # End Source File
 # End Group
 # Begin Source File
@@ -444,6 +464,10 @@ SOURCE=.\mikmod\mmio\mmalloc.c
 # Begin Source File
 
 SOURCE=.\mikmod\mmio\mmconfig.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\mikmod\mmio\mmconfig.h
 # End Source File
 # Begin Source File
 

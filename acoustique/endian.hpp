@@ -6,7 +6,9 @@
 #ifdef WORDS_BIGENDIAN
 #  define BIG_ENDIAN
 #else
-#  define LITTLE_ENDIAN
+#  ifndef LITTLE_ENDIAN
+#    define LITTLE_ENDIAN
+#  endif
 #endif
 
 

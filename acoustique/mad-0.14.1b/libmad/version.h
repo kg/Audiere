@@ -1,5 +1,5 @@
 /*
- * mad - MPEG audio decoder
+ * libmad - MPEG audio decoder library
  * Copyright (C) 2000-2001 Robert Leslie
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,31 +19,29 @@
  * $Id$
  */
 
-# ifndef RESAMPLE_H
-# define RESAMPLE_H
+# ifndef LIBMAD_VERSION_H
+# define LIBMAD_VERSION_H
 
-# include "mad.h"
+# define MAD_VERSION_MAJOR	0
+# define MAD_VERSION_MINOR	14
+# define MAD_VERSION_PATCH	1
+# define MAD_VERSION_EXTRA	" (beta)"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+# define MAD_VERSION_STRINGIZE(str)	#str
+# define MAD_VERSION_STRING(num)	MAD_VERSION_STRINGIZE(num)
 
-struct resample_state {
-  mad_fixed_t ratio;
+# define MAD_VERSION		MAD_VERSION_STRING(MAD_VERSION_MAJOR) "."  \
+				MAD_VERSION_STRING(MAD_VERSION_MINOR) "."  \
+				MAD_VERSION_STRING(MAD_VERSION_PATCH)  \
+				MAD_VERSION_EXTRA
 
-  mad_fixed_t step;
-  mad_fixed_t last;
-};
+# define MAD_PUBLISHYEAR	"2000-2001"
+# define MAD_AUTHOR		"Robert Leslie"
+# define MAD_EMAIL		"rob@mars.org"
 
-int resample_init(struct resample_state *, unsigned int, unsigned int);
-
-# define resample_finish(state)  /* nothing */
-
-unsigned int resample_block(struct resample_state *, unsigned int nsamples,
-			    mad_fixed_t const *, mad_fixed_t *);
-
-#ifdef __cplusplus
-}
-#endif
+extern char const mad_version[];
+extern char const mad_copyright[];
+extern char const mad_author[];
+extern char const mad_build[];
 
 # endif

@@ -1,5 +1,5 @@
 /*
- * mad - MPEG audio decoder
+ * libmad - MPEG audio decoder library
  * Copyright (C) 2000-2001 Robert Leslie
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,31 +19,13 @@
  * $Id$
  */
 
-# ifndef RESAMPLE_H
-# define RESAMPLE_H
+# ifndef LIBMAD_LAYER12_H
+# define LIBMAD_LAYER12_H
 
-# include "mad.h"
+# include "stream.h"
+# include "frame.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-struct resample_state {
-  mad_fixed_t ratio;
-
-  mad_fixed_t step;
-  mad_fixed_t last;
-};
-
-int resample_init(struct resample_state *, unsigned int, unsigned int);
-
-# define resample_finish(state)  /* nothing */
-
-unsigned int resample_block(struct resample_state *, unsigned int nsamples,
-			    mad_fixed_t const *, mad_fixed_t *);
-
-#ifdef __cplusplus
-}
-#endif
+int mad_layer_I(struct mad_stream *, struct mad_frame *);
+int mad_layer_II(struct mad_stream *, struct mad_frame *);
 
 # endif

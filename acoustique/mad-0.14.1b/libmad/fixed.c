@@ -1,5 +1,5 @@
 /*
- * mad - MPEG audio decoder
+ * libmad - MPEG audio decoder library
  * Copyright (C) 2000-2001 Robert Leslie
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,31 +19,19 @@
  * $Id$
  */
 
-# ifndef RESAMPLE_H
-# define RESAMPLE_H
-
-# include "mad.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-struct resample_state {
-  mad_fixed_t ratio;
-
-  mad_fixed_t step;
-  mad_fixed_t last;
-};
-
-int resample_init(struct resample_state *, unsigned int, unsigned int);
-
-# define resample_finish(state)  /* nothing */
-
-unsigned int resample_block(struct resample_state *, unsigned int nsamples,
-			    mad_fixed_t const *, mad_fixed_t *);
-
-#ifdef __cplusplus
-}
-#endif
-
+# ifdef HAVE_CONFIG_H
+#  include "config.h"
 # endif
+
+# include "global.h"
+
+# include "fixed.h"
+
+/*
+ * NAME:	fixed->abs()
+ * DESCRIPTION:	return absolute value of a fixed-point number
+ */
+mad_fixed_t mad_f_abs(mad_fixed_t x)
+{
+  return x < 0 ? -x : x;
+}

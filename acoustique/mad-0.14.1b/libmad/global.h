@@ -1,5 +1,5 @@
 /*
- * mad - MPEG audio decoder
+ * libmad - MPEG audio decoder library
  * Copyright (C) 2000-2001 Robert Leslie
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,31 +19,27 @@
  * $Id$
  */
 
-# ifndef RESAMPLE_H
-# define RESAMPLE_H
+# ifndef LIBMAD_GLOBAL_H
+# define LIBMAD_GLOBAL_H
 
-# include "mad.h"
+/* conditional debugging */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+# if defined(DEBUG) && defined(NDEBUG)
+#  error "cannot define both DEBUG and NDEBUG"
+# endif
 
-struct resample_state {
-  mad_fixed_t ratio;
+# if defined(DEBUG)
+#  include <stdio.h>
+# endif
 
-  mad_fixed_t step;
-  mad_fixed_t last;
-};
+/* conditional features */
 
-int resample_init(struct resample_state *, unsigned int, unsigned int);
+# if defined(OPT_SPEED) && defined(OPT_ACCURACY)
+#  error "cannot optimize for both speed and accuracy"
+# endif
 
-# define resample_finish(state)  /* nothing */
-
-unsigned int resample_block(struct resample_state *, unsigned int nsamples,
-			    mad_fixed_t const *, mad_fixed_t *);
-
-#ifdef __cplusplus
-}
-#endif
+# if defined(OPT_SPEED) && !defined(OPT_SSO)
+#  define OPT_SSO 1
+# endif
 
 # endif

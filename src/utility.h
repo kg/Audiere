@@ -78,7 +78,7 @@ namespace audiere {
   }
 
 
-  class UnseekableSource : public DLLImplementation<SampleSource> {
+  class UnseekableSource : public RefImplementation<SampleSource> {
   public:
     bool isSeekable() {
       return false;

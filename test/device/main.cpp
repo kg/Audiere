@@ -30,15 +30,15 @@ int main(int argc, char** argv) {
     device_name = argv[1];
   }
 
-  auto_ptr<AudioDevice> device(OpenDevice(device_name.c_str()));
+  RefPtr<AudioDevice> device(OpenDevice(device_name.c_str()));
   if (!device.get()) {
     cerr << "Opening output device failed" << endl;
     return EXIT_FAILURE;
   }
 
-  auto_ptr<OutputStream> stream1(device->openStream(CreateTone(256)));
-  auto_ptr<OutputStream> stream2(device->openStream(CreateTone(512)));
-  auto_ptr<OutputStream> stream3(device->openStream(CreateTone(515)));
+  RefPtr<OutputStream> stream1(device->openStream(CreateTone(256)));
+  RefPtr<OutputStream> stream2(device->openStream(CreateTone(512)));
+  RefPtr<OutputStream> stream3(device->openStream(CreateTone(515)));
 
   if (!stream1.get() || !stream2.get() || !stream3.get()) {
     cerr << "openStream() failed" << endl;

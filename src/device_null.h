@@ -16,14 +16,17 @@ namespace audiere {
   class NullOutputStream;
 
   class NullAudioDevice
-    : public RefCountedImplementation<AudioDevice>
+    : public RefImplementation<AudioDevice>
     , public Synchronized
   {
   public:
+    static NullAudioDevice* create(ParameterList& parameters);
+
+  private:
     NullAudioDevice();
     ~NullAudioDevice();
 
-    bool initialize(ParameterList& parameters);
+  public:
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(
@@ -39,7 +42,7 @@ namespace audiere {
     friend class NullOutputStream;
   };
 
-  class NullOutputStream : public DLLImplementation<OutputStream> {
+  class NullOutputStream : public RefImplementation<OutputStream> {
   private:
     NullOutputStream(NullAudioDevice* device, SampleSource* source);
     ~NullOutputStream();
@@ -69,7 +72,7 @@ namespace audiere {
     void update();
     int dummyRead(int samples_to_read);
 
-    NullAudioDevice* m_device;
+    RefPtr<NullAudioDevice> m_device;
                           
     RepeatableStream* m_source;
     int m_channel_count;           //

@@ -31,63 +31,120 @@
 
 namespace audiere {
 
-  /**
-   * A helper class for DLL-compatible interfaces.  Derive your cross-DLL
-   * interfaces from this class.
-   *
-   * When deriving from this class, do not declare a virtual destructor
-   * on your interface.
-   */
-  class DLLInterface {
-  private:
+  class RefCounted {
+  protected:
     /**
-     * Destroy the object, freeing all associated memory.  This is
-     * the same as a destructor.
+     * Protected so users of refcounted classes don't use std::auto_ptr
+     * or the delete operator.
+     *
+     * Interfaces that derive from RefCounted should define an inline,
+     * empty, protected destructor as well.
      */
-    virtual void destroy() = 0;
+    ~RefCounted() { }
 
   public:
     /**
-     * "delete image" should actually call image->destroy(), thus putting the
-     * burden of calling the destructor and freeing the memory on the image
-     * object, and thus on Corona's side of the DLL boundary.
+     * Add a reference to the internal reference count.
      */
-    void operator delete(void* p) {
-      if (p) {
-        DLLInterface* i = static_cast<DLLInterface*>(p);
-        i->destroy();
+    virtual void ref() = 0;
+
+    /**
+     * Remove a reference from the internal reference count.  When this
+     * reaches 0, the object is destroyed.
+     */
+    virtual void unref() = 0;
+  };
+
+
+  template<typename T>
+  class RefPtr {
+  public:
+    RefPtr(T* ptr = 0) {
+      m_ptr = 0;
+      *this = ptr;
+    }
+
+    RefPtr(const RefPtr<T>& ptr) {
+      m_ptr = 0;
+      *this = ptr;
+    }
+
+    ~RefPtr() {
+      if (m_ptr) {
+        m_ptr->unref();
+        m_ptr = 0;
       }
     }
+ 
+    RefPtr<T>& operator=(T* ptr) {
+      if (ptr != m_ptr) {
+        if (m_ptr) {
+          m_ptr->unref();
+        }
+        m_ptr = ptr;
+        if (m_ptr) {
+          m_ptr->ref();
+        }
+      }
+      return *this;
+    }
+
+    RefPtr<T>& operator=(const RefPtr<T>& ptr) {
+      *this = ptr.m_ptr;
+      return *this;
+    }
+
+    T* operator->() {
+      return m_ptr;
+    }
+
+    T& operator*() {
+      return *m_ptr;
+    }
+
+    operator bool() {
+      return (m_ptr != 0);
+    }
+
+    T* get() {
+      return m_ptr;
+    }
+
+  private:
+    T* m_ptr;
   };
 
 
   /**
-   * A helper class for DLL-compatible interface implementations.  Derive
-   * your implementations from DLLImplementation<YourInterface>.
+   * A basic implementation of the RefCounted interface.  Derive
+   * your implementations from RefImplementation<YourInterface>.
    */
   template<class Interface>
-  class DLLImplementation : public Interface {
-  public:
+  class RefImplementation : public Interface {
+  protected:
+    RefImplementation() {
+      m_ref_count = 0;
+    }
+
     /**
      * So the implementation can put its destruction logic in the destructor,
      * as natural C++ code does.
      */
-    virtual ~DLLImplementation() { }
+    virtual ~RefImplementation() { }
 
-    /**
-     * Call the destructor in a Win32 ABI-compatible way.
-     */
-    virtual void destroy() {
-      delete this;
+  public:
+    void ref() {
+      ++m_ref_count;
     }
 
-    /**
-     * So destroy()'s "delete this" doesn't go into an infinite loop,
-     * calling the interface's operator delete, which calls destroy()...
-     */
-    void operator delete(void* p) {
-      ::operator delete(p);
+    void unref() {
+      if (--m_ref_count == 0) {
+        delete this;
+      }
     }
+
+  private:
+    int m_ref_count;
   };
 
 
@@ -97,7 +154,10 @@ namespace audiere {
    * transformations.  File objects are roughly analogous to ANSI C
    * FILE* objects.
    */
-  class File : public DLLInterface {
+  class File : public RefCounted {
+  protected:
+    ~File() { }
+
   public:
     /**
      * The different ways you can seek within a file.
@@ -155,7 +215,10 @@ namespace audiere {
    * Some sample sources are seekable.  Seekable sources have two additional
    * properties: length and position.  Length is read-only. 
    */
-  class SampleSource : public DLLInterface {
+  class SampleSource : public RefCounted {
+  protected:
+    ~SampleSource() { }
+
   public:
     /**
      * Retrieve the number of channels, sample rate, and sample format of
@@ -218,7 +281,10 @@ namespace audiere {
    * Each output stream can be independently played and stopped.  They
    * also each have a volume from 0.0 (silence) to 1.0 (maximum volume).
    */
-  class OutputStream : public DLLInterface {
+  class OutputStream : public RefCounted {
+  protected:
+    ~OutputStream() { }
+
   public:
     /**
      * Start playback of the output stream.  If the stream is already
@@ -320,7 +386,10 @@ namespace audiere {
    * This interface is synchronized.  update() and openStream() may
    * be called on different threads.
    */
-  class AudioDevice : public DLLInterface {
+  class AudioDevice : public RefCounted {
+  protected:
+    ~AudioDevice() { }
+
   public:
     /**
      * Tell the device to do any internal state updates.  Some devices

@@ -25,14 +25,19 @@ namespace audiere {
   class DSOutputBuffer;
 
   class DSAudioDevice
-    : public RefCountedImplementation<AudioDevice>
+    : public RefImplementation<AudioDevice>
     , public Synchronized
   {
   public:
-    DSAudioDevice();
+    static DSAudioDevice* create(ParameterList& parameters);
+
+  private:
+    DSAudioDevice(
+      int buffer_length,
+      HWND anonymous_window,
+      IDirectSound* direct_sound);
     ~DSAudioDevice();
 
-    bool initialize(ParameterList& parameters);
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(
@@ -55,17 +60,11 @@ namespace audiere {
 
     HWND m_anonymous_window;
 
-
-    // these must be overridden
-    virtual REFCLSID getCLSID() = 0;
-    virtual DWORD getCooperativeLevel() = 0;
-    virtual bool createPrimarySoundBuffer(IDirectSound* ds) = 0;
-
     friend class DSOutputStream;
   };
 
 
-  class DSOutputStream : public DLLImplementation<OutputStream> {
+  class DSOutputStream : public RefImplementation<OutputStream> {
   private:
     DSOutputStream(
       DSAudioDevice* device,
@@ -100,7 +99,7 @@ namespace audiere {
     int streamRead(int samples_to_read, void* buffer);
   
   private:
-    DSAudioDevice* m_device;
+    RefPtr<DSAudioDevice> m_device;
 
     IDirectSoundBuffer* m_buffer;
     int m_buffer_length;  // in samples
@@ -121,7 +120,7 @@ namespace audiere {
   };
 
 
-  class DSOutputBuffer : public DLLImplementation<SampleSource> {
+  class DSOutputBuffer : public RefImplementation<SampleSource> {
   private:
 /*
     DSOutputStream(

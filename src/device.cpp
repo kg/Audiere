@@ -13,13 +13,10 @@
 
 #ifdef WIN32
 
-  // include this before DS8, because it includes <dsound.h>, which defines
-  // DIRECTSOUND_VERSION
-  #include "device_ds3.h"
-
-  #if DIRECTSOUND_VERSION >= 0x0800
-    #include "device_ds8.h"
-  #endif
+  #include <windows.h>
+  #include <mmsystem.h>
+  #include "device_ds.h"
+  #include "device_mm.h"
 
 #endif
 
@@ -43,13 +40,11 @@ namespace audiere {
     }                                                           \
   } NEED_SEMICOLON
 
-  #define TRY_DEVICE(DeviceType) {          \
-    DeviceType* device = new DeviceType();  \
-    if (device->initialize(parameters)) {   \
-      return device;                        \
-    } else {                                \
-      delete device;                        \
-    }                                       \
+  #define TRY_DEVICE(DeviceType) {                         \
+    DeviceType* device = DeviceType::create(parameters);   \
+    if (device) {                                          \
+      return device;                                       \
+    }                                                      \
   } NEED_SEMICOLON
 
 
@@ -63,15 +58,18 @@ namespace audiere {
 
       if (name == "" || name == "autodetect") {
         TRY_GROUP("directsound");
+        TRY_GROUP("winmm");
         TRY_GROUP("openal");
         return 0;
       }
 
       if (name == "directsound") {
-        #if DIRECTSOUND_VERSION >= 0x0800
-          TRY_DEVICE(DS8AudioDevice);
-        #endif
-        TRY_DEVICE(DS3AudioDevice);
+        TRY_DEVICE(DSAudioDevice);
+        return 0;
+      }
+
+      if (name == "winmm") {
+        TRY_DEVICE(MMAudioDevice);
         return 0;
       }
 
@@ -121,7 +119,7 @@ namespace audiere {
   }
 
 
-  class ThreadedDevice : public DLLImplementation<AudioDevice> {
+  class ThreadedDevice : public RefImplementation<AudioDevice> {
   public:
     ThreadedDevice(AudioDevice* device) {
       m_device = device;
@@ -137,8 +135,6 @@ namespace audiere {
       while (m_thread_exists) {
         AI_Sleep(50);
       }
-
-      delete m_device;
     }
 
     // don't need to update the device...  the thread does it for us
@@ -173,7 +169,7 @@ namespace audiere {
     }
 
   private:
-    AudioDevice* m_device;
+    RefPtr<AudioDevice> m_device;
     volatile bool m_thread_should_die;
     volatile bool m_thread_exists;
   };

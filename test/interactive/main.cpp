@@ -34,11 +34,11 @@ void passOut(int milliseconds) {
 void testDriver(const char* driver) {
   string sound_names[] = {"kclick.wav", "knock.wav", "laugh.wav", "shot.wav"};
   const int sound_count = arraysize(sound_names);
-  OutputStream* sounds[sound_count];
+  RefPtr<OutputStream> sounds[sound_count];
 
   cout << "testDriver " << driver << "\n--" << endl;
 
-  auto_ptr<AudioDevice> device(OpenDevice(driver));
+  RefPtr<AudioDevice> device(OpenDevice(driver));
   if (!device.get()) {
     cout << "Error opening output device" << endl;
     return;
@@ -48,9 +48,6 @@ void testDriver(const char* driver) {
     string name = sound_names[i];
     sounds[i] = OpenSound(device.get(), name.c_str());
     if (!sounds[i]) {
-      for (int j = 0; j < i; ++j) {
-        delete sounds[i];
-      }
       cout << "Error opening sound: " << name << endl;
       return;
     }
@@ -63,8 +60,6 @@ void testDriver(const char* driver) {
       passOut(50);
     }
     cout << "Done" << endl;
-
-    delete sounds[i];
   }
 
   cout << endl;

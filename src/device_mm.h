@@ -16,14 +16,17 @@ namespace audiere {
 
 
   class MMAudioDevice
-    : public RefCountedImplementation<AudioDevice>
+    : public RefImplementation<AudioDevice>
     , public Synchronized
   {
   public:
+    static MMAudioDevice* create(ParameterList& parameters);
+
+  private:
     MMAudioDevice();
     ~MMAudioDevice();
-    bool initialize(ParameterList& parameters);
 
+  public:
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(

@@ -24,12 +24,6 @@ namespace audiere {
   }
 
 
-  WAVInputStream::~WAVInputStream() {
-    delete m_file;
-    m_file = 0;
-  }
-
-
   bool
   WAVInputStream::initialize(File* file) {
     m_file = file;

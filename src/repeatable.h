@@ -7,10 +7,9 @@
 
 namespace audiere {
 
-  class RepeatableStream : public DLLImplementation<SampleSource> {
+  class RepeatableStream : public RefImplementation<SampleSource> {
   public:
     RepeatableStream(SampleSource* source, bool initial_repeat);
-    ~RepeatableStream();
 
     void setRepeat(bool repeat);
     bool getRepeat();
@@ -31,7 +30,7 @@ namespace audiere {
 
   private:
     bool m_repeat;
-    SampleSource* m_source;
+    RefPtr<SampleSource> m_source;
     int m_sample_size;  // convenience
   };
 

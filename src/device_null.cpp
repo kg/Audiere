@@ -13,6 +13,12 @@
 
 namespace audiere {
 
+  NullAudioDevice*
+  NullAudioDevice::create(ParameterList& /*parameters*/) {
+    return new NullAudioDevice;
+  }
+
+
   NullAudioDevice::NullAudioDevice() {
   }
 
@@ -22,12 +28,6 @@ namespace audiere {
 
     ADR_ASSERT(m_streams.size() == 0,
       "Null output context should not die with open streams");
-  }
-
-
-  bool
-  NullAudioDevice::initialize(ParameterList& /*parameters*/) {
-    return true;
   }
 
 
@@ -94,14 +94,12 @@ namespace audiere {
   , m_pan(0)
   , m_last_update(0)
   {
-    m_device->ref();
     m_source->getFormat(m_channel_count, m_sample_rate, m_sample_format);
   }
 
 
   NullOutputStream::~NullOutputStream() {
     m_device->removeStream(this);
-    m_device->unref();
 
     delete m_source;
   }
@@ -135,14 +133,14 @@ namespace audiere {
 
   void
   NullOutputStream::setRepeat(bool repeat) {
-    SYNCHRONIZED(m_device);
+    SYNCHRONIZED(m_device.get());
     m_source->setRepeat(repeat);
   }
 
 
   bool
   NullOutputStream::getRepeat() {
-    SYNCHRONIZED(m_device);
+    SYNCHRONIZED(m_device.get());
     return m_source->getRepeat();
   }
 
@@ -185,7 +183,7 @@ namespace audiere {
 
   void
   NullOutputStream::setPosition(int position) {
-    SYNCHRONIZED(m_device);
+    SYNCHRONIZED(m_device.get());
     m_source->setPosition(position);
     reset();
   }

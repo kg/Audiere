@@ -31,10 +31,10 @@ int Min(int a, int b) {
 }
 
 
-class ToneBuffer : public DLLImplementation<SampleSource> {
+class ToneBuffer : public RefImplementation<SampleSource> {
 public:
   ToneBuffer(double frequency) {
-    auto_ptr<SampleSource> tone(CreateTone(frequency));
+    RefPtr<SampleSource> tone(CreateTone(frequency));
     tone->getFormat(m_channel_count, m_sample_rate, m_sample_format);
 
     m_block_size = m_channel_count * GetSampleSize(m_sample_format);
@@ -108,16 +108,16 @@ int main(int argc, char** argv) {
     device_name = argv[1];
   }
 
-  auto_ptr<AudioDevice> device(OpenDevice(device_name.c_str()));
+  RefPtr<AudioDevice> device(OpenDevice(device_name.c_str()));
   if (!device.get()) {
     cerr << "Opening output device failed" << endl;
     return EXIT_FAILURE;
   }
 
-  auto_ptr<OutputStream> s1(OpenSound(device.get(), new ToneBuffer(256)));
-  auto_ptr<OutputStream> s2(OpenSound(device.get(), new ToneBuffer(512)));
-  auto_ptr<OutputStream> s3(OpenSound(device.get(), new ToneBuffer(513)));
-  auto_ptr<OutputStream> s4(OpenSound(device.get(), new ToneBuffer(514)));
+  RefPtr<OutputStream> s1(OpenSound(device.get(), new ToneBuffer(256)));
+  RefPtr<OutputStream> s2(OpenSound(device.get(), new ToneBuffer(512)));
+  RefPtr<OutputStream> s3(OpenSound(device.get(), new ToneBuffer(513)));
+  RefPtr<OutputStream> s4(OpenSound(device.get(), new ToneBuffer(514)));
 
   if (!s1.get() || !s2.get() || !s3.get() || !s4.get()) {
     cerr << "OpenSound() failed" << endl;

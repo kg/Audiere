@@ -40,19 +40,21 @@ namespace audiere {
   /**
    * The internal implementation of OpenSampleSource.
    *
-   * @param file      the file to load from.  cannot be 0.
+   * @param raw_file  the file to load from.  cannot be 0.
    * @param filename  the name of the file, or 0 if it is not available
    */
-  SampleSource* OpenSource(File* file, const char* filename) {
+  SampleSource* OpenSource(File* raw_file, const char* filename) {
     ADR_GUARD("OpenSource");
 
-    #define TRY_SOURCE(source_type) {                           \
-      source_type* source = TryInputStream<source_type>(file);  \
-      if (source) {                                             \
-        return source;                                          \
-      } else {                                                  \
-        file->seek(0, File::BEGIN);                             \
-      }                                                         \
+    RefPtr<File> file(raw_file);
+
+    #define TRY_SOURCE(source_type) {                                 \
+      source_type* source = TryInputStream<source_type>(file.get());  \
+      if (source) {                                                   \
+        return source;                                                \
+      } else {                                                        \
+        file->seek(0, File::BEGIN);                                   \
+      }                                                               \
     }
 
     // if filename is available, use it as a hint
@@ -80,7 +82,6 @@ namespace audiere {
     TRY_SOURCE(WAVInputStream);
     TRY_SOURCE(OGGInputStream);
 
-    delete file;
     return 0;
   }
 

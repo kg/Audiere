@@ -19,11 +19,6 @@ namespace audiere {
   }
 
 
-  RepeatableStream::~RepeatableStream() {
-    delete m_source;
-  }
-
-
   void
   RepeatableStream::setRepeat(bool repeat) {
     m_repeat = repeat;

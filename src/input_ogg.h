@@ -30,7 +30,7 @@ namespace audiere {
     static long   FileTell(void* opaque);
 
   private:
-    File* m_file;
+    RefPtr<File> m_file;
 
     OggVorbis_File m_vorbis_file;
 

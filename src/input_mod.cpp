@@ -92,15 +92,14 @@ namespace audiere {
 
 
   MODInputStream::~MODInputStream() {
-    // were we initialized successfully?
-    if (m_file) {
-    
+    if (m_player) {
       Player_Free(m_player);
+    }
+    if (m_module) {
       Unimod_Free(m_module);
+    }
+    if (m_driver) {
       Mikmod_Exit(m_driver);
-
-      delete m_file;
-      m_file = 0;
     }
   }
 
@@ -380,7 +379,7 @@ namespace audiere {
   int CRT_CALL
   MODInputStream::MMSeek(FILE* stream, long offset, int origin) {
     MODInputStream* istream = reinterpret_cast<MODInputStream*>(stream);
-    File* file = istream->m_file;
+    File* file = istream->m_file.get();
 
     File::SeekMode seek_mode;
     switch (origin) {
@@ -397,7 +396,7 @@ namespace audiere {
   int CRT_CALL
   MODInputStream::MMTell(FILE* stream) {
     MODInputStream* istream = reinterpret_cast<MODInputStream*>(stream);
-    File* file = istream->m_file;
+    File* file = istream->m_file.get();
     return file->tell();
   }
 

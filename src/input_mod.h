@@ -61,7 +61,7 @@ namespace audiere {
   private:
     enum { SAMPLE_BUFFER_SIZE = 4096 };
 
-    File* m_file;
+    RefPtr<File> m_file;
 
     // MikMod handles
     MDRIVER* m_driver;

@@ -4,6 +4,12 @@
 
 namespace audiere {
 
+  MMAudioDevice*
+  MMAudioDevice::create(ParameterList& parameters) {
+    return 0;
+  }
+
+
   MMAudioDevice::MMAudioDevice() {
     m_device = NULL;
   }
@@ -14,13 +20,6 @@ namespace audiere {
   }
 
 
-  bool
-  MMAudioDevice::initialize(ParameterList& parameters) {
-    
-    return false;
-  }
-
-
   void
   MMAudioDevice::update() {
   }
@@ -28,7 +27,7 @@ namespace audiere {
 
   OutputStream*
   MMAudioDevice::openStream(SampleSource* source) {
-    delete source;
+    RefPtr<SampleSource> s(source);
     return 0;
   }
 

@@ -8,7 +8,7 @@
 
 namespace audiere {
 
-  class BufferStream : public DLLImplementation<SampleSource> {
+  class BufferStream : public RefImplementation<SampleSource> {
   public:
     BufferStream(
       void* samples, int sample_count,

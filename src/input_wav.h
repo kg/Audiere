@@ -12,7 +12,6 @@ namespace audiere {
   class WAVInputStream : public UnseekableSource {
   public:
     WAVInputStream();
-    ~WAVInputStream();
 
     bool initialize(File* file);
 
@@ -29,7 +28,7 @@ namespace audiere {
     bool SkipBytes(int size);
 
   private:
-    File* m_file;
+    RefPtr<File> m_file;
 
     // from format chunk
     int m_channel_count;

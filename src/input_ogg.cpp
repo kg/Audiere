@@ -22,9 +22,6 @@ namespace audiere {
     // were we initialized successfully?
     if (m_file) {
       ov_clear(&m_vorbis_file);
-
-      delete m_file;
-      m_file = 0;
     }
   }
 

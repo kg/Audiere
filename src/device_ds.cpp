@@ -29,44 +29,19 @@ namespace audiere {
 
 
 
-  DSAudioDevice::DSAudioDevice() {
-    m_direct_sound     = NULL;
-    m_buffer_length    = DS_DefaultBufferLength;
-    m_anonymous_window = NULL;
-  }
+  DSAudioDevice*
+  DSAudioDevice::create(ParameterList& parameters) {
+    ADR_GUARD("DSAudioDevice::create");
 
-
-  DSAudioDevice::~DSAudioDevice() {
-    ADR_ASSERT(m_open_streams.size() == 0,
-      "DirectSound output context should not die with open streams");
-
-    // if the anonymous window is open, close it
-    if (m_anonymous_window) {
-      DestroyWindow(m_anonymous_window);
-      m_anonymous_window = NULL;
-    }
-
-    // shut down DirectSound
-    if (m_direct_sound) {
-      m_direct_sound->Release();
-      m_direct_sound = NULL;
-    }
-  }
-
-
-  bool
-  DSAudioDevice::initialize(ParameterList& parameters) {
-    ADR_GUARD("DSAudioDevice::initialize");
-
-    m_buffer_length = atoi(parameters.getValue("buffer", "").c_str());
-    if (m_buffer_length == 0) {
-      m_buffer_length = DS_DefaultBufferLength;
+    int buffer_length = atoi(parameters.getValue("buffer", "").c_str());
+    if (buffer_length == 0) {
+      buffer_length = DS_DefaultBufferLength;
     }
 
     // initialize COM
     HRESULT rv = CoInitialize(NULL);
     if (FAILED(rv)) {
-      return false;
+      return 0;
     }
 
     ADR_LOG("COM initialized properly");
@@ -87,71 +62,81 @@ namespace audiere {
     RegisterClass(&wc);
 
     // create anonymous window
-    m_anonymous_window = CreateWindow(
+    HWND anonymous_window = CreateWindow(
       "AudiereHiddenWindow", "", WS_POPUP,
       0, 0, 0, 0,
       NULL, NULL, GetModuleHandle(NULL), NULL);
-    if (!m_anonymous_window) {
+    if (!anonymous_window) {
       return false;
     }
 
     ADR_LOG("Anonymous window created successfully");
 
     // create the DirectSound object
+    IDirectSound* direct_sound;
     rv = CoCreateInstance(
-      getCLSID(),
+      CLSID_DirectSound8,
       NULL,
       CLSCTX_INPROC_SERVER,
       IID_IDirectSound,
-      (void**)&m_direct_sound);
-    if (FAILED(rv) || !m_direct_sound) {
-      DestroyWindow(m_anonymous_window);
-      m_anonymous_window = NULL;
-      return false;
+      (void**)&direct_sound);
+    if (FAILED(rv) || !direct_sound) {
+      DestroyWindow(anonymous_window);
+      return 0;
     }
 
     ADR_LOG("Created DS object");
 
     // initialize the DirectSound device
-    rv = m_direct_sound->Initialize(NULL);
+    rv = direct_sound->Initialize(NULL);
     if (FAILED(rv)) {
-      DestroyWindow(m_anonymous_window);
-      m_anonymous_window = NULL;
-      m_direct_sound->Release();
-      m_direct_sound = NULL;
-      return false;
+      DestroyWindow(anonymous_window);
+      direct_sound->Release();
+      return 0;
     }
 
     ADR_LOG("Initialized DS object");
 
     // set the cooperative level
-    rv = m_direct_sound->SetCooperativeLevel(
-      m_anonymous_window,
-      getCooperativeLevel());
+    rv = direct_sound->SetCooperativeLevel(anonymous_window, DSSCL_NORMAL);
     if (FAILED(rv)) {
-      DestroyWindow(m_anonymous_window);
-      m_anonymous_window = NULL;
-      m_direct_sound->Release();
-      m_direct_sound = NULL;
-      return false;
+      DestroyWindow(anonymous_window);
+      direct_sound->Release();
+      return 0;
     }
 
     ADR_LOG("Set cooperative level");
 
-    if (!createPrimarySoundBuffer(m_direct_sound)) {
+    return new DSAudioDevice(buffer_length, anonymous_window, direct_sound);
+  }
 
-      ADR_LOG("CreatePrimarySoundBuffer failed");
 
+  DSAudioDevice::DSAudioDevice(
+    int buffer_length,
+    HWND anonymous_window,
+    IDirectSound* direct_sound)
+  {
+    m_buffer_length    = buffer_length;
+    m_anonymous_window = anonymous_window;
+    m_direct_sound     = direct_sound;
+  }
+
+
+  DSAudioDevice::~DSAudioDevice() {
+    ADR_ASSERT(m_open_streams.size() == 0,
+      "DirectSound output context should not die with open streams");
+
+    // if the anonymous window is open, close it
+    if (m_anonymous_window) {
       DestroyWindow(m_anonymous_window);
       m_anonymous_window = NULL;
-      m_direct_sound->Release();
-      m_direct_sound = NULL;
-      return false;
     }
 
-    ADR_LOG("Primary sound buffer created");
-
-    return true;
+    // shut down DirectSound
+    if (m_direct_sound) {
+      m_direct_sound->Release();
+      m_direct_sound = NULL;
+    }
   }
 
 
@@ -260,7 +245,6 @@ namespace audiere {
     ADR_GUARD("DSOutputStream::DSOutputStream");
 
     m_device = device;
-    m_device->ref();
 
     m_buffer        = buffer;
     m_buffer_length = buffer_length;
@@ -291,7 +275,6 @@ namespace audiere {
     ADR_GUARD("DSOutputStream::~DSOutputStream");
 
     m_device->removeStream(this);
-    m_device->unref();
 
     // destroy the sound buffer interface
     m_buffer->Release();
@@ -353,14 +336,14 @@ namespace audiere {
 
   void
   DSOutputStream::setRepeat(bool repeat) {
-    SYNCHRONIZED(m_device);
+    SYNCHRONIZED(m_device.get());
     m_source->setRepeat(repeat);
   }
 
 
   bool
   DSOutputStream::getRepeat() {
-    SYNCHRONIZED(m_device);
+    SYNCHRONIZED(m_device.get());
     return m_source->getRepeat();
   }
 
@@ -405,7 +388,7 @@ namespace audiere {
 
   void
   DSOutputStream::setPosition(int position) {
-    SYNCHRONIZED(m_device);
+    SYNCHRONIZED(m_device.get());
     m_source->setPosition(position);
     reset();
   }

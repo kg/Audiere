@@ -4,7 +4,7 @@
 
 namespace audiere {
 
-  class CFile : public DLLImplementation<File> {
+  class CFile : public RefImplementation<File> {
   public:
     CFile(FILE* file) {
       m_file = file;

@@ -134,15 +134,11 @@ SOURCE=..\..\src\device_ds.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\device_ds3.cpp
+SOURCE=..\..\src\device_mm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\device_ds3.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\device_ds8.h
+SOURCE=..\..\src\device_mm.h
 # End Source File
 # Begin Source File
 

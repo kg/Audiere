@@ -14,7 +14,7 @@ using namespace audiere;
 using namespace std;
 
 
-static AudioDevice* g_device;
+static RefPtr<AudioDevice> g_device;
 
 
 class wxPlayerFrame : public wxFrame
@@ -46,7 +46,7 @@ private:
   wxSlider* m_volume;
   wxSlider* m_pan;
 
-  vector<OutputStream*> m_streams;
+  vector<RefPtr<OutputStream> > m_streams;
 
   DECLARE_EVENT_TABLE()
 };
@@ -103,10 +103,6 @@ wxPlayerFrame::wxPlayerFrame()
 void
 wxPlayerFrame::OnClose(wxCloseEvent& event)
 {
-  // destroy all open streams
-  for (int i = 0; i < m_streams.size(); i++) {
-    delete m_streams[i];
-  }
   m_streams.clear();
 
   Destroy();
@@ -149,7 +145,7 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
     return;
   }
 
-  OutputStream* sound = OpenSound(g_device, result.c_str());
+  OutputStream* sound = OpenSound(g_device.get(), result.c_str());
   if (!sound) {
     wxMessageBox("Could not open stream");
   } else {
@@ -165,7 +161,6 @@ wxPlayerFrame::OnDump(wxCommandEvent& event)
   int sel = m_songs->GetSelection();
   if (sel >= 0 && sel < m_songs->Number()) {
 
-    delete m_streams[sel];
     m_streams.erase(m_streams.begin() + sel);
     m_songs->Delete(sel);
 
@@ -258,11 +253,6 @@ public:
     frame->Show(true);
     SetTopWindow(frame);
     return true;
-  }
-
-  int OnExit() {
-    delete g_device;
-    return 0;
   }
 };
 

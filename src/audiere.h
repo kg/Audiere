@@ -111,8 +111,8 @@ namespace audiere {
     /**
      * Read size bytes from the file, storing them in buffer.
      *
-     * @param buffer  
-     * @param size    
+     * @param buffer  buffer to read into
+     * @param size    number of bytes to read
      *
      * @return  number of bytes successfully read
      */

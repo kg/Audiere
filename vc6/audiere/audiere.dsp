@@ -150,6 +150,14 @@ SOURCE=..\..\src\device_ds_stream.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\device_mixer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_mixer.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\device_mm.cpp
 # End Source File
 # Begin Source File
@@ -199,14 +207,6 @@ SOURCE=..\..\src\input_wav.h
 # Begin Source File
 
 SOURCE=..\..\src\internal.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mixer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mixer.h
 # End Source File
 # Begin Source File
 

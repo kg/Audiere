@@ -14,7 +14,6 @@ namespace audiere {
     void setRepeat(bool repeat);
     bool getRepeat();
 
-    // ISampleSource implementation
     void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,

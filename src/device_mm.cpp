@@ -5,14 +5,17 @@
 
 namespace audiere {
 
+  static const int RATE = 44100;
+
+
   MMAudioDevice*
   MMAudioDevice::create(const ParameterList& parameters) {
     WAVEFORMATEX wfx;
     memset(&wfx, 0, sizeof(wfx));
     wfx.wFormatTag      = WAVE_FORMAT_PCM;
     wfx.nChannels       = 2;
-    wfx.nSamplesPerSec  = 44100;
-    wfx.nAvgBytesPerSec = 44100 * 4;
+    wfx.nSamplesPerSec  = RATE;
+    wfx.nAvgBytesPerSec = RATE * 4;
     wfx.nBlockAlign     = 4;
     wfx.wBitsPerSample  = 16;
     wfx.cbSize          = sizeof(WAVEFORMATEX);
@@ -23,15 +26,16 @@ namespace audiere {
       return 0;
     }
 
-    return new MMAudioDevice(handle);
+    return new MMAudioDevice(handle, RATE);
   }
 
 
-  MMAudioDevice::MMAudioDevice(HWAVEOUT device) {
+  MMAudioDevice::MMAudioDevice(HWAVEOUT device, int rate)
+    : MixerDevice(rate)
+  {
     ADR_GUARD("MMAudioDevice::MMAudioDevice");
 
     m_device = device;
-    m_mixer = new Mixer(44100);
     m_current_buffer = 0;
 
     // fill each buffer with samples and prepare it for output
@@ -41,7 +45,7 @@ namespace audiere {
       wh.lpData         = (char*)m_samples + i * BUFFER_LENGTH;
       wh.dwBufferLength = BUFFER_LENGTH;
 
-      m_mixer->read(BUFFER_LENGTH / 4, wh.lpData);
+      read(BUFFER_LENGTH / 4, wh.lpData);
 
       MMRESULT result = waveOutPrepareHeader(m_device, &wh, sizeof(wh));
       if (result != MMSYSERR_NOERROR) {
@@ -84,7 +88,7 @@ namespace audiere {
         }
 
         // fill with new samples
-        m_mixer->read(BUFFER_LENGTH / 4, wh.lpData);
+        read(BUFFER_LENGTH / 4, wh.lpData);
         wh.dwFlags = 0;
 
         // prepare
@@ -102,129 +106,5 @@ namespace audiere {
     }
     Sleep(10);
   }
-
-
-  OutputStream*
-  MMAudioDevice::openStream(SampleSource* source) {
-    return (source ? new MMOutputStream(this, source) : 0);
-  }
-
-
-  OutputStream*
-  MMAudioDevice::openBuffer(
-    void* samples, int sample_count,
-    int channel_count, int sample_rate, SampleFormat sample_format)
-  {
-    return openStream(new BufferStream(
-      samples, sample_count,
-      channel_count, sample_rate, sample_format));
-  }
-
-
-  MMOutputStream::MMOutputStream(MMAudioDevice* device, SampleSource* source) {
-    m_device = device;
-    m_source = source;
-
-    getMixer().addSource(m_source);
-  }
-
-  
-  MMOutputStream::~MMOutputStream() {
-    getMixer().removeSource(m_source);
-  }
-
-
-  void
-  MMOutputStream::play() {
-    getMixer().setPlaying(m_source, true);
-  }
-
-
-  void
-  MMOutputStream::stop() {
-    getMixer().setPlaying(m_source, false);
-  }
-
-
-  bool
-  MMOutputStream::isPlaying() {
-    return getMixer().isPlaying(m_source);
-  }
-
-
-  void
-  MMOutputStream::reset() {
-    getMixer().resetSource(m_source);
-  }
-
-
-  void
-  MMOutputStream::setRepeat(bool repeat) {
-    getMixer().setRepeat(m_source, repeat);
-  }
-
-
-  bool
-  MMOutputStream::getRepeat() {
-    return getMixer().getRepeat(m_source);
-  }
-
-
-  void
-  MMOutputStream::setVolume(float volume) {
-    getMixer().setVolume(m_source, volume);
-  }
-
-
-  float
-  MMOutputStream::getVolume() {
-    return getMixer().getVolume(m_source);
-  }
-
-
-  void
-  MMOutputStream::setPan(float pan) {
-    getMixer().setPan(m_source, pan);
-  }
-
-
-  float
-  MMOutputStream::getPan() {
-    return getMixer().getPan(m_source);
-  }
-
-
-  bool
-  MMOutputStream::isSeekable() {
-    /// @todo  implement MMOutputStream::isSeekable
-    return false;
-  }
-
-
-  int
-  MMOutputStream::getLength() {
-    /// @todo  implement MMOutputStream::getLength
-    return 0;
-  }
-
-
-  void
-  MMOutputStream::setPosition(int position) {
-    /// @todo  implement MMOutputStream::setPosition
-  }
-
-
-  int
-  MMOutputStream::getPosition() {
-    /// @todo  implement MMOutputStream::getPosition
-    return 0;
-  }
-
-
-  Mixer&
-  MMOutputStream::getMixer() {
-    return *(m_device->m_mixer);
-  }
-
 
 }

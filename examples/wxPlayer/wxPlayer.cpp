@@ -51,6 +51,8 @@ public:
   : wxMDIChildFrame(parent, -1, title)
   {
     m_stream = stream;
+    m_stream_is_seekable = stream->isSeekable();
+    m_stream_length = stream->getLength();
 
     m_playing_label = new wxStaticText(this, -1, "Stopped");
     m_repeating = new wxCheckBox(this, STREAM_REPEAT, "Repeating");
@@ -80,7 +82,7 @@ public:
     sizer->Add(m_length_pos_label, 1, wxEXPAND | wxALL, 4);
     sizer->Add(m_pos,              1, wxEXPAND | wxALL, 4);
 
-    if (!m_stream->isSeekable()) {
+    if (m_stream_is_seekable) {
       m_pos->Enable(false);
     }
 
@@ -140,8 +142,8 @@ public:
   }
 
   void OnUpdateStatus() {
-    if (m_stream->isSeekable()) {
-      m_pos->SetValue(1000 * m_stream->getPosition() / m_stream->getLength());
+    if (m_stream_is_seekable) {
+      m_pos->SetValue(1000 * m_stream->getPosition() / m_stream_length);
     }
     UpdateLengthPosLabel();
 
@@ -160,11 +162,11 @@ public:
   }
 
   void UpdateLengthPosLabel() {
-    if (m_stream->isSeekable()) {
+    if (m_stream_is_seekable) {
       wxString label;
       label.Printf(
         "Length: %d   Pos: %d",
-        m_stream->getLength(),
+        m_stream_length,
         m_stream->getPosition());
       m_length_pos_label->SetLabel(label);
     } else {
@@ -174,6 +176,8 @@ public:
 
 private:
   RefPtr<OutputStream> m_stream;
+  bool m_stream_is_seekable;
+  int m_stream_length;
 
   wxTimer* m_timer;
 

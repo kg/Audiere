@@ -82,7 +82,7 @@ namespace audiere {
   void
   DSOutputStream::reset() {
     ADR_GUARD("DSOutputStream::reset");
-    SYNCHRONIZED(m_device.get());
+    SYNCHRONIZED(this);
 
     // figure out if we're playing or not
     bool is_playing = isPlaying();
@@ -110,14 +110,14 @@ namespace audiere {
 
   void
   DSOutputStream::setRepeat(bool repeat) {
-    SYNCHRONIZED(m_device.get());
+    SYNCHRONIZED(this);
     m_source->setRepeat(repeat);
   }
 
 
   bool
   DSOutputStream::getRepeat() {
-    SYNCHRONIZED(m_device.get());
+    SYNCHRONIZED(this);
     return m_source->getRepeat();
   }
 
@@ -164,21 +164,21 @@ namespace audiere {
 
   bool
   DSOutputStream::isSeekable() {
-    SYNCHRONIZED(m_device.get());
+    SYNCHRONIZED(this);
     return m_source->isSeekable();
   }
 
 
   int
   DSOutputStream::getLength() {
-    SYNCHRONIZED(m_device.get());
+    SYNCHRONIZED(this);
     return m_source->getLength();
   }
 
 
   void
   DSOutputStream::setPosition(int position) {
-    SYNCHRONIZED(m_device.get());
+    SYNCHRONIZED(this);
 
     // figure out if we're playing or not
     bool is_playing = isPlaying();
@@ -206,7 +206,7 @@ namespace audiere {
 
   int
   DSOutputStream::getPosition() {
-    SYNCHRONIZED(m_device.get());
+    SYNCHRONIZED(this);
     int pos = m_source->getPosition() - (m_total_read - m_total_written);
     if (pos < 0) {
       pos += m_source->getLength();
@@ -260,6 +260,8 @@ namespace audiere {
 
   void
   DSOutputStream::update() {
+    SYNCHRONIZED(this);
+
     // if it's not playing, don't do anything
     if (!isPlaying()) {
       return;

@@ -161,6 +161,8 @@ namespace audiere {
    * are always binary: that is, they do no end-of-line
    * transformations.  File objects are roughly analogous to ANSI C
    * FILE* objects.
+   *
+   * This interface is not synchronized.
    */
   class File : public RefCounted {
   protected:
@@ -221,7 +223,9 @@ namespace audiere {
    * be read from or reset.
    *
    * Some sample sources are seekable.  Seekable sources have two additional
-   * properties: length and position.  Length is read-only. 
+   * properties: length and position.  Length is read-only.
+   *
+   * This interface is not synchronized.
    */
   class SampleSource : public RefCounted {
   protected:

@@ -7,6 +7,7 @@
 #include <dsound.h>
 #include "audiere.h"
 #include "repeatable.h"
+#include "threads.h"
 #include "utility.h"
 
 
@@ -14,7 +15,10 @@ namespace audiere {
 
   class DSAudioDevice;
 
-  class DSOutputStream : public RefImplementation<OutputStream> {
+  class DSOutputStream
+    : public RefImplementation<OutputStream>
+    , public Synchronized
+  {
   public:
     DSOutputStream(
       DSAudioDevice* device,

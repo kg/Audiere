@@ -5,8 +5,8 @@
 
 #include <algorithm>
 #include "device_mixer.h"
-#include "buffer_stream.h"
 #include "resampler.h"
+#include "utility.h"
 
 
 namespace audiere {
@@ -27,7 +27,7 @@ namespace audiere {
     void* samples, int frame_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
-    return openStream(new BufferStream(
+    return openStream(OpenBufferStream(
       samples, frame_count,
       channel_count, sample_rate, sample_format));
   }

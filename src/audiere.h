@@ -446,6 +446,50 @@ namespace audiere {
   };
 
 
+  /**
+   * A readonly sample container which can open sample streams as iterators
+   * through the buffer.  This is commonly used in cases where a very large
+   * sound effect is loaded once into memory and then streamed several times
+   * to the audio device.  This is more efficient memory-wise than loading
+   * the effect multiple times.
+   *
+   * @see CreateSampleBuffer
+   */
+  class SampleBuffer : public RefCounted {
+  protected:
+    ~SampleBuffer() { }
+
+  public:
+
+    /**
+     * Return the format of the sample data in the sample buffer.
+     * @see SampleSource::getFormat
+     */
+    virtual void ADR_CALL getFormat(
+      int& channel_count,
+      int& sample_rate,
+      SampleFormat& sample_format) = 0;
+
+    /**
+     * Get the length of the sample buffer in frames.
+     */
+    virtual int ADR_CALL getLength() = 0;
+
+    /**
+     * Get a readonly pointer to the samples contained within the buffer.  The
+     * buffer is |channel_count * frame_count * GetSampleSize(sample_format)|
+     * bytes long.
+     */
+    virtual const void* ADR_CALL getSamples() = 0;
+
+    /**
+     * Open a seekable sample source using the samples contained in the
+     * buffer.
+     */
+    virtual SampleSource* ADR_CALL openStream() = 0;
+  };
+
+
   /// PRIVATE API - for internal use only
   namespace hidden {
 
@@ -466,6 +510,13 @@ namespace audiere {
       AudioDevice* device,
       SampleSource* source,
       bool streaming);
+
+    ADR_FUNCTION(SampleBuffer*, AdrCreateSampleBuffer)(
+      void* samples,
+      int frame_count,
+      int channel_count,
+      int sample_rate,
+      SampleFormat sample_format);
   }
 
 
@@ -594,6 +645,36 @@ namespace audiere {
     bool streaming = false)
   {
     return OpenSound(device, OpenSampleSource(file), streaming);
+  }
+
+
+  /**
+   * Create a SampleBuffer object using the specified samples and formats.
+   *
+   * @param samples  Pointer to a buffer of samples used to initialize the
+   *                 new object.  If this is 0, the sample buffer contains
+   *                 just silence.
+   *
+   * @param frame_count  Size of the sample buffer in frames.
+   *
+   * @param channel_count  Number of channels in each frame.
+   *
+   * @param sample_rate  Sample rate in Hz.
+   *
+   * @param sample_format  Format of each sample.  @see SampleFormat.
+   *
+   * @return  new SampleBuffer object
+   */
+  inline SampleBuffer* CreateSampleBuffer(
+    void* samples,
+    int frame_count,
+    int channel_count,
+    int sample_rate,
+    SampleFormat sample_format)
+  {
+    return hidden::AdrCreateSampleBuffer(
+      samples, frame_count,
+      channel_count, sample_rate, sample_format);
   }
 }
 

@@ -102,14 +102,6 @@ SOURCE=..\..\src\audiere.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\buffer_stream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\buffer_stream.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\debug.cpp
 # End Source File
 # Begin Source File
@@ -223,6 +215,10 @@ SOURCE=..\..\src\resampler.cpp
 # Begin Source File
 
 SOURCE=..\..\src\resampler.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\sample_buffer.cpp
 # End Source File
 # Begin Source File
 

@@ -1,6 +1,7 @@
+#include <windows.h>
+#include <mmsystem.h>
 #include "device_mm.h"
-#include "buffer_stream.h"
-#include <mmreg.h>
+#include "utility.h"
 
 
 namespace audiere {

@@ -3,6 +3,8 @@
   added GetSupportedFileFormats for file format enumeration
   added audiere-config script which provides version information and
     external library dependencies
+  finer synchronization granularity on DirectSound output streams for
+    lower-latency OutputStream calls
 
 2002.10.04
 

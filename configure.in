@@ -56,7 +56,6 @@ AC_CHECK_LIB(pthread, pthread_create,
     LIBS="-lpthread $LIBS"
     EXTRA_LIBS="-lpthread $EXTRA_LIBS"
   ,
-    AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find pthread library))
 
 dnl Look for OpenAL
@@ -122,7 +121,6 @@ AC_CHECK_HEADER(vorbis/vorbisfile.h,
     LIBS="-lvorbisfile -lvorbis -logg $LIBS"
     EXTRA_LIBS="-lvorbisfile -lvorbis -logg $EXTRA_LIBS"
   ,
-    AC_MSG_RESULT(no)
     AC_MSG_WARN([Could not find vorbisfile header.  You do not appear to have libvorbis installed.
 Get libvorbis from http://www.vorbis.com/])
     AC_MSG_WARN([Disabling Ogg Vorbis support.])
@@ -133,9 +131,7 @@ AC_CHECK_HEADER(dsound.h,
     HAVE_DSOUND=true
     AC_DEFINE(HAVE_DSOUND)
     LIBS="-ldsound -lole32 -lrpcrt4 $LIBS"
-    EXTRA_LIBS="-ldsound -lole32 -lrpcrt4 $EXTRA_LIBS"
-  ,
-    AC_MSG_RESULT(no))
+    EXTRA_LIBS="-ldsound -lole32 -lrpcrt4 $EXTRA_LIBS")
 AM_CONDITIONAL(HAVE_DSOUND, test "x$HAVE_DSOUND" = "xtrue")
 
 AC_CHECK_HEADER(mmsystem.h,
@@ -143,9 +139,7 @@ AC_CHECK_HEADER(mmsystem.h,
     AC_DEFINE(HAVE_WINMM)
     LIBS="-lwinmm $LIBS"
     EXTRA_LIBS="-lwinmm $EXTRA_LIBS"
-  ,
-    AC_MSG_RESULT(no)
-  ,
+  ,,
     [#include <windows.h>])
 AM_CONDITIONAL(HAVE_WINMM, test "x$HAVE_WINMM" = "xtrue")
 

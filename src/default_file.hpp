@@ -14,7 +14,7 @@ extern int ADR_CALL DefaultFileRead(
   void* buffer,
   int size);
 
-extern int ADR_CALL DefaultFileSeek(
+extern bool ADR_CALL DefaultFileSeek(
   ADR_FILE file,
   int destination,
   ADR_SEEK_TYPE origin);

@@ -74,12 +74,12 @@ static PyObject* Stream_getattr(PyObject* self, char* name)
       
   } else if (strcmp(name, "repeating") == 0) {
 
-    ADR_BOOL repeating = AdrGetStreamRepeat(object->stream);
+    bool repeating = AdrGetStreamRepeat(object->stream);
     return PyInt_FromLong(repeating ? 1 : 0);
 
   } else if (strcmp(name, "playing") == 0) {
 
-    ADR_BOOL playing = AdrIsStreamPlaying(object->stream);
+    bool playing = AdrIsStreamPlaying(object->stream);
     return PyInt_FromLong(playing ? 1 : 0);
 
   } else if (strcmp(name, "VOLUME_MIN") == 0) {
@@ -106,8 +106,7 @@ static int Stream_setattr(PyObject* self, char* name, PyObject* value)
     
     AdrSetStreamRepeat(
       object->stream,
-      PyObject_IsTrue(value) ? ADR_TRUE : ADR_FALSE
-    );
+      PyObject_IsTrue(value) ? true : false);
     return 0;
 
   // check read-only attributes

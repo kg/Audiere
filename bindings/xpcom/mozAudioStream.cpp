@@ -58,7 +58,7 @@ mozAudioStream::GetRepeating(PRBool* aRepeating)
 NS_IMETHODIMP
 mozAudioStream::SetRepeating(PRBool aRepeating)
 {
-  AdrSetStreamRepeat(mStream, (aRepeating ? ADR_TRUE : ADR_FALSE));
+  AdrSetStreamRepeat(mStream, (aRepeating ? true : false));
   return NS_OK;
 }
 

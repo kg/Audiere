@@ -12,9 +12,8 @@
 #define AUDIERE_H
 
 
-/* extern C */
-#ifdef __cplusplus
-extern "C" {
+#ifndef __cplusplus
+#error Audiere requires C++
 #endif
 
 
@@ -24,12 +23,6 @@ extern "C" {
 #else
 #  define ADR_CALL
 #endif
-
-
-/* boolean */
-typedef int ADR_BOOL;
-#define ADR_TRUE  1
-#define ADR_FALSE 0
 
 
 /* file callback types */
@@ -54,7 +47,7 @@ typedef int (ADR_CALL *ADR_FILE_READ)(
   void* buffer,
   int size);
 
-typedef ADR_BOOL (ADR_CALL *ADR_FILE_SEEK)(
+typedef bool (ADR_CALL *ADR_FILE_SEEK)(
   ADR_FILE file,
   int offset,
   ADR_SEEK_TYPE type);
@@ -241,7 +234,7 @@ void ADR_CALL AdrResetStream(
  * Returns ADR_TRUE if the stream is currently playing audio.
  *
  */
-ADR_BOOL ADR_CALL AdrIsStreamPlaying(
+bool ADR_CALL AdrIsStreamPlaying(
   ADR_STREAM stream);
 
 
@@ -253,7 +246,7 @@ ADR_BOOL ADR_CALL AdrIsStreamPlaying(
  */
 void ADR_CALL AdrSetStreamRepeat(
   ADR_STREAM stream,
-  ADR_BOOL repeat);
+  bool repeat);
 
 
 /*
@@ -262,7 +255,7 @@ void ADR_CALL AdrSetStreamRepeat(
  * Returns the repeat flag for the given stream.  Repeat defaults to false.
  *
  */
-ADR_BOOL ADR_CALL AdrGetStreamRepeat(
+bool ADR_CALL AdrGetStreamRepeat(
   ADR_STREAM);
 
 
@@ -288,10 +281,6 @@ void ADR_CALL AdrSetStreamVolume(
 int ADR_CALL AdrGetStreamVolume(
   ADR_STREAM stream);
 
-
-#ifdef __cplusplus
-}
-#endif
 
 
 // C++ convenience classes 
@@ -328,13 +317,13 @@ namespace audiere {
       AdrResetStream(m_stream);
     }
     bool isPlaying() {
-      return (AdrIsStreamPlaying(m_stream) == ADR_TRUE);
+      return AdrIsStreamPlaying(m_stream);
     }
     void setRepeat(bool repeat) {
-      AdrSetStreamRepeat(m_stream, repeat ? ADR_TRUE : ADR_FALSE);
+      AdrSetStreamRepeat(m_stream, repeat);
     }
     bool getRepeat() {
-      return (AdrGetStreamRepeat(m_stream) == ADR_TRUE);
+      return AdrGetStreamRepeat(m_stream);
     }
     void setVolume(int volume) {
       AdrSetStreamVolume(m_stream, volume);

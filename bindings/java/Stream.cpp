@@ -105,7 +105,7 @@ JNIEXPORT void JNICALL Java_org_aegisknight_audiere_Stream_setRepeating(
 {
   ADR_STREAM stream = GetStream(env, obj);
   if (stream) {
-    AdrSetStreamRepeat(stream, repeating ? ADR_TRUE : ADR_FALSE);
+    AdrSetStreamRepeat(stream, repeating ? true : false);
   }
 }
 

@@ -185,29 +185,29 @@ void ADR_CALL AdrResetStream(ADR_STREAM stream)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ADR_BOOL ADR_CALL AdrIsStreamPlaying(ADR_STREAM stream)
+bool ADR_CALL AdrIsStreamPlaying(ADR_STREAM stream)
 {
   ADR_GUARD("AdrIsStreamPlaying");
 
-  return ImportStream(stream)->IsPlaying() ? ADR_TRUE : ADR_FALSE;
+  return ImportStream(stream)->IsPlaying();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void ADR_CALL AdrSetStreamRepeat(ADR_STREAM stream, ADR_BOOL repeat)
+void ADR_CALL AdrSetStreamRepeat(ADR_STREAM stream, bool repeat)
 {
   ADR_GUARD("AdrSetStreamRepeat");
 
-  ImportStream(stream)->SetRepeat(repeat == ADR_TRUE);
+  ImportStream(stream)->SetRepeat(repeat);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ADR_BOOL ADR_CALL AdrGetStreamRepeat(ADR_STREAM stream)
+bool ADR_CALL AdrGetStreamRepeat(ADR_STREAM stream)
 {
   ADR_GUARD("AdrGetStreamRepeat");
 
-  return ImportStream(stream)->IsRepeating() ? ADR_TRUE : ADR_FALSE;
+  return ImportStream(stream)->IsRepeating();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -56,7 +56,7 @@ ADRFile::Read(void* bytes, int byte_count)
 bool
 ADRFile::Seek(int offset, ADR_SEEK_TYPE type)
 {
-  return (m_file_system->m_seek(m_file, offset, type) == ADR_TRUE);
+  return m_file_system->m_seek(m_file, offset, type);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,35 @@
+2003.01.05
+
+  many general improvements to wxPlayer
+
+2003.01.04
+
+  use __declspec instead of def files for mingw compatiblity
+
+2002.12.30
+  build the winmm audio device in Cygwin if it's available
+  build the DirectSound audio device in Cygwin if it's available
+  greatly improved linearity of the volume property in the DirectSound
+    device (Mik Popov)
+
+2002.12.21
+
+  add support for audio device enumeration
+  enable setting the GLOBAL_FOCUS bit on DS surfaces via the global=
+    device parameter
+  enable choosing nonstandard DirectSound devices via the device_guid=
+    device parameter
+  drastic performance increase when using MULTIPLE sound effects
+
+2002.12.20
+
+  implement volume, panning, and pitch shift on SoundEffect objects
+  improved latency of SGI audio device
+
+2002.10.21
+
+  disable Ogg or FLAC if 'configure' can't find them.
+
 2002.10.12
 
   1.9.1 release

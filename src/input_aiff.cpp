@@ -46,7 +46,7 @@ namespace audiere {
 
     if (memcmp(header, "FORM", 4) != 0 ||
         read32_be(header + 4) == 0 ||
-        memcmp(header, "AIFF", 4) != 0)
+        memcmp(header + 8, "AIFF", 4) != 0)
     {
       ADR_LOG("Invalid AIFF header");
       m_file = 0;
@@ -87,7 +87,7 @@ namespace audiere {
     const int read = m_file->read(buffer, bytes_to_read);
     const int frames_read = read / frame_size;
 
-#if WORDS_BIGENDIAN
+#ifndef WORDS_BIGENDIAN
     if (m_sample_format == SF_S16) {
       // make little endian into host endian
       u8* out = (u8*)buffer;

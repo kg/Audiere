@@ -350,10 +350,12 @@ namespace audiere {
     int length1 = buffer1_length / m_sample_size;
     int length2 = buffer2_length / m_sample_size;
     int read = streamRead(length1, buffer1);
-    if (length1 == read) {
-      read += streamRead(length2, buffer2);
-    } else {
-      fillSilence(length2, buffer2);
+    if (buffer2) {
+      if (length1 == read) {
+        read += streamRead(length2, buffer2);
+      } else {
+        fillSilence(length2, buffer2);
+      }
     }
 
     ADR_IF_DEBUG {

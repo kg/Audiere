@@ -180,6 +180,14 @@ SOURCE=..\..\src\input.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\input_aiff.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\input_aiff.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\input_flac.cpp
 # End Source File
 # Begin Source File

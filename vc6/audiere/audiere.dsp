@@ -94,10 +94,6 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\src\audiere.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\audiere.def
 # End Source File
 # Begin Source File
@@ -107,14 +103,6 @@ SOURCE=..\..\src\audiere.h
 # Begin Source File
 
 SOURCE=..\..\src\config.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\context.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\context.hpp
 # End Source File
 # Begin Source File
 
@@ -130,15 +118,11 @@ SOURCE=..\..\src\default_file.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\device.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\endian.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\file.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\file.hpp
 # End Source File
 # Begin Source File
 
@@ -147,10 +131,6 @@ SOURCE=..\..\src\file_ansi.cpp
 # Begin Source File
 
 SOURCE=..\..\src\input.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\input.hpp
 # End Source File
 # Begin Source File
 
@@ -178,39 +158,7 @@ SOURCE=..\..\src\input_wav.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\output.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output_ds.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output_ds.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output_ds3.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output_ds3.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output_ds8.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output_null.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\output_null.hpp
+SOURCE=..\..\src\internal.hpp
 # End Source File
 # Begin Source File
 
@@ -219,14 +167,6 @@ SOURCE=..\..\src\repeatable.cpp
 # Begin Source File
 
 SOURCE=..\..\src\repeatable.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\stream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\stream.hpp
 # End Source File
 # Begin Source File
 
@@ -246,11 +186,19 @@ SOURCE=..\..\src\timer_win32.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\types.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\utility.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\utility.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\version.cpp
 # End Source File
 # End Group
 # Begin Group "mmio"

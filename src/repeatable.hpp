@@ -2,32 +2,40 @@
 #define REPEATABLE_HPP
 
 
-#include "input.hpp"
+#include "audiere.h"
 
 
-class RepeatableStream : public ISampleSource
-{
-public:
-  RepeatableStream(ISampleSource* source, bool initial_state);
-  ~RepeatableStream();
+namespace audiere {
 
-  void SetRepeat(bool repeat);
-  bool GetRepeat();
+  class RepeatableStream : public DLLImplementation<SampleSource> {
+  public:
+    RepeatableStream(SampleSource* source, bool initial_state);
+    ~RepeatableStream();
 
-  // ISampleSource implementation
-  void GetFormat(
-    int& channel_count,
-    int& sample_rate,
-    int& bits_per_sample);
+    void setRepeat(bool repeat);
+    bool getRepeat();
 
-  int Read(int sample_count, void* samples);
-  bool Reset();
+    // ISampleSource implementation
+    void getFormat(
+      int& channel_count,
+      int& sample_rate,
+      int& bits_per_sample);
 
-private:
-  bool m_repeat;
-  ISampleSource* m_source;
-  int m_sample_size;  // convenience
-};
+    int read(int sample_count, void* samples);
+    void reset();
+
+    bool isSeekable();
+    int getLength();
+    void setPosition();
+    int getPosition();
+
+  private:
+    bool m_repeat;
+    SampleSource* m_source;
+    int m_sample_size;  // convenience
+  };
+
+}
 
 
 #endif

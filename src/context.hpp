@@ -9,22 +9,6 @@
 #include "threads.hpp"
 
 
-struct ADR_CONTEXT_ATTRimp
-{
-  std::string    output_device;
-  std::string    parameters;
-  void*          opaque;
-  ADR_FILE_OPEN  open;
-  ADR_FILE_CLOSE close;
-  ADR_FILE_READ  read;
-  ADR_FILE_SEEK  seek;
-  ADR_FILE_TELL  tell;
-};
-
-
-class Stream;
-
-
 class Context : public Synchronized
 {
 public:

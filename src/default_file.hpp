@@ -2,25 +2,14 @@
 #define DEFAULT_FILE_HPP
 
 
-extern ADR_FILE ADR_CALL DefaultFileOpen(
-  void* opaque,
-  const char* filename);
+#include "audiere.h"
 
-extern void ADR_CALL DefaultFileClose(
-  ADR_FILE file);
 
-extern int ADR_CALL DefaultFileRead(
-  ADR_FILE file,
-  void* buffer,
-  int size);
+namespace audiere {
 
-extern bool ADR_CALL DefaultFileSeek(
-  ADR_FILE file,
-  int destination,
-  ADR_SEEK_TYPE origin);
+  File* OpenDefaultFile(const char* filename);
 
-extern int ADR_CALL DefaultFileTell(
-  ADR_FILE file);
+}
 
 
 #endif

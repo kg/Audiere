@@ -9,4 +9,4 @@ The following files contain version information:
   configure.in
   doc/doxygen/audiere.doxy
   doc/doxygen/mainpage.doxy
-  src/audiere.cpp
+  src/version.cpp

@@ -1,51 +1,47 @@
 #include <stdio.h>
-#include "file.hpp"
+#include "default_file.hpp"
 
 
-////////////////////////////////////////////////////////////////////////////////
+namespace audiere {
 
-ADR_FILE ADR_CALL DefaultFileOpen(void* /*opaque*/, const char* filename)
-{
-  return (ADR_FILE)fopen(filename, "rb");
-}
+  class CFile : public DLLImplementation<File> {
+  public:
+    CFile(FILE* file) {
+      m_file = file;
+    }
 
-////////////////////////////////////////////////////////////////////////////////
+    ~CFile() {
+      fclose(m_file);
+    }
 
-void ADR_CALL DefaultFileClose(ADR_FILE file)
-{
-  fclose((FILE*)file);
-}
+    int read(void* buffer, int size) {
+      return fread(buffer, 1, size, m_file);
+    }
 
-////////////////////////////////////////////////////////////////////////////////
+    bool seek(int position, SeekMode mode) {
+      int m;
+      switch (mode) {
+        case BEGIN:   m = SEEK_SET; break;
+        case CURRENT: m = SEEK_CUR; break;
+        case END:     m = SEEK_END; break;
+        default: return false;
+      }
 
-int ADR_CALL DefaultFileRead(ADR_FILE file, void* buffer, int size)
-{
-  return fread(buffer, 1, size, (FILE*)file);
-}
+      return (fseek(m_file, position, m) == 0);
+    }
 
-////////////////////////////////////////////////////////////////////////////////
+    int tell() {
+      return ftell(m_file);
+    }
 
-bool ADR_CALL DefaultFileSeek(
-  ADR_FILE file,
-  int destination,
-  ADR_SEEK_TYPE origin)
-{
-  int o;
-  switch (origin) {
-    case ADR_BEGIN:   o = SEEK_SET; break;
-    case ADR_CURRENT: o = SEEK_CUR; break;
-    case ADR_END:     o = SEEK_END; break;
-    default: return false;
+  private:
+    FILE* m_file;
+  };
+
+
+  File* OpenDefaultFile(const char* filename) {
+    FILE* file = fopen(filename, "rb");
+    return (file ? new CFile(file) : 0);
   }
 
-  return (0 == fseek((FILE*)file, destination, o));
 }
-
-////////////////////////////////////////////////////////////////////////////////
-
-int ADR_CALL DefaultFileTell(ADR_FILE file)
-{
-  return ftell((FILE*)file);
-}
-
-////////////////////////////////////////////////////////////////////////////////

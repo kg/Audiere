@@ -7,13 +7,15 @@
 #define TIMER_HPP
 
 
-#include "config.h"
+#include "types.h"
 
 
-/**
- * Return current time in microseconds.
- */
-adr_u64 GetNow();
+namespace audiere {
+
+  /// Return current time in microseconds.
+  u64 GetNow();
+
+}
 
 
 #endif

@@ -2,45 +2,52 @@
 #define INPUT_WAV_HPP
 
 
-#include "config.h"
-#include "input.hpp"
-#include "file.hpp"
+#include "audiere.h"
+#include "types.h"
 
 
-class WAVInputStream : public ISampleSource
-{
-public:
-  WAVInputStream();
-  ~WAVInputStream();
+namespace audiere {
 
-  bool Initialize(IFile* file);
+  class WAVInputStream : public DLLImplementation<SampleSource> {
+  public:
+    WAVInputStream();
+    ~WAVInputStream();
 
-  void GetFormat(
-    int& channel_count,
-    int& sample_rate,
-    int& bits_per_sample);
-  int Read(int sample_count, void* samples);
-  bool Reset();
+    bool initialize(File* file);
 
-private:
-  bool FindFormatChunk();
-  bool FindDataChunk();
-  bool SkipBytes(int size);
+    void getFormat(
+      int& channel_count,
+      int& sample_rate,
+      int& bits_per_sample);
+    int read(int sample_count, void* samples);
+    void reset();
 
-private:
-  IFile* m_file;
+    bool isSeekable();
+    int getLength();
+    void setPosition(int position);
+    int getPosition();
 
-  // from format chunk
-  int m_channel_count;
-  int m_bits_per_sample;
-  int m_sample_rate;
+  private:
+    bool FindFormatChunk();
+    bool FindDataChunk();
+    bool SkipBytes(int size);
 
-  // from data chunk
-  int m_data_chunk_location; // bytes
-  int m_data_chunk_length;   // in samples
+  private:
+    File* m_file;
 
-  int m_samples_left_in_chunk;
-};
+    // from format chunk
+    int m_channel_count;
+    int m_bits_per_sample;
+    int m_sample_rate;
+
+    // from data chunk
+    int m_data_chunk_location; // bytes
+    int m_data_chunk_length;   // in samples
+
+    int m_samples_left_in_chunk;
+  };
+
+}
 
 
 #endif

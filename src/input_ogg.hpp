@@ -3,40 +3,47 @@
 
 
 #include <vorbis/vorbisfile.h>
-#include "input.hpp"
+#include "audiere.h"
 
 
-class OGGInputStream : public ISampleSource
-{
-public:
-  OGGInputStream();
-  ~OGGInputStream();
+namespace audiere {
 
-  bool Initialize(IFile* file);
+  class OGGInputStream : public DLLImplementation<SampleSource> {
+  public:
+    OGGInputStream();
+    ~OGGInputStream();
 
-  void GetFormat(
-    int& channel_count,
-    int& sample_rate,
-    int& bits_per_sample);
-  int Read(int sample_count, void* samples);
-  bool Reset();
+    bool initialize(File* file);
 
-private:
-  static size_t FileRead(void* buffer, size_t size, size_t n, void* opaque);
-  static int    FileSeek(void* opaque, ogg_int64_t offset, int whence);
-  static int    FileClose(void* opaque);
-  static long   FileTell(void* opaque);
+    void getFormat(
+      int& channel_count,
+      int& sample_rate,
+      int& bits_per_sample);
+    int read(int sample_count, void* samples);
+    void reset();
 
-private:
-  IFile* m_file;
+    bool isSeekable();
+    int getLength();
+    void setPosition(int position);
+    int getPosition();
 
-  OggVorbis_File m_vorbis_file;
-//  bool           m_eof;
+  private:
+    static size_t FileRead(void* buffer, size_t size, size_t n, void* opaque);
+    static int    FileSeek(void* opaque, ogg_int64_t offset, int whence);
+    static int    FileClose(void* opaque);
+    static long   FileTell(void* opaque);
 
-  int m_channel_count;
-  int m_sample_rate;
-  int m_bits_per_sample;
-};
+  private:
+    File* m_file;
 
+    OggVorbis_File m_vorbis_file;
+  //  bool           m_eof;
+
+    int m_channel_count;
+    int m_sample_rate;
+    int m_bits_per_sample;
+  };
+
+}
 
 #endif

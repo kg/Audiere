@@ -1,20 +1,7 @@
 EXPORTS
   AdrGetVersion
-  AdrCreateContextAttr
-  AdrDestroyContextAttr
-  AdrContextAttrSetOutputDevice
-  AdrContextAttrSetParameters
-  AdrContextAttrSetOpaque
-  AdrContextAttrSetFileCallbacks
-  AdrCreateContext
-  AdrDestroyContext
-  AdrOpenStream
-  AdrCloseStream
-  AdrPlayStream
-  AdrPauseStream
-  AdrResetStream
-  AdrIsStreamPlaying
-  AdrSetStreamRepeat
-  AdrGetStreamRepeat
-  AdrSetStreamVolume
-  AdrGetStreamVolume
+  AdrOpenDevice
+  AdrOpenSampleSource
+  AdrOpenSampleSourceFromFile
+  AdrOpenSound
+  AdrOpenSoundFromFile

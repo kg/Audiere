@@ -15,7 +15,7 @@
 #ifndef TDEFS_H
 #define TDEFS_H
 
-#ifdef __GNUC__
+#ifndef _MSC_VER
 #ifndef __cdecl
 #define __cdecl
 #endif
@@ -158,6 +158,10 @@ typedef __int64          INT64S;
 typedef unsigned __int64 INT64U;
 
 #elif __GNUC__
+typedef long long          INT64S;
+typedef unsigned long long INT64U;
+
+#elif __sgi
 typedef long long          INT64S;
 typedef unsigned long long INT64U;
 

@@ -209,7 +209,7 @@ namespace audiere {
       ++out;
     }
 
-    if (read >= 0) {
+    if (read > 0) {
       l = out[-2];
       r = out[-1];
     }

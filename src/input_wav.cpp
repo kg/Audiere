@@ -94,7 +94,7 @@ namespace audiere {
     if (m_sample_format == SF_S16) {
       // make little endian into host endian
       u8* out = (u8*)buffer;
-      for (int i = 0; i < samples_read * m_channel_count; ++i) {
+      for (int i = 0; i < frames_read * m_channel_count; ++i) {
         std::swap(out[0], out[1]);
         out += 2;
       }

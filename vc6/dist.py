@@ -1,43 +1,41 @@
-import os
-import types
+PREFIX = ARGUMENTS.get('prefix', 'dist')
 
-PREFIX = os.path.abspath(ARGUMENTS.get('prefix', 'dist'))
-
-env = Environment()
+env = Environment(tools=[])
 def install(target, source, files):
-    if type(files) != types.ListType:
+    from os.path import join
+    from types import ListType
+
+    if type(files) != ListType:
         files = [files]
     for f in files:
-        env.Install(os.path.join(PREFIX, target),
-                    os.path.join(source, f))
+        env.Install(join(PREFIX, target), join(source, f))
 
 # normal C++ interface
-install('bin', 'bin/Release', ['audiere.dll', 'wxPlayer.exe'])
-install('doc', '../doc',
+install('bin', 'vc6/bin/Release', ['audiere.dll', 'wxPlayer.exe'])
+install('doc', 'doc',
         ['changelog.txt', 'cvs.txt', 'dependencies.txt',
          'device_parameters.txt', 'faq.txt', 'glossary.txt', 'license.txt',
          'overview.txt', 'readme.txt', 'release-howto.txt',
          'small-buffers.txt', 'tutorial.txt'])
-install('include',       '../src',          'audiere.h')
-install('lib',           'audiere/Release', 'audiere.lib')
+install('include', 'src', 'audiere.h')
+install('lib', 'vc6/audiere/Release', 'audiere.lib')
 
 # Java bindings
-install('bindings/java', 'bin/Release', 'javaAudiere.dll')
-install('bindings/java', '../bindings/java',
+install('bindings/java', 'vc6/bin/Release', 'javaAudiere.dll')
+install('bindings/java', 'bindings/java',
         ['AudiereException.java', 'AudiereTest.java', 'AudioDevice.java',
          'OutputStream.java', 'javaAudiere.txt'])
-install('bindings/java', '../bindings/java/org/aegisknight/audiere',
+install('bindings/java', 'bindings/java/org/aegisknight/audiere',
         ['AudiereException.class', 'AudiereTest.class', 'AudioDevice.class',
          'OutputStream.class'])
 
 # Python bindings
-install('bindings/python', 'bin/Release', 'audiere.pyd')
-install('bindings/python', '../bindings/python', 'pyAudiere.txt')
+install('bindings/python', 'vc6/bin/Release', 'audiere.pyd')
+install('bindings/python', 'bindings/python', 'pyAudiere.txt')
 
 # XPCOM bindings
-install('bindings/xpcom', 'bin/Release', 'mozAudiere.dll')
-install('bindings/xpcom', '../bindings/xpcom',
+install('bindings/xpcom', 'vc6/bin/Release', 'mozAudiere.dll')
+install('bindings/xpcom', 'bindings/xpcom',
         ['mozAudiere.txt', 'adrIAudiereService.idl', 'adrIAudiereService.xpt',
          'adrIAudioDevice.idl', 'adrIAudioDevice.xpt',
          'adrIOutputStream.idl', 'adrIOutputStream.xpt'])
-

@@ -45,7 +45,9 @@ int strcasecmp(char const *, char const *);
 # endif
 
 # if !defined(HAVE_STRNCASECMP)
+/* we don't need this - aegis 2001.10.26
 int strncasecmp(char const *, char const *, unsigned long);
+*/ 
 # endif
 
 /* conditional natural language support */

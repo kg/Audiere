@@ -1,4 +1,4 @@
-SUBDIRS = mikmod
+SUBDIRS = mikmod resample
 
 INCLUDES = \
 	-I mikmod/mmio \
@@ -23,4 +23,5 @@ libacoustique_la_LDFLAGS = \
 
 libacoustique_la_LIBADD = \
 	mikmod/mmio/libmmio.la \
-	mikmod/mikmod/libmikmod.la
+	mikmod/mikmod/libmikmod.la \
+	resample/libresample.la

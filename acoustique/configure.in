@@ -48,4 +48,5 @@ AC_OUTPUT(
 	mikmod/mikmod/virtch/Makefile
 	mikmod/mikmod/virtch/resfilter/Makefile
 	mikmod/mmio/Makefile
+	resample/Makefile
 )

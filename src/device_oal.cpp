@@ -146,10 +146,10 @@ namespace audiere {
 
   OutputStream*
   OALAudioDevice::openBuffer(
-    void* samples, int sample_count,
+    void* samples, int frame_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
-    /// @todo  implement ALAudioDevice::openBuffer
+    /// @todo  implement OALAudioDevice::openBuffer
     return 0;
   }
 
@@ -339,13 +339,13 @@ namespace audiere {
 
   void
   OALOutputStream::setRepeat(bool repeat) {
-    /// @todo  implement ALOutputStream::setRepeat
+    /// @todo  implement OALOutputStream::setRepeat
   }
 
 
   bool
   OALOutputStream::getRepeat() {
-    /// @todo  implement ALOutputStream::getRepeat
+    /// @todo  implement OALOutputStream::getRepeat
     return false;
   }
 
@@ -365,40 +365,40 @@ namespace audiere {
 
   void
   OALOutputStream::setPan(float pan) {
-    /// @todo  implement ALOutputStream::setPan
+    /// @todo  implement OALOutputStream::setPan
   }
 
 
   float
   OALOutputStream::getPan() {
-    /// @todo  implement ALOutputStream::getPan
+    /// @todo  implement OALOutputStream::getPan
     return 0.0f;
   }
 
 
   bool
   OALOutputStream::isSeekable() {
-    /// @todo  implement ALOutputStream::isSeekable
+    /// @todo  implement OALOutputStream::isSeekable
     return false;
   }
 
 
   int
   OALOutputStream::getLength() {
-    /// @todo  implement ALOutputStream::getLength
+    /// @todo  implement OALOutputStream::getLength
     return 0;
   }
 
 
   void
   OALOutputStream::setPosition(int /*position*/) {
-    /// @todo  implement ALOutputStream::setPosition
+    /// @todo  implement OALOutputStream::setPosition
   }
 
 
   int
   OALOutputStream::getPosition() {
-    /// @todo  implement ALOutputStream::getPosition
+    /// @todo  implement OALOutputStream::getPosition
     return 0;
   }
 

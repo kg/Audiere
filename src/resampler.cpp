@@ -27,10 +27,10 @@ namespace audiere {
   }
 
   int
-  Resampler::read(const int sample_count, void* samples) {
-    u16* out = (u16*)samples;
+  Resampler::read(const int frame_count, void* buffer) {
+    u16* out = (u16*)buffer;
 
-    int left = sample_count;
+    int left = frame_count;
 
     // if we didn't finish resampling last time...
     while (m_time > m_native_sample_rate && left > 0) {
@@ -48,7 +48,7 @@ namespace audiere {
 
         // could we read any more?
         if (m_samples_left == 0) {
-          return sample_count - left;
+          return frame_count - left;
         }
       }
 
@@ -65,7 +65,7 @@ namespace audiere {
       }
 
     }
-    return sample_count;
+    return frame_count;
   }
 
   void

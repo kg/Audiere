@@ -32,7 +32,7 @@ namespace audiere {
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int ADR_CALL read(int sample_count, void* samples);
+    int ADR_CALL read(int frame_count, void* buffer);
     void ADR_CALL reset();
 
   private:

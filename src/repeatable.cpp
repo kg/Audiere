@@ -39,11 +39,11 @@ namespace audiere {
 
 
   int
-  RepeatableStream::read(int sample_count, void* samples) {
+  RepeatableStream::read(int frame_count, void* buffer) {
     if (m_repeat) {
 
-      unsigned char* out = (unsigned char*)samples;
-      int samples_left = sample_count;
+      unsigned char* out = (unsigned char*)buffer;
+      int samples_left = frame_count;
       while (samples_left > 0) {
 
         // read some samples
@@ -52,7 +52,7 @@ namespace audiere {
         // if we couldn't read anything, reset the stream and try again
         if (samples_read == 0) {
           m_source->reset();
-          samples_read = m_source->read(samples_left, samples);
+          samples_read = m_source->read(samples_left, buffer);
         }
 
         // if we still can't read anything, we're done
@@ -64,11 +64,11 @@ namespace audiere {
         out += samples_read * m_sample_size;
       }
 
-      return sample_count - samples_left;
+      return frame_count - samples_left;
 
     } else {
 
-      return m_source->read(sample_count, samples);
+      return m_source->read(frame_count, buffer);
 
     }
   }

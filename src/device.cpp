@@ -159,11 +159,11 @@ namespace audiere {
     }
 
     OutputStream* ADR_CALL openBuffer(
-      void* samples, int sample_count,
+      void* samples, int frame_count,
       int channel_count, int sample_rate, SampleFormat sample_format)
     {
       return m_device->openBuffer(
-        samples, sample_count,
+        samples, frame_count,
         channel_count, sample_rate, sample_format);
     }
 

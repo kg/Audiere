@@ -81,9 +81,9 @@ namespace audiere {
   class UnseekableSource : public RefImplementation<SampleSource> {
   public:
     bool ADR_CALL isSeekable()                  { return false; }
-    int ADR_CALL getLength()                    { return 0;     }
+    int  ADR_CALL getLength()                   { return 0;     }
     void ADR_CALL setPosition(int /*position*/) {               }
-    int ADR_CALL getPosition()                  { return 0;     }
+    int  ADR_CALL getPosition()                 { return 0;     }
   };
 
 

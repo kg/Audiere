@@ -1,14 +1,12 @@
 /*
-
   How It Works
 
   
   MikMod/Integration
   --
   We actually implement a MikMod output driver to render PCM
-  data.  When AcqRead needs more PCM data, we ask MikMod to
+  data.  When read() needs more PCM data, we ask MikMod to
   update until we have enough data.
-
 */
 
 
@@ -215,15 +213,15 @@ namespace audiere {
 
 
   int
-  MODInputStream::read(int sample_count, void* samples) {
+  MODInputStream::read(int frame_count, void* buffer) {
     ADR_GUARD("MODInputStream::read");
 
-    u32* out = static_cast<u32*>(samples);
+    u32* out = static_cast<u32*>(buffer);
 
     int total_written = 0;
-    while (sample_count > 0) {
+    while (frame_count > 0) {
 
-      // if there are no samples in the buffer, tell mikmod to give us a few
+      // if there are no frames in the buffer, tell mikmod to give us a few
       if (m_samples_left == 0) {
 
         // if the song isn't playing any more, just stop
@@ -236,7 +234,7 @@ namespace audiere {
 
       // read data out of the buffer
       u32 samples_to_read = std::min<u32>(
-        sample_count,
+        frame_count,
         m_samples_left);
       memcpy(out, m_next_sample, samples_to_read * 4);
 
@@ -244,7 +242,7 @@ namespace audiere {
       out            += samples_to_read;    
       m_next_sample  += samples_to_read;
       m_samples_left -= samples_to_read;
-      sample_count   -= samples_to_read;
+      frame_count    -= samples_to_read;
       total_written  += samples_to_read;
     }
 

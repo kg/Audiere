@@ -30,7 +30,7 @@ namespace audiere {
     void ADR_CALL update();
     OutputStream* ADR_CALL openStream(SampleSource* source);
     OutputStream* ADR_CALL openBuffer(
-      void* samples, int sample_count,
+      void* samples, int frame_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
 
   private:

@@ -27,7 +27,7 @@ namespace audiere {
     void update();
     OutputStream* openStream(SampleSource* source);
     OutputStream* openBuffer(
-      void* samples, int sample_count,
+      void* samples, int frame_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
 
   private:

@@ -32,10 +32,10 @@ namespace audiere {
     }
 
 
-    int ADR_CALL read(int frame_count, void* samples) {
+    int ADR_CALL read(int frame_count, void* buffer) {
       int to_read = std::min(frame_count, m_frame_count - m_position);
       memcpy(
-        samples,
+        buffer,
         m_samples + m_position * m_frame_size,
         to_read * m_frame_size);
       m_position += to_read;

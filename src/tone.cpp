@@ -25,19 +25,19 @@ namespace audiere {
       sample_format = SF_S16;
     }
 
-    int ADR_CALL read(int sample_count, void* samples) {
+    int ADR_CALL read(int frame_count, void* buffer) {
       // if frequency is 0 Hz, use silence
       if (m_frequency == 0) {
-        memset(samples, 0, sample_count * 2);
-        return sample_count;
+        memset(buffer, 0, frame_count * 2);
+        return frame_count;
       }
 
-      s16* out = (s16*)samples;
-      for (int i = 0; i < sample_count; ++i) {
+      s16* out = (s16*)buffer;
+      for (int i = 0; i < frame_count; ++i) {
         double h = sin(2 * PI * m_frequency / 44100 * elapsed++);
         out[i] = normal_to_s16(h);
       }
-      return sample_count;
+      return frame_count;
     }
 
     void ADR_CALL reset() {

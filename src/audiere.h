@@ -613,6 +613,10 @@ namespace audiere {
    *                if it returns 0.  (In that case, OpenSound immediately
    *                deletes the SampleSource.)
    *
+   * @param streaming  If false or unspecified, OpenSound attempts to
+   *                   open the entire sound into memory.  Otherwise, it
+   *                   streams the sound from the file.
+   *
    * @return  new output stream if successful, 0 otherwise
    */
   inline OutputStream* OpenSound(

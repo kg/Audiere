@@ -102,6 +102,14 @@ SOURCE=..\..\src\audiere.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\buffer_stream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\buffer_stream.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\debug.cpp
 # End Source File
 # Begin Source File

@@ -20,6 +20,7 @@
 
 #include <math.h>
 #include "device_ds.h"
+#include "buffer_stream.h"
 #include "debug.h"
 #include "utility.h"
 
@@ -267,8 +268,9 @@ namespace audiere {
     void* samples, int sample_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
-    /// @todo implement openBuffer
-    return 0;
+    return openStream(new BufferStream(
+      samples, sample_count,
+      channel_count, sample_rate, sample_format));
   }
 
 

@@ -42,6 +42,8 @@ public:
     m_position = 0;
     m_buffer_length = 88200;
     m_buffer = new u8[m_block_size * m_buffer_length];
+    memset(m_buffer, 0, m_block_size * m_buffer_length);
+    tone->read(m_buffer_length, m_buffer);
   }
 
   ~ToneBuffer() {
@@ -64,6 +66,7 @@ public:
       samples,
       m_buffer + m_position * m_block_size,
       to_read * m_block_size);
+    m_position += to_read;
     return to_read;
   }
 

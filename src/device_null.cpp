@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include "device_null.h"
+#include "buffer_stream.h"
 #include "timer.h"
 #include "threads.h"
 #include "utility.h"
@@ -69,8 +70,9 @@ namespace audiere {
     void* samples, int sample_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
-    /// @todo implement openBuffer
-    return 0;
+    return openStream(new BufferStream(
+      samples, sample_count,
+      channel_count, sample_rate, sample_format));
   }
 
 

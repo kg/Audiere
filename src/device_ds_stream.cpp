@@ -166,7 +166,6 @@ namespace audiere {
       doStop(true);
     }
 
-    m_source->setPosition(position);
     m_last_play = 0;
 
     m_source->setPosition(position);
@@ -280,6 +279,7 @@ namespace audiere {
 
     // unlock
     m_buffer->Unlock(buffer, buffer_length, NULL, 0);
+    m_buffer->SetCurrentPosition(0);
   }
 
 

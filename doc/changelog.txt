@@ -3,6 +3,9 @@
   Replaced mpegsound with a stand-alone version of the MPEG audio decoder
   from ffmpeg's libavcodec library. (Matt Campbell)
 
+  Fixed a minor problem with seeking in DirectSound streams. (Matt
+  Campbell)
+
 2004.08.18
 
   1.9.4 released.

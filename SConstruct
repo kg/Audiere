@@ -18,8 +18,11 @@ else:
 base_env = Environment(
     CPPPATH = ['/usr/freeware/include'],
     LIBPATH = ['/usr/freeware/lib32'],
-    LIBS = ['pthread', 'vorbisfile', 'vorbis', 'ogg', 'FLAC++', 'FLAC', 'audio', 'm'])
+    LIBS = ['pthread', 'vorbisfile', 'vorbis', 'ogg', 'FLAC', 'audio', 'm'])
 base_env.Append(CXXFLAGS = CXXFLAGS)
+
+if base_env['CXX'] in ['g++', 'c++']:
+    base_env.Append(CXXFLAGS = ['-Wall', '-Wno-non-virtual-dtor'])
 
 Export('PREFIX base_env')
 

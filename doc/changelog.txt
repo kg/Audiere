@@ -1,3 +1,9 @@
+2003.07.01
+
+  Made the FLAC decoder use libFLAC instead of libFLAC++.  This makes
+  it easier to compile on platforms with differing C++ ABIs, such as
+  IRIX (MIPSPro CC vs. GNU g++).
+
 2003.06.29
 
   Removed the VC7 build system.  It's out of date, nobody uses it, and

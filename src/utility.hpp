@@ -5,6 +5,7 @@
 #include <list>
 #include <string>
 #include <utility>
+#include "audiere.h"
 
 
 namespace audiere {
@@ -27,6 +28,25 @@ namespace audiere {
   ParameterList ParseParameters(const char* parameters_string);
 
   int strcmp_case(const char* a, const char* b);
+
+
+  class UnseekableSource : public DLLImplementation<SampleSource> {
+  public:
+    bool isSeekable() {
+      return false;
+    }
+
+    int getLength() {
+      return 0;
+    }
+
+    void setPosition(int /*position*/) {
+    }
+
+    int getPosition() {
+      return 0;
+    }
+  };
 
 }
 

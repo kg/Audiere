@@ -85,4 +85,28 @@ namespace audiere {
     m_source->reset();
   }
 
+
+  bool
+  RepeatableStream::isSeekable() {
+    return m_source->isSeekable();
+  }
+
+
+  int
+  RepeatableStream::getLength() {
+    return m_source->getLength();
+  }
+
+
+  void
+  RepeatableStream::setPosition(int position) {
+    m_source->setPosition(position);
+  }
+
+  
+  int
+  RepeatableStream::getPosition() {
+    return m_source->getPosition();
+  }
+
 }

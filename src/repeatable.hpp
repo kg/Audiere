@@ -26,7 +26,7 @@ namespace audiere {
 
     bool isSeekable();
     int getLength();
-    void setPosition();
+    void setPosition(int position);
     int getPosition();
 
   private:

@@ -37,72 +37,68 @@ namespace audiere {
   }
 
 
-  namespace hidden {
+  /**
+   * The internal implementation of OpenSampleSource.
+   *
+   * @param file      the file to load from.  cannot be 0.
+   * @param filename  the name of the file, or 0 if it is not available
+   */
+  SampleSource* OpenSource(File* file, const char* filename) {
+    ADR_GUARD("OpenSource");
 
-    /**
-     * The internal implementation of OpenSampleSource.
-     *
-     * @param file      the file to load from.  cannot be 0.
-     * @param filename  the name of the file, or 0 if it is not available
-     */
-    SampleSource* OpenSource(File* file, const char* filename) {
-      ADR_GUARD("OpenSource");
+    #define TRY_SOURCE(source_type) {                           \
+      source_type* source = TryInputStream<source_type>(file);  \
+      if (source) {                                             \
+        return source;                                          \
+      } else {                                                  \
+        file->seek(0, File::BEGIN);                             \
+      }                                                         \
+    }
 
-      #define TRY_SOURCE(source_type) {                           \
-        source_type* source = TryInputStream<source_type>(file);  \
-        if (source) {                                             \
-          return source;                                          \
-        } else {                                                  \
-          file->seek(0, File::BEGIN);                             \
-        }                                                         \
+    // if filename is available, use it as a hint
+    if (filename) {
+      if (end_is(filename, ".it") ||
+          end_is(filename, ".xm") ||
+          end_is(filename, ".s3m") ||
+          end_is(filename, ".mod")) {
+
+        TRY_SOURCE(MODInputStream);
+
+      } else if (end_is(filename, ".wav")) {
+
+        TRY_SOURCE(WAVInputStream);
+
+      } else if (end_is(filename, ".ogg")) {
+
+        TRY_SOURCE(OGGInputStream);
+
       }
+    }
 
-      // if filename is available, use it as a hint
-      if (filename) {
-        if (end_is(filename, ".it") ||
-            end_is(filename, ".xm") ||
-            end_is(filename, ".s3m") ||
-            end_is(filename, ".mod")) {
+    // autodetect otherwise, in decreasing order of possibility of failure
+    TRY_SOURCE(MODInputStream);
+    TRY_SOURCE(WAVInputStream);
+    TRY_SOURCE(OGGInputStream);
 
-          TRY_SOURCE(MODInputStream);
+    delete file;
+    return 0;
+  }
 
-        } else if (end_is(filename, ".wav")) {
 
-          TRY_SOURCE(WAVInputStream);
-
-        } else if (end_is(filename, ".ogg")) {
-
-          TRY_SOURCE(OGGInputStream);
-
-        }
-      }
-
-      // autodetect otherwise?
-      // (in decreasing order of possibility of failure)
-      TRY_SOURCE(MODInputStream);
-      TRY_SOURCE(WAVInputStream);
-      TRY_SOURCE(OGGInputStream);
-
-      delete file;
+  ADR_EXPORT(SampleSource*, AdrOpenSampleSource)(const char* filename) {
+    if (!filename) {
       return 0;
     }
-
-
-    ADR_EXPORT(SampleSource*, AdrOpenSampleSource)(const char* filename) {
-      if (!filename) {
-        return 0;
-      }
-      std::auto_ptr<File> file(OpenDefaultFile(filename));
-      return OpenSource(file.get(), filename);
-    }
-
-
-    ADR_EXPORT(SampleSource*, AdrOpenSampleSourceFromFile)(File* file) {
-      if (!file) {
-        return 0;
-      }
-      return OpenSource(file, 0);
-    }
-
+    std::auto_ptr<File> file(OpenDefaultFile(filename));
+    return OpenSource(file.get(), filename);
   }
+
+
+  ADR_EXPORT(SampleSource*, AdrOpenSampleSourceFromFile)(File* file) {
+    if (!file) {
+      return 0;
+    }
+    return OpenSource(file, 0);
+  }
+
 }

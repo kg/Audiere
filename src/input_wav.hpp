@@ -4,11 +4,12 @@
 
 #include "audiere.h"
 #include "types.h"
+#include "utility.hpp"
 
 
 namespace audiere {
 
-  class WAVInputStream : public DLLImplementation<SampleSource> {
+  class WAVInputStream : public UnseekableSource {
   public:
     WAVInputStream();
     ~WAVInputStream();
@@ -21,11 +22,6 @@ namespace audiere {
       int& bits_per_sample);
     int read(int sample_count, void* samples);
     void reset();
-
-    bool isSeekable();
-    int getLength();
-    void setPosition(int position);
-    int getPosition();
 
   private:
     bool FindFormatChunk();

@@ -33,16 +33,23 @@
 
 namespace audiere {
 
-  template<typename T>
-  T* TryDevice(const char* parameters) {
-    T* device = new T();
-    if (device->initialize(parameters)) {
-      return device;
-    } else {
-      delete device;
-      return 0;
-    }
-  }
+  #define NEED_SEMICOLON do ; while (false)
+
+  #define TRY_GROUP(group_name) {                                       \
+    AudioDevice* device = OpenDevice(group_name, parameters, threaded); \
+    if (device) {                                                       \
+      return device;                                                    \
+    }                                                                   \
+  } NEED_SEMICOLON
+
+  #define TRY_DEVICE(DeviceType) {          \
+    DeviceType* device = new DeviceType();  \
+    if (device->initialize(parameters)) {   \
+      return device;                        \
+    } else {                                \
+      delete device;                        \
+    }                                       \
+  } NEED_SEMICOLON
 
 
   ADR_EXPORT(AudioDevice*, AdrOpenDevice)(
@@ -52,22 +59,12 @@ namespace audiere {
   {
     ADR_GUARD("AdrOpenDevice");
 
-
-    #define NEED_SEMICOLON do ; while (false)
-
-    #define TRY_GROUP(group_name) {                                       \
-      AudioDevice* device = OpenDevice(group_name, parameters, threaded); \
-      if (device) {                                                       \
-        return device;                                                    \
-      }                                                                   \
-    } NEED_SEMICOLON
-
-    #define TRY_CONTEXT(device_type) {                          \
-      device_type* device = TryDevice<device_type>(parameters); \
-      if (device) {                                             \
-        return device;                                          \
-      }                                                         \
-    } NEED_SEMICOLON
+    if (!name) {
+      name = "";
+    }
+    if (!parameters) {
+      parameters = "";
+    }
 
 
     std::string dev(name);
@@ -82,21 +79,21 @@ namespace audiere {
 
       if (dev == "directsound") {
         #if DIRECTSOUND_VERSION >= 0x0800
-          TRY_CONTEXT(DS8AudioDevice);
+          TRY_DEVICE(DS8AudioDevice);
         #endif
-        TRY_CONTEXT(DS3AudioDevice);
+        TRY_DEVICE(DS3AudioDevice);
         return 0;
       }
 
       #ifdef WITH_OPENAL
         if (dev == "openal") {
-          TRY_CONTEXT(ALAudioDevice);
+          TRY_DEVICE(ALAudioDevice);
           return 0;
         }
       #endif
 
       if (dev == "null") {
-        TRY_CONTEXT(NullAudioDevice);
+        TRY_DEVICE(NullAudioDevice);
         return 0;
       }
 
@@ -110,20 +107,20 @@ namespace audiere {
 
       #ifdef WITH_OSS
         if (dev == "oss") {
-          TRY_CONTEXT(OSSOutputContext);
+          TRY_DEVICE(OSSOutputContext);
           return 0;
         }
       #endif
 
       #ifdef WITH_OPENAL
         if (dev == "openal") {
-          TRY_CONTEXT(ALOutputContext);
+          TRY_DEVICE(ALOutputContext);
           return 0;
         }
       #endif
 
       if (dev == "null") {
-        TRY_CONTEXT(NullOutputContext);
+        TRY_DEVICE(NullOutputContext);
         return 0;
       }
 
@@ -132,6 +129,5 @@ namespace audiere {
     // no devices
     return 0;
   }
-
 
 }

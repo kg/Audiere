@@ -122,6 +122,34 @@ SOURCE=..\..\src\device.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\device_ds.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_ds.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_ds3.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_ds3.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_ds8.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_null.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_null.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\endian.hpp
 # End Source File
 # Begin Source File
@@ -167,6 +195,10 @@ SOURCE=..\..\src\repeatable.cpp
 # Begin Source File
 
 SOURCE=..\..\src\repeatable.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\sound.cpp
 # End Source File
 # Begin Source File
 

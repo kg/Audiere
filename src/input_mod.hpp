@@ -7,6 +7,7 @@
 #include <mplayer.h> //
 #include "audiere.h"
 #include "types.h"
+#include "utility.hpp"
 
 
 // CRT_CALL should match the C runtime's calling convention
@@ -20,7 +21,7 @@
 
 namespace audiere {
 
-  class MODInputStream : public DLLImplementation<SampleSource> {
+  class MODInputStream : public UnseekableSource {
   public:
     MODInputStream();
     ~MODInputStream();
@@ -33,11 +34,6 @@ namespace audiere {
       int& bits_per_sample);
     int read(int sample_count, void* samples);
     void reset();
-
-    bool isSeekable();
-    int getLength();
-    void setPosition(int position);
-    int getPosition();
 
   private:
     // MMIO file callbacks

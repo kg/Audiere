@@ -1,4 +1,5 @@
 #include <string>
+#include <memory>
 #include <string.h>
 #include <ctype.h>
 #include <acoustique.h>
@@ -205,12 +206,9 @@ void ADR_CALL AdrContextAttrSetFileCallbacks(
 ADR_CONTEXT ADR_CALL AdrCreateContext(
   ADR_CONTEXT_ATTR attr)
 {
-  // take advantage of the fact that AdrDestroyConetextAttr is just a
-  // |delete attr|
-  std::auto_ptr<ADR_CONTEXT_ATTRimp> default_attr;
+  ADR_CONTEXT_ATTR default_attr = 0;
   if (!attr) {
-    default_attr = std::auto_ptr<ADR_CONTEXT_ATTRimp>(AdrCreateContextAttr());
-    attr = default_attr.get();
+    attr = default_attr = AdrCreateContextAttr();
   }
 
   // initialize the context
@@ -230,6 +228,7 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
     attr->parameters.c_str());
   if (!context->output_context) {
     delete context;
+    delete default_attr;
     return NULL;
   }
 
@@ -243,9 +242,11 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
     AI_DestroyCriticalSection(context->cs);
     delete context->output_context;
     delete context;
+    delete default_attr;
     return NULL;
   }
 
+  delete default_attr;
   return context;
 }
 

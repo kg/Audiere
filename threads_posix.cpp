@@ -10,7 +10,7 @@ struct ThreadInternal
 };
 
 
-struct CriticalSectionInternal
+struct AI_CriticalSectionStruct
 {
   pthread_mutex_t mutex;
 };
@@ -59,7 +59,7 @@ void AI_Sleep(unsigned milliseconds)
 
 AI_CriticalSection AI_CreateCriticalSection()
 {
-  CriticalSectionInternal* cs = new CriticalSectionInternal;
+  AI_CriticalSectionStruct* cs = new AI_CriticalSectionStruct;
   int result = pthread_mutex_init(&cs->mutex, NULL);
   if (result != 0) {
     delete cs;
@@ -73,24 +73,21 @@ AI_CriticalSection AI_CreateCriticalSection()
 
 void AI_DestroyCriticalSection(AI_CriticalSection cs)
 {
-  CriticalSectionInternal* cs_ = (CriticalSectionInternal*)cs;
-  pthread_mutex_destroy(&cs_->mutex);
+  pthread_mutex_destroy(&cs->mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void AI_EnterCriticalSection(AI_CriticalSection cs)
 {
-  CriticalSectionInternal* cs_ = (CriticalSectionInternal*)cs;
-  pthread_mutex_lock(&cs_->mutex);
+  pthread_mutex_lock(&cs->mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void AI_LeaveCriticalSection(AI_CriticalSection cs)
 {
-  CriticalSectionInternal* cs_ = (CriticalSectionInternal*)cs;
-  pthread_mutex_unlock(&cs_->mutex);
+  pthread_mutex_unlock(&cs->mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

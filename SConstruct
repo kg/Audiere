@@ -8,7 +8,11 @@ Default('.')
 # get installation prefix
 PREFIX = ARGUMENTS.get('prefix', '/usr/local')
 
-CXXFLAGS = ['-LANG:std', '-DHAVE_AL', '-DNO_MIKMOD', '-DWORDS_BIGENDIAN']
+CXXFLAGS = ['-LANG:std',
+            '-DHAVE_AL',
+            '-DNO_MIKMOD',
+            '-DNO_FLAC',
+            '-DWORDS_BIGENDIAN']
 
 # build debug?
 if ARGUMENTS.get('debug', 0):
@@ -24,10 +28,10 @@ base_env = Environment(
     SHLINKFLAGS = ['-shared'],
     CPPPATH = ['/usr/freeware/include'],
     LIBPATH = ['/usr/freeware/lib32'],
-    LIBS = ['vorbisfile', 'vorbis', 'ogg', 'audio'])
+    LIBS = ['vorbisfile', 'vorbis', 'ogg', 'audio', 'm'])
 
 Export('PREFIX base_env')
 
-SConscript(dirs = ['src', 'test'])
+SConscript(dirs = ['src', 'examples', 'test'])
 
 base_env.Alias('install', PREFIX)

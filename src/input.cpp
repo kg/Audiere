@@ -2,7 +2,9 @@
 #include <string.h>
 #include "debug.h"
 #include "default_file.h"
+#ifndef NO_FLAC
 #include "input_flac.h"
+#endif
 #ifndef NO_MIKMOD
 #include "input_mod.h"
 #endif
@@ -30,7 +32,9 @@ namespace audiere {
     return
       "MP3 Files:mp3"  ";"
       "Ogg Vorbis Files:ogg"  ";"
+#ifndef NO_FLAC
       "FLAC Files:flac"  ";"
+#endif
 #ifndef NO_MIKMOD
       "Mod Files:mod,s3m,xm,it"  ";"
 #endif
@@ -95,10 +99,11 @@ namespace audiere {
 
         TRY_SOURCE(MP3InputStream);
 
+#ifndef NO_FLAC
       } else if (end_is(filename, ".flac")) {
 
         TRY_SOURCE(FLACInputStream);
-
+#endif
       }
     }
 
@@ -109,7 +114,9 @@ namespace audiere {
     TRY_SOURCE(WAVInputStream);
     TRY_SOURCE(OGGInputStream);
     TRY_SOURCE(MP3InputStream);
+#ifndef NO_FLAC
     TRY_SOURCE(FLACInputStream);
+#endif
 
     return 0;
   }

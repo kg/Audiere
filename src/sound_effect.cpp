@@ -61,7 +61,20 @@ namespace audiere {
     }
 
     void ADR_CALL play() {
-      // open the stream and play it
+      // go through the list and see if any streams are done playing
+      // so we can reuse them
+      for (unsigned i = 0; i < m_streams.size(); ++i) {
+        if (!m_streams[i]->isPlaying()) {
+          m_streams[i]->reset();
+          m_streams[i]->setVolume(m_volume);
+          m_streams[i]->setPan(m_pan);
+          m_streams[i]->setPitchShift(m_shift);
+          m_streams[i]->play();
+          return;
+        }
+      }
+
+      // open a new stream and play it
       OutputStream* stream = m_device->openStream(m_buffer->openStream());
       if (!stream) {
         return;
@@ -70,15 +83,6 @@ namespace audiere {
       stream->setPan(m_pan);
       stream->setPitchShift(m_shift);
       stream->play();
-
-      // go through the list and see if any streams are done playing
-      // so we can reuse them
-      for (unsigned i = 0; i < m_streams.size(); ++i) {
-        if (!m_streams[i]->isPlaying()) {
-          m_streams[i] = stream;
-          return;
-        }
-      }
 
       m_streams.push_back(stream);
     }

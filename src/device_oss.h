@@ -43,7 +43,7 @@ namespace audiere {
     SampleSource* m_source;
     int m_volume;
 
-    friend class OSSOutputContext;
+    friend class OSSAudioDevice;
   };
 
 }

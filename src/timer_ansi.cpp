@@ -1,5 +1,5 @@
 #include <time.h>
-#include "timer.hpp"
+#include "timer.h"
 
 
 adr_u64 GetNow() {

@@ -219,7 +219,7 @@ public:
       return;
     }
 
-    OutputStream* stream = m_device->openStream(OpenSampleSource(filename));
+    OutputStream* stream = OpenSound(m_device.get(), filename, true);
     if (!stream) {
       wxMessageBox(
         "Could not open stream: " + filename,

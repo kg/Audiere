@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "output/Static_Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "../nbase" /D "NDEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /D "NDEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "output/Static_Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../nbase" /D "_DEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "WIN32_LEAN_AND_MEAN" /D "STRICT" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -159,17 +159,21 @@ SOURCE=.\output_null.cpp
 
 SOURCE=.\output_null.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\threads.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\threads_win32.cpp
+# End Source File
 # End Group
 # Begin Group "libraries"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\acoustique\acoustique.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\nbase\nbase.hpp
+SOURCE=..\naikai\audiere\acoustique\acoustique.h
 # End Source File
 # End Group
 # End Target

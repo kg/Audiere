@@ -1,12 +1,10 @@
 #include <string.h>
 #include <ctype.h>
 #include <acoustique.h>
-#include "nbase.hpp"
 #include "audiere.h"
 #include "default_io.hpp"
 #include "output.hpp"
-
-namespace nbase = naikai::base;
+#include "threads.hpp"
 
 
 struct ADR_CONTEXT_STRUCT
@@ -27,7 +25,7 @@ struct ADR_CONTEXT_STRUCT
 
   // threading
   bool thread_should_die;
-  nbase::CriticalSection cs;
+  AI_CriticalSection cs;
 };
 
 
@@ -100,13 +98,13 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
   }
 
   // create a critical section
-  context->cs = nbase::CreateCriticalSection();
+  context->cs = AI_CreateCriticalSection();
 
   // create a thread
   context->thread_should_die = false;
-  bool result = nbase::CreateThread(ThreadRoutine, context, +4);
+  bool result = AI_CreateThread(ThreadRoutine, context, +4);
   if (!result) {
-    nbase::DestroyCriticalSection(context->cs);
+    AI_DestroyCriticalSection(context->cs);
     delete context->output_context;
     delete context;
     return NULL;
@@ -130,10 +128,10 @@ void ADR_CALL AdrDestroyContext(ADR_CONTEXT context)
 
     // wait until the thread is dead
     while (internal->thread_should_die) {
-      nbase::Sleep(50);
+      AI_Sleep(50);
     }
 
-    nbase::DestroyCriticalSection(internal->cs);
+    AI_DestroyCriticalSection(internal->cs);
   
     delete internal->output_context;
     delete internal;
@@ -149,10 +147,10 @@ void ThreadRoutine(void* opaque)
   // while we're not dead, process the sound update loop
   while (!context->thread_should_die) {
     
-    nbase::EnterCriticalSection(context->cs);
+    AI_EnterCriticalSection(context->cs);
     context->output_context->Update();
-    nbase::LeaveCriticalSection(context->cs);
-    nbase::Sleep(50);
+    AI_LeaveCriticalSection(context->cs);
+    AI_Sleep(50);
 
   }
 
@@ -255,7 +253,7 @@ ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
   // calculate sample size
   stream->sample_size = channel_count * bits_per_sample / 8;
 
-  nbase::EnterCriticalSection(stream->context->cs);
+  AI_EnterCriticalSection(stream->context->cs);
 
   // open output stream
   stream->output_stream = stream->context->output_context->OpenStream(
@@ -276,7 +274,7 @@ ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
   // increment the context's reference count
   stream->context->refcount++;
   
-  nbase::LeaveCriticalSection(stream->context->cs);
+  AI_LeaveCriticalSection(stream->context->cs);
 
   return stream;
 }
@@ -363,7 +361,7 @@ void ADR_CALL AdrCloseStream(ADR_STREAM stream)
   ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
 
   // close output_stream
-  nbase::EnterCriticalSection(internal->context->cs);
+  AI_EnterCriticalSection(internal->context->cs);
   delete internal->output_stream;
 
   // close input stream
@@ -375,7 +373,7 @@ void ADR_CALL AdrCloseStream(ADR_STREAM stream)
   // we no longer need the context
   AdrDestroyContext(internal->context);
 
-  nbase::LeaveCriticalSection(internal->context->cs);
+  AI_LeaveCriticalSection(internal->context->cs);
   
   delete internal;
 }
@@ -406,7 +404,7 @@ void ADR_CALL AdrResetStream(ADR_STREAM stream)
 {
   ADR_STREAM_STRUCT* internal = (ADR_STREAM_STRUCT*)stream;
 
-  nbase::EnterCriticalSection(internal->context->cs);
+  AI_EnterCriticalSection(internal->context->cs);
 
   // reset the input stream
   AcqResetStream(internal->input_stream);
@@ -414,7 +412,7 @@ void ADR_CALL AdrResetStream(ADR_STREAM stream)
   // reset the output stream
   internal->output_stream->Reset();
 
-  nbase::LeaveCriticalSection(internal->context->cs);
+  AI_LeaveCriticalSection(internal->context->cs);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -16,57 +16,12 @@
 #pragma warning(disable : 4305)
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include <math.h>
 #include <stdlib.h>
 
 #include "mpegsound.h"
 #include "mpegsound_locals.h"
-
-inline void Mpegbitwindow::wrap(void)
-{
-  int p=bitindex>>3;
-  point&=(WINDOWSIZE-1);
-
-  if(p>=point)
-  {
-    for(register int i=4;i<point;i++)
-      buffer[WINDOWSIZE+i]=buffer[i];
-  }
-  *((int *)(buffer+WINDOWSIZE))=*((int *)buffer);
-}
-
-inline int Mpegbitwindow::getbit(void)
-{
-//  register int r=(buffer[(bitindex>>3)&(WINDOWSIZE-1)]>>(7-(bitindex&7)))&1;
-  register int r=(buffer[bitindex>>3]>>(7-(bitindex&7)))&1;
-  bitindex++;
-  return r;
-};
-
-inline int Mpegbitwindow::getbits9(int bits)
-{
-  register unsigned short a;
-
-#ifndef WORDS_BIGENDIAN
-  {
-    //    int offset=(bitindex>>3)&(WINDOWSIZE-1);
-    int offset=bitindex>>3;
-
-    a=(((unsigned char)buffer[offset])<<8) | ((unsigned char)buffer[offset+1]);
-  }
-#else
-  //  a=*((unsigned short *)(buffer+((bitindex>>3)&(WINDOWSIZE-1))));
-  a=*((unsigned short *)(buffer+((bitindex>>3))));
-#endif
-
-  a<<=(bitindex&7);
-  bitindex+=bits;
-  return (int)((unsigned int)(a>>(16-bits)));
-}
 
 inline int Mpegtoraw::wgetbit  (void)    {return bitwindow.getbit  ();    }
 inline int Mpegtoraw::wgetbits9(int bits){return bitwindow.getbits9(bits);}
@@ -649,10 +604,8 @@ inline void Mpegtoraw::huffmandecoder_1(const HUFFMANCODETABLE *h,int *x,int *y)
   {
     if(h->val[point][0]==0)
     {   /*end of tree*/
-      int xx,yy;
-
-      xx=h->val[point][1]>>4;
-      yy=h->val[point][1]&0xf;
+      int xx=h->val[point][1]>>4;
+      int yy=h->val[point][1]&0xf;
 
       if(h->linbits)
       {

@@ -9,11 +9,8 @@
 #pragma warning(disable : 4244)
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "mpegsound.h"
@@ -391,6 +388,12 @@ bool Mpegtoraw::loadheader()
 	                     -(protection?0:2)
 	                     -4;
     }
+  }
+
+  // if frame size is invalid, fail
+  if (framesize < 4 || framesize > 4100) {
+    seterrorcode(SOUND_ERROR_BAD);
+    return false;
   }
 
   if(!fillbuffer(framesize-4))seterrorcode(SOUND_ERROR_FILEREADFAIL);

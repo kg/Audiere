@@ -39,15 +39,8 @@ inline int Mpegtoraw::getbits8(void)
 {
   register unsigned short a;
 
-#ifndef WORDS_BIGENDIAN
-  {
-    int offset=bitindex>>3;
-
-    a=(((unsigned char)buffer[offset])<<8) | ((unsigned char)buffer[offset+1]);
-  }
-#else
-  a=*((unsigned short *)(buffer+((bitindex>>3))));
-#endif
+  const int offset=bitindex>>3;
+  a=(((unsigned char)buffer[offset])<<8) | ((unsigned char)buffer[offset+1]);
 
   a<<=(bitindex&7);
   bitindex+=8;

@@ -9,8 +9,11 @@
 /*
  * Chad Austin, 2003.06.01
  *
- * Build the MP3 decoder source files with custom optimizations.  Some files
- * have static when all of the optimizations are enabled.
+ * Build the MP3 decoder source files with custom optimizations in
+ * VC6.  Some files have static when all of the optimizations are
+ * enabled.
+ *
+ * I've also tested this code on Linux and SGI.
  */
 
 /************************************/
@@ -163,8 +166,6 @@ class Soundplayer : public Errorbase
 {
 public:
   virtual bool setsoundtype(int stereo,int samplesize,int speed)=0;
-//%%  virtual bool resetsoundtype() { return true; }
-
   virtual bool putblock(void *buffer,int size)                  =0;
 };
 
@@ -179,20 +180,55 @@ class Mpegbitwindow
 public:
   Mpegbitwindow(){bitindex=point=0;};
 
-  void initialize()  {bitindex=point=0;};
+  void initialize()        {bitindex=point=0;};
   int  gettotalbit() const {return bitindex;};
-  void putbyte(int c)    {buffer[point&(WINDOWSIZE-1)]=c;point++;};
+  void putbyte(int c)      {buffer[point&(WINDOWSIZE-1)]=c;point++;};
   void wrap();
-  void rewind(int bits)  {bitindex-=bits;};
-  void forward(int bits) {bitindex+=bits;};
+  void rewind(int bits)    {bitindex-=bits;};
+  void forward(int bits)   {bitindex+=bits;};
   int  getbit();
   int  getbits9(int bits);
   int  getbits(int bits);
 
 private:
-  int  point,bitindex;
+  int  point;
+  int  bitindex;
   char buffer[2*WINDOWSIZE];
 };
+
+inline void Mpegbitwindow::wrap()
+{
+  int p=bitindex>>3;
+  point&=(WINDOWSIZE-1);
+
+  if(p>=point)
+  {
+    for(register int i=4;i<point;i++)
+      buffer[WINDOWSIZE+i]=buffer[i];
+  }
+  *((int *)(buffer+WINDOWSIZE))=*((int *)buffer);
+}
+
+inline int Mpegbitwindow::getbit()
+{
+//  register int r=(buffer[(bitindex>>3)&(WINDOWSIZE-1)]>>(7-(bitindex&7)))&1;
+  register int r=(buffer[bitindex>>3]>>(7-(bitindex&7)))&1;
+  bitindex++;
+  return r;
+};
+
+inline int Mpegbitwindow::getbits9(int bits)
+{
+  register unsigned short a;
+  //    int offset=(bitindex>>3)&(WINDOWSIZE-1);
+  int offset=bitindex>>3;
+
+  a=(((unsigned char)buffer[offset])<<8) | ((unsigned char)buffer[offset+1]);
+
+  a<<=(bitindex&7);
+  bitindex+=bits;
+  return (int)((unsigned int)(a>>(16-bits)));
+}
 
 
 

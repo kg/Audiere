@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "debug.h"
 #include "default_file.h"
 
 
@@ -7,6 +8,7 @@ namespace audiere {
   class CFile : public RefImplementation<File> {
   public:
     CFile(FILE* file) {
+      ADR_ASSERT(file, "FILE* handle not valid");
       m_file = file;
     }
 
@@ -15,6 +17,8 @@ namespace audiere {
     }
 
     int ADR_CALL read(void* buffer, int size) {
+      ADR_ASSERT(buffer, "buffer pointer not valid");
+      ADR_ASSERT(size >= 0, "can't read negative number of bytes");
       return fread(buffer, 1, size, m_file);
     }
 

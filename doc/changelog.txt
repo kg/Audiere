@@ -1,3 +1,8 @@
+2003.0613
+
+  Fixed some unaligned reads in the MP3 decoder code, which caused
+  Audiere on SGI/IRIX to crash.
+
 2003.06.12
 
   Replaced MikMod with an actively-maintained MOD decoding engine:

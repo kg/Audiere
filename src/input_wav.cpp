@@ -1,4 +1,5 @@
 #include <string.h>
+#include "debug.h"
 #include "input_wav.h"
 #include "utility.h"
 
@@ -45,12 +46,14 @@ namespace audiere {
         riff_length == 0 ||
         memcmp(riff_datatype, "WAVE", 4) != 0) {
 
+      ADR_LOG("Couldn't read RIFF header");
+
       // so we don't destroy the file
       m_file = 0;
       return false;
     }
 
-    if (FindFormatChunk() && FindDataChunk()) {
+    if (findFormatChunk() && findDataChunk()) {
       return true;
     } else {
       m_file = 0;
@@ -141,7 +144,9 @@ namespace audiere {
 
 
   bool
-  WAVInputStream::FindFormatChunk() {
+  WAVInputStream::findFormatChunk() {
+    ADR_GUARD("WAVInputStream::findFormatChunk");
+
     // seek to just after the RIFF header
     m_file->seek(12, File::BEGIN);
 
@@ -162,6 +167,8 @@ namespace audiere {
       // if we found a format chunk, excellent!
       if (memcmp(chunk_id, "fmt ", 4) == 0 && chunk_length >= 16) {
 
+        ADR_LOG("Found format chunk");
+
         // read format chunk
         u8 chunk[16];
         size = m_file->read(chunk, 16);
@@ -177,8 +184,8 @@ namespace audiere {
         u16 format_tag         = read16_le(chunk + 0);
         u16 channel_count      = read16_le(chunk + 2);
         u32 samples_per_second = read32_le(chunk + 4);
-        u32 bytes_per_second   = read32_le(chunk + 8);
-        u16 block_align        = read16_le(chunk + 12);
+        //u32 bytes_per_second   = read32_le(chunk + 8);
+        //u16 block_align        = read16_le(chunk + 12);
         u16 bits_per_sample    = read16_le(chunk + 14);
 
         // format_tag must be 1 (WAVE_FORMAT_PCM)
@@ -186,11 +193,12 @@ namespace audiere {
         if (format_tag != 1 ||
             channel_count > 2 ||
             !IsValidSampleSize(bits_per_sample)) {
+          ADR_LOG("Invalid WAV");
           return false;
         }
 
         // skip the rest of the chunk
-        if (!SkipBytes(chunk_length)) {
+        if (!skipBytes(chunk_length)) {
           // oops, end of stream
           return false;
         }
@@ -212,7 +220,7 @@ namespace audiere {
       } else {
 
         // skip the rest of the chunk
-        if (!SkipBytes(chunk_length)) {
+        if (!skipBytes(chunk_length)) {
           // oops, end of stream
           return false;
         }
@@ -223,7 +231,9 @@ namespace audiere {
 
 
   bool
-  WAVInputStream::FindDataChunk() {
+  WAVInputStream::findDataChunk() {
+    ADR_GUARD("WAVInputStream::findDataChunk");
+
     // seek to just after the RIFF header
     m_file->seek(12, File::BEGIN);
 
@@ -238,11 +248,14 @@ namespace audiere {
 
       // if we couldn't read enough, we're done
       if (size != 8) {
+        ADR_LOG("Couldn't read chunk header");
         return false;
       }
 
       // if we found a data chunk, excellent!
       if (memcmp(chunk_id, "data", 4) == 0) {
+
+        ADR_LOG("Found data chunk");
 
         // calculate the frame size so we can truncate the data chunk
         int frame_size = m_channel_count * GetSampleSize(m_sample_format);
@@ -254,8 +267,16 @@ namespace audiere {
 
       } else {
 
+        ADR_IF_DEBUG {
+          char str[80];
+          sprintf(str, "Skipping: %d bytes in chunk '%c%c%c%c'",
+                  (int)chunk_length,
+                  chunk_id[0], chunk_id[1], chunk_id[2], chunk_id[3]);
+          ADR_LOG(str);
+        }
+
         // skip the rest of the chunk
-        if (!SkipBytes(chunk_length)) {
+        if (!skipBytes(chunk_length)) {
           // oops, end of stream
           return false;
         }
@@ -266,7 +287,7 @@ namespace audiere {
 
 
   bool
-  WAVInputStream::SkipBytes(int size) {
+  WAVInputStream::skipBytes(int size) {
     return m_file->seek(size, File::CURRENT);
   }
 

@@ -28,9 +28,9 @@ namespace audiere {
     int  ADR_CALL getPosition();
 
   private:
-    bool FindFormatChunk();
-    bool FindDataChunk();
-    bool SkipBytes(int size);
+    bool findFormatChunk();
+    bool findDataChunk();
+    bool skipBytes(int size);
 
   private:
     FilePtr m_file;

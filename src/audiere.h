@@ -506,6 +506,7 @@ namespace audiere {
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSourceFromFile)(File* file);
     ADR_FUNCTION(SampleSource*, AdrCreateTone)(double frequency);
     ADR_FUNCTION(SampleSource*, AdrCreateSquareWave)(double frequency);
+    ADR_FUNCTION(SampleSource*, AdrCreateWhiteNoise)();
 
     ADR_FUNCTION(OutputStream*, AdrOpenSound)(
       AudioDevice* device,
@@ -609,6 +610,16 @@ namespace audiere {
    */
   inline SampleSource* CreateSquareWave(double frequency) {
     return hidden::AdrCreateSquareWave(frequency);
+  }
+
+  /**
+   * Create a white noise sample source.  White noise is just random
+   * data.
+   *
+   * @return  white noise sample source
+   */
+  inline SampleSource* CreateWhiteNoise() {
+    return hidden::AdrCreateWhiteNoise();
   }
 
   /**

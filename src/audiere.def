@@ -6,5 +6,6 @@ EXPORTS
   AdrOpenSampleSourceFromFile
   AdrCreateTone
   AdrCreateSquareWave
+  AdrCreateWhiteNoise
   AdrOpenSound
   AdrCreateSampleBuffer

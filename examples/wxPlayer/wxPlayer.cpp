@@ -18,6 +18,7 @@ enum {
   DEVICE_OPEN_SOUND,
   DEVICE_CREATE_TONE,
   DEVICE_CREATE_SQUARE_WAVE,
+  DEVICE_CREATE_WHITE_NOISE,
   DEVICE_CLOSE,
 
   STREAM_PLAY,
@@ -33,7 +34,7 @@ enum {
 
 class StreamFrame : public wxMDIChildFrame {
 public:
-  StreamFrame(wxMDIParentFrame* parent, wxString& title, OutputStream* stream)
+  StreamFrame(wxMDIParentFrame* parent, const wxString& title, OutputStream* stream)
   : wxMDIChildFrame(parent, -1, title)
   {
     m_stream = stream;
@@ -196,6 +197,7 @@ public:
     fileMenu->Append(DEVICE_OPEN_SOUND,         "Open &Sound...");
     fileMenu->Append(DEVICE_CREATE_TONE,        "Create &Tone...");
     fileMenu->Append(DEVICE_CREATE_SQUARE_WAVE, "Create S&quare Wave...");
+    fileMenu->Append(DEVICE_CREATE_WHITE_NOISE, "Create &White Noise");
     fileMenu->AppendSeparator();
     fileMenu->Append(DEVICE_CLOSE,              "&Close Device");
 
@@ -307,6 +309,17 @@ public:
     }
   }
 
+  void OnDeviceCreateWhiteNoise() {
+    OutputStream* stream = m_device->openStream(CreateWhiteNoise());
+    if (!stream) {
+      wxMessageBox(
+        "Could not open output stream",
+        "Create White Noise", wxOK | wxCENTRE, this);
+    } else {
+      new StreamFrame(this, "White Noise", stream);
+    }
+  }
+
   void OnDeviceClose() {
     Close();
   }
@@ -324,6 +337,7 @@ BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
   EVT_MENU(DEVICE_OPEN_SOUND,         DeviceFrame::OnDeviceOpenSound)
   EVT_MENU(DEVICE_CREATE_TONE,        DeviceFrame::OnDeviceCreateTone)
   EVT_MENU(DEVICE_CREATE_SQUARE_WAVE, DeviceFrame::OnDeviceCreateSquareWave)
+  EVT_MENU(DEVICE_CREATE_WHITE_NOISE, DeviceFrame::OnDeviceCreateWhiteNoise)
   EVT_MENU(DEVICE_CLOSE,              DeviceFrame::OnDeviceClose)
 END_EVENT_TABLE()
 

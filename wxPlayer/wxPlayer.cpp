@@ -5,7 +5,7 @@
 #include <audiere.h>
 
 
-static ADR_CONTEXT g_context;
+static audiere::Context* g_context;
 
 
 class wxPlayerFrame : public wxFrame
@@ -35,7 +35,7 @@ private:
   wxButton* m_repeat;
   wxSlider* m_volume;
 
-  std::vector<ADR_STREAM> m_streams;
+  std::vector<audiere::Stream*> m_streams;
 
   DECLARE_EVENT_TABLE()
 };
@@ -91,8 +91,9 @@ wxPlayerFrame::OnClose(wxCloseEvent& event)
 {
   // destroy all open streams
   for (int i = 0; i < m_streams.size(); i++) {
-    AdrCloseStream(m_streams[i]);
+    delete m_streams[i];
   }
+  m_streams.clear();
 
   Destroy();
 }
@@ -135,7 +136,7 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
     return;
   }
 
-  ADR_STREAM stream = AdrOpenStream(g_context, result.c_str());
+  audiere::Stream* stream = g_context->openStream(result.c_str());
   if (!stream) {
     wxMessageBox("Could not open stream");
   } else {
@@ -151,7 +152,7 @@ wxPlayerFrame::OnDump(wxCommandEvent& event)
   int sel = m_songs->GetSelection();
   if (sel >= 0 && sel < m_songs->Number()) {
 
-    AdrCloseStream(m_streams[sel]);
+    delete m_streams[sel];
     m_streams.erase(m_streams.begin() + sel);
     m_songs->Delete(sel);
 
@@ -165,7 +166,7 @@ wxPlayerFrame::OnPlay(wxCommandEvent& event)
   int sel = m_songs->GetSelection();
   if (sel >= 0 && sel < m_songs->Number()) {
 
-    AdrPlayStream(m_streams[sel]);
+    m_streams[sel]->play();
 
   }
 }
@@ -177,7 +178,7 @@ wxPlayerFrame::OnPause(wxCommandEvent& event)
   int sel = m_songs->GetSelection();
   if (sel >= 0 && sel < m_songs->Number()) {
 
-    AdrPauseStream(m_streams[sel]);
+    m_streams[sel]->pause();
 
   }
 }
@@ -189,7 +190,7 @@ wxPlayerFrame::OnReset(wxCommandEvent& event)
   int sel = m_songs->GetSelection();
   if (sel >= 0 && sel < m_songs->Number()) {
 
-    AdrResetStream(m_streams[sel]);
+    m_streams[sel]->reset();
 
   }
 }
@@ -201,7 +202,7 @@ wxPlayerFrame::OnRepeat(wxCommandEvent& event)
   int sel = m_songs->GetSelection();
   if (sel >= 0 && sel < m_songs->Number()) {
 
-    AdrSetStreamRepeat(m_streams[sel], !AdrGetStreamRepeat(m_streams[sel]));
+    m_streams[sel]->setRepeat(!m_streams[sel]->getRepeat());
 
   }
 }
@@ -212,7 +213,7 @@ wxPlayerFrame::OnChangeVolume(wxScrollEvent& event)
 {
   int volume = event.GetPosition();
   for (int i = 0; i < m_songs->Number(); i++) {
-    AdrSetStreamVolume(m_streams[i], volume);
+    m_streams[i]->setVolume(volume);
   }
 }
 
@@ -224,11 +225,7 @@ class wxPlayer : public wxApp
 {
 public:
   bool OnInit() {
-    g_context = AdrCreateContext(
-      "",
-      "",
-      NULL, NULL, NULL, NULL, NULL, NULL
-    );
+    g_context = audiere::CreateContext(0);
     if (!g_context) {
       wxMessageBox("Could not create Audiere context");
       return false;
@@ -241,9 +238,7 @@ public:
   }
 
   int OnExit() {
-    if (g_context) {
-      AdrDestroyContext(g_context);
-    }
+    delete g_context;
     return 0;
   }
 };

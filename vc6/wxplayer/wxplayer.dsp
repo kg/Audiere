@@ -96,6 +96,10 @@ LINK32=link.exe
 
 SOURCE=..\..\examples\wxPlayer\wxPlayer.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wxPlayer.rc
+# End Source File
 # End Group
 # End Target
 # End Project

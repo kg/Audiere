@@ -1,209 +1,301 @@
-// We need to include windows.h to use Windows common controls without
-// crashing?  What the heck...
-//
-// part #2: something to do with wxSlider's vtable generation.  VS.NET crashes
-// as well.  Stupid wxWindows...  :P
-#ifdef WIN32
+// for some reason, we have to include windows.h for this to run
+#ifdef _MSC_VER
 #include <windows.h>
 #endif
 
-#include <vector>
+
 #include <wx/wx.h>
 #include <audiere.h>
 using namespace audiere;
-using namespace std;
 
 
-static RefPtr<AudioDevice> g_device;
+bool TryDevice(const char* name);
 
 
-class wxPlayerFrame : public wxFrame
-{
+enum {
+  DEVICE_NEW_DEVICE,
+  DEVICE_OPEN_STREAM,
+  DEVICE_OPEN_SOUND,
+  DEVICE_CREATE_TONE,
+  DEVICE_CLOSE,
+
+  STREAM_PLAY,
+  STREAM_STOP,
+  STREAM_RESET,
+  STREAM_REPEAT,
+  STREAM_VOLUME,
+  STREAM_PAN,
+  STREAM_POS,
+  STREAM_UPDATE,
+};
+
+
+class StreamFrame : public wxMDIChildFrame {
 public:
-  wxPlayerFrame();
+  StreamFrame(wxMDIParentFrame* parent, wxString& title, OutputStream* stream)
+  : wxMDIChildFrame(parent, -1, title)
+  {
+    m_stream = stream;
 
-  void OnClose(wxCloseEvent& event);
-  void OnSize(wxSizeEvent& event);
-  
-  void OnLoad(wxCommandEvent& event);
-  void OnDump(wxCommandEvent& event);
-  void OnPlay(wxCommandEvent& event);
-  void OnPause(wxCommandEvent& event);
-  void OnReset(wxCommandEvent& event);
-  void OnRepeat(wxCommandEvent& event);
+    int slider_max = (m_stream->isSeekable() ? m_stream->getLength() : 1);
+    
+    m_repeating = new wxCheckBox(this, STREAM_REPEAT, "Repeating");
+    m_volume_pan_label = new wxStaticText(this, -1, "Volume - Pan");
+    m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
+    m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
+    m_length_pos_label = new wxStaticText(this, -1, "Length - Pos");
+    m_pos    = new wxSlider(this, STREAM_POS,    0, 0, slider_max);
 
-  void OnChangeVolume(wxScrollEvent& event);
-  void OnChangePan(wxScrollEvent& event);
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(
+      new wxButton(this, STREAM_PLAY, "Play"),
+      1, wxEXPAND | wxALL, 4);
+    sizer->Add(
+      new wxButton(this, STREAM_STOP, "Stop"),
+      1, wxEXPAND | wxALL, 4);
+    sizer->Add(
+      new wxButton(this, STREAM_RESET, "Reset"),
+      1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_repeating, 1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_volume_pan_label, 1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_volume, 1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_pan, 1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_length_pos_label, 1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_pos, 1, wxEXPAND | wxALL, 4);
+
+    if (!m_stream->isSeekable()) {
+      m_pos->Enable(false);
+    }
+
+    UpdateVolumePanLabel();
+    UpdateLengthPosLabel();
+
+    SetAutoLayout(true);
+    SetSizer(sizer);
+
+    sizer->Fit(this);
+    sizer->SetSizeHints(this);
+
+    // create a timer to update the current position
+    wxTimer* timer = new wxTimer(this, STREAM_UPDATE);
+    timer->Start(200);
+  }
+
+  void OnPlay() {
+    m_stream->play();
+  }
+
+  void OnStop() {
+    m_stream->stop();
+  }
+
+  void OnReset() {
+    m_stream->reset();
+  }
+
+  void OnRepeat() {
+    m_stream->setRepeat(m_repeating->GetValue());
+  }
+
+  void OnChangeVolume() {
+    m_stream->setVolume(m_volume->GetValue() / 100.0f);
+    UpdateVolumePanLabel();
+  }
+
+  void OnChangePan() {
+    m_stream->setPan(m_pan->GetValue() / 100.0f);
+    UpdateVolumePanLabel();
+  }
+
+  void OnChangePos() {
+    m_stream->setPosition(m_pos->GetValue());
+  }
+
+  void OnUpdatePosition() {
+    if (m_stream->isSeekable()) {
+      m_pos->SetValue(m_stream->getPosition());
+    }
+    UpdateLengthPosLabel();
+  }
+
+  void UpdateVolumePanLabel() {
+    wxString label;
+    label.Printf(
+      "Volume: %1.2f   Pan: %1.2f",
+      m_volume->GetValue() / 100.0f,
+      m_pan->GetValue() / 100.0f);
+    m_volume_pan_label->SetLabel(label);
+  }
+
+  void UpdateLengthPosLabel() {
+    if (m_stream->isSeekable()) {
+      wxString label;
+      label.Printf(
+        "Length: %d   Pos: %d",
+        m_stream->getLength(),
+        m_stream->getPosition());
+      m_length_pos_label->SetLabel(label);
+    } else {
+      m_length_pos_label->SetLabel("Unseekable Stream");
+    }
+  }
 
 private:
-  wxListBox* m_songs;
-  wxButton* m_load;
-  wxButton* m_dump;
-  wxButton* m_play;
-  wxButton* m_pause;
-  wxButton* m_reset;
-  wxButton* m_repeat;
-  wxSlider* m_volume;
-  wxSlider* m_pan;
+  RefPtr<OutputStream> m_stream;
 
-  vector<RefPtr<OutputStream> > m_streams;
+  wxCheckBox*   m_repeating;
+  wxStaticText* m_volume_pan_label;
+  wxSlider*     m_volume;
+  wxSlider*     m_pan;
+  wxStaticText* m_length_pos_label;
+  wxSlider*     m_pos;
 
   DECLARE_EVENT_TABLE()
 };
 
 
-enum {
-  event_Begin = 100,
+BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
+  EVT_BUTTON(STREAM_PLAY,  OnPlay)
+  EVT_BUTTON(STREAM_STOP,  OnStop)
+  EVT_BUTTON(STREAM_RESET, OnReset)
 
-  event_Load,
-  event_Dump,
-  event_Play,
-  event_Pause,
-  event_Reset,
-  event_Repeat,
+  EVT_CHECKBOX(STREAM_REPEAT, OnRepeat)
 
-  event_Volume,
-  event_Pan,
-};
+  EVT_COMMAND_SCROLL(STREAM_VOLUME, OnChangeVolume)
+  EVT_COMMAND_SCROLL(STREAM_PAN,    OnChangePan)
+  EVT_COMMAND_SCROLL(STREAM_POS,    OnChangePos)
 
-
-BEGIN_EVENT_TABLE(wxPlayerFrame, wxFrame)
-
-  EVT_CLOSE(wxPlayerFrame::OnClose)
-  EVT_SIZE(wxPlayerFrame::OnSize)
-
-  EVT_BUTTON(event_Load,   wxPlayerFrame::OnLoad)
-  EVT_BUTTON(event_Dump,   wxPlayerFrame::OnDump)
-  EVT_BUTTON(event_Play,   wxPlayerFrame::OnPlay)
-  EVT_BUTTON(event_Pause,  wxPlayerFrame::OnPause)
-  EVT_BUTTON(event_Reset,  wxPlayerFrame::OnReset)
-  EVT_BUTTON(event_Repeat, wxPlayerFrame::OnRepeat)
-
-  EVT_COMMAND_SCROLL(event_Volume, wxPlayerFrame::OnChangeVolume)
-  EVT_COMMAND_SCROLL(event_Pan,    wxPlayerFrame::OnChangePan)
-  
+  EVT_TIMER(STREAM_UPDATE, OnUpdatePosition)
 END_EVENT_TABLE()
 
 
-wxPlayerFrame::wxPlayerFrame()
-: wxFrame(NULL, -1, "wxPlayer", wxDefaultPosition, wxSize(400, 300))
-{
-  m_songs  = new wxListBox(this, -1, wxDefaultPosition, wxSize(300, 200));
-  m_load   = new wxButton(this, event_Load,   "load",   wxDefaultPosition);
-  m_dump   = new wxButton(this, event_Dump,   "dump",   wxDefaultPosition);
-  m_play   = new wxButton(this, event_Play,   "play",   wxDefaultPosition);
-  m_pause  = new wxButton(this, event_Pause,  "pause",  wxDefaultPosition);
-  m_reset  = new wxButton(this, event_Reset,  "reset",  wxDefaultPosition);
-  m_repeat = new wxButton(this, event_Repeat, "repeat", wxDefaultPosition);
-  m_volume = new wxSlider(this, event_Volume, 1000, 0, 1000);
-  m_pan    = new wxSlider(this, event_Pan, 0, -1000, 1000);
-}
+class DeviceFrame : public wxMDIParentFrame {
+public:
+  DeviceFrame(AudioDevice* device, const wxString& device_name)
+  : wxMDIParentFrame(NULL, -1, "Device Window - " + device_name)
+  {
+    m_device = device;
 
+    wxMenu* fileMenu = new wxMenu();
+    fileMenu->Append(DEVICE_NEW_DEVICE,  "&New Device...");
+    fileMenu->AppendSeparator();
+    fileMenu->Append(DEVICE_OPEN_STREAM, "&Open Stream...");
+    fileMenu->Append(DEVICE_OPEN_SOUND,  "Open &Sound...");
+    fileMenu->Append(DEVICE_CREATE_TONE, "Create &Tone...");
+    fileMenu->AppendSeparator();
+    fileMenu->Append(DEVICE_CLOSE,       "&Close Device");
 
-void
-wxPlayerFrame::OnClose(wxCloseEvent& event)
-{
-  m_streams.clear();
-
-  Destroy();
-}
-
-
-void
-wxPlayerFrame::OnSize(wxSizeEvent& event)
-{
-  static const int button_width = 80;
-  static const int button_height = 30;
-
-  wxSize size = event.GetSize();
-  int button_x = size.GetWidth() - button_width;
-
-  m_songs->SetSize(0, 0, button_x, size.GetHeight());
-
-  // move the controls
-  wxControl* controls[] = {
-    m_load, m_dump, m_play, m_pause, m_reset, m_repeat, m_volume, m_pan
-  };
-  for (int i = 0; i < sizeof(controls) / sizeof(controls[0]); i++) {
-    controls[i]->SetSize(button_x, button_height * i, button_width, button_height);
-  }
-}
-
-
-void
-wxPlayerFrame::OnLoad(wxCommandEvent& event)
-{
-  const wxString result = wxFileSelector(
-    "Select a sound file",
-    "",
-    "",
-    "",
-    "Sound Files (*.wav,*.ogg,*.mod,*.it,*.xm,*.s3m)|*.wav;*.ogg;*.mod;*.it;*.xm;*.s3m",
-    wxOPEN,
-    this);
-  if (!result.Length()) {
-    return;
+    wxMenuBar* menuBar = new wxMenuBar();
+    menuBar->Append(fileMenu, "&Device");
+    SetMenuBar(menuBar);
   }
 
-  OutputStream* sound = OpenSound(g_device.get(), result.c_str());
-  if (!sound) {
-    wxMessageBox("Could not open stream");
-  } else {
-    m_songs->Append(result);
-    m_streams.push_back(sound);
+  void OnDeviceNewDevice() {
+    wxString name = wxGetTextFromUser(
+      "New Device",
+      "Enter Device Name",
+      "autodetect",
+      this);
+    if (!name.empty()) {
+      if (!TryDevice(name)) {
+        wxMessageBox(
+          "Could not open audio device: " + name,
+          "New Device", wxOK | wxCENTRE, this);
+      }
+    }
   }
-}
 
-
-void
-wxPlayerFrame::OnDump(wxCommandEvent& event)
-{
-  int sel = m_songs->GetSelection();
-  if (sel >= 0 && sel < m_songs->Number()) {
-
-    m_streams.erase(m_streams.begin() + sel);
-    m_songs->Delete(sel);
-
+  wxString GetSoundFile() {
+    return wxFileSelector(
+      "Select a sound file", "", "", "",
+      "Sound Files (*.wav,*.ogg,*.mod,*.it,*.xm,*.s3m)|"  \
+      "*.wav;*.ogg;*.mod;*.it;*.xm;*.s3m",
+      wxOPEN, this);
   }
-}
 
+  void OnDeviceOpenStream() {
+    wxString filename(GetSoundFile());
+    if (filename.empty()) {
+      return;
+    }
 
-void
-wxPlayerFrame::OnPlay(wxCommandEvent& event)
-{
-  int sel = m_songs->GetSelection();
-  if (sel >= 0 && sel < m_songs->Number()) {
+    OutputStream* stream = m_device->openStream(OpenSampleSource(filename));
+    if (!stream) {
+      wxMessageBox(
+        "Could not open stream: " + filename,
+        "Open Stream", wxOK | wxCENTRE, this);
+      return;
+    }
 
-    m_streams[sel]->play();
+    // get the basename of the path for the window title
+    wxString basename = wxFileNameFromPath(filename);;
 
+    wxString title;
+    title.sprintf("Stream: %s", basename.c_str());
+    new StreamFrame(this, title, stream);
   }
-}
 
+  void OnDeviceOpenSound() {
+    wxString filename(GetSoundFile());
+    if (filename.empty()) {
+      return;
+    }
 
-void
-wxPlayerFrame::OnPause(wxCommandEvent& event)
-{
-  int sel = m_songs->GetSelection();
-  if (sel >= 0 && sel < m_songs->Number()) {
+    OutputStream* stream = OpenSound(m_device.get(), filename);
+    if (!stream) {
+      wxMessageBox(
+        "Could not open sound: " + filename,
+        "Open Stream", wxOK | wxCENTRE, this);
+      return;
+    }
 
-    m_streams[sel]->stop();
+    // get the basename of the path for the window title
+    wxString basename = wxFileNameFromPath(filename);;
 
+    wxString title;
+    title.sprintf("Sound: %s", basename.c_str());
+    new StreamFrame(this, title, stream);
   }
-}
 
-
-void
-wxPlayerFrame::OnReset(wxCommandEvent& event)
-{
-  int sel = m_songs->GetSelection();
-  if (sel >= 0 && sel < m_songs->Number()) {
-
-    m_streams[sel]->reset();
-
+  void OnDeviceCreateTone() {
+    int frequency = wxGetNumberFromUser(
+      "Value must be between 1 and 30000.", "Enter frequency in Hz",
+      "Create Tone", 256, 1, 30000, this);
+    if (frequency != -1) {
+      OutputStream* stream = m_device->openStream(CreateTone(frequency));
+      if (!stream) {
+        wxMessageBox(
+          "Could not open output stream",
+          "Create Tone", wxOK | wxCENTRE, this);
+      } else {
+        wxString title;
+        title.sprintf("Tone: %d Hz", frequency);
+        new StreamFrame(this, title, stream);
+      }
+    }
   }
-}
+
+  void OnDeviceClose() {
+    Close();
+  }
+
+private:
+  RefPtr<AudioDevice> m_device;
+
+  DECLARE_EVENT_TABLE()
+};
 
 
+BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
+  EVT_MENU(DEVICE_NEW_DEVICE,  OnDeviceNewDevice)
+  EVT_MENU(DEVICE_OPEN_STREAM, OnDeviceOpenStream)
+  EVT_MENU(DEVICE_OPEN_SOUND,  OnDeviceOpenSound)
+  EVT_MENU(DEVICE_CREATE_TONE, OnDeviceCreateTone)
+  EVT_MENU(DEVICE_CLOSE,       OnDeviceClose)
+END_EVENT_TABLE()
+
+
+/*
 void
 wxPlayerFrame::OnRepeat(wxCommandEvent& event)
 {
@@ -234,25 +326,31 @@ wxPlayerFrame::OnChangePan(wxScrollEvent& event)
     m_streams[i]->setPan(pan / 1000.0f);
   }
 }
-
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
+
+
+bool TryDevice(const char* name) {
+  if (RefPtr<AudioDevice> device = audiere::OpenDevice(name)) {
+    DeviceFrame* frame = new DeviceFrame(device.get(), name);
+    frame->Show(true);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 
 class wxPlayer : public wxApp
 {
 public:
   bool OnInit() {
-    g_device = audiere::OpenDevice();
-    if (!g_device) {
-      wxMessageBox("Could not open output device");
-      return false;
+    bool result = (TryDevice("autodetect") || TryDevice("null"));
+    if (!result) {
+      wxMessageBox("Could not open output device", "wxPlayer");
     }
-
-    wxPlayerFrame* frame = new wxPlayerFrame;
-    frame->Show(true);
-    SetTopWindow(frame);
-    return true;
+    return result;
   }
 };
 

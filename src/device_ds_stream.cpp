@@ -189,7 +189,11 @@ namespace audiere {
   int
   DSOutputStream::getPosition() {
     SYNCHRONIZED(m_device.get());
-    return m_source->getPosition() - (m_total_read - m_total_written);
+    int pos = m_source->getPosition() - (m_total_read - m_total_written);
+    if (pos < 0) {
+      pos += m_source->getLength();
+    }
+    return pos;
   }
 
 

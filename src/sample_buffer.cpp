@@ -119,7 +119,7 @@ namespace audiere {
   };
 
 
-  ADR_EXPORT(SampleBuffer*, AdrCreateSampleBuffer)(
+  ADR_EXPORT(SampleBuffer*) AdrCreateSampleBuffer(
     void* samples,
     int frame_count,
     int channel_count,
@@ -131,7 +131,7 @@ namespace audiere {
       channel_count, sample_rate, sample_format);
   }
 
-  ADR_EXPORT(SampleBuffer*, AdrCreateSampleBufferFromSource)(
+  ADR_EXPORT(SampleBuffer*) AdrCreateSampleBufferFromSource(
     SampleSource* source)
   {
     // if there is no source or it isn't seekable, we can't make a

@@ -50,7 +50,7 @@ namespace audiere {
   };
 
 
-  ADR_EXPORT(SampleSource*, AdrCreateSquareWave)(double frequency) {
+  ADR_EXPORT(SampleSource*) AdrCreateSquareWave(double frequency) {
     return new SquareWave(frequency);
   }
 

@@ -32,7 +32,7 @@ namespace audiere {
   }
 
 
-  ADR_EXPORT(const char*, AdrGetSupportedFileFormats)() {
+  ADR_EXPORT(const char*) AdrGetSupportedFileFormats() {
     return
 #ifndef NO_MP3
       "MP3 Files:mp3"  ";"
@@ -136,7 +136,7 @@ namespace audiere {
   }
 
 
-  ADR_EXPORT(SampleSource*, AdrOpenSampleSource)(const char* filename) {
+  ADR_EXPORT(SampleSource*) AdrOpenSampleSource(const char* filename) {
     if (!filename) {
       return 0;
     }
@@ -148,7 +148,7 @@ namespace audiere {
   }
 
 
-  ADR_EXPORT(SampleSource*, AdrOpenSampleSourceFromFile)(File* file) {
+  ADR_EXPORT(SampleSource*) AdrOpenSampleSourceFromFile(File* file) {
     if (!file) {
       return 0;
     }

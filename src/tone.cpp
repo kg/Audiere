@@ -58,7 +58,7 @@ namespace audiere {
   };
 
 
-  ADR_EXPORT(SampleSource*, AdrCreateTone)(double frequency) {
+  ADR_EXPORT(SampleSource*) AdrCreateTone(double frequency) {
     return new SineWave(frequency);
   }
 

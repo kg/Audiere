@@ -137,7 +137,7 @@ namespace audiere {
   };
 
 
-  ADR_EXPORT(SoundEffect*, AdrOpenSoundEffect)(
+  ADR_EXPORT(SoundEffect*) AdrOpenSoundEffect(
     AudioDevice* device,
     SampleSource* source,
     SoundEffectType type)

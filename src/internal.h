@@ -5,7 +5,7 @@
 #include "audiere.h"
 
 
-#define ADR_EXPORT(ret, name)  ADR_FUNCTION(ret, name)
+#define ADR_EXPORT(ret)  ADR_FUNCTION(ret)
 
 
 #endif

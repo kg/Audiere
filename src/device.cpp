@@ -40,7 +40,7 @@
 namespace audiere {
 
 
-  ADR_EXPORT(const char*, AdrGetSupportedAudioDevices)() {
+  ADR_EXPORT(const char*) AdrGetSupportedAudioDevices() {
     return
 #ifdef _MSC_VER
       "directsound:DirectSound (high-performance)"  ";"
@@ -233,7 +233,7 @@ namespace audiere {
   };
 
 
-  ADR_EXPORT(AudioDevice*, AdrOpenDevice)(
+  ADR_EXPORT(AudioDevice*) AdrOpenDevice(
     const char* name,
     const char* parameters)
   {

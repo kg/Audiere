@@ -50,7 +50,7 @@
 
 
 
-#define ADR_FUNCTION(ret, name) extern "C" ADR_DECL ret ADR_CALL name
+#define ADR_FUNCTION(ret) extern "C" ADR_DECL ret ADR_CALL
 
 
 namespace audiere {
@@ -617,7 +617,7 @@ namespace audiere {
 
     // these are extern "C" so we don't mangle the names
 
-    ADR_FUNCTION(const char*, AdrGetVersion)();
+    ADR_FUNCTION(const char*) AdrGetVersion();
 
     /**
      * Returns a formatted string that lists the file formats that Audiere
@@ -627,7 +627,7 @@ namespace audiere {
      *
      * description1:ext1,ext2,ext3;description2:ext1,ext2,ext3
      */
-    ADR_FUNCTION(const char*, AdrGetSupportedFileFormats)();
+    ADR_FUNCTION(const char*) AdrGetSupportedFileFormats();
 
     /**
      * Returns a formatted string that lists the audio devices Audiere
@@ -637,36 +637,36 @@ namespace audiere {
      *
      * name1:description1;name2:description2;...
      */
-    ADR_FUNCTION(const char*, AdrGetSupportedAudioDevices)();
+    ADR_FUNCTION(const char*) AdrGetSupportedAudioDevices();
 
-    ADR_FUNCTION(int, AdrGetSampleSize)(SampleFormat format);
+    ADR_FUNCTION(int) AdrGetSampleSize(SampleFormat format);
 
-    ADR_FUNCTION(AudioDevice*, AdrOpenDevice)(
+    ADR_FUNCTION(AudioDevice*) AdrOpenDevice(
       const char* name,
       const char* parameters);
 
-    ADR_FUNCTION(SampleSource*, AdrOpenSampleSource)(const char* filename);
-    ADR_FUNCTION(SampleSource*, AdrOpenSampleSourceFromFile)(File* file);
-    ADR_FUNCTION(SampleSource*, AdrCreateTone)(double frequency);
-    ADR_FUNCTION(SampleSource*, AdrCreateSquareWave)(double frequency);
-    ADR_FUNCTION(SampleSource*, AdrCreateWhiteNoise)();
-    ADR_FUNCTION(SampleSource*, AdrCreatePinkNoise)();
+    ADR_FUNCTION(SampleSource*) AdrOpenSampleSource(const char* filename);
+    ADR_FUNCTION(SampleSource*) AdrOpenSampleSourceFromFile(File* file);
+    ADR_FUNCTION(SampleSource*) AdrCreateTone(double frequency);
+    ADR_FUNCTION(SampleSource*) AdrCreateSquareWave(double frequency);
+    ADR_FUNCTION(SampleSource*) AdrCreateWhiteNoise();
+    ADR_FUNCTION(SampleSource*) AdrCreatePinkNoise();
 
-    ADR_FUNCTION(OutputStream*, AdrOpenSound)(
+    ADR_FUNCTION(OutputStream*) AdrOpenSound(
       AudioDevice* device,
       SampleSource* source,
       bool streaming);
 
-    ADR_FUNCTION(SampleBuffer*, AdrCreateSampleBuffer)(
+    ADR_FUNCTION(SampleBuffer*) AdrCreateSampleBuffer(
       void* samples,
       int frame_count,
       int channel_count,
       int sample_rate,
       SampleFormat sample_format);
-    ADR_FUNCTION(SampleBuffer*, AdrCreateSampleBufferFromSource)(
+    ADR_FUNCTION(SampleBuffer*) AdrCreateSampleBufferFromSource(
       SampleSource* source);
 
-    ADR_FUNCTION(SoundEffect*, AdrOpenSoundEffect)(
+    ADR_FUNCTION(SoundEffect*) AdrOpenSoundEffect(
       AudioDevice* device,
       SampleSource* source,
       SoundEffectType type);

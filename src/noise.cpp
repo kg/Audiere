@@ -30,7 +30,7 @@ namespace audiere {
     }
   };
 
-  ADR_EXPORT(SampleSource*, AdrCreateWhiteNoise)() {
+  ADR_EXPORT(SampleSource*) AdrCreateWhiteNoise() {
     return new WhiteNoise();
   }
 
@@ -131,7 +131,7 @@ namespace audiere {
     long m_seed;
   };
 
-  ADR_EXPORT(SampleSource*, AdrCreatePinkNoise)() {
+  ADR_EXPORT(SampleSource*) AdrCreatePinkNoise() {
     return new PinkNoise();
   }
 

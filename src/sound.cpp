@@ -6,7 +6,7 @@
 
 namespace audiere {
 
-  ADR_EXPORT(OutputStream*, AdrOpenSound)(
+  ADR_EXPORT(OutputStream*) AdrOpenSound(
     AudioDevice* device,
     SampleSource* source_raw,
     bool streaming)

@@ -79,7 +79,7 @@ namespace audiere {
   }
 
 
-  ADR_EXPORT(int, AdrGetSampleSize)(SampleFormat format) {
+  ADR_EXPORT(int) AdrGetSampleSize(SampleFormat format) {
     switch (format) {
       case SF_U8:  return 1;
       case SF_S16: return 2;

@@ -77,8 +77,13 @@ public:
     sizer->SetSizeHints(this);
 
     // create a timer to update the current position
-    wxTimer* timer = new wxTimer(this, STREAM_UPDATE);
-    timer->Start(200);
+    m_timer = new wxTimer(this, STREAM_UPDATE);
+    m_timer->Start(200);
+  }
+
+  ~StreamFrame() {
+    m_timer->Stop();
+    delete m_timer;
   }
 
   void OnPlay() {
@@ -142,6 +147,8 @@ public:
 
 private:
   RefPtr<OutputStream> m_stream;
+
+  wxTimer* m_timer;
 
   wxCheckBox*   m_repeating;
   wxStaticText* m_volume_pan_label;

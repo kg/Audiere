@@ -112,6 +112,9 @@ namespace audiere {
   DSOutputStream::setRepeat(bool repeat) {
     SYNCHRONIZED(this);
     m_source->setRepeat(repeat);
+    if (!isPlaying()) {
+      reset();
+    }
   }
 
 

@@ -35,6 +35,9 @@ namespace audiere {
     sample_t tmp_l[BUFFER_SIZE];
     sample_t tmp_r[BUFFER_SIZE];
     float delta = m_shift * m_native_sample_rate / m_rate;
+    if (m_shift == 0) {  // If shift is zero, which shouldn't be the case, use a shift of 1.
+      delta = float(m_native_sample_rate / m_rate);
+    }
     while (left > 0) {
       int transfer = std::min(left, int(BUFFER_SIZE));
       memset(tmp_l, 0, transfer * sizeof(sample_t));

@@ -2,7 +2,6 @@ noinst_LTLIBRARIES = libmpegsound.la
 
 libmpegsound_la_SOURCES = \
 	bitwindow.cpp \
-	fileinput.cpp \
 	filter.cpp \
 	filter_2.cpp \
 	huffmantable.cpp \
@@ -12,6 +11,4 @@ libmpegsound_la_SOURCES = \
 	mpegsound.h \
 	mpegsound_locals.h \
 	mpegtable.cpp \
-	mpegtoraw.cpp \
-	soundinputstream.cpp \
-	soundplayer.cpp
+	mpegtoraw.cpp

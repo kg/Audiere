@@ -4,6 +4,8 @@ SRC = \
 	Commands.h \
 	DeviceFrame.cpp \
 	DeviceFrame.h \
+	EditLoopPointsDialog.cpp \
+	EditLoopPointsDialog.h \
 	NewDeviceDialog.cpp \
 	NewDeviceDialog.h \
 	SoundEffectFrame.cpp \

@@ -1,3 +1,8 @@
+#ifdef _MSC_VER
+#pragma warning(disable : 4786)
+#endif
+
+
 #include <audiere.h>
 #include "wxPlayer.h"
 #include "DeviceFrame.h"

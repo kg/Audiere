@@ -1,3 +1,7 @@
+2003.06.29
+
+  Added support for custom loop points via the LoopPointSource interface.
+
 2003.06.21
 
   SoundEffect objects in SINGLE mode no longer stream from the sample

@@ -1,3 +1,8 @@
+#ifdef _MSC_VER
+#pragma warning(disable : 4786)
+#endif
+
+
 #include "NewDeviceDialog.h"
 
 
@@ -38,7 +43,7 @@ NewDeviceDialog::NewDeviceDialog(wxWindow* parent)
 
   sizer->Add(buttonSizer, 0, wxALIGN_CENTER | wxALL, 4);
 
-  SetAutoLayout(TRUE);
+  SetAutoLayout(true);
   SetSizer(sizer);
 
   m_device->SetFocus();

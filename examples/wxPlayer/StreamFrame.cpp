@@ -1,4 +1,10 @@
+#ifdef _MSC_VER
+#pragma warning(disable : 4786)
+#endif
+
+
 #include "Commands.h"
+#include "EditLoopPointsDialog.h"
 #include "StreamFrame.h"
 
 
@@ -6,6 +12,7 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
   EVT_BUTTON(STREAM_PLAY,  StreamFrame::OnPlay)
   EVT_BUTTON(STREAM_STOP,  StreamFrame::OnStop)
   EVT_BUTTON(STREAM_RESET, StreamFrame::OnReset)
+  EVT_BUTTON(STREAM_EDIT_LOOP_POINTS, StreamFrame::OnEditLoopPoints)
 
   EVT_CHECKBOX(STREAM_REPEAT, StreamFrame::OnRepeat)
 
@@ -18,10 +25,15 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
 END_EVENT_TABLE()
 
 
-StreamFrame::StreamFrame(wxMDIParentFrame* parent, const wxString& title, audiere::OutputStream* stream)
+StreamFrame::StreamFrame(
+  wxMDIParentFrame* parent,
+  const wxString& title,
+  audiere::OutputStream* stream,
+  audiere::LoopPointSource* loop_source)
 : wxMDIChildFrame(parent, -1, title)
 {
   m_stream = stream;
+  m_loop_source = loop_source;
   m_stream_is_seekable = stream->isSeekable();
   m_stream_length = stream->getLength();
 
@@ -53,6 +65,13 @@ StreamFrame::StreamFrame(wxMDIParentFrame* parent, const wxString& title, audier
   sizer->Add(m_length_pos_label, 1, wxEXPAND | wxALL, 4);
   sizer->Add(m_pos,              1, wxEXPAND | wxALL, 4);
 
+  wxButton* editButton = new wxButton(
+    this, STREAM_EDIT_LOOP_POINTS, "Edit Loop Points...");
+  sizer->Add(editButton, 1, wxEXPAND | wxALL, 4);
+  if (!loop_source) {
+    editButton->Enable(false);
+  }
+
   if (!m_stream_is_seekable) {
     m_pos->Enable(false);
   }
@@ -68,7 +87,7 @@ StreamFrame::StreamFrame(wxMDIParentFrame* parent, const wxString& title, audier
 
   // create a timer to update the current position
   m_timer = new wxTimer(this, STREAM_UPDATE);
-  m_timer->Start(500);
+  m_timer->Start(100);
 }
 
 
@@ -90,6 +109,11 @@ void StreamFrame::OnStop() {
 
 void StreamFrame::OnReset() {
   m_stream->reset();
+}
+
+
+void StreamFrame::OnEditLoopPoints() {
+  EditLoopPointsDialog(this, m_loop_source.get()).ShowModal();
 }
 
 

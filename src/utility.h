@@ -49,6 +49,13 @@
 
 namespace audiere {
 
+
+  template<typename T>
+  T clamp(T min, T x, T max) {
+    return std::max(std::min(x, max), min);
+  }
+
+
   class ParameterList {
   public:
     ParameterList(const char* parameters);
@@ -61,6 +68,18 @@ namespace audiere {
   };
 
   int strcmp_case(const char* a, const char* b);
+
+
+  inline int GetFrameSize(SampleSource* source) {
+    int channel_count, sample_rate;
+    SampleFormat sample_format;
+    source->getFormat(channel_count, sample_rate, sample_format);
+    return GetSampleSize(sample_format) * channel_count;
+  }
+  
+  inline int GetFrameSize(const SampleSourcePtr& source) {
+    return GetFrameSize(source.get());
+  }
 
 
   inline u16 read16_le(const u8* b) {

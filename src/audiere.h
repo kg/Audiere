@@ -327,13 +327,81 @@ namespace audiere {
     /**
      * Sets whether the sample source should repeat or not.  Note that not
      * all sample sources repeat by starting again at the beginning of the
-     * sound.  For example
+     * sound.  For example MOD files can contain embedded loop points.
      *
      * @param repeat  true if the source should repeat, false otherwise
      */
     virtual void ADR_CALL setRepeat(bool repeat) = 0;
   };
   typedef RefPtr<SampleSource> SampleSourcePtr;
+
+
+  /**
+   * LoopPointSource is a wrapper around another SampleSource, providing
+   * custom loop behavior.  LoopPointSource maintains a set of links
+   * within the sample stream and whenever the location of one of the links
+   * (i.e. a loop point) is reached, the stream jumps to that link's target.
+   * Each loop point maintains a count.  Every time a loop point comes into
+   * effect, the count is decremented.  Once it reaches zero, that loop point
+   * is temporarily disabled.  If a count is not a positive value, it
+   * cannot be disabled.  Calling reset() resets all counts to their initial
+   * values.
+   *
+   * Loop points only take effect when repeating has been enabled via the
+   * setRepeat() method.
+   *
+   * Loop points are stored in sorted order by their location.  Each one
+   * has an index based on its location within the list.  A loop point's
+   * index will change if another is added before it.
+   *
+   * There is always one implicit loop point after the last sample that
+   * points back to the first.  That way, this class's default looping
+   * behavior is the same as a standard SampleSource.  This loop point
+   * does not show up in the list.
+   */
+  class LoopPointSource : public SampleSource {
+  protected:
+    ~LoopPointSource() { }
+
+  public:
+    /**
+     * Adds a loop point to the stream.  If a loop point at 'location'
+     * already exists, the new one replaces it.  Location and target are
+     * clamped to the actual length of the stream.
+     *
+     * @param location   frame where loop occurs
+     * @param target     frame to jump to after loop point is hit
+     * @param loopCount  number of times to execute this jump.
+     */
+    virtual void ADR_CALL addLoopPoint(
+      int location, int target, int loopCount) = 0;
+
+    /**
+     * Removes the loop point at index 'index' from the stream.
+     *
+     * @param index  index of the loop point to remove
+     */
+    virtual void ADR_CALL removeLoopPoint(int index) = 0;
+
+    /**
+     * Returns the number of loop points in this stream.
+     */
+    virtual int ADR_CALL getLoopPointCount() = 0;
+
+    /**
+     * Retrieves information about a specific loop point.
+     *
+     * @param index      index of the loop point
+     * @param location   frame where loop occurs
+     * @param target     loop point's target frame
+     * @param loopCount  number of times to loop from this particular point
+     *
+     * @return  true if the index is valid and information is returned
+     */
+    virtual bool ADR_CALL getLoopPoint(
+      int index, int& location, int& target, int& loopCount) = 0;
+  };
+  typedef RefPtr<LoopPointSource> LoopPointSourcePtr;
 
 
   /**
@@ -694,6 +762,9 @@ namespace audiere {
     ADR_FUNCTION(SampleSource*) AdrCreateWhiteNoise();
     ADR_FUNCTION(SampleSource*) AdrCreatePinkNoise();
 
+    ADR_FUNCTION(LoopPointSource*) AdrCreateLoopPointSource(
+      SampleSource* source);
+
     ADR_FUNCTION(OutputStream*) AdrOpenSound(
       AudioDevice* device,
       SampleSource* source,
@@ -908,6 +979,37 @@ namespace audiere {
    */
   inline SampleSource* CreatePinkNoise() {
     return hidden::AdrCreatePinkNoise();
+  }
+
+  /**
+   * Create a LoopPointSource from a SampleSource.  The SampleSource must
+   * be seekable.  If it isn't, or the source isn't valid, this function
+   * returns 0.
+   */
+  inline LoopPointSource* CreateLoopPointSource(
+    const SampleSourcePtr& source)
+  {
+    return hidden::AdrCreateLoopPointSource(source.get());
+  }
+
+  /**
+   * Creates a LoopPointSource from a source loaded from a file.
+   */
+  inline LoopPointSource* CreateLoopPointSource(
+    const char* filename,
+    FileFormat file_format = FF_AUTODETECT)
+  {
+    return CreateLoopPointSource(OpenSampleSource(filename, file_format));
+  }
+
+  /**
+   * Creates a LoopPointSource from a source loaded from a file.
+   */
+  inline LoopPointSource* CreateLoopPointSource(
+    const FilePtr& file,
+    FileFormat file_format = FF_AUTODETECT)
+  {
+    return CreateLoopPointSource(OpenSampleSource(file, file_format));
   }
 
   /**

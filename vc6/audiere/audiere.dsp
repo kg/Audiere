@@ -232,6 +232,10 @@ SOURCE=..\..\src\internal.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\loop_point_source.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\memory_file.cpp
 # End Source File
 # Begin Source File

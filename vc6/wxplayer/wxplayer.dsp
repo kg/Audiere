@@ -107,6 +107,14 @@ SOURCE=..\..\examples\wxPlayer\DeviceFrame.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\examples\wxPlayer\EditLoopPointsDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\EditLoopPointsDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\examples\wxPlayer\NewDeviceDialog.cpp
 # End Source File
 # Begin Source File

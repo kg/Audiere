@@ -164,7 +164,11 @@ namespace audiere {
 
   int
   Resampler::getPosition() {
-    return m_source->getPosition() - m_samples_left;
+    int position = m_source->getPosition() - m_samples_left;
+    while (position < 0) {
+      position += m_source->getLength();
+    }
+    return position;
   }
 
   bool

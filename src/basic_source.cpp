@@ -12,31 +12,25 @@ namespace audiere {
   int
   BasicSource::read(int frame_count, void* buffer) {
     if (m_repeat) {
-
-      // calculate this on every read... shouldn't be too much overhead
-      int channel_count, sample_rate;
-      SampleFormat sample_format;
-      getFormat(channel_count, sample_rate, sample_format);
-      const int frame_size = channel_count * GetSampleSize(sample_format);
+      const int frame_size = GetFrameSize(this);
 
       // the main read loop:
       u8* out = (u8*)buffer;
       int frames_left = frame_count;
       while (frames_left > 0) {
 
-        // read some frames
+        // read some frames.  if we can't read anything, reset the stream
+        // and try again.
         int frames_read = doRead(frames_left, out);
-
-        // if we couldn't read anything, reset the stream and try again
         if (frames_read == 0) {
           reset();
           frames_read = doRead(frames_left, out);
-        }
 
-        // if we still can't read anything, we're done
-        if (frames_read == 0) {
-          ADR_LOG("Can't read any samples even after reset");
-          break;
+          // if we still can't read anything, we're done
+          if (frames_read == 0) {
+            ADR_LOG("Can't read any samples even after reset");
+            break;
+          }
         }
 
         frames_left -= frames_read;

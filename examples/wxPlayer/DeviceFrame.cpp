@@ -138,17 +138,34 @@ void DeviceFrame::OnDeviceOpenStream() {
     return;
   }
 
-  audiere::OutputStream* stream = audiere::OpenSound(m_device, filename, true);
+  audiere::SampleSourcePtr source = audiere::OpenSampleSource(filename);
+  if (!source) {
+    wxMessageBox(
+      "Could not open sample source: " + filename,
+      "Open Stream", wxOK | wxCENTRE, this);
+    return;
+  }
+
+  audiere::LoopPointSourcePtr loop_source =
+    audiere::CreateLoopPointSource(source);
+  if (loop_source) {
+    source = loop_source.get();
+  }
+
+  audiere::OutputStreamPtr stream = audiere::OpenSound(
+    m_device,
+    source,
+    true);
   if (!stream) {
     wxMessageBox(
-      "Could not open stream: " + filename,
+      "Could not open output stream: " + filename,
       "Open Stream", wxOK | wxCENTRE, this);
     return;
   }
 
   // get the basename of the path for the window title
   wxString basename = wxFileNameFromPath(filename);
-  new StreamFrame(this, "Stream: " + basename, stream);
+  new StreamFrame(this, "Stream: " + basename, stream.get(), loop_source.get());
 }
 
 

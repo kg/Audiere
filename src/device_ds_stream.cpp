@@ -28,15 +28,12 @@ namespace audiere {
 
     m_source = source;
 
-    int channel_count, sample_rate;
-    SampleFormat sample_format;
-    source->getFormat(channel_count, sample_rate, sample_format);
-    m_sample_size = GetSampleSize(sample_format) * channel_count;
+    m_frame_size = GetFrameSize(m_source);
 
-    m_total_read    = 0;
-    m_total_written = 0;
+    m_total_read   = 0;
+    m_total_played = 0;
 
-    m_last_sample = new BYTE[m_sample_size];
+    m_last_frame = new BYTE[m_frame_size];
 
     setVolume(1);
     setPan(0);
@@ -53,7 +50,7 @@ namespace audiere {
 
     // destroy the sound buffer interface
     m_buffer->Release();
-    delete[] m_last_sample;
+    delete[] m_last_frame;
   }
 
   
@@ -174,9 +171,9 @@ namespace audiere {
     m_last_play = 0;
 
     m_source->setPosition(position);
-    m_total_read = 0;
-    m_total_written = 0;
-    m_next_read = 0;
+    m_total_read   = 0;
+    m_total_played = 0;
+    m_next_read    = 0;
     fillStream();
 
     // if we were playing, restart
@@ -189,9 +186,9 @@ namespace audiere {
   int
   DSOutputStream::getPosition() {
     SYNCHRONIZED(this);
-    int pos = m_source->getPosition() - (m_total_read - m_total_written);
-    if (pos < 0) {
-      pos += m_buffer_length;
+    int pos = m_source->getPosition() - (m_total_read - m_total_played);
+    while (pos < 0) {
+      pos += m_source->getLength();
     }
     return pos;
   }
@@ -211,9 +208,9 @@ namespace audiere {
     m_last_play = 0;
 
     m_source->reset();
-    m_total_read = 0;
-    m_total_written = 0;
-    m_next_read = 0;
+    m_total_read   = 0;
+    m_total_played = 0;
+    m_next_read    = 0;
     fillStream();
 
     // if we were playing, restart
@@ -235,7 +232,7 @@ namespace audiere {
     // lock
     HRESULT result = m_buffer->Lock(
       0,
-      m_buffer_length * m_sample_size,
+      m_buffer_length * m_frame_size,
       &buffer,
       &buffer_length,
       NULL,
@@ -253,7 +250,7 @@ namespace audiere {
     }
 
     // fill
-    int samples_to_read = buffer_length / m_sample_size;
+    int samples_to_read = buffer_length / m_frame_size;
     int samples_read = streamRead(samples_to_read, buffer);
     if (samples_read != samples_to_read) {
       m_next_read = samples_read;
@@ -295,8 +292,8 @@ namespace audiere {
     }
 
     // deal with them in samples, not bytes
-    play  /= m_sample_size;
-    write /= m_sample_size;
+    play  /= m_frame_size;
+    write /= m_frame_size;
 
     ADR_IF_DEBUG {
       char str[160];
@@ -306,11 +303,11 @@ namespace audiere {
       ADR_LOG(str);
     }
 
-    // how many samples have we written since the last update?
+    // how many samples have we playen since the last update?
     if (play < m_last_play) {
-      m_total_written += play + m_buffer_length - m_last_play;
+      m_total_played += play + m_buffer_length - m_last_play;
     } else {
-      m_total_written += play - m_last_play;
+      m_total_played += play - m_last_play;
     }
     m_last_play = play;
 
@@ -330,8 +327,8 @@ namespace audiere {
     DWORD buffer1_length;
     DWORD buffer2_length;
     result = m_buffer->Lock(
-      m_next_read * m_sample_size,
-      read_length * m_sample_size,
+      m_next_read * m_frame_size,
+      read_length * m_frame_size,
       &buffer1, &buffer1_length,
       &buffer2, &buffer2_length,
       0);
@@ -347,8 +344,8 @@ namespace audiere {
     }
 
     // now actually read samples
-    int length1 = buffer1_length / m_sample_size;
-    int length2 = buffer2_length / m_sample_size;
+    int length1 = buffer1_length / m_frame_size;
+    int length2 = buffer2_length / m_frame_size;
     int read = streamRead(length1, buffer1);
     if (buffer2) {
       if (length1 == read) {
@@ -371,7 +368,7 @@ namespace audiere {
 
   
     // Should we stop?
-    if (m_total_written > m_total_read) {
+    if (m_total_played > m_total_read) {
       ADR_LOG("Stopping stream!");
 
       stop();
@@ -380,7 +377,7 @@ namespace audiere {
 
       m_source->reset();
 
-      m_total_written = 0;
+      m_total_played = 0;
       m_total_read = 0;
       m_next_read = 0;
       fillStream();
@@ -408,13 +405,13 @@ namespace audiere {
     // remember the last sample
     if (samples_read > 0) {
       memcpy(
-        m_last_sample,
-        (BYTE*)samples + (samples_read - 1) * m_sample_size,
-        m_sample_size);
+        m_last_frame,
+        (BYTE*)samples + (samples_read - 1) * m_frame_size,
+        m_frame_size);
     }
 
     // fill the rest with silence
-    BYTE* out = (BYTE*)samples + m_sample_size * samples_read;
+    BYTE* out = (BYTE*)samples + m_frame_size * samples_read;
     int c = sample_count - samples_read;
     fillSilence(c, out);
 
@@ -428,8 +425,8 @@ namespace audiere {
     int c = sample_count;
     BYTE* out = (BYTE*)samples;
     while (c--) {
-      memcpy(out, m_last_sample, m_sample_size);
-      out += m_sample_size;
+      memcpy(out, m_last_frame, m_frame_size);
+      out += m_frame_size;
     }
   }
 

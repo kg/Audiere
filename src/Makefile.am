@@ -85,6 +85,7 @@ libaudiere_la_SOURCES = \
 	input_wav.cpp \
 	input_wav.h \
 	internal.h \
+	loop_point_source.cpp \
 	memory_file.cpp \
 	memory_file.h \
 	noise.cpp \

@@ -32,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxd.lib comctl32.lib ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="wxmswd.lib comctl32.lib ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)/wxplayer.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -78,7 +78,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wx.lib comctl32.lib ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="wxmsw.lib comctl32.lib ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)/wxplayer.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"

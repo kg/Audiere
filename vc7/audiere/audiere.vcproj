@@ -327,9 +327,6 @@
 				RelativePath="..\..\src\mikmod\mikmod\mloader.c">
 			</File>
 			<File
-				RelativePath="..\..\src\mikmod\mikmod\mlreg.c">
-			</File>
-			<File
 				RelativePath="..\..\src\mikmod\mikmod\mpforbid.h">
 			</File>
 			<File
@@ -375,22 +372,10 @@
 					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_it.c">
 				</File>
 				<File
-					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_m15.c">
-				</File>
-				<File
 					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_mod.c">
 				</File>
 				<File
-					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_mtm.c">
-				</File>
-				<File
 					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_s3m.c">
-				</File>
-				<File
-					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_stm.c">
-				</File>
-				<File
-					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_ult.c">
 				</File>
 				<File
 					RelativePath="..\..\src\mikmod\mikmod\loaders\Load_xm.c">

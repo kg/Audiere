@@ -327,7 +327,7 @@ public:
 
     m_device = new wxChoice(this, -1, wxDefaultPosition, size);
     m_device->Append("autodetect: Choose default device");
-    for (int i = 0; i < m_devices.size(); ++i) {
+    for (unsigned i = 0; i < m_devices.size(); ++i) {
       m_device->Append((m_devices[i].name + ": " + m_devices[i].description).c_str());
     }
     m_device->SetSelection(0);

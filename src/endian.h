@@ -28,7 +28,6 @@ namespace audiere {
 
   #ifdef LITTLE_ENDIAN
 
-
     inline u32 LittleToHost32(u32 value) {
       return value;
     }
@@ -36,11 +35,9 @@ namespace audiere {
     inline u32 BigToHost32(u32 value) {
       return SwapEndianness32(value);
     }
-
 
   #elif defined(BIG_ENDIAN)
 
-
     inline u32 LittleToHost32(u32 value) {
       return SwapEndianness32(value);
     }
@@ -48,7 +45,6 @@ namespace audiere {
     inline u32 BigToHost32(u32 value) {
       return value;
     }
-
 
   #else
 

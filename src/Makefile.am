@@ -7,48 +7,46 @@ INCLUDES = \
 lib_LTLIBRARIES = libaudiere.la
 include_HEADERS = audiere.h
 
+if HAVE_OPENAL
+OPENAL_SOURCES = device_al.cpp device_al.h
+endif
+
+if HAVE_OSS
+OSS_SOURCES = device_oss.cpp device_oss.h
+endif
+
 libaudiere_la_SOURCES = \
-	audiere.cpp \
-	config.h \
-	context.cpp \
-	context.hpp \
 	debug.cpp \
 	debug.hpp \
-	default_file.hpp \
-	endian.hpp \
+	default_file.h \
+	device.cpp \
+	device_null.cpp \
+	device_null.h \
+	$(OPENAL_SOURCES) \
+	$(OSS_SOURCES) \
+	endian.h \
 	file_ansi.cpp \
-	file.cpp \
-	file.hpp \
 	input.cpp \
-	input.hpp \
 	input_mod.cpp \
 	input_mod.hpp \
 	input_ogg.cpp \
-	input_ogg.hpp \
+	input_ogg.h \
 	input_wav.cpp \
-	input_wav.hpp \
+	input_wav.h \
 	mixer.cpp \
-	mixer.hpp \
-	output.cpp \
-	output.hpp \
-	output_al.cpp \
-	output_al.hpp \
-	output_oss.cpp \
-	output_oss.hpp \
-	output_null.cpp \
-	output_null.hpp \
+	mixer.h \
 	repeatable.cpp \
-	repeatable.hpp \
+	repeatable.h \
 	resampler.cpp \
-	resampler.hpp \
-	stream.cpp \
-	stream.hpp \
+	resampler.h \
 	threads_posix.cpp \
-	threads.hpp \
+	threads.h \
 	timer_posix.cpp \
-	timer.hpp \
+	timer.h \
+	types.h \
 	utility.cpp \
-	utility.hpp
+	utility.h \
+	version.cpp
 
 libaudiere_la_LDFLAGS = \
 	-release $(VERSION) \

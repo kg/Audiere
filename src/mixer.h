@@ -3,53 +3,55 @@
 
 
 #include <map>
-#include "config.h"
-#include "input.hpp"
+#include "audiere.h"
+#include "types.h"
 
 
-// always produce 44.1 KHz, 16-bit, stereo audio
-class Mixer : public ISampleSource
-{
-public:
-  Mixer();
-  ~Mixer();
+namespace audiere {
 
-  void GetFormat(int& channel_count, int& sample_rate, int& bits_per_sample);
-  int Read(int sample_count, void* samples);
-  bool Reset();
+  /// Always produce 44.1 KHz, 16-bit, stereo audio.
+  class Mixer : public DLLImplementation<SampleSource> {
+  public:
+    Mixer();
+    ~Mixer();
 
-  void AddSource(ISampleSource* source);
-  void RemoveSource(ISampleSource* source);
+    void getFormat(int& channel_count, int& sample_rate, int& bits_per_sample);
+    int read(int sample_count, void* samples);
+    bool reset();
 
-  bool IsPlaying(ISampleSource* source);
-  void SetPlaying(ISampleSource* source, bool is_playing);
+    void addSource(ISampleSource* source);
+    void removeSource(ISampleSource* source);
 
-  int GetVolume(ISampleSource* source);
-  void SetVolume(ISampleSource* source, int volume);
+    bool isPlaying(ISampleSource* source);
+    void setPlaying(ISampleSource* source, bool is_playing);
 
-private:
-  struct SourceAttributes {
-    // immutable
-    ISampleSource* resampler;
-    adr_s16 last_l;  // left
-    adr_s16 last_r;  // right
+    int getVolume(ISampleSource* source);
+    void setVolume(ISampleSource* source, int volume);
 
-    // mutable (set by external calls)
-    bool is_playing;
-    int volume;
+  private:
+    struct SourceAttributes {
+      // immutable
+      ISampleSource* resampler;
+      adr_s16 last_l;  // left
+      adr_s16 last_r;  // right
+
+      // mutable (set by external calls)
+      bool is_playing;
+      int volume;
+    };
+
+    typedef std::map<SampleSource*, SourceAttributes> SourceMap;
+
+  private:
+    void read(SampleSource* source,
+              SourceAttributes& attr,
+              int to_mix,
+              adr_s16* buffer);
+
+  private:
+    SourceMap m_sources;
   };
 
-  typedef std::map<ISampleSource*, SourceAttributes> SourceMap;
-
-private:
-  void Read(ISampleSource* source,
-	    SourceAttributes& attr,
-	    int to_mix,
-	    adr_s16* buffer);
-
-private:
-  SourceMap m_sources;
-};
-
+}
 
 #endif

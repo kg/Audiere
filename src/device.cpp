@@ -23,11 +23,11 @@
 
 #endif
 
-#ifdef WITH_OSS
+#ifdef HAVE_OSS
   #include "device_oss.h"
 #endif
 
-#ifdef WITH_OPENAL
+#ifdef HAVE_OPENAL
   #include "device_al.h"
 #endif
 
@@ -84,7 +84,7 @@ namespace audiere {
         return 0;
       }
 
-      #ifdef WITH_OPENAL
+      #ifdef HAVE_OPENAL
         if (dev == "openal") {
           TRY_DEVICE(ALAudioDevice);
           return 0;
@@ -98,28 +98,28 @@ namespace audiere {
 
     #else  // not Win32 - assume autoconf UNIX
 
-      if (dev == "" || device == "autodetect") {
+      if (dev == "" || dev == "autodetect") {
         TRY_GROUP("oss");
         TRY_GROUP("openal");
         return 0;
       }
 
-      #ifdef WITH_OSS
+      #ifdef HAVE_OSS
         if (dev == "oss") {
-          TRY_DEVICE(OSSOutputContext);
+          TRY_DEVICE(OSSAudioDevice);
           return 0;
         }
       #endif
 
-      #ifdef WITH_OPENAL
+      #ifdef HAVE_OPENAL
         if (dev == "openal") {
-          TRY_DEVICE(ALOutputContext);
+          TRY_DEVICE(ALAudioDevice);
           return 0;
         }
       #endif
 
       if (dev == "null") {
-        TRY_DEVICE(NullOutputContext);
+        TRY_DEVICE(NullAudioDevice);
         return 0;
       }
 

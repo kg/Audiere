@@ -1,7 +1,9 @@
 EXPORTS
   AdrGetVersion
   AdrOpenDevice
+  AdrOpenDevice3D
   AdrOpenSampleSource
   AdrOpenSampleSourceFromFile
+  AdrCreateTone
   AdrOpenSound
   AdrOpenSoundFromFile

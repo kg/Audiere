@@ -214,6 +214,10 @@ SOURCE=..\..\src\timer_win32.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\tone.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\types.h
 # End Source File
 # Begin Source File

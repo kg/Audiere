@@ -163,6 +163,7 @@ namespace audiere {
 
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSource)(const char* filename);
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSourceFromFile)(File* file);
+    ADR_FUNCTION(SampleSource*, AdrCreateTone)(double frequency);
 
     ADR_FUNCTION(Sound*, AdrOpenSound)(
       AudioDevice* device,
@@ -199,6 +200,10 @@ namespace audiere {
 
   inline SampleSource* OpenSampleSource(File* file) {
     return hidden::AdrOpenSampleSourceFromFile(file);
+  }
+
+  inline SampleSource* CreateTone(double frequency) {
+    return hidden::AdrCreateTone(frequency);
   }
 
   inline Sound* OpenSound(

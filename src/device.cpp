@@ -198,4 +198,11 @@ namespace audiere {
     return new ThreadedDevice(device);
   }
 
+  ADR_EXPORT(AudioDevice3D*, AdrOpenDevice3D)(
+    const char* name,
+    const char* parameters)
+  {
+    return 0;
+  }
+
 }

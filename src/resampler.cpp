@@ -162,11 +162,7 @@ namespace audiere {
 
   int
   Resampler::getPosition() {
-    /**
-     * @todo  make this correct wrt how much we have stored in the internal
-     *        buffer
-     */
-    return m_source->getPosition();
+    return m_source->getPosition() - m_samples_left;
   }
 
 }

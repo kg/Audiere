@@ -19,11 +19,13 @@ dnl Checks for options.
 
 AC_ARG_ENABLE(debug,
     AC_HELP_STRING(--enable-debug, build debug),
+    CFLAGS="$CFLAGS -g"
     CXXFLAGS="$CXXFLAGS -g"
     AC_DEFINE(DEBUG))
 
 AC_ARG_ENABLE(opt,
     AC_HELP_STRING(--enable-opt, build with optimizations),
+    CFLAGS="$CFLAGS -O2"
     CXXFLAGS="$CXXFLAGS -O2")
 
 dnl Checks for programs.

@@ -316,6 +316,95 @@ std::string Join(
 }
 
 
+class NewDeviceDialog : public wxDialog {
+public:
+  NewDeviceDialog(wxWindow* parent)
+    : wxDialog(parent, -1, wxString("New Device"))
+  {
+    // size of text controls
+    static const wxSize size(300, 22);
+
+    GetSupportedAudioDevices(m_devices);
+
+    m_device = new wxChoice(this, -1, wxDefaultPosition, size);
+    m_device->Append("autodetect: Choose default device");
+    for (int i = 0; i < m_devices.size(); ++i) {
+      m_device->Append((m_devices[i].name + ": " + m_devices[i].description).c_str());
+    }
+    m_device->SetSelection(0);
+
+    // create parameters box
+    m_parameters = new wxTextCtrl(this, -1, "", wxDefaultPosition, size);
+
+    // create vertical sizer
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(m_device,     0, wxALIGN_CENTER | wxALL, 5);
+    sizer->Add(m_parameters, 0, wxALIGN_CENTER | wxALL, 5);
+
+    // button bar
+    m_ok     = new wxButton(this, -1, "OK");
+    m_cancel = new wxButton(this, -1, "Cancel");
+    wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+    buttonSizer->Add(m_ok,     0, wxALIGN_CENTER | wxALL, 5);
+    buttonSizer->Add(m_cancel, 0, wxALIGN_CENTER | wxALL, 5);
+
+    sizer->Add(buttonSizer, 0, wxALIGN_CENTER | wxALL, 4);
+
+    SetAutoLayout(TRUE);
+    SetSizer(sizer);
+
+    m_device->SetFocus();
+    m_ok->SetDefault();
+
+    sizer->Fit(this);
+    sizer->SetSizeHints(this);
+  }
+
+  const std::string& getDevice() const {
+    return m_device_str;
+  }
+
+  const std::string& getParameters() const {
+    return m_parameters_str;
+  }
+
+private:
+  void OnButton(wxCommandEvent& event) {
+    if (event.GetEventObject() == m_ok) {
+      int value = m_device->GetSelection();
+      if (value == 0) {
+        m_device_str = "autodetect";
+      } else {
+        m_device_str = m_devices[value - 1].name;
+      }
+
+      m_parameters_str = m_parameters->GetValue();
+      EndModal(wxID_OK);
+    } else if (event.GetEventObject() == m_cancel) {
+      EndModal(wxID_CANCEL);
+    }
+  }
+
+  std::vector<AudioDeviceDesc> m_devices;
+
+  wxChoice*   m_device;
+  wxTextCtrl* m_parameters;
+
+  wxButton* m_ok;
+  wxButton* m_cancel;
+
+  std::string m_device_str;
+  std::string m_parameters_str;
+
+  DECLARE_EVENT_TABLE()
+};
+
+
+BEGIN_EVENT_TABLE(NewDeviceDialog, wxDialog)
+  EVT_BUTTON(-1, NewDeviceDialog::OnButton)
+END_EVENT_TABLE()
+
+
 class DeviceFrame : public wxMDIParentFrame {
 public:
   DeviceFrame(AudioDevice* device, const wxString& device_name)
@@ -343,26 +432,15 @@ public:
     wxMenuBar* menuBar = new wxMenuBar();
     menuBar->Append(fileMenu, "&Device");
     SetMenuBar(menuBar);
+
+    SetFocus();
   }
 
   void OnDeviceNewDevice() {
-    wxString name = wxGetTextFromUser(
-      "New Device",
-      "Enter Device Name",
-      "autodetect",
-      this);
-    if (!name.empty()) {
-      wxString parameters = wxGetTextFromUser(
-        "Enter Device Parameters",
-        "New Device Parameters: " + name,
-        "",
-        this);
-
-      if (!TryDevice(name, parameters)) {
-        wxMessageBox(
-          "Could not open audio device: " + name,
-          "New Device", wxOK | wxCENTRE, this);
-      }
+    NewDeviceDialog dialog(this);
+    if (dialog.ShowModal() == wxID_OK) {
+      TryDevice(dialog.getDevice().c_str(),
+                dialog.getParameters().c_str());
     }
   }
 

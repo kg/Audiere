@@ -19,7 +19,7 @@ extern "C" {
 
 
 /* calling convention */
-#ifdef _WIN32
+#if defined(WIN32) || defined(_WIN32)
 #  define ADR_CALL __stdcall
 #else
 #  define ADR_CALL

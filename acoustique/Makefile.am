@@ -3,7 +3,7 @@ SUBDIRS = mikmod resample
 INCLUDES = \
 	-I mikmod/mmio \
 	-I mikmod/mikmod \
-        -I mad-0.13.0b
+        -I resample
 
 lib_LTLIBRARIES = libacoustique.la
 include_HEADERS = acoustique.h

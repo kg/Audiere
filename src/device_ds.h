@@ -38,9 +38,9 @@ namespace audiere {
       IDirectSound* direct_sound);
     ~DSAudioDevice();
 
-    void update();
-    OutputStream* openStream(SampleSource* source);
-    OutputStream* openBuffer(
+    void ADR_CALL update();
+    OutputStream* ADR_CALL openStream(SampleSource* source);
+    OutputStream* ADR_CALL openBuffer(
       void* samples, int sample_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
 

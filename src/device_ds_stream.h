@@ -18,24 +18,24 @@ namespace audiere {
       SampleSource* source);
     ~DSOutputStream();
 
-    void play();
-    void stop();
-    bool isPlaying();
-    void reset();
+    void ADR_CALL play();
+    void ADR_CALL stop();
+    bool ADR_CALL isPlaying();
+    void ADR_CALL reset();
 
-    void setRepeat(bool repeat);
-    bool getRepeat();
+    void ADR_CALL setRepeat(bool repeat);
+    bool ADR_CALL getRepeat();
 
-    void  setVolume(float volume);
-    float getVolume();
+    void  ADR_CALL setVolume(float volume);
+    float ADR_CALL getVolume();
 
-    void  setPan(float pan);
-    float getPan();
+    void  ADR_CALL setPan(float pan);
+    float ADR_CALL getPan();
 
-    bool isSeekable();
-    int  getLength();
-    void setPosition(int position);
-    int  getPosition();
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
 
   private:
     void fillStream();

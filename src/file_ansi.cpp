@@ -14,11 +14,11 @@ namespace audiere {
       fclose(m_file);
     }
 
-    int read(void* buffer, int size) {
+    int ADR_CALL read(void* buffer, int size) {
       return fread(buffer, 1, size, m_file);
     }
 
-    bool seek(int position, SeekMode mode) {
+    bool ADR_CALL seek(int position, SeekMode mode) {
       int m;
       switch (mode) {
         case BEGIN:   m = SEEK_SET; break;
@@ -30,7 +30,7 @@ namespace audiere {
       return (fseek(m_file, position, m) == 0);
     }
 
-    int tell() {
+    int ADR_CALL tell() {
       return ftell(m_file);
     }
 

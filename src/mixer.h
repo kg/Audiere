@@ -21,29 +21,29 @@ namespace audiere {
   public:
     Mixer(int rate);
 
-    void getFormat(
+    void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int read(int sample_count, void* samples);
-    void reset();
+    int ADR_CALL read(int sample_count, void* samples);
+    void ADR_CALL reset();
 
-    void addSource(SampleSource* source);
-    void removeSource(SampleSource* source);
+    void ADR_CALL addSource(SampleSource* source);
+    void ADR_CALL removeSource(SampleSource* source);
 
-    void resetSource(SampleSource* source);
+    void ADR_CALL resetSource(SampleSource* source);
 
-    void setPlaying(SampleSource* source, bool is_playing);
-    bool isPlaying(SampleSource* source);
+    void ADR_CALL setPlaying(SampleSource* source, bool is_playing);
+    bool ADR_CALL isPlaying(SampleSource* source);
 
-    void setVolume(SampleSource* source, float volume);
-    float getVolume(SampleSource* source);
+    void  ADR_CALL setVolume(SampleSource* source, float volume);
+    float ADR_CALL getVolume(SampleSource* source);
 
-    void setPan(SampleSource* source, float pan);
-    float getPan(SampleSource* source);
+    void  ADR_CALL setPan(SampleSource* source, float pan);
+    float ADR_CALL getPan(SampleSource* source);
 
-    void setRepeat(SampleSource* source, bool repeat);
-    bool getRepeat(SampleSource* source);
+    void ADR_CALL setRepeat(SampleSource* source, bool repeat);
+    bool ADR_CALL getRepeat(SampleSource* source);
 
   private:
     struct SourceAttributes {

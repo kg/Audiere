@@ -15,7 +15,7 @@ namespace audiere {
       doReset(); // not supposed to call virtual functions in constructors
     }
 
-    void getFormat(
+    void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format)
@@ -25,7 +25,7 @@ namespace audiere {
       sample_format = SF_S16;
     }
 
-    int read(int sample_count, void* samples) {
+    int ADR_CALL read(int sample_count, void* samples) {
       // if frequency is 0 Hz, use silence
       if (m_frequency == 0) {
         memset(samples, 0, sample_count * 2);
@@ -40,7 +40,7 @@ namespace audiere {
       return sample_count;
     }
 
-    void reset() {
+    void ADR_CALL reset() {
       doReset();
     }
 

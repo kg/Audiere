@@ -151,14 +151,14 @@ namespace audiere {
     }
 
     // don't need to update the device...  the thread does it for us
-    void update() {
+    void ADR_CALL update() {
     }
 
-    OutputStream* openStream(SampleSource* source) {
+    OutputStream* ADR_CALL openStream(SampleSource* source) {
       return m_device->openStream(source);
     }
 
-    OutputStream* openBuffer(
+    OutputStream* ADR_CALL openBuffer(
       void* samples, int sample_count,
       int channel_count, int sample_rate, SampleFormat sample_format)
     {

@@ -15,12 +15,12 @@ namespace audiere {
 
     bool initialize(File* file);
 
-    void getFormat(
+    void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int read(int frame_count, void* samples);
-    void reset();
+    int ADR_CALL read(int frame_count, void* samples);
+    void ADR_CALL reset();
 
   private:
     bool FindFormatChunk();

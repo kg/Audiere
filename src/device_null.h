@@ -27,9 +27,9 @@ namespace audiere {
     ~NullAudioDevice();
 
   public:
-    void update();
-    OutputStream* openStream(SampleSource* source);
-    OutputStream* openBuffer(
+    void ADR_CALL update();
+    OutputStream* ADR_CALL openStream(SampleSource* source);
+    OutputStream* ADR_CALL openBuffer(
       void* samples, int sample_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
 
@@ -48,24 +48,24 @@ namespace audiere {
     ~NullOutputStream();
 
   public:
-    void play();
-    void stop();
-    void reset();
-    bool isPlaying();
+    void ADR_CALL play();
+    void ADR_CALL stop();
+    void ADR_CALL reset();
+    bool ADR_CALL isPlaying();
 
-    void setRepeat(bool repeat);
-    bool getRepeat();
+    void ADR_CALL setRepeat(bool repeat);
+    bool ADR_CALL getRepeat();
 
-    void  setVolume(float volume);
-    float getVolume();
+    void  ADR_CALL setVolume(float volume);
+    float ADR_CALL getVolume();
 
-    void  setPan(float pan);
-    float getPan();
+    void  ADR_CALL setPan(float pan);
+    float ADR_CALL getPan();
 
-    bool isSeekable();
-    int  getLength();
-    void setPosition(int position);
-    int  getPosition();
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
 
   private:
     void resetTimer();

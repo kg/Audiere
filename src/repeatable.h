@@ -15,18 +15,18 @@ namespace audiere {
     bool getRepeat();
 
     // ISampleSource implementation
-    void getFormat(
+    void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,
       SampleFormat& bits_per_sample);
 
-    int read(int sample_count, void* samples);
-    void reset();
+    int ADR_CALL read(int sample_count, void* samples);
+    void ADR_CALL reset();
 
-    bool isSeekable();
-    int getLength();
-    void setPosition(int position);
-    int getPosition();
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
 
   private:
     bool m_repeat;

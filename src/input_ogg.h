@@ -16,12 +16,12 @@ namespace audiere {
 
     bool initialize(File* file);
 
-    void getFormat(
+    void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int read(int sample_count, void* samples);
-    void reset();
+    int ADR_CALL read(int sample_count, void* samples);
+    void ADR_CALL reset();
 
   private:
     static size_t FileRead(void* buffer, size_t size, size_t n, void* opaque);

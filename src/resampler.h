@@ -14,13 +14,13 @@ namespace audiere {
     Resampler(SampleSource* source, int rate);
 
     // for now, resamplers always return (2, rate, 16-bit)
-    void getFormat(
+    void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
 
-    int read(int sample_count, void* samples);
-    void reset();
+    int ADR_CALL read(int sample_count, void* samples);
+    void ADR_CALL reset();
 
   private:
     void fillBuffer();

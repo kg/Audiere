@@ -46,13 +46,13 @@ namespace audiere {
     /**
      * Add a reference to the internal reference count.
      */
-    virtual void ref() = 0;
+    virtual void ADR_CALL ref() = 0;
 
     /**
      * Remove a reference from the internal reference count.  When this
      * reaches 0, the object is destroyed.
      */
-    virtual void unref() = 0;
+    virtual void ADR_CALL unref() = 0;
   };
 
 
@@ -133,11 +133,11 @@ namespace audiere {
     virtual ~RefImplementation() { }
 
   public:
-    void ref() {
+    void ADR_CALL ref() {
       ++m_ref_count;
     }
 
-    void unref() {
+    void ADR_CALL unref() {
       if (--m_ref_count == 0) {
         delete this;
       }
@@ -176,7 +176,7 @@ namespace audiere {
      *
      * @return  number of bytes successfully read
      */
-    virtual int read(void* buffer, int size) = 0;
+    virtual int ADR_CALL read(void* buffer, int size) = 0;
 
     /**
      * Jump to a new position in the file, using the specified seek
@@ -189,14 +189,14 @@ namespace audiere {
      *
      * @return  true on success, false otherwise
      */
-    virtual bool seek(int position, SeekMode mode) = 0;
+    virtual bool ADR_CALL seek(int position, SeekMode mode) = 0;
 
     /**
      * Get current position within the file.
      *
      * @return  current position
      */
-    virtual int tell() = 0;
+    virtual int ADR_CALL tell() = 0;
   };
 
 
@@ -224,7 +224,7 @@ namespace audiere {
      * Retrieve the number of channels, sample rate, and sample format of
      * the sample source.
      */
-    virtual void getFormat(
+    virtual void ADR_CALL getFormat(
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format) = 0;
@@ -238,25 +238,25 @@ namespace audiere {
      *
      * @return  number of frames actually read
      */
-    virtual int read(int frame_count, void* buffer) = 0;
+    virtual int ADR_CALL read(int frame_count, void* buffer) = 0;
 
     /**
      * Reset the sample source.  This has the same effect as setPosition(0)
      * on a seekable source.  On an unseekable source, it resets all internal
      * state to the way it was when the source was first created.
      */
-    virtual void reset() = 0;
+    virtual void ADR_CALL reset() = 0;
 
     /**
      * @return  true if the stream is seekable, false otherwise
      */
-    virtual bool isSeekable() = 0;
+    virtual bool ADR_CALL isSeekable() = 0;
 
     /**
      * @return  number of frames in the stream, or 0 if the stream is not
      *          seekable
      */
-    virtual int getLength() = 0;
+    virtual int ADR_CALL getLength() = 0;
     
     /**
      * Sets the current position within the sample source.  If the stream
@@ -264,14 +264,14 @@ namespace audiere {
      *
      * @param position  current position in frames
      */
-    virtual void setPosition(int position) = 0;
+    virtual void ADR_CALL setPosition(int position) = 0;
 
     /**
      * Returns the current position within the sample source.
      *
      * @return  current position in frames
      */
-    virtual int getPosition() = 0;
+    virtual int ADR_CALL getPosition() = 0;
   };
 
 
@@ -292,18 +292,18 @@ namespace audiere {
      * Start playback of the output stream.  If the stream is already
      * playing, this does nothing.
      */
-    virtual void play() = 0;
+    virtual void ADR_CALL play() = 0;
 
     /**
      * Stop playback of the output stream.  If the stream is already
      * stopped, this does nothing.
      */
-    virtual void stop() = 0;
+    virtual void ADR_CALL stop() = 0;
 
     /**
      * @return  true if the output stream is playing, false otherwise
      */
-    virtual bool isPlaying() = 0;
+    virtual bool ADR_CALL isPlaying() = 0;
 
     /**
      * Reset the output stream's internal buffer, causing it to buffer new
@@ -312,56 +312,56 @@ namespace audiere {
      * On some output streams, this operation can be moderately slow, as up to
      * several seconds of PCM buffer must be refilled.
      */
-    virtual void reset() = 0;
+    virtual void ADR_CALL reset() = 0;
 
     /**
      * Set whether the output stream should repeat.
      *
      * @param repeat  true if the stream should repeat, false otherwise
      */
-    virtual void setRepeat(bool repeat) = 0;
+    virtual void ADR_CALL setRepeat(bool repeat) = 0;
 
     /**
      * @return  true if the stream is repeating
      */
-    virtual bool getRepeat() = 0;
+    virtual bool ADR_CALL getRepeat() = 0;
 
     /**
      * Sets the stream's volume.
      *
      * @param  volume  0.0 = silence, 1.0 = maximum volume (default)
      */
-    virtual void setVolume(float volume) = 0;
+    virtual void ADR_CALL setVolume(float volume) = 0;
 
     /**
      * Gets the current volume.
      *
      * @return  current volume of the output stream
      */
-    virtual float getVolume() = 0;
+    virtual float ADR_CALL getVolume() = 0;
 
     /**
      * Set current pan.
      *
      * @param pan  -1.0 = left, 0.0 = center (default), 1.0 = right
      */
-    virtual void setPan(float pan) = 0;
+    virtual void ADR_CALL setPan(float pan) = 0;
 
     /**
      * Get current pan.
      */
-    virtual float getPan() = 0;
+    virtual float ADR_CALL getPan() = 0;
 
     /**
      * @return  true if the stream is seekable, false otherwise
      */
-    virtual bool isSeekable() = 0;
+    virtual bool ADR_CALL isSeekable() = 0;
 
     /**
      * @return  number of frames in the stream, or 0 if the stream is not
      *          seekable
      */
-    virtual int getLength() = 0;
+    virtual int ADR_CALL getLength() = 0;
     
     /**
      * Sets the current position within the sample source.  If the stream
@@ -369,14 +369,14 @@ namespace audiere {
      *
      * @param position  current position in frames
      */
-    virtual void setPosition(int position) = 0;
+    virtual void ADR_CALL setPosition(int position) = 0;
 
     /**
      * Returns the current position within the sample source.
      *
      * @return  current position in frames
      */
-    virtual int getPosition() = 0;
+    virtual int ADR_CALL getPosition() = 0;
   };
 
 
@@ -398,7 +398,7 @@ namespace audiere {
      * update on an internal thread.  If that is the case, this method
      * does nothing.
      */
-    virtual void update() = 0;
+    virtual void ADR_CALL update() = 0;
 
     /**
      * Open an output stream with a given sample source.  If the sample
@@ -413,7 +413,7 @@ namespace audiere {
      *
      * @return  new output stream if successful, 0 if failure
      */
-    virtual OutputStream* openStream(SampleSource* source) = 0;
+    virtual OutputStream* ADR_CALL openStream(SampleSource* source) = 0;
 
     /**
      * Open a single buffer with the specified PCM data.  This is sometimes
@@ -437,7 +437,7 @@ namespace audiere {
      *
      * @return  new output stream if successful, 0 if failure
      */
-    virtual OutputStream* openBuffer(
+    virtual OutputStream* ADR_CALL openBuffer(
       void* samples,
       int frame_count,
       int channel_count,

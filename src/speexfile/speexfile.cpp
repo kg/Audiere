@@ -193,7 +193,7 @@ int speexfile::seek_time ( double timepos )
         if ( timepos >= time &&
              timepos  < time + stream_get_duration (i) ) {
             double delta_s = (timepos - time) * stream_get_samplerate (i);
-            return seek_sample ( sample + delta_s );
+            return seek_sample ( int64_t(sample + delta_s) );
         }
         time   += stream_get_duration ( i );
         sample += stream_get_samples  ( i );
@@ -492,7 +492,7 @@ double speexfile::stream_get_duration ( int32_t _stream )
     if ( _stream >= streamcount ) return 0;
     if ( stream_get_samplerate (_stream) == 0 ) return 0;
 
-    return stream_get_samples ( _stream ) / stream_get_samplerate ( _stream );
+    return double(stream_get_samples ( _stream ) / stream_get_samplerate ( _stream ));
 }
 
 double speexfile::stream_get_bitrate ( int32_t _stream )

@@ -7,10 +7,14 @@ namespace audiere {
   class FileReader : public speexfile::Reader {
   private:
     FilePtr m_file;
+    bool m_seekable;
 
   public:
     FileReader(FilePtr file) {
       m_file = file;
+
+      // Hacky test to see whether we can seek in the file.
+      m_seekable = m_file->seek(0, File::BEGIN);
     }
 
     int read(void* ptr, int size) {
@@ -35,7 +39,7 @@ namespace audiere {
     }
 
     bool can_seek() {
-      return true;
+      return m_seekable;
     }
   };
 
@@ -64,8 +68,8 @@ namespace audiere {
       return false;
     }
 
-    int32_t rate     = m_speexfile->stream_get_samplerate();
-    int32_t channels = m_speexfile->stream_get_channels();
+    speexfile::int32_t rate     = m_speexfile->stream_get_samplerate();
+    speexfile::int32_t channels = m_speexfile->stream_get_channels();
     if (rate == 0 || channels == 0) {
       delete m_speexfile;
       m_speexfile = 0;

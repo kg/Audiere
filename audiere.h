@@ -264,4 +264,133 @@ int ADR_CALL AdrGetStreamVolume(
 #endif
 
 
+// C++ convenience classes 
+#ifdef __cplusplus
+
+#include <exception>
+#include <string>
+
+namespace audiere {
+
+  class Context;
+
+
+  // STREAM
+
+  class Stream {
+  private:
+    Stream(ADR_STREAM stream) {
+      m_stream = stream;
+    }
+
+  public:
+    ~Stream() {
+      AdrCloseStream(m_stream);
+    }
+
+    void play() {
+      AdrPlayStream(m_stream);
+    }
+    void pause() {
+      AdrPauseStream(m_stream);
+    }
+    void reset() {
+      AdrResetStream(m_stream);
+    }
+    bool isPlaying() {
+      return (AdrIsStreamPlaying(m_stream) == ADR_TRUE);
+    }
+    void setRepeat(bool repeat) {
+      AdrSetStreamRepeat(m_stream, repeat ? ADR_TRUE : ADR_FALSE);
+    }
+    bool getRepeat() {
+      return (AdrGetStreamRepeat(m_stream) == ADR_TRUE);
+    }
+    void setVolume(int volume) {
+      AdrSetStreamVolume(m_stream, volume);
+    }
+    int getVolume() {
+      return AdrGetStreamVolume(m_stream);
+    }
+    
+  private:
+    ADR_STREAM m_stream;
+
+    friend Context;
+  };
+
+
+  // CONTEXT ATTRIBUTES
+
+  class ContextAttr {
+  public:
+    ContextAttr() {
+      m_attr = AdrCreateContextAttr();
+    }
+
+    ~ContextAttr() {
+      AdrDestroyContextAttr(m_attr);
+    }
+
+    void setOutputDevice(const char* device) {
+      AdrContextAttrSetOutputDevice(m_attr, device);
+    }
+    void setParameters(const char* parameters) {
+      AdrContextAttrSetParameters(m_attr, parameters);
+    }
+    void setOpaque(void* opaque) {
+      AdrContextAttrSetOpaque(m_attr, opaque);
+    }
+    void setFileCallbacks(
+        ADR_FILE_OPEN  open,
+        ADR_FILE_CLOSE close,
+        ADR_FILE_READ  read,
+        ADR_FILE_SEEK  seek,
+        ADR_FILE_TELL  tell) {
+      
+      AdrContextAttrSetFileCallbacks(m_attr, open, close, read, seek, tell);
+    }
+
+  private:
+    ADR_CONTEXT_ATTR m_attr;
+
+    friend Context* CreateContext(ContextAttr* attr);
+  };
+
+
+  // CONTEXT
+
+  class Context {
+  private:
+    Context(ADR_CONTEXT context) {
+      m_context = context;
+    }
+
+  public:
+    ~Context() {
+      AdrDestroyContext(m_context);
+    }
+
+    Stream* openStream(const char* filename) {
+      ADR_STREAM stream = AdrOpenStream(m_context, filename);
+      return (stream ? new Stream(stream) : 0);
+    }
+
+  private:
+    ADR_CONTEXT m_context;
+
+    friend Context* CreateContext(ContextAttr* attr);
+  };
+
+
+  // CONTEXT FACTORY
+  inline Context* CreateContext(ContextAttr* attr) {
+    ADR_CONTEXT context = AdrCreateContext(attr ? attr->m_attr : 0);
+    return (context ? new Context(context) : 0);
+  }
+}
+
+#endif
+
+
 #endif

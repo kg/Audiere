@@ -25,7 +25,7 @@ void Swap(T& a, T& b) {
 
 
 inline adr_u32 SwapEndianness32(adr_u32 value) {
-  adr_u8* u8 = (adr_u8*)value;
+  adr_u8* u8 = (adr_u8*)&value;
   Swap(u8[0], u8[3]);
   Swap(u8[1], u8[2]);
   return value;

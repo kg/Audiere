@@ -13,8 +13,8 @@ static const int BUFFER_MILLISECONDS = 250;
 
 ALOutputContext::ALOutputContext()
 {
-  m_Device = NULL;
-  m_Context = NULL;
+  m_Device = 0;
+  m_Context = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,14 +22,14 @@ ALOutputContext::ALOutputContext()
 ALOutputContext::~ALOutputContext()
 {
   if (m_Context) {
-    alcMakeContextCurrent(NULL);
+    alcMakeContextCurrent(0);
     alcDestroyContext(m_Context);
-    m_Context = NULL;
+    m_Context = 0;
   }
 
   if (m_Device) {
     alcCloseDevice(m_Device);
-    m_Device = NULL;
+    m_Device = 0;
   }
 }
 
@@ -44,16 +44,16 @@ ALOutputContext::Initialize(const char* parameters)
   }
 
   // open an output device
-  m_Device = alcOpenDevice(NULL);
+  m_Device = alcOpenDevice(0);
   if (!m_Device) {
     return false;
   }
 
   // create a rendering context
-  m_Context = alcCreateContext(m_Device, NULL);
+  m_Context = alcCreateContext(m_Device, 0);
   if (!m_Context) {
     alcCloseDevice(m_Device);
-    m_Device = NULL;
+    m_Device = 0;
     return false;
   }
 
@@ -83,15 +83,15 @@ ALOutputContext::Initialize(const char* parameters)
 
   // if we failed, go home
   if (!success) {
-    alcMakeContextCurrent(NULL);
+    alcMakeContextCurrent(0);
     alcDestroyContext(m_Context);
-    m_Context = NULL;
+    m_Context = 0;
     alcCloseDevice(m_Device);
-    m_Device = NULL;
+    m_Device = 0;
     return false;
   }
 
-  return (m_Device != NULL);
+  return (m_Device != 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +128,7 @@ ALOutputContext::OpenStream(ISampleSource* source)
   } else if (channel_count == 2 && bits_per_sample == 16) {
     format = AL_FORMAT_STEREO16;
   } else {
-    return NULL;
+    return 0;
   }
 
   // generate buffers
@@ -246,7 +246,10 @@ ALOutputStream::Update()
   int buffer_length_bytes = read_size_bytes;
   while (processed_buffers--) {
 
-    Read(sample_buffer, read_size_samples);
+    if (Read(sample_buffer, read_size_samples) == 0) {
+      Stop();
+      break;
+    }
 
     // unqueue/refill/queue
     ALuint buffer;
@@ -316,8 +319,7 @@ ALOutputStream::FillBuffers()
       m_Format,
       samples,
       m_BufferLength * m_SampleSize,
-      m_SampleRate
-    );
+      m_SampleRate);
 
     samples += m_BufferLength * m_SampleSize;
     buffer++;

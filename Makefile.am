@@ -55,3 +55,7 @@ libaudiere_la_LDFLAGS = \
 	-lvorbisfile \
 	-lvorbis \
 	-logg
+
+libaudiere_la_LIBADD = \
+	mikmod/mmio/libmmio.la \
+	mikmod/mikmod/libmikmod.la

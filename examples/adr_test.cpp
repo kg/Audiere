@@ -15,11 +15,16 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  auto_ptr<Context> context(CreateContext(0));
+  ContextAttr attr;
+  attr.setOutputDevice("openal");
+
+  auto_ptr<Context> context(CreateContext(&attr));
   if (!context.get()) {
     cerr << "CreateContext() failed" << endl;
     return EXIT_FAILURE;
   }
+
+  cerr << "created context" << endl;
 
   auto_ptr<Stream> stream(context->openStream(argv[1]));
   if (!stream.get()) {
@@ -27,7 +32,11 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
+  cerr << "created stream" << endl;
+
   stream->play();
+
+  cerr << "started playback" << endl;
   while (stream->isPlaying()) {
     sleep(1);
   }

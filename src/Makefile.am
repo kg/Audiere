@@ -20,12 +20,12 @@ OSS_SOURCES = device_oss.cpp device_oss.h
 endif
 
 libaudiere_la_SOURCES = \
-	buffer_stream.cpp \
-	buffer_stream.h \
 	debug.cpp \
 	debug.h \
 	default_file.h \
 	device.cpp \
+	device_mixer.cpp \
+	device_mixer.h \
 	device_null.cpp \
 	device_null.h \
 	$(OPENAL_SOURCES) \
@@ -40,12 +40,11 @@ libaudiere_la_SOURCES = \
 	input_wav.cpp \
 	input_wav.h \
 	internal.h \
-	mixer.cpp \
-	mixer.h \
 	repeatable.cpp \
 	repeatable.h \
 	resampler.cpp \
 	resampler.h \
+	sample_buffer.cpp \
 	sound.cpp \
 	threads_posix.cpp \
 	threads.h \

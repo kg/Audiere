@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 #include "audiere.h"
 using namespace std;
 using namespace audiere;
@@ -27,7 +28,14 @@ void passOut(int milliseconds) {
 #endif
 
 
+#define arraysize(array) (sizeof(array) / sizeof(*(array)))
+
+
 void testDriver(const char* driver) {
+  string sound_names[] = {"kclick.wav", "knock.wav", "laugh.wav", "shot.wav"};
+  const int sound_count = arraysize(sound_names);
+  Stream* sounds[sound_count];
+
   cout << "testDriver " << driver << "\n--" << endl;
 
   ContextAttr attr;
@@ -38,39 +46,36 @@ void testDriver(const char* driver) {
     return;
   }
 
-  auto_ptr<Stream> stream1(context->openStream("laugh.wav"));
-  if (!stream1.get()) {
-    cout << "Error opening laugh.wav" << endl;
-    return;
+  for (int i = 0; i < sound_count; ++i) {
+    string name = sound_names[i];
+    sounds[i] = context->openStream(name.c_str());
+    if (!sounds[i]) {
+      for (int j = 0; j < i; ++j) {
+        delete sounds[i];
+      }
+      cout << "Error opening stream: " << name << endl;
+      return;
+    }
   }
 
-  auto_ptr<Stream> stream2(context->openStream("shot.wav"));
-  if (!stream2.get()) {
-    cout << "Error opening shot.wav" << endl;
-    return;
-  }
-
-  for (int i = 0; i < 3; ++i) {
-    cout << "Playing laugh.wav...  this should last about one second..." << endl;
-    stream1->play();
-    while (stream1->isPlaying()) {
+  for (int i = 0; i < sound_count; ++i) {
+    cout << "Playing " << sound_names[i] << "...";
+    sounds[i]->play();
+    while (sounds[i]->isPlaying()) {
       passOut(50);
     }
-    cout << "Done\n" << endl;
+    cout << "Done" << endl;
 
-    cout << "Playing shot.wav...  this should last about one second..." << endl;
-    stream2->play();
-    while (stream2->isPlaying()) {
-      passOut(50);
-    }
-    cout << "Done\n" << endl;
+    delete sounds[i];
   }
+
+  cout << endl;
 }
 
 
 int main() {
-  testDriver("null");
-  testDriver("");  // default
+  testDriver("");
+  testDriver("null");  // default
 
   // VC++ 6 sucks
   return 0;

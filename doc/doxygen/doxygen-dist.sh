@@ -14,8 +14,7 @@ doxygen audiere.doxy      || die
 cp -r html $BASE          || die
 zip -r $BASE.zip $BASE    || die
 tar cfv $BASE.tar $BASE   || die
-bzip2 -k $BASE.tar        || die
-gzip $BASE.tar            || die
+bzip2 $BASE.tar           || die
 
 "C:/Program Files/HTML Help Workshop/hhc" html/index.hhp
 mv html/index.chm $BASE.chm || die

@@ -1,26 +1,62 @@
-This document will eventually describe how to release a new version of
-Audiere.  For now, it just lists some information that will be useful
-when the time to release comes around.
+Bump the Version Number
+
+     The following files contain version information:
+         configure.in
+         make-release-sgi.sh
+         make-release-win32.sh
+         bindings/python/setup.py
+         doc/doxygen/audiere.doxy
+         doc/doxygen/doxygen-dist.sh
+         doc/doxygen/mainpage.doxy
+         src/audiere.h
+         src/audiere.rc
+         src/version.cpp
 
 
-== Bumping the Version Number ==
-
-The following files contain version information:
-  configure.in
-  bindings/python/setup.py
-  doc/doxygen/audiere.doxy
-  doc/doxygen/doxygen-dist.sh
-  doc/doxygen/mainpage.doxy
-  src/audiere.h
-  src/audiere.rc
-  src/version.cpp
+Run tests with wxPlayer!!!
 
 
-== Announcements ==
+Build the VC6 Binary Release
 
-Announce on http://audiere.sf.net
-Announce on http://aegisknight.org
-Announce on http://flipcode.com
-Announce on http://sf.net/projects/audiere (news)
-Announce on http://isugamedev.sf.net/
-Send e-mail to audiere-annc@lists.sf.net
+    1) Check out a fresh copy from CVS into a temporary directory
+    2) Run make-release-win32.sh
+
+
+Build the SGI Binary Release
+
+    1) Check out a fresh copy from CVS into a temporary directory
+    2) Run make-release-sgi.sh
+
+
+Build UNIX Release
+
+    1) Check out a fresh copy from CVS into a temporary directory
+    2) Run ( ./bootstrap && ./configure && make dist )
+
+
+Build Doxygen Releases
+
+    1) Check out a fresh copy from CVS into a temporary directory
+    2) Run doxygen-dist.sh
+
+
+Build CVS snapshot tarball
+
+    1) cvs export a fresh copy into a temporary directory
+    2) tar cfvj audiere-$VERSION-src.tar.bz2 audiere
+
+
+Upload the files to the SourceForge download section.
+
+
+Update the web site.
+
+
+Make Announcements
+
+     Announce on http://audiere.sourceforge.net
+     Announce on http://aegisknight.org
+     Announce on http://sf.net/projects/audiere (news)
+     Send e-mail to audiere-annc@lists.sf.net
+
+Add "$VERSION release" to changelog.

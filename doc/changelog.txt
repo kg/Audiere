@@ -123,6 +123,10 @@
   No longer use the MTM or STM mikmod loaders because they crash on
   certain wav files.
 
+2003.01.06
+
+  1.9.2 Release
+
 2003.01.05
 
   Many general improvements to wxPlayer.

@@ -91,10 +91,7 @@ wxPlayerFrame::wxPlayerFrame()
   m_pause  = new wxButton(this, event_Pause,  "pause",  wxDefaultPosition);
   m_reset  = new wxButton(this, event_Reset,  "reset",  wxDefaultPosition);
   m_repeat = new wxButton(this, event_Repeat, "repeat", wxDefaultPosition);
-  m_volume = new wxSlider(this, event_Volume,
-    OutputStream::MaximumVolume,
-    OutputStream::MinimumVolume,
-    OutputStream::MaximumVolume);
+  m_volume = new wxSlider(this, event_Volume, 1000, 0, 1000);
 }
 
 
@@ -148,7 +145,8 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
     return;
   }
 
-  Sound* sound = OpenSound(g_device, result.c_str(), STREAM);
+  SampleSource* source = OpenSampleSource(result.c_str());
+  Sound* sound = OpenSound(g_device, source, STREAM);
   if (!sound) {
     wxMessageBox("Could not open stream");
   } else {
@@ -225,7 +223,7 @@ wxPlayerFrame::OnChangeVolume(wxScrollEvent& event)
 {
   int volume = event.GetPosition();
   for (int i = 0; i < m_songs->Number(); i++) {
-    m_streams[i]->setVolume(volume);
+    m_streams[i]->setVolume(volume / 1000.0f);
   }
 }
 

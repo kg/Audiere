@@ -31,10 +31,9 @@ namespace audiere {
 
   // DirectSound treats volumes as decibels (exponential growth like the Richter
   // scale).  We want a linear ramp.  Do the conversion!
-  inline int Volume_AudiereToDirectSound(int volume) {
+  inline int Volume_AudiereToDirectSound(float volume) {
     // I can't figure out the proper math, and this comes close enough...
-    double fv = volume / 255.0;  // range: 0-1
-    double attenuate = pow(1 - fv, 3);
+    double attenuate = pow(1 - volume, 3);
     return int(-10000 * attenuate);
   }
 
@@ -283,7 +282,7 @@ namespace audiere {
     m_sample_size = sample_size;
     m_last_sample = new BYTE[sample_size];
 
-    setVolume(MaximumVolume);
+    setVolume(1);
 
     // fill the buffer with data
     fillStream();
@@ -534,13 +533,13 @@ namespace audiere {
 
 
   void
-  DSOutputStream::setVolume(int volume) {
+  DSOutputStream::setVolume(float volume) {
     m_volume = volume;
     m_buffer->SetVolume(Volume_AudiereToDirectSound(volume));
   }
 
 
-  int
+  float
   DSOutputStream::getVolume() {
     return m_volume;
   }

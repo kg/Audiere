@@ -78,7 +78,7 @@ namespace audiere {
   : m_device(device)
   , m_source(source)
   , m_is_playing(false)
-  , m_volume(MaximumVolume)
+  , m_volume(1)
   , m_last_update(0)
   {
     m_device->ref();
@@ -121,12 +121,12 @@ namespace audiere {
 
 
   void
-  NullOutputStream::setVolume(int volume) {
+  NullOutputStream::setVolume(float volume) {
     m_volume = volume;
   }
 
 
-  int
+  float
   NullOutputStream::getVolume() {
     return m_volume;
   }

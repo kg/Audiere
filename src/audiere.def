@@ -6,4 +6,3 @@ EXPORTS
   AdrOpenSampleSourceFromFile
   AdrCreateTone
   AdrOpenSound
-  AdrOpenSoundFromFile

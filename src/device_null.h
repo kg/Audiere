@@ -44,8 +44,9 @@ namespace audiere {
     void stop();
     void reset();
     bool isPlaying();
-    void setVolume(int volume);
-    int  getVolume();
+
+    void  setVolume(float volume);
+    float getVolume();
 
   private:
     void resetTimer();
@@ -60,7 +61,7 @@ namespace audiere {
     SampleFormat m_sample_format;  //
 
     bool m_is_playing;
-    int m_volume;
+    float m_volume;
 
     u64 m_last_update;
 

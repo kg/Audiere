@@ -70,8 +70,9 @@ namespace audiere {
     void stop();
     void reset();
     bool isPlaying();
-    void setVolume(int volume);
-    int  getVolume();
+
+    void  setVolume(float volume);
+    float getVolume();
 
     void fillStream();
     void update();
@@ -91,7 +92,7 @@ namespace audiere {
     SampleSource* m_source;
     int m_sample_size;  // convenience: bits per sample * channel count / 8
 
-    int m_volume;
+    float m_volume;
     ::BYTE* m_last_sample; // the last sample read (used for clickless silence)
 
     friend class DSAudioDevice;

@@ -414,9 +414,9 @@ typedef struct XMNOTE
         break;
 
         case 'L'-55:                    // L - set envelope position
-            effdat.param.hiword.u = ninf->dat;
-            effdat.param.byte_b   = TRUE;
-	    effdat.param.byte_a   = 0; /* Works better like this! */
+            effdat.param.words.hiword.u = ninf->dat;
+            effdat.param.bytes.byte_b   = TRUE;
+	    effdat.param.bytes.byte_a   = 0; /* Works better like this! */
             effdat.effect         = UNI_ENVELOPE_CONTROL;
             effdat.framedly       = UFD_RUNONCE;
             utrk_write_local(ut, &effdat, UNIMEM_NONE);
@@ -434,8 +434,8 @@ typedef struct XMNOTE
 
         case 'R'-55:                    // R - multi retrig note
             if(ninf->dat)
-            {   effdat.param.loword.u = lo;
-                effdat.param.hiword.u = hi;
+            {   effdat.param.words.loword.u = lo;
+                effdat.param.words.hiword.u = hi;
                 effdat.effect   = UNI_RETRIG;
                 effdat.framedly = 0;
                 utrk_write_local(ut, &effdat, FT2MEM_RETRIG);
@@ -443,8 +443,8 @@ typedef struct XMNOTE
         break;
 
         case 'T'-55:                    // T - Tremor !! (== S3M effect I)
-            effdat.param.loword.u = lo + 1;
-            effdat.param.hiword.u = hi + 1;
+            effdat.param.words.loword.u = lo + 1;
+            effdat.param.words.hiword.u = hi + 1;
             effdat.effect   = UNI_TREMOR;
             effdat.framedly = 1;
             utrk_write_local(ut, &effdat, FT2MEM_TREMOR);

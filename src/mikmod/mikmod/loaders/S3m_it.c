@@ -182,11 +182,11 @@ enum
                     effdat.framedly = 0;
                     if(oldeffect & 1)
                     {   // should this be masked or not? Will we ever know?  Will it ever matter?
-                        effdat.param.loword.u = (lo+1)&0xf;
-                        effdat.param.hiword.u = (hi+1)&0xf;
+                        effdat.param.words.loword.u = (lo+1)&0xf;
+                        effdat.param.words.hiword.u = (hi+1)&0xf;
                     } else
-                    {   effdat.param.loword.u = lo;
-                        effdat.param.hiword.u = hi;
+                    {   effdat.param.words.loword.u = lo;
+                        effdat.param.words.hiword.u = hi;
                     }
                     utrk_write_local(ut, &effdat, STMEM_TREMOR);
                 } else utrk_memory_local(ut, &effdat, STMEM_TREMOR, 0);
@@ -194,8 +194,8 @@ enum
 
             case 0xa:               // Jxy arpeggio
                 if(inf)
-                {   effdat.param.byte_a = lo;
-                    effdat.param.byte_b = hi;
+                {   effdat.param.bytes.byte_a = lo;
+                    effdat.param.bytes.byte_b = hi;
                     effdat.effect  = UNI_ARPEGGIO;
                     utrk_write_local(ut, &effdat, STMEM_ARPEGGIO);
                 } else utrk_memory_local(ut, NULL, STMEM_ARPEGGIO, 0);
@@ -232,8 +232,8 @@ enum
             case 0xf:               // Oxx set sampleoffset xx00h
 		if (inf) {
                   effdat.effect         = UNI_OFFSET_LEGACY;
-                  effdat.param.loword.u = inf<<8;
-		  if (!(oldeffect & 1)) effdat.param.hiword.u=0x2000;
+                  effdat.param.words.loword.u = inf<<8;
+		  if (!(oldeffect & 1)) effdat.param.words.hiword.u=0x2000;
 			/* Must ignore offset commands that go past
 			   end of sample when old effects are off. */
 			   
@@ -249,8 +249,8 @@ enum
 
             case 0x11:              // Qxy Retrig (+volumeslide)
                 if(inf)
-                {   effdat.param.loword.u = lo;
-                    effdat.param.hiword.u = hi;
+                {   effdat.param.words.loword.u = lo;
+                    effdat.param.words.hiword.u = hi;
                     effdat.effect   = UNI_RETRIG;
                     effdat.framedly = 0;
                     utrk_write_local(ut, &effdat, STMEM_RETRIG);
@@ -301,7 +301,7 @@ enum
     
                         case SS_FRAMEDELAY:     // S6x Delay x number of frames (patdly)
                             effdat.effect          = UNI_GLOB_DELAY;
-                            effdat.param.loword.u  = lo;
+                            effdat.param.words.loword.u  = lo;
                             globeffect = 1;
                         break;
     
@@ -332,26 +332,26 @@ enum
                                 break;
 
                                 case 8:         // S78 Volume Envelope on
-                                    effdat.param.byte_b = TRUE;
+                                    effdat.param.bytes.byte_b = TRUE;
 
                                 case 7:         // S77 Volume Envelope off
                                     effdat.effect = UNI_ENVELOPE_CONTROL;
                                 break;
 
                                 case 0xa:       // S7a Panning Envelope on
-                                    effdat.param.byte_b = TRUE;
+                                    effdat.param.bytes.byte_b = TRUE;
 
                                 case 9:         // S79 Panning Envelope off
                                     effdat.effect       = UNI_ENVELOPE_CONTROL;
-                                    effdat.param.byte_a = 1;
+                                    effdat.param.bytes.byte_a = 1;
                                 break;
 
                                 case 0xc:       // S7c Pitch Envelope on
-                                    effdat.param.byte_b = TRUE;
+                                    effdat.param.bytes.byte_b = TRUE;
 
                                 case 0xb:       // S7b Pitch Envelope off
                                     effdat.effect       = UNI_ENVELOPE_CONTROL;
-                                    effdat.param.byte_a = 2;
+                                    effdat.param.bytes.byte_a = 2;
                                 break;
                             }
                         break;
@@ -367,7 +367,7 @@ enum
                         break;
 
                         case SS_HIOFFSET:       // set the upper bits of the sample offset.
-                            effdat.param.hiword.u = lo|0x1000; /* Flag to indicate hi word. */
+                            effdat.param.words.hiword.u = lo|0x1000; /* Flag to indicate hi word. */
                             effdat.effect         = UNI_OFFSET_LEGACY;
                         break;
 
@@ -391,7 +391,7 @@ enum
                         break;
 
                         case SS_PATDELAY:
-                            effdat.param.hiword.u = lo;
+                            effdat.param.words.hiword.u = lo;
                             effdat.effect         = UNI_GLOB_DELAY;
                             globeffect = 1;
                         break;

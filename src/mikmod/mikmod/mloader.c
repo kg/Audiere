@@ -294,8 +294,8 @@ MLOADER *firstloader = NULL;
         break;
 
         case 0xe:                  // pattern delay
-            effdat.param.hiword.u = dat;
-            effdat.param.loword.u = 0;
+            effdat.param.words.hiword.u = dat;
+            effdat.param.words.loword.u = 0;
             effdat.effect         = UNI_GLOB_DELAY;
             //effdat.framedly       = 0;
             globeffect = 1;
@@ -332,8 +332,8 @@ MLOADER *firstloader = NULL;
     {   // global effects get special treatments now.
         switch(eff)
         {   case 0:                     // arpeggio!
-                effdat.param.byte_a = lo;
-                effdat.param.byte_b = hi;
+                effdat.param.bytes.byte_a = lo;
+                effdat.param.bytes.byte_b = hi;
                 effdat.effect  = UNI_ARPEGGIO;
                 utrk_write_local(ut, &effdat, UNIMEM_NONE);
             break;
@@ -428,7 +428,7 @@ MLOADER *firstloader = NULL;
                 if(dat)
                 {   effdat.effect          = UNI_OFFSET_LEGACY;
                     effdat.framedly        = UFD_RUNONCE;
-                    effdat.param.loword.u  = dat*256;
+                    effdat.param.words.loword.u  = dat*256;
                      utrk_write_local(ut, &effdat, PTMEM_OFFSET);
                 } else utrk_memory_local(ut, &effdat, PTMEM_OFFSET, 0);
             break;

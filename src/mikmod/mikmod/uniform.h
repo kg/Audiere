@@ -285,19 +285,24 @@ typedef union _WORD_MOB
     SWORD      s;
 } WORD_MOB;
 
+typedef struct _WORD_PAIR
+{
+  WORD_MOB loword;
+  WORD_MOB hiword;
+} WORD_PAIR;
+
+typedef struct _BYTE_BUNCH
+{
+  UBYTE byte_a, byte_b, byte_c, byte_d;
+} BYTE_BUNCH;
+
 typedef union _INT_MOB
 {   ULONG      u;
     SLONG      s;
 
-    struct _WORD_PAIR
-    {   WORD_MOB  loword;
-        WORD_MOB  hiword;
-    };
+  WORD_PAIR words;
+  BYTE_BUNCH bytes;   
 
-    struct _BYTE_BUNCH
-    {   UBYTE     byte_a, byte_b,
-                  byte_c, byte_d;
-    };
 } INT_MOB;
 
 

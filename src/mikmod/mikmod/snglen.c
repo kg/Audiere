@@ -278,8 +278,8 @@ extern UNITRK_EFFECT *global_geteffect(MPLAYER *ps, UNITRK_EFFECT *effdat, MP_CO
             break;
 
             case UNI_GLOB_TEMPO:
-                if(ps->state.patdly2 || (dat.byte_a < 32)) break;
-                ps->state.bpm = dat.byte_a;
+                if(ps->state.patdly2 || (dat.bytes.byte_a < 32)) break;
+                ps->state.bpm = dat.bytes.byte_a;
             break;
 
             case UNI_GLOB_TEMPOSLIDE:
@@ -290,7 +290,7 @@ extern UNITRK_EFFECT *global_geteffect(MPLAYER *ps, UNITRK_EFFECT *effdat, MP_CO
 
             case UNI_GLOB_SPEED:
                 if(ps->state.patdly2) break;
-                ps->state.sngspd = dat.byte_a;
+                ps->state.sngspd = dat.bytes.byte_a;
             break;
 
             case UNI_GLOB_LOOPSET:       // set loop
@@ -303,7 +303,7 @@ extern UNITRK_EFFECT *global_geteffect(MPLAYER *ps, UNITRK_EFFECT *effdat, MP_CO
                 // Then set patloop flag to indicate to the patjump code it's time to loop.
 
                 if(!a->pat_repcnt)
-                {   a->pat_repcnt = dat.byte_a + 1;      // not yet looping, so set repcnt
+                {   a->pat_repcnt = dat.bytes.byte_a + 1;      // not yet looping, so set repcnt
                     ps->state.patloop++;
                     if(dat.u & UFF_LOOP_PATTERNSCOPE)
                     {   if(a->rep_sngpos != ps->state.sngpos)
@@ -327,8 +327,8 @@ extern UNITRK_EFFECT *global_geteffect(MPLAYER *ps, UNITRK_EFFECT *effdat, MP_CO
 
             case UNI_GLOB_DELAY:       // pattern delay
                 if(!ps->state.patdly2)
-                {   if(dat.hiword.u) ps->state.patdly   = dat.hiword.u + 1;
-                    if(dat.loword.u) ps->state.framedly = dat.loword.u;
+                {   if(dat.words.hiword.u) ps->state.patdly   = dat.words.hiword.u + 1;
+                    if(dat.words.loword.u) ps->state.framedly = dat.words.loword.u;
                 }
             break;
 
@@ -337,21 +337,21 @@ extern UNITRK_EFFECT *global_geteffect(MPLAYER *ps, UNITRK_EFFECT *effdat, MP_CO
                 // Should PT do the same?  I hope so...
 
                 if(ps->state.patdly2)  break;
-                if(dat.loword.u > ps->mf->numpos) dat.loword.u = ps->mf->numpos;
+                if(dat.words.loword.u > ps->mf->numpos) dat.words.loword.u = ps->mf->numpos;
 
                 ps->state.posjmp = 2;         // 2 means we set the new position manually.
 
-                if(ps->state.sngpos != dat.loword.u)
-                    ps->state.sngpos = dat.loword.u;
+                if(ps->state.sngpos != dat.words.loword.u)
+                    ps->state.sngpos = dat.words.loword.u;
 
                 // Can't have this else it fucks up backwards songs.
-                //ps->state.patbrk = dat.hiword.u;
+                //ps->state.patbrk = dat.words.hiword.u;
             break;
 
             case UNI_GLOB_PATBREAK:
                 if(ps->state.patbrk || ps->state.patdly2) break;
-                if(dat.loword.u < ps->mf->pattrows[ps->mf->positions[ps->state.sngpos]])
-                    ps->state.patbrk = dat.loword.u;
+                if(dat.words.loword.u < ps->mf->pattrows[ps->mf->positions[ps->state.sngpos]])
+                    ps->state.patbrk = dat.words.loword.u;
                 else
                     ps->state.patbrk = 0;
                 if(!ps->state.posjmp) ps->state.posjmp = 3;

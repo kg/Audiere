@@ -688,14 +688,14 @@ static int ScalePan(int pan,int pansep)
     void __inline DoEnvelopeControl(INT_MOB dat, UBYTE *flag, unsigned int envlen, ENVPR *env)
 // =====================================================================================
 {
-    if(dat.byte_b)
+    if(dat.bytes.byte_b)
         *flag |= EF_ON;
     else
         *flag &= ~EF_ON;
 
     // no need to check for i being null?
-    if(dat.hiword.u)
-        env->p = env->env[(dat.hiword.u>envlen) ? envlen : dat.hiword.u].pos;
+    if(dat.words.hiword.u)
+        env->p = env->env[(dat.words.hiword.u>envlen) ? envlen : dat.words.hiword.u].pos;
 }
 
 
@@ -925,8 +925,8 @@ static int ScalePan(int pan,int pansep)
             break;
 
             case UNI_GLOB_TEMPO:
-                if(ps->state.patdly2 || (dat.byte_a < 32)) break;
-                ps->state.bpm = dat.byte_a;
+                if(ps->state.patdly2 || (dat.bytes.byte_a < 32)) break;
+                ps->state.bpm = dat.bytes.byte_a;
             break;
 
             case UNI_GLOB_TEMPOSLIDE:
@@ -938,7 +938,7 @@ static int ScalePan(int pan,int pansep)
 
             case UNI_GLOB_SPEED:
                 if(ps->state.patdly2) break;
-                ps->state.sngspd = dat.byte_a;
+                ps->state.sngspd = dat.bytes.byte_a;
                 ps->state.vbtick = 0;
             break;
 
@@ -952,7 +952,7 @@ static int ScalePan(int pan,int pansep)
                 // Then set patloop flag to indicate to the patjump code it's time to loop.
 
                 if(!a->pat_repcnt)
-                {   a->pat_repcnt = dat.byte_a + 1;      // not yet looping, so set repcnt
+                {   a->pat_repcnt = dat.bytes.byte_a + 1;      // not yet looping, so set repcnt
                     ps->state.patloop++;
                     if(dat.u & UFF_LOOP_PATTERNSCOPE)
                     {   if(a->rep_sngpos != ps->state.sngpos)
@@ -976,9 +976,9 @@ static int ScalePan(int pan,int pansep)
 
             case UNI_GLOB_DELAY:       // pattern delay
                 if(!ps->state.patdly2)
-                {   if(dat.hiword.u) ps->state.patdly   = dat.hiword.u + 1;
+                {   if(dat.words.hiword.u) ps->state.patdly   = dat.words.hiword.u + 1;
                 }
-                if(dat.loword.u) ps->state.framedly += dat.loword.u;
+                if(dat.words.loword.u) ps->state.framedly += dat.words.loword.u;
             break;
 
             case UNI_GLOB_PATJUMP:
@@ -986,23 +986,23 @@ static int ScalePan(int pan,int pansep)
                 // Should PT do the same?  I hope so...
 
                 if(ps->state.patdly2)  break;
-                if(dat.loword.u > ps->mf->numpos) dat.loword.u = ps->mf->numpos;
+                if(dat.words.loword.u > ps->mf->numpos) dat.words.loword.u = ps->mf->numpos;
 
                 ps->state.posjmp = 2;         // 2 means we set the new position manually.
 
                 if(ps->state.vbtick == ps->state.sngspd-1)
-                {   if(ps->state.sngpos != dat.loword.u)
-                        ps->state.sngpos = dat.loword.u;
+                {   if(ps->state.sngpos != dat.words.loword.u)
+                        ps->state.sngpos = dat.words.loword.u;
                 }
 
                 // Can't have this else it fucks up backwards songs.
-                //ps->state.patbrk = dat.hiword.u;
+                //ps->state.patbrk = dat.words.hiword.u;
             break;
 
             case UNI_GLOB_PATBREAK:
                 if(ps->state.patbrk || ps->state.patdly2) break;
-                if(dat.loword.u < ps->mf->pattrows[ps->mf->positions[ps->state.sngpos]])
-                    ps->state.patbrk = dat.loword.u;
+                if(dat.words.loword.u < ps->mf->pattrows[ps->mf->positions[ps->state.sngpos]])
+                    ps->state.patbrk = dat.words.loword.u;
                 else
                     ps->state.patbrk = 0;
                 if(!ps->state.posjmp) ps->state.posjmp = 3;
@@ -1048,8 +1048,8 @@ static int ScalePan(int pan,int pansep)
                 lo = a->shared.note;
 
                 switch(ps->state.vbtick % 3)
-                {   case 1:  lo += dat.byte_b;  break;
-                    case 2:  lo += dat.byte_a;  break;
+                {   case 1:  lo += dat.bytes.byte_b;  break;
+                    case 2:  lo += dat.bytes.byte_a;  break;
                 }
                 a->shared.period = GetPeriod(ps->mf->flags, lo, a->speed);
                 a->ownper = 1;
@@ -1093,8 +1093,8 @@ static int ScalePan(int pan,int pansep)
             case UNI_TREMOR:
                 if(!dat.u) return;
 
-                a->tremor %= (dat.hiword.u + dat.loword.u);
-                a->volume  = (a->tremor < dat.hiword.u ) ? a->tmpvolume : 0;
+                a->tremor %= (dat.words.hiword.u + dat.words.loword.u);
+                a->volume  = (a->tremor < dat.words.hiword.u ) ? a->tmpvolume : 0;
                 a->tremor++;
                 a->ownvol  = 1;
             break;
@@ -1263,27 +1263,27 @@ static int ScalePan(int pan,int pansep)
                 // sample until ps->state.vbtick==nib
 
                 //if(dat.byte_a >= ps->state.sngspd) dat.byte_a = ps->state.sngspd-1;
-                if(ps->state.vbtick == dat.byte_a) a->notedelay = 0;
+                if(ps->state.vbtick == dat.bytes.byte_a) a->notedelay = 0;
                 else if(ps->state.vbtick == 0) a->notedelay = 1;
             break;
 
             case UNI_RETRIG:
-                if(dat.loword.u > 0)
+                if(dat.words.loword.u > 0)
                 {   if(a->retrig == 0)
                     {   // when retrig counter reaches 0,
                         // reset counter and restart the sample
 
                         a->shared.kick |= KICK_NOTE;
-                        a->retrig       = dat.loword.u;
+                        a->retrig       = dat.words.loword.u;
 
                         if(ps->state.vbtick)                     // don't slide on first retrig
-                        {   switch(dat.hiword.u)
+                        {   switch(dat.words.hiword.u)
                             {   case 1:
                                 case 2:
                                 case 3:
                                 case 4:
                                 case 5:
-                                    a->tmpvolume -= (1<<(dat.hiword.u-1));
+                                    a->tmpvolume -= (1<<(dat.words.hiword.u-1));
                                 break;
             
                                 case 6:
@@ -1299,7 +1299,7 @@ static int ScalePan(int pan,int pansep)
                                 case 0xb:
                                 case 0xc:
                                 case 0xd:
-                                    a->tmpvolume+=(1<<(dat.hiword.u-9));
+                                    a->tmpvolume+=(1<<(dat.words.hiword.u-9));
                                 break;
 
                                 case 0xe:
@@ -1323,13 +1323,13 @@ static int ScalePan(int pan,int pansep)
 
 		/* "Hiworld"? As in "Hello world!"? B-) */ 
 
-                if(dat.loword.u) a->offset_lo = dat.loword.u;
-                if(dat.hiword.u&0x1000) a->offset_hi = dat.hiword.u&0x0fff; /* SA0 can't be ignored! */
+                if(dat.words.loword.u) a->offset_lo = dat.words.loword.u;
+                if(dat.words.hiword.u&0x1000) a->offset_hi = dat.words.hiword.u&0x0fff; /* SA0 can't be ignored! */
 
-                if (dat.loword.u) {
+                if (dat.words.loword.u) {
 		  a->shared.start = (int)(a->offset_hi<<16) + a->offset_lo;
                   if(a->shared.s && (a->shared.s->flags & SL_LOOP) && (a->shared.start > (SLONG)a->shared.s->loopend)) a->shared.start = a->shared.s->loopstart;
-		  if((dat.hiword.u&0x2000) && (a->shared.start >= (SLONG)a->shared.s->length)) a->shared.start=0;
+		  if((dat.words.hiword.u&0x2000) && (a->shared.start >= (SLONG)a->shared.s->length)) a->shared.start=0;
                 }
             break;
 
@@ -1363,7 +1363,7 @@ static int ScalePan(int pan,int pansep)
             case UNI_ENVELOPE_CONTROL:
                 if(!a->slave || !a->shared.i) break;
 
-                switch(dat.byte_a)
+                switch(dat.bytes.byte_a)
                 {   
                     // Note to self:  Should these reset only the envelope which is changed or
                     // all of the envelopes together (which is old behavior)?  Well, I should
@@ -1393,7 +1393,7 @@ static int ScalePan(int pan,int pansep)
             break;
 
             case UNI_NNA_CONTROL:
-                a->shared.nna    = (a->shared.nna & ~0x3f) | (dat.byte_a & 0x3f);
+                a->shared.nna    = (a->shared.nna & ~0x3f) | (dat.bytes.byte_a & 0x3f);
                 if(a->slave) a->slave->shared.nna = a->shared.nna;
             break;
 

@@ -36,11 +36,13 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  auto_ptr<OutputStream> stream1(device->openStream(CreateTone(511)));
+  auto_ptr<OutputStream> stream1(device->openStream(CreateTone(256)));
   auto_ptr<OutputStream> stream2(device->openStream(CreateTone(512)));
+  auto_ptr<OutputStream> stream3(device->openStream(CreateTone(515)));
 
   stream1->play();
   stream2->play();
+  stream3->play();
 
   // wait for five seconds
   PassOut(5);

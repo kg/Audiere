@@ -1,5 +1,9 @@
 #ifdef _MSC_VER
-#pragma warning(disable : 4786)
+  #pragma warning(disable : 4786)
+  #include <windows.h>
+  #ifdef CreateDialog
+    #undef CreateDialog
+  #endif
 #endif
 
 #include <set>
@@ -521,7 +525,7 @@ public:
     }
 
     // get the basename of the path for the window title
-    wxString basename = wxFileNameFromPath(filename);;
+    wxString basename = wxFileNameFromPath(filename);
 
     wxString title;
     title.sprintf("Sound: %s", basename.c_str());

@@ -1,0 +1,5 @@
+When compiling the wxWindows 2.4.0 libraries in order to build
+wxPlayer, make sure the optimization settings are set to /O1 (minimize
+size) and disable inline function expansion.
+
+Otherwise wxPlayer will crash in release mode!

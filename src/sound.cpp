@@ -1,4 +1,5 @@
 #include "audiere.h"
+#include "debug.h"
 #include "internal.h"
 #include "repeatable.h"
 #include "utility.h"
@@ -11,6 +12,8 @@ namespace audiere {
     SampleSource* source_raw,
     bool streaming)
   {
+    ADR_GUARD("AdrOpenSound");
+
     if (!device || !source_raw) {
       return 0;
     }

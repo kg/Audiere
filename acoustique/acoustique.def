@@ -1,0 +1,7 @@
+EXPORTS
+  AcqGetVersion
+  AcqOpenStream
+  AcqCloseStream
+  AcqGetStreamInformation
+  AcqReadStream
+  AcqResetStream

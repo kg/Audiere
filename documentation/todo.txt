@@ -1,0 +1,12 @@
+Work Left To Be Done:
+
+Linux port
+MacOS port
+support 3D audio (OpenAL?  DirectSound3D?  Both?)
+.NET bindings
+Scheme bindings
+seekable streams
+streaming over a network
+integrate with a sane build system (maybe autoconf/automake?)
+do a thread-safety audit
+make the null output driver actually read samples with correct timing

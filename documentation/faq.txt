@@ -1,0 +1,11 @@
+What does Audiere mean?
+--
+
+It's Latin for 'to hear'.  Pronounced oww dee err ayy.
+Rizen suggested it.  :)
+
+
+Why did you make this?  We already have FMOD.
+--
+
+I'm not a fan of FMOD's API, and it's not open source.

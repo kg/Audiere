@@ -1,0 +1,9 @@
+#include "nsISupports.idl"
+#include "mozIAudioContext.idl"
+
+
+[scriptable, uuid(e2583794-1dd1-11b2-89e7-940e3cbc9691)]
+interface mozIAudioService : nsISupports
+{
+  mozIAudioContext createContext(in string output_device, in string parameters);
+};

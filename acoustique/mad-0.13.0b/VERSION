@@ -1,0 +1,6 @@
+0.13.0b
+configure.in:25
+abxtest:31
+libmad/configure.in:25
+libmad/version.h:25-28
+winamp/in_mad.c:44

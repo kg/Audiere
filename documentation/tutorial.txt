@@ -1,0 +1,49 @@
+This a very simple introduction to a very simple API.
+
+First, #include <audiere.h>
+
+(make sure the Audiere header is in your compiler include path somewhere)
+
+You need an Audiere context before you can play sounds...
+
+
+ADR_CONTEXT context = AdrCreateContext(
+  "autodetect",  // just give me an output device
+  "",            // no extra parameters
+  NULL,          //
+  NULL,          // If we pass in NULL for the file I/O callbacks, Audiere
+  NULL,          // uses the standard C runtime functions.
+  NULL,          //
+  NULL,          //
+  NULL           //
+);
+if (!context) {
+  // failure
+} 
+
+
+Now that we have a context, we can actually open and play songs.
+
+
+ADR_STREAM stream = AdrOpenStream(context, "American Jesus.mp3");
+if (!stream) {
+  // failure
+}
+
+AdrPlayStream(stream);
+
+bool done = false;
+while (!done) {
+  // do something until the user wants to quit
+}
+
+
+Okay, now that we're done, destroy the stream and then destroy the context.
+Remember, all streams must be closed before the context is destroyed.
+
+
+AdrCloseStream(stream);
+AdrDestroyContext(context);
+
+
+That's it!  Look in audiere.h for descriptions of the remaining functions.

@@ -1,0 +1,178 @@
+%{
+/*
+ * mad - MPEG audio decoder
+ * Copyright (C) 2000-2001 Robert Leslie
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+
+# ifdef HAVE_CONFIG_H
+#  include "config.h"
+# endif
+
+# include "global.h"
+
+# include <string.h>
+
+# include "id3.h"
+# include "id3v2.h"
+%}
+struct id3v2_frame;
+%%
+#
+# ID3v2.2 frames
+#
+BUF,	N_("Recommended buffer size"),				0
+CNT,	N_("Play counter"),					0
+COM,	N_("Comments"),						0
+CRA,	N_("Audio encryption"),					0
+CRM,	N_("Encrypted meta frame"),				0
+EQU,	N_("Equalization"),					0
+ETC,	N_("Event timing codes"),				0
+GEO,	N_("General encapsulated object"),			0
+IPL,	N_("Involved people list"),				0
+LNK,	N_("Linked information"),				0
+MCI,	N_("Music CD Identifier"),				0
+MLL,	N_("MPEG location lookup table"),			0
+PIC,	N_("Attached picture"),					0
+POP,	N_("Popularimeter"),					0
+REV,	N_("Reverb"),						0
+RVA,	N_("Relative volume adjustment"),			0
+SLT,	N_("Synchronized lyric/text"),				0
+STC,	N_("Synced tempo codes"),				0
+TAL,	N_("Album/Movie/Show title"),				id3_text
+TBP,	N_("BPM (Beats Per Minute)"),				id3_text
+TCM,	N_("Composer"),						id3_text
+TCO,	N_("Content type"),					id3_text
+TCR,	N_("Copyright message"),				id3_text
+TDA,	N_("Date"),						id3_text
+TDY,	N_("Playlist delay"),					id3_text
+TEN,	N_("Encoded by"),					id3_text
+TFT,	N_("File type"),					id3_text
+TIM,	N_("Time"),						id3_text
+TKE,	N_("Initial key"),					id3_text
+TLA,	N_("Language(s)"),					id3_text
+TLE,	N_("Length"),						id3_text
+TMT,	N_("Media type"),					id3_text
+TOA,	N_("Original artist(s)/performer(s)"),			id3_text
+TOF,	N_("Original filename"),				id3_text
+TOL,	N_("Original lyricist(s)/text writer(s)"),		id3_text
+TOR,	N_("Original release year"),				id3_text
+TOT,	N_("Original album/Movie/Show title"),			id3_text
+TP1,	N_("Lead artist(s)/Lead performer(s)/Soloist(s)/Performing group"),	id3_text
+TP2,	N_("Band/Orchestra/Accompaniment"),			id3_text
+TP3,	N_("Conductor/Performer refinement"),			id3_text
+TP4,	N_("Interpreted, remixed, or otherwise modified by"),	id3_text
+TPA,	N_("Part of a set"),					id3_text
+TPB,	N_("Publisher"),					id3_text
+TRC,	N_("ISRC (International Standard Recording Code)"),	id3_text
+TRD,	N_("Recording dates"),					id3_text
+TRK,	N_("Track number/Position in set"),			id3_text
+TSI,	N_("Size"),						id3_text
+TSS,	N_("Software/Hardware and settings used for encoding"),	id3_text
+TT1,	N_("Content group description"),			id3_text
+TT2,	N_("Title/Songname/Content description"),		id3_text
+TT3,	N_("Subtitle/Description refinement"),			id3_text
+TXT,	N_("Lyricist/Text writer"),				id3_text
+TXX,	N_("User defined text information frame"),		0
+TYE,	N_("Year"),						id3_text
+UFI,	N_("Unique file identifier"),				0
+ULT,	N_("Unsychronized lyric/text transcription"),		0
+WAF,	N_("Official audio file webpage"),			0
+WAR,	N_("Official artist/performer webpage"),		0
+WAS,	N_("Official audio source webpage"),			0
+WCM,	N_("Commercial information"),				0
+WCP,	N_("Copyright/Legal information"),			0
+WPB,	N_("Publishers official webpage"),			0
+WXX,	N_("User defined URL link frame"),			0
+#
+# ID3v2.3 frames
+#
+AENC,	N_("Audio encryption"),					0
+APIC,	N_("Attached picture"),					0
+COMM,	N_("Comments"),						id3_comment
+COMR,	N_("Commercial frame"),					0
+ENCR,	N_("Encryption method registration"),			0
+EQUA,	N_("Equalization"),					0
+ETCO,	N_("Event timing codes"),				0
+GEOB,	N_("General encapsulated object"),			0
+GRID,	N_("Group identification registration"),		0
+IPLS,	N_("Involved people list"),				0
+LINK,	N_("Linked information"),				0
+MCDI,	N_("Music CD Identifier"),				0
+MLLT,	N_("MPEG location lookup table"),			0
+OWNE,	N_("Ownership frame"),					0
+PCNT,	N_("Play counter"),					0
+POPM,	N_("Popularimeter"),					0
+POSS,	N_("Position synchronisation frame"),			0
+PRIV,	N_("Private frame"),					0
+RBUF,	N_("Recommended buffer size"),				0
+RVAD,	N_("Relative volume adjustment"),			0
+RVRB,	N_("Reverb"),						0
+SYLT,	N_("Synchronized lyric/text"),				0
+SYTC,	N_("Synchronized tempo codes"),				0
+TALB,	N_("Album/Movie/Show title"),				id3_text
+TBPM,	N_("BPM (Beats Per Minute)"),				id3_text
+TCOM,	N_("Composer"),						id3_text
+TCON,	N_("Content type"),					id3_text
+TCOP,	N_("Copyright message"),				id3_text
+TDAT,	N_("Date"),						id3_text
+TDLY,	N_("Playlist delay"),					id3_text
+TENC,	N_("Encoded by"),					id3_text
+TEXT,	N_("Lyricist/Text writer"),				id3_text
+TFLT,	N_("File type"),					id3_text
+TIME,	N_("Time"),						id3_text
+TIT1,	N_("Content group description"),			id3_text
+TIT2,	N_("Title/Songname/Content description"),		id3_text
+TIT3,	N_("Subtitle/Description refinement"),			id3_text
+TKEY,	N_("Initial key"),					id3_text
+TLAN,	N_("Language(s)"),					id3_text
+TLEN,	N_("Length"),						id3_text
+TMED,	N_("Media type"),					id3_text
+TOAL,	N_("Original album/Movie/Show title"),			id3_text
+TOFN,	N_("Original filename"),				id3_text
+TOLY,	N_("Original lyricist(s)/text writer(s)"),		id3_text
+TOPE,	N_("Original artist(s)/performer(s)"),			id3_text
+TORY,	N_("Original release year"),				id3_text
+TOWN,	N_("File owner/licensee"),				id3_text
+TPE1,	N_("Lead performer(s)/Soloist(s)"),			id3_text
+TPE2,	N_("Band/Orchestra/Accompaniment"),			id3_text
+TPE3,	N_("Conductor/Performer refinement"),			id3_text
+TPE4,	N_("Interpreted, remixed, or otherwise modified by"),	id3_text
+TPOS,	N_("Part of a set"),					id3_text
+TPUB,	N_("Publisher"),					id3_text
+TRCK,	N_("Track number/Position in set"),			id3_text
+TRDA,	N_("Recording dates"),					id3_text
+TRSN,	N_("Internet radio station name"),			id3_text
+TRSO,	N_("Internet radio station owner"),			id3_text
+TSIZ,	N_("Size"),						id3_text
+TSRC,	N_("ISRC (International Standard Recording Code)"),	id3_text
+TSSE,	N_("Software/Hardware and settings used for encoding"),	id3_text
+TXXX,	N_("User defined text information frame"),		0
+TYER,	N_("Year"),						id3_text
+UFID,	N_("Unique file identifier"),				0
+USER,	N_("Terms of use"),					0
+USLT,	N_("Unsychronized lyric/text transcription"),		0
+WCOM,	N_("Commercial information"),				0
+WCOP,	N_("Copyright/Legal information"),			0
+WOAF,	N_("Official audio file webpage"),			0
+WOAR,	N_("Official artist/performer webpage"),		0
+WOAS,	N_("Official audio source webpage"),			0
+WORS,	N_("Official Internet radio station homepage"),		0
+WPAY,	N_("Payment"),						0
+WPUB,	N_("Publishers official webpage"),			0
+WXXX,	N_("User defined URL link frame"),			0

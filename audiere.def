@@ -1,0 +1,16 @@
+EXPORTS
+  AdrGetVersion
+  AdrCreateContext
+  AdrDestroyContext
+  AdrOpenStream
+  AdrCloseStream
+  AdrPlayStream
+  AdrPauseStream
+  AdrResetStream
+  AdrIsStreamPlaying
+  AdrSetStreamRepeat
+  AdrGetStreamRepeat
+  AdrSetStreamVolume
+  AdrGetStreamVolume
+  AdrSetStreamPan
+  AdrGetStreamPan

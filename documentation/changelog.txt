@@ -1,0 +1,44 @@
+2001.08.05
+
+  1.02 - minor release
+
+  fixed crasher on failed mod loads
+  rewrote DS8 and DS3 output drivers to be more efficient, have
+  - fewer audible artifacts, and reduce latency (to effectively zero)
+
+
+2001.07.26
+  Java bindings
+  fixed DirectSound 3 driver (works on NT4, yay!)
+  made contexts refcounted (no longer need to destroy streams before contexts)
+  reset output driver with input driver to eliminate reset latency
+  increased default buffer size to half of a second
+
+
+2001.07.23
+  no longer recreate the resampling engine every MPEG audio frame
+
+
+2001.07.21
+  no longer simply halt reading when we encounter corrupt MP3 frames
+
+
+2001.07.16
+
+  1.01 - Bugfix Release
+
+
+2001.07.15
+  updated version string (oops!)
+  fixed volume ramping to be linear instead of logarithmic
+  fixed crash on loading certain MODs
+  added Python bindings
+  increased priority of decoder thread to decrease skipping
+  added anonymous CVS document
+  fixed crash in Mozilla binding
+  mozilla: Audiere contexts are no longer XPCOM services
+
+
+2001.07.13
+
+  1.0 - Initial Release

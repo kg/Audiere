@@ -1,0 +1,21 @@
+mozAudio - Mozilla bindings for Audiere
+
+
+Installation Instructions
+----
+
+Copy the mozAudio.dll file and mozIAudio*.xpt into the Mozilla 'bin/components'
+directory.  Restart Mozilla.
+
+
+Usage Instructions
+----
+
+Look in the IDL files for the full API.
+
+Short JavaScript example:
+
+var service = Components.classes["@aegisknight.org/audio;1"].getService(Components.interfaces.mozIAudioService);
+var context = service.createContext("autodetect", "")
+var song = context.openStream("song.mp3");
+song.play();

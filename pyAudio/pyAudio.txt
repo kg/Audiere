@@ -1,0 +1,48 @@
+Audiere Bindings for Python
+
+
+Introduction
+--
+In my quest to get Audiere used everywhere, I made Python bindings for it
+(admittedly mostly for the v27 community).
+
+
+How do I install it?
+--
+
+Into ActiveState's Python 2.1:
+  Copy the pyAudio.pyd into Python21/DLLs.
+
+Into v27:
+  Just copy pyAudio.pyd into your VERGE folder.
+
+
+How do I use it?
+--
+
+import audiere                                   # brings in the Audiere module
+context = audiere.open_context("autodetect", "") # creates an Audiere context object
+song = context.open_stream("song.mp3")           # opens a song
+song.play()                                      # begins playback
+
+
+Cool!  What else can I do?
+--
+
+All you can do with contexts are open streams...
+
+The interesting stuff is in the stream objects:
+
+song.play()  # begins playback
+song.reset() # resets a song from the beginning
+song.pause() # stops playback, but does not reset from the beginning
+
+song.volume = integer # volume can be 0 (quiet) up to 255 (loudest)
+                      # defaults to 255
+
+song.pan = integer # pan can be -255 (left) to 0 (center) to 255 (right)
+                   # defaults to 0
+
+song.repeating = true|false # sets whether the song should repeat or not
+
+song.playing # (read-only) true if song is playing, false otherwise

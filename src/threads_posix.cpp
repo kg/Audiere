@@ -36,7 +36,7 @@ namespace audiere {
       return false;
     }
 
-    // get default scheduling parameters
+    // get default scheduling policy
     int policy;
     if (pthread_attr_getschedpolicy(&attr, &policy)) {
       pthread_attr_destroy(&attr);
@@ -47,6 +47,7 @@ namespace audiere {
     int min_prio = sched_get_priority_min(policy);
     int max_prio = sched_get_priority_max(policy);
 
+    // get default scheduling parameters
     sched_param sched;
     if (pthread_attr_getschedparam(&attr, &sched)) {
         pthread_attr_destroy(&attr);
@@ -54,6 +55,7 @@ namespace audiere {
         return false;
     }
 
+    // treat the specified priority as an offset from the default one
     sched.sched_priority = clamp(
         min_prio,
         sched.sched_priority + priority,
@@ -64,7 +66,7 @@ namespace audiere {
         delete ti;
         return false;
     }
-    
+
     pthread_t thread;
     int result = pthread_create(&thread, &attr, ThreadRoutine, ti);
     if (result != 0) {

@@ -857,7 +857,12 @@ namespace audiere {
    * sample source.  If the specified sample source is seekable, it
    * loads it into memory and uses AudioDevice::openBuffer to create
    * the output stream.  If the stream is not seekable, it uses
-   * AudioDevice::openStream to create the output stream.
+   * AudioDevice::openStream to create the output stream.  This means
+   * that certain file types must always be streamed, and therefore,
+   * OpenSound will hold on to the file object.  If you must guarantee
+   * that the file on disk is no longer referenced, you must create
+   * your own memory file implementation and load your data into that
+   * before calling OpenSound.
    *
    * @param device  AudioDevice in which to open the output stream.
    *

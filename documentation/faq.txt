@@ -1,22 +1,33 @@
 What does Audiere mean?
 --
 
-It's Latin for 'to hear'.  Pronounced oww dee err ayy.
-Rizen suggested it (and he's to blame for any
-incorrect information).  :)
+  It's just a cool word.  :)  Pronounced "awww dee air".
+
+
+I got Audiere to compile and install properly, but when I try to link
+with it, I get an error telling me that "libaudiere cannot be found"
+What do I do?
+--
+
+  Locate the libaudiere libraries on your system.  By default, they're
+  in /usr/local/lib.  Make sure that directory is listed in
+  /etc/ld.so.conf or add the path to the environmental variable
+  LD_LIBRARY_PATH.  If you changed /etc/ld.so.conf, run ldconfig as
+  root.  It should work now.
 
 
 Why did you make this?  We already have FMOD.
 --
 
-I'm not a fan of FMOD's API, and it's not open source.
-It's a lot of fun, too.  :)
+  I'm not a fan of FMOD's API, and it's not open source.  It's a lot
+  of fun, too.  :)
 
 
 Why not support MIDI?
 --
 
-I'd like to keep every supported decoder inside of Acoustique (i.e. not using
-an external program).  The only good software MIDI decoder I've found is
-timidity++, and that requires megs upon megs of patch files.  I think having
-a 20 meg sound library isn't really feasible.
+  I'd like to keep every supported decoder inside of Acoustique
+  (i.e. not using an external program).  The only good software MIDI
+  decoder I've found is timidity++, and that requires megs upon megs
+  of patch files.  I think having a 20 meg sound library isn't really
+  feasible.

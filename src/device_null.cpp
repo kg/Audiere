@@ -57,6 +57,10 @@ namespace audiere {
 
   OutputStream*
   NullAudioDevice::openStream(SampleSource* source) {
+    if (!source) {
+      return 0;
+    }
+
     Lock l__(this);
 
     NullOutputStream* stream = new NullOutputStream(this, source);

@@ -106,7 +106,7 @@ namespace audiere {
 
   OutputStream*
   MMAudioDevice::openStream(SampleSource* source) {
-    return new MMOutputStream(this, source);
+    return (source ? new MMOutputStream(this, source) : 0);
   }
 
 

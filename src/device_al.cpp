@@ -92,7 +92,7 @@ namespace audiere {
 
   OutputStream*
   ALAudioDevice::openStream(SampleSource* source) {
-    return new ALOutputStream(this, source);
+    return (source ? new ALOutputStream(this, source) : 0);
   }
 
 

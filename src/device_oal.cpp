@@ -92,6 +92,10 @@ namespace audiere {
 
   OutputStream*
   OALAudioDevice::openStream(SampleSource* source) {
+    if (!source) {
+      return 0;
+    }
+
     int channel_count, sample_rate;
     SampleFormat sample_format;
     source->getFormat(channel_count, sample_rate, sample_format);

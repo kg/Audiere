@@ -72,7 +72,7 @@ AM_CONDITIONAL(HAVE_AL, test "x$HAVE_AL" = "xtrue")
 dnl Look for wxWindows
 AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin)
 if [[ "$WX_CONFIG" = "no" ]] ; then
-   AC_MSG_WARN("wxWindows not found, not building wxPlayer")
+   AC_MSG_WARN(wxWindows not found, not building wxPlayer)
 else
    HAVE_WXWINDOWS=true
    AC_DEFINE(HAVE_WXWINDOWS)

@@ -98,7 +98,7 @@ namespace audiere {
 
   OutputStream*
   OSSAudioDevice::openStream(SampleSource* source) {
-    return new OSSOutputStream(this, source);
+    return (source ? new OSSOutputStream(this, source) : 0);
   }
 
 

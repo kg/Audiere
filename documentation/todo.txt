@@ -9,3 +9,6 @@ streaming over a network
 integrate with a sane build system (maybe autoconf/automake?)
 do a thread-safety audit
 make the null output driver actually read samples with correct timing
+
+
+http://sourceforge.net/tracker/?group_id=32783

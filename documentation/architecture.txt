@@ -8,8 +8,8 @@ the output driver to output itself.  If the output driver needs more samples, it
 asks Audiere to provide them, who in term asks Acoustique to decode more samples
 from the file.
 
-Internally, there are several types of output devices.  Currently (as of 1.0) it
-supports DirectSound 8, DirectSound 3, null output, and arbitrary DLLs.
+Internally, there are several types of output devices.  Currently (as of 1.0.4) it
+supports DirectSound 8, DirectSound 3, null output.
 
 
 Here's a nifty drawing:

@@ -196,9 +196,8 @@ void ThreadRoutine(void* opaque)
   // while we're not dead, process the sound update loop
   while (!context->thread_should_die) {
     
-    AI_EnterCriticalSection(context->cs);
+    AI_Lock l(context->cs);
     context->output_context->Update();
-    AI_LeaveCriticalSection(context->cs);
 
   }
 
@@ -301,7 +300,7 @@ ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
   // calculate sample size
   stream->sample_size = channel_count * bits_per_sample / 8;
 
-  AI_EnterCriticalSection(stream->context->cs);
+  AI_Lock l(stream->context->cs);
 
   // open output stream
   stream->output_stream = stream->context->output_context->OpenStream(stream);
@@ -315,8 +314,6 @@ ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
   // increment the context's reference count
   stream->context->refcount++;
   
-  AI_LeaveCriticalSection(stream->context->cs);
-
   return stream;
 }
 
@@ -340,30 +337,28 @@ void ACQ_CALL FileReset(void* opaque)
 
 void ADR_CALL AdrCloseStream(ADR_STREAM stream)
 {
-  ADR_STREAM internal = (ADR_STREAM)stream;
-
   // close output_stream
-  AI_EnterCriticalSection(internal->context->cs);
-  delete internal->output_stream;
+  AI_Lock l(stream->context->cs);
+  delete stream->output_stream;
 
   // close input stream
-  AcqCloseStream(internal->input_stream);
+  AcqCloseStream(stream->input_stream);
 
   // close file
-  internal->context->close(internal->file_handle);
+  stream->context->close(stream->file_handle);
 
   // we no longer need the context
-  AdrDestroyContext(internal->context);
+  AdrDestroyContext(stream->context);
 
-  AI_LeaveCriticalSection(internal->context->cs);
-  
-  delete internal;
+  delete stream;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ADR_CALL AdrPlayStream(ADR_STREAM stream)
 {
+  AI_Lock l(stream->context->cs);
+
   // tell the output driver to start asking for samples
   stream->output_stream->Play();
 }
@@ -372,6 +367,8 @@ void ADR_CALL AdrPlayStream(ADR_STREAM stream)
 
 void ADR_CALL AdrPauseStream(ADR_STREAM stream)
 {
+  AI_Lock l(stream->context->cs);
+
   // tell the output driver to stop asking for samples
   stream->output_stream->Stop();
 }
@@ -380,21 +377,20 @@ void ADR_CALL AdrPauseStream(ADR_STREAM stream)
 
 void ADR_CALL AdrResetStream(ADR_STREAM stream)
 {
-  AI_EnterCriticalSection(stream->context->cs);
+  AI_Lock l(stream->context->cs);
 
   // reset the input stream
   AcqResetStream(stream->input_stream);
 
   // reset the output stream
   stream->output_stream->Reset();
-
-  AI_LeaveCriticalSection(stream->context->cs);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 ADR_BOOL ADR_CALL AdrIsStreamPlaying(ADR_STREAM stream)
 {
+  AI_Lock l(stream->context->cs);
   return stream->output_stream->IsPlaying();
 }
 
@@ -402,6 +398,7 @@ ADR_BOOL ADR_CALL AdrIsStreamPlaying(ADR_STREAM stream)
 
 void ADR_CALL AdrSetStreamRepeat(ADR_STREAM stream, ADR_BOOL repeat)
 {
+  AI_Lock l(stream->context->cs);
   stream->repeat = repeat;
 }
 
@@ -409,6 +406,7 @@ void ADR_CALL AdrSetStreamRepeat(ADR_STREAM stream, ADR_BOOL repeat)
 
 ADR_BOOL ADR_CALL AdrGetStreamRepeat(ADR_STREAM stream)
 {
+  AI_Lock l(stream->context->cs);
   return stream->repeat;
 }
 
@@ -423,6 +421,7 @@ void ADR_CALL AdrSetStreamVolume(ADR_STREAM stream, int volume)
     volume = ADR_VOLUME_MAX;
   }
 
+  AI_Lock l(stream->context->cs);
   stream->output_stream->SetVolume(volume);
 }
 
@@ -430,6 +429,7 @@ void ADR_CALL AdrSetStreamVolume(ADR_STREAM stream, int volume)
 
 int ADR_CALL AdrGetStreamVolume(ADR_STREAM stream)
 {
+  AI_Lock l(stream->context->cs);
   return stream->output_stream->GetVolume();
 }
 

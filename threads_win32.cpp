@@ -10,7 +10,7 @@ struct ThreadInternal
   int           priority;
 };
 
-struct CriticalSectionInternal
+struct AI_CriticalSectionStruct
 {
   CRITICAL_SECTION cs;
 };
@@ -75,7 +75,7 @@ void AI_Sleep(unsigned milliseconds)
 
 AI_CriticalSection AI_CreateCriticalSection()
 {
-  CriticalSectionInternal* cs = new CriticalSectionInternal;
+  AI_CriticalSectionStruct* cs = new AI_CriticalSectionStruct;
   ::InitializeCriticalSection(&cs->cs);
   return cs;
 }
@@ -84,25 +84,22 @@ AI_CriticalSection AI_CreateCriticalSection()
 
 void AI_DestroyCriticalSection(AI_CriticalSection cs)
 {
-  CriticalSectionInternal* internal = (CriticalSectionInternal*)cs;
-  ::DeleteCriticalSection(&internal->cs);
-  delete internal;
+  ::DeleteCriticalSection(&cs->cs);
+  delete cs;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void AI_EnterCriticalSection(AI_CriticalSection cs)
 {
-  CriticalSectionInternal* internal = (CriticalSectionInternal*)cs;
-  ::EnterCriticalSection(&internal->cs);
+  ::EnterCriticalSection(&cs->cs);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void AI_LeaveCriticalSection(AI_CriticalSection cs)
 {
-  CriticalSectionInternal* internal = (CriticalSectionInternal*)cs;
-  ::LeaveCriticalSection(&internal->cs);
+  ::LeaveCriticalSection(&cs->cs);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

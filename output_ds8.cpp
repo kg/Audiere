@@ -365,12 +365,6 @@ DS8OutputStream::Update()
   int old_next_read = m_NextRead;
   m_NextRead = (m_NextRead + read1 + read2) % m_BufferLength;
 
-//  char buf[1024];
-//  sprintf(buf, "rl1 (%d/%d) rl2 (%d/%d)  old/new pos (%d/%d)\n",
-//          read1, length1, read2, length2,
-//          old_next_read, m_NextRead);
-//  OutputDebugString(buf);
-
   // unlock
   m_Buffer->Unlock(buffer1, buffer1_length, buffer2, buffer2_length);
 
@@ -491,7 +485,7 @@ DS8OutputStream::IsPlaying()
 {
   DWORD status;
   HRESULT rv = m_Buffer->GetStatus(&status);
-  return (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING);
+  return (SUCCEEDED(rv) && (status & DSBSTATUS_PLAYING));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,0 @@
-Originally, Audiere and Acoustique were licensed under the GPL, as it uses the MAD
-MP3 decoder, which is under the GPL.  However, if you build the library without
-support for MP3, it's licensed under the LGPL.

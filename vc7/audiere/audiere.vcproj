@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib winmm.lib"
+				AdditionalDependencies="dxguid.lib winmm.lib rpcrt4.lib"
 				OutputFile="$(OutDir)/audiere.dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile="../../src/audiere.def"
@@ -84,7 +84,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib winmm.lib"
+				AdditionalDependencies="dxguid.lib winmm.lib rpcrt4.lib"
 				OutputFile="$(OutDir)/audiere.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile="../../src/audiere.def"

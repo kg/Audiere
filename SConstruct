@@ -29,7 +29,7 @@ base_env = Environment(
     SHLINKFLAGS = ['-shared'],
     CPPPATH = ['/usr/freeware/include'],
     LIBPATH = ['/usr/freeware/lib32'],
-    LIBS = ['vorbisfile', 'vorbis', 'ogg', 'audio', 'm'])
+    LIBS = ['pthread', 'vorbisfile', 'vorbis', 'ogg', 'audio', 'm'])
 
 Export('PREFIX base_env')
 

@@ -198,7 +198,10 @@ namespace audiere {
       m_thread_should_die = false;
 
       /// @todo  what if thread creation fails?
-      AI_CreateThread(threadRoutine, this, 2);
+      bool result = AI_CreateThread(threadRoutine, this, 2);
+      if (!result) {
+        ADR_LOG("THREAD CREATION FAILED");
+      }
     }
 
     ~ThreadedDevice() {

@@ -59,6 +59,9 @@ int main(int argc, const char** argv) {
   cerr << "started playback" << endl;
   while (sound->isPlaying()) {
     sleepSecond();
+    if (sound->isSeekable()) {
+      cerr << "position: " << sound->getPosition() << endl;
+    }
   }
 
   return EXIT_SUCCESS;

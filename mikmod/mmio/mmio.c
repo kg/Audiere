@@ -612,7 +612,7 @@ int _mm_read_string(CHAR *buffer, int number, MMSTREAM *fp)
 {
     if(fp->fp)
     {   fp->fread(buffer,sizeof(CHAR),number,fp->fp);
-        return !feof(fp->fp);
+        return !_mm_feof(fp);
     } else
     {   memcpy(buffer,&fp->dp[fp->seekpos], sizeof(CHAR) * number);
         fp->seekpos += number;

@@ -9,7 +9,7 @@
 #include "types.h"
 
 
-#if _MSC_VER <= 1200
+#if defined(_MSC_VER) && _MSC_VER <= 1200
 
   // std::min and std::max are broken in VC++ 6, so define our own.
   // Unfortunately, this means we must include utility.h to use

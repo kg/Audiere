@@ -1,0 +1,28 @@
+// Audiere C++ Tutorial
+// 2001.12.07
+
+#include <memory>  // for auto_ptr
+#include <audiere.h>
+using namespace std;
+using namespace audiere;
+
+
+int main() {
+    // auto_ptr's destroy themselves when they leave the scope :)
+
+    // create a context
+    auto_ptr<Context> context(CreateContext(0));
+    if (!context.get()) {
+       return EXIT_FAILURE;
+    }
+
+    // open a stream
+    auto_ptr<Stream> stream(context->openStream(filename));
+    if (!stream.get()) {
+       return EXIT_FAILURE;
+    }
+
+    stream->play(); // play the song
+    getchar(); // wait until key is pressed
+    return EXIT_SUCCESS();
+}

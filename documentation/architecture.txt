@@ -24,5 +24,3 @@ Here's a nifty drawing:
 | Acoustique |   | output |
 --------------   ----------
 
-naikai::base is the glue Audiere uses to connect Acoustique and the output drivers.
-It provides a portable threading API and synchronization objects.

@@ -1,3 +1,41 @@
+2001.12.06
+
+  Linux/OSS works (I think)!  Yay!
+  more internal architecture refactoring
+
+
+2001.12.04
+
+  Created C++ interface to Audiere (See bottom of audiere.h)
+
+
+2001.11.28
+
+  AdrCreateContext takes an attributes object now (BROKE SOURCE AND BINARY COMPATIBILITY)
+
+
+2001.11.15
+
+  various architecture changes
+
+
+2001.11.01
+
+  made MP3 support optional in UNIX build
+
+
+2001.10.26
+
+  uses Air's new mikmod
+  added GNU autoconf/automake support
+  updated to MAD 0.14.1b
+
+
+2001.10.25
+
+  removed nbase
+
+
 2001.09.25
 
   removed panning

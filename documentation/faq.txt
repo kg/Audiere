@@ -9,3 +9,4 @@ Why did you make this?  We already have FMOD.
 --
 
 I'm not a fan of FMOD's API, and it's not open source.
+It's a lot of fun, too.  :)

@@ -1,6 +1,5 @@
 Work Left To Be Done:
 
-Linux port
 MacOS port
 support 3D audio (OpenAL?  DirectSound3D?  Both?)
 .NET bindings

@@ -7,16 +7,7 @@ First, #include <audiere.h>
 You need an Audiere context before you can play sounds...
 
 
-ADR_CONTEXT context = AdrCreateContext(
-  "autodetect",  // just give me an output device
-  "",            // no extra parameters
-  NULL,          //
-  NULL,          // If we pass in NULL for the file I/O callbacks, Audiere
-  NULL,          // uses the standard C runtime functions.
-  NULL,          //
-  NULL,          //
-  NULL           //
-);
+ADR_CONTEXT context = AdrCreateContext(NULL);
 if (!context) {
   // failure
 } 
@@ -39,7 +30,7 @@ while (!done) {
 
 
 Okay, now that we're done, destroy the stream and then destroy the context.
-Remember, all streams must be closed before the context is destroyed.
+You can even destroy the context before you close the stream!
 
 
 AdrCloseStream(stream);

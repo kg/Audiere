@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string.h>
 #include "input_ogg.h"
 #include "types.h"

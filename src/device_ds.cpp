@@ -159,6 +159,10 @@ namespace audiere {
 
   OutputStream*
   DSAudioDevice::openStream(SampleSource* source) {
+    if (!source) {
+      return 0;
+    }
+
     ADR_GUARD("DSAudioDevice::openStream");
 
     Lock l__(this);

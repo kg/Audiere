@@ -7,6 +7,7 @@ when the time to release comes around.
 
 The following files contain version information:
   configure.in
+  bindings/python/setup.py
   doc/doxygen/audiere.doxy
   doc/doxygen/mainpage.doxy
   src/audiere.h

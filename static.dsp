@@ -101,10 +101,6 @@ SOURCE=.\default_io.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ds_utility.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\file.hpp
 # End Source File
 # Begin Source File
@@ -129,15 +125,19 @@ SOURCE=.\output_dll.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\output_ds.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\output_ds.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\output_ds3.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\output_ds3.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\output_ds8.cpp
 # End Source File
 # Begin Source File
 

@@ -11,3 +11,13 @@ The following files contain version information:
   doc/doxygen/mainpage.doxy
   src/audiere.h
   src/version.cpp
+
+
+== Announcements ==
+
+Announce on http://audiere.sf.net
+Announce on http://aegisknight.org
+Announce on http://flipcode.com
+Announce on http://sf.net/projects/audiere (news)
+Announce on http://isugamedev.sf.net/
+Send e-mail to audiere-annc@lists.sf.net

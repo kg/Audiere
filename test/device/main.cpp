@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
   stream2->play();
 
   // wait for five seconds
-  PassOut(1);
+  PassOut(5);
 
   return EXIT_SUCCESS; // VC++ 6 sucks
 }

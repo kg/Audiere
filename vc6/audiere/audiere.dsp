@@ -110,11 +110,11 @@ SOURCE=..\..\src\debug.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\debug.hpp
+SOURCE=..\..\src\debug.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\default_file.hpp
+SOURCE=..\..\src\default_file.h
 # End Source File
 # Begin Source File
 
@@ -126,7 +126,7 @@ SOURCE=..\..\src\device_ds.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\device_ds.hpp
+SOURCE=..\..\src\device_ds.h
 # End Source File
 # Begin Source File
 
@@ -134,11 +134,11 @@ SOURCE=..\..\src\device_ds3.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\device_ds3.hpp
+SOURCE=..\..\src\device_ds3.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\device_ds8.hpp
+SOURCE=..\..\src\device_ds8.h
 # End Source File
 # Begin Source File
 
@@ -146,11 +146,11 @@ SOURCE=..\..\src\device_null.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\device_null.hpp
+SOURCE=..\..\src\device_null.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\endian.hpp
+SOURCE=..\..\src\endian.h
 # End Source File
 # Begin Source File
 
@@ -166,7 +166,7 @@ SOURCE=..\..\src\input_mod.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\input_mod.hpp
+SOURCE=..\..\src\input_mod.h
 # End Source File
 # Begin Source File
 
@@ -174,7 +174,7 @@ SOURCE=..\..\src\input_ogg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\input_ogg.hpp
+SOURCE=..\..\src\input_ogg.h
 # End Source File
 # Begin Source File
 
@@ -182,11 +182,11 @@ SOURCE=..\..\src\input_wav.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\input_wav.hpp
+SOURCE=..\..\src\input_wav.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\internal.hpp
+SOURCE=..\..\src\internal.h
 # End Source File
 # Begin Source File
 
@@ -194,7 +194,7 @@ SOURCE=..\..\src\repeatable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\repeatable.hpp
+SOURCE=..\..\src\repeatable.h
 # End Source File
 # Begin Source File
 
@@ -202,7 +202,7 @@ SOURCE=..\..\src\sound.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\threads.hpp
+SOURCE=..\..\src\threads.h
 # End Source File
 # Begin Source File
 
@@ -210,7 +210,7 @@ SOURCE=..\..\src\threads_win32.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\timer.hpp
+SOURCE=..\..\src\timer.h
 # End Source File
 # Begin Source File
 
@@ -226,7 +226,7 @@ SOURCE=..\..\src\utility.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\utility.hpp
+SOURCE=..\..\src\utility.h
 # End Source File
 # Begin Source File
 

@@ -9,6 +9,7 @@
 #include "debug.h"
 #include "device_null.h"
 #include "internal.h"
+#include "threads.h"
 
 #ifdef WIN32
 
@@ -35,11 +36,11 @@ namespace audiere {
 
   #define NEED_SEMICOLON do ; while (false)
 
-  #define TRY_GROUP(group_name) {                                       \
-    AudioDevice* device = OpenDevice(group_name, parameters, threaded); \
-    if (device) {                                                       \
-      return device;                                                    \
-    }                                                                   \
+  #define TRY_GROUP(group_name) {                               \
+    AudioDevice* device = DoOpenDevice(group_name, parameters); \
+    if (device) {                                               \
+      return device;                                            \
+    }                                                           \
   } NEED_SEMICOLON
 
   #define TRY_DEVICE(DeviceType) {          \
@@ -52,12 +53,11 @@ namespace audiere {
   } NEED_SEMICOLON
 
 
-  ADR_EXPORT(AudioDevice*, AdrOpenDevice)(
+  AudioDevice* DoOpenDevice(
     const char* name,
-    const char* parameters,
-    bool threaded)
+    const char* parameters)
   {
-    ADR_GUARD("AdrOpenDevice");
+    ADR_GUARD("DoOpenDevice");
 
     if (!name) {
       name = "";
@@ -65,7 +65,6 @@ namespace audiere {
     if (!parameters) {
       parameters = "";
     }
-
 
     std::string dev(name);
 
@@ -128,6 +127,75 @@ namespace audiere {
 
     // no devices
     return 0;
+  }
+
+
+  class ThreadedDevice
+    : public DLLImplementation<AudioDevice>
+    , public Synchronized {
+  public:
+    ThreadedDevice(AudioDevice* device) {
+      m_device = device;
+      m_thread_exists = false;
+      m_thread_should_die = false;
+
+      // what do we do about failure?
+      AI_CreateThread(threadRoutine, this, 0);
+    }
+
+    ~ThreadedDevice() {
+      m_thread_should_die = true;
+      while (m_thread_exists) {
+        AI_Sleep(50);
+      }
+
+      delete m_device;
+    }
+
+    // don't need to update the device...  the thread does it for us
+    void update() {
+    }
+
+    OutputStream* openStream(SampleSource* source) {
+      Lock theLock(this);
+      return m_device->openStream(source);
+    }
+
+  private:
+    void run() {
+      m_thread_exists = true;
+      while (!m_thread_should_die) {
+        Lock theLock(this);
+        m_device->update();
+      }
+      m_thread_exists = false;
+    }
+
+    static void threadRoutine(void* arg) {
+      ThreadedDevice* This = (ThreadedDevice*)arg;
+      This->run();
+    }
+
+  private:
+    AudioDevice* m_device;
+    volatile bool m_thread_should_die;
+    volatile bool m_thread_exists;
+  };
+
+
+  ADR_EXPORT(AudioDevice*, AdrOpenDevice)(
+    const char* name,
+    const char* parameters)
+  {
+    ADR_GUARD("AdrOpenDevice");
+
+    // first, we need an unthreaded audio device
+    AudioDevice* device = DoOpenDevice(name, parameters);
+    if (!device) {
+      return 0;
+    }
+
+    return new ThreadedDevice(device);
   }
 
 }

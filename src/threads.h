@@ -39,14 +39,14 @@ namespace audiere {
       AI_DestroyCriticalSection(m_cs);
     }
 
-    void Lock() {
+    void lock() {
    
       ADR_LOG("--> Trying to lock");
       AI_EnterCriticalSection(m_cs);
       ADR_LOG("-->:: LOCKED ::");
     }
 
-    void Unlock() {
+    void unlock() {
       ADR_LOG("<-- Unlocking...");
       AI_LeaveCriticalSection(m_cs);
     }
@@ -56,15 +56,15 @@ namespace audiere {
   };
 
 
-  class AI_Lock {
+  class Lock {
   public:
-    AI_Lock(Synchronized* object)
+    Lock(Synchronized* object)
     : m_object(object) {
-      object->Lock();
+      object->lock();
     }
 
-    ~AI_Lock() {
-      m_object->Unlock();
+    ~Lock() {
+      m_object->unlock();
     }
 
   private:

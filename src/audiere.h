@@ -137,8 +137,7 @@ namespace audiere {
     ADR_FUNCTION(const char*, AdrGetVersion)();
     ADR_FUNCTION(AudioDevice*, AdrOpenDevice)(
       const char* name,
-      const char* parameters,
-      bool threaded);
+      const char* parameters);
 
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSource)(const char* filename);
     ADR_FUNCTION(SampleSource*, AdrOpenSampleSourceFromFile)(File* file);
@@ -159,11 +158,10 @@ namespace audiere {
   }
 
   inline AudioDevice* OpenDevice(
-    const char* name = "",
-    const char* parameters = "",
-    bool threaded = true)
+    const char* name = 0,
+    const char* parameters = 0)
   {
-    return hidden::AdrOpenDevice(name, parameters, threaded);
+    return hidden::AdrOpenDevice(name, parameters);
   }
 
   inline SampleSource* OpenSampleSource(const char* filename) {

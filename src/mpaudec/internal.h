@@ -48,7 +48,7 @@ typedef signed __int64 int64_t;
 
 /* debug stuff */
 
-#ifndef DEBUG
+#if !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
 #endif
 #include <assert.h>

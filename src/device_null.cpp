@@ -21,14 +21,12 @@ namespace audiere {
       "Null output context should not die with open streams");
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
 
   bool
   NullAudioDevice::initialize(const char* /*parameters*/) {
     return true;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
 
   void
   NullAudioDevice::update() {
@@ -49,7 +47,6 @@ namespace audiere {
     AI_Sleep(50);
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
 
   OutputStream*
   NullAudioDevice::openStream(SampleSource* source) {
@@ -58,14 +55,12 @@ namespace audiere {
     return stream;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
 
   void
   NullAudioDevice::removeStream(NullOutputStream* stream) {
     m_streams.erase(stream);
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
 
   NullOutputStream::NullOutputStream(
     NullAudioDevice* device,

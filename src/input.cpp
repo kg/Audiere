@@ -89,8 +89,7 @@ namespace audiere {
     if (!filename) {
       return 0;
     }
-    std::auto_ptr<File> file(OpenDefaultFile(filename));
-    return OpenSource(file.get(), filename);
+    return OpenSource(OpenDefaultFile(filename), filename);
   }
 
 

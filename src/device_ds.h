@@ -13,13 +13,14 @@
 #include <dsound.h>
 #include <list>
 #include "audiere.h"
+#include "internal.h"
 
 
 namespace audiere {
 
   class DSOutputStream;
 
-  class DSAudioDevice : public DLLImplementation<AudioDevice> {
+  class DSAudioDevice : public RefCountedImplementation<AudioDevice> {
   public:
     DSAudioDevice();
     ~DSAudioDevice();

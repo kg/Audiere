@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# This doesn't work right now because configure won't add the
+# -LANG:std LDFLAG to the linking command.
+
 export CC="cc"
 export CXX="CC"
 export CXXFLAGS="-LANG:std"

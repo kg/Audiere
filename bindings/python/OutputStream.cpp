@@ -38,6 +38,8 @@ static PyObject* OutputStream_getattr(PyObject* self, char* name) {
     return PyInt_FromLong(object->stream->getLength());
   } else if (strcmp(name, "position") == 0) {
     return PyInt_FromLong(object->stream->getPosition());
+  } else if (strcmp(name, "pitchshift") == 0) {
+    return PyFloat_FromDouble(object->stream->getPitchShift());
   } else {
     return Py_FindMethod(OutputStreamMethods, self, name);
   }
@@ -59,6 +61,8 @@ static int OutputStream_setattr(PyObject* self, char* name, PyObject* value) {
     object->stream->setVolume((float)PyFloat_AsDouble(value));
   } else if (strcmp(name, "pan") == 0) {
     object->stream->setPan((float)PyFloat_AsDouble(value));
+  } else if (strcmp(name, "pitchshift") == 0) {
+    object->stream->setPitchShift((float)PyFloat_AsDouble(value));
   } else if (strcmp(name, "position") == 0) {
     object->stream->setPosition(PyInt_AsLong(value));
   } else if (strcmp(name, "seekable") == 0 ||

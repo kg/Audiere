@@ -1,92 +1,88 @@
-#ifndef OUTPUT_AL_HPP
-#define OUTPUT_AL_HPP
+#ifndef DEVICE_AL_HPP
+#define DEVICE_AL_HPP
 
 
 #include <list>
 #include <AL/al.h>
 #include <AL/alc.h>
-#include "input.hpp"
-#include "output.hpp"
+#include "audiere.h"
 
 
-// XXX hack around the fact that the Linux headers don't have ALCcontext yet
-#ifndef _WIN32
-typedef void ALCcontext;
-#endif
+namespace audiere {
+
+  class ALOutputStream;
+
+  class ALAudioDevice : public RefCountedImplementation<AudioDevice> {
+  public:
+    ALAudioDevice();
+    ~ALAudioDevice();
+
+    bool initialize(const char* parameters);
+    void update();
+    OutputStream* openStream(SampleSource* source);
+
+  private:
+    void removeStream(ALOutputStream* stream);
+
+    ALCdevice*  m_device;
+    ALCcontext* m_context;
+
+    typedef std::list<ALOutputStream*> StreamList;
+    StreamList m_open_streams;
+
+    friend class ALOutputStream;
+  };
 
 
-class ALOutputStream;
+  class ALOutputStream : public DLLImplementation<OutputStream> {
+  public:
+    void play();
+    void stop();
+    void reset();
+    bool isPlaying();
+    void setVolume(int volume);
+    int  getVolume();
 
+  private:
+    ALOutputStream(
+      ALAudioDevice* device,
+      SampleSource* source,
+      ALuint al_source,
+      ALuint* buffers,
+      ALenum format,
+      int sample_rate);
+    ~ALOutputStream();
 
-class ALOutputContext : public IOutputContext
-{
-public:
-  ALOutputContext();
-  ~ALOutputContext();
+    void update();
+    int read(void* samples, int sample_count);
+    void fillBuffers();
 
-  bool Initialize(const char* parameters);
-  void Update();
-  IOutputStream* OpenStream(ISampleSource* source);
+  private:
+    ALAudioDevice* m_device;
 
-private:
-  ALCdevice*  m_Device;
-  ALCcontext* m_Context;
+    // sample stream
+    SampleSource* m_source;
 
-  typedef std::list<ALOutputStream*> StreamList;
-  StreamList m_OpenStreams;
+    // informational (convenience)
+    ALenum m_format;
+    int    m_sample_size;  // (num channels * bits per sample / 8)
+    int    m_sample_rate;
 
-  friend class ALOutputStream;
-};
-
-
-class ALOutputStream : public IOutputStream
-{
-public:
-  void Play();
-  void Stop();
-  void Reset();
-  bool IsPlaying();
-  void SetVolume(int volume);
-  int  GetVolume();
-
-private:
-  ALOutputStream(
-    ALOutputContext* context,
-    ISampleSource* source,
-    ALuint al_source,
-    ALuint* buffers,
-    ALenum format,
-    int sample_rate);
-  ~ALOutputStream();
-  void Update();
-
-  int Read(void* samples, int sample_count);
-  void FillBuffers();
-
-private:
-  ALOutputContext* m_Context;
-
-  // sample stream
-  ISampleSource* m_Source;
-
-  // informational (convenience)
-  ALenum m_Format;
-  int    m_SampleSize;  // (num channels * bits per sample / 8)
-  int    m_SampleRate;
-
-  // the last sample read
-  ALubyte* m_LastSample;  
+    // the last sample read
+    ALubyte* m_last_sample;  
   
-  // AL objects
-  ALuint  m_ALSource;
-  ALuint* m_Buffers;
+    // AL objects
+    ALuint  m_ALsource;
+    ALuint* m_buffers;
 
-  int m_BufferLength;  // in samples
-  bool m_IsPlaying;
-  int m_Volume;
+    int m_buffer_length;  // in samples
+    bool m_is_playing;
+    int m_volume;
 
-  friend class ALOutputContext;
-};
+    friend class ALAudioDevice;
+  };
+
+}
 
 
 #endif

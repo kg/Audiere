@@ -1,5 +1,5 @@
-#ifndef OUTPUT_DS_HPP
-#define OUTPUT_DS_HPP
+#ifndef DEVICE_DS_HPP
+#define DEVICE_DS_HPP
 
 
 // disable 'identifier too long' warning

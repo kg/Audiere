@@ -1,5 +1,3 @@
-#ifdef WITH_OPENAL
-
 #include <limits.h>
 #include "output_al.hpp"
 #include "threads.hpp"
@@ -9,204 +7,193 @@ static const int BUFFER_COUNT = 4;
 static const int BUFFER_MILLISECONDS = 250;
 
 
-////////////////////////////////////////////////////////////////////////////////
+namespace audiere {
 
-ALOutputContext::ALOutputContext()
-{
-  m_Device = 0;
-  m_Context = 0;
+  ALAudioDevice::ALAudioDevice() {
+    m_device = 0;
+    m_context = 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
 
-ALOutputContext::~ALOutputContext()
-{
-  if (m_Context) {
-    alcMakeContextCurrent(0);
-    alcDestroyContext(m_Context);
-    m_Context = 0;
-  }
+  ALAudioDevice::~ALAudioDevice() {
+    if (m_Context) {
+      alcMakeContextCurrent(0);
+      alcDestroyContext(m_Context);
+      m_Context = 0;
+    }
 
-  if (m_Device) {
-    alcCloseDevice(m_Device);
-    m_Device = 0;
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-bool
-ALOutputContext::Initialize(const char* parameters)
-{
-  // are we already initialized?
-  if (m_Device) {
-    return false;
-  }
-
-  // open an output device
-  m_Device = alcOpenDevice(0);
-  if (!m_Device) {
-    return false;
-  }
-
-  // create a rendering context
-  m_Context = alcCreateContext(m_Device, 0);
-  if (!m_Context) {
-    alcCloseDevice(m_Device);
-    m_Device = 0;
-    return false;
-  }
-
-  alcMakeContextCurrent(m_Context);
-
-  // define the listener state
-  ALfloat position[]    = { 0.0, 0.0, 0.0 };
-  ALfloat velocity[]    = { 0.0, 0.0, 0.0 };
-  ALfloat orientation[] = { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0 };
-
-  // set the listener state
-  bool success = false;
-  alListenerfv(AL_POSITION, position);
-  if (alGetError() == AL_NO_ERROR) {
-    alListenerfv(AL_VELOCITY, velocity);
-    if (alGetError() == AL_NO_ERROR) {
-      alListenerfv(AL_ORIENTATION, orientation);
-      if (alGetError() == AL_NO_ERROR) {
-
-        // set the distance model
-        alDistanceModel(AL_NONE);
-        success = (alGetError() == AL_NO_ERROR);
-
-      }
+    if (m_Device) {
+      alcCloseDevice(m_Device);
+      m_Device = 0;
     }
   }
 
-  // if we failed, go home
-  if (!success) {
-    alcMakeContextCurrent(0);
-    alcDestroyContext(m_Context);
-    m_Context = 0;
-    alcCloseDevice(m_Device);
-    m_Device = 0;
-    return false;
+
+  bool
+  ALAudioDevice::initialize(const char* parameters) {
+    // are we already initialized?
+    if (m_Device) {
+      return false;
+    }
+
+    // open an output device
+    m_Device = alcOpenDevice(0);
+    if (!m_Device) {
+      return false;
+    }
+
+    // create a rendering context
+    m_Context = alcCreateContext(m_Device, 0);
+    if (!m_Context) {
+      alcCloseDevice(m_Device);
+      m_Device = 0;
+      return false;
+    }
+
+    alcMakeContextCurrent(m_Context);
+
+    // define the listener state
+    ALfloat position[]    = { 0.0, 0.0, 0.0 };
+    ALfloat velocity[]    = { 0.0, 0.0, 0.0 };
+    ALfloat orientation[] = { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0 };
+
+    // set the listener state
+    bool success = false;
+    alListenerfv(AL_POSITION, position);
+    if (alGetError() == AL_NO_ERROR) {
+      alListenerfv(AL_VELOCITY, velocity);
+      if (alGetError() == AL_NO_ERROR) {
+        alListenerfv(AL_ORIENTATION, orientation);
+        if (alGetError() == AL_NO_ERROR) {
+
+          // set the distance model
+          alDistanceModel(AL_NONE);
+          success = (alGetError() == AL_NO_ERROR);
+
+        }
+      }
+    }
+
+    // if we failed, go home
+    if (!success) {
+      alcMakeContextCurrent(0);
+      alcDestroyContext(m_Context);
+      m_Context = 0;
+      alcCloseDevice(m_Device);
+      m_Device = 0;
+      return false;
+    }
+
+    return (m_Device != 0);
   }
 
-  return (m_Device != 0);
-}
 
-////////////////////////////////////////////////////////////////////////////////
-
-void
-ALOutputContext::Update()
-{
-  // enumerate all open streams
-  StreamList::iterator i = m_OpenStreams.begin();
-  while (i != m_OpenStreams.end()) {
-    ALOutputStream* s = *i++;
-    s->Update();
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-IOutputStream*
-ALOutputContext::OpenStream(ISampleSource* source)
-{
-  int channel_count;
-  int sample_rate;
-  int bits_per_sample;
-  source->GetFormat(channel_count, sample_rate, bits_per_sample);
-
-  // calculate OpenAL format
-  ALenum format;
-  if (channel_count == 1 && bits_per_sample == 8) {
-    format = AL_FORMAT_MONO8;
-  } else if (channel_count == 1 && bits_per_sample == 16) {
-    format = AL_FORMAT_MONO16;
-  } else if (channel_count == 2 && bits_per_sample == 8) {
-    format = AL_FORMAT_STEREO8;
-  } else if (channel_count == 2 && bits_per_sample == 16) {
-    format = AL_FORMAT_STEREO16;
-  } else {
-    return 0;
+  void
+  ALAudioDevice::update() {
+    // enumerate all open streams
+    StreamList::iterator i = m_OpenStreams.begin();
+    while (i != m_OpenStreams.end()) {
+      ALOutputStream* s = *i++;
+      s->update();
+    }
   }
 
-  // generate buffers
-  ALuint* buffers = new ALuint[BUFFER_COUNT];
-  alGenBuffers(BUFFER_COUNT, buffers);
-  if (alGetError() != AL_NO_ERROR) {
-    delete[] buffers;
-    return NULL;
+
+  IOutputStream*
+  ALAudioDevice::OpenStream(ISampleSource* source) {
+    int channel_count;
+    int sample_rate;
+    int bits_per_sample;
+    source->GetFormat(channel_count, sample_rate, bits_per_sample);
+
+    // calculate OpenAL format
+    ALenum format;
+    if (channel_count == 1 && bits_per_sample == 8) {
+      format = AL_FORMAT_MONO8;
+    } else if (channel_count == 1 && bits_per_sample == 16) {
+      format = AL_FORMAT_MONO16;
+    } else if (channel_count == 2 && bits_per_sample == 8) {
+      format = AL_FORMAT_STEREO8;
+    } else if (channel_count == 2 && bits_per_sample == 16) {
+      format = AL_FORMAT_STEREO16;
+    } else {
+      return 0;
+    }
+
+    // generate buffers
+    ALuint* buffers = new ALuint[BUFFER_COUNT];
+    alGenBuffers(BUFFER_COUNT, buffers);
+    if (alGetError() != AL_NO_ERROR) {
+      delete[] buffers;
+      return NULL;
+    }
+
+    // generate sources
+    // we have one source for each channel
+    ALuint al_source;
+    alGenSources(1, &al_source);
+    if (alGetError() != AL_NO_ERROR) {
+      alDeleteBuffers(BUFFER_COUNT, buffers);
+      delete[] buffers;
+      return NULL;
+    }
+
+    ALOutputStream* stream = new ALOutputStream(
+      this,
+      source,
+      al_source,
+      buffers,
+      format,
+      sample_rate);
+    m_OpenStreams.push_back(stream);
+    return stream;
   }
 
-  // generate sources
-  // we have one source for each channel
-  ALuint al_source;
-  alGenSources(1, &al_source);
-  if (alGetError() != AL_NO_ERROR) {
-    alDeleteBuffers(BUFFER_COUNT, buffers);
-    delete[] buffers;
-    return NULL;
+
+  ALOutputStream::ALOutputStream(
+    ALAudioDevice* context,
+    ISampleSource* source,
+    ALuint al_source,
+    ALuint* buffers,
+    ALenum format,
+    int sample_rate)
+  {
+    // fill the members
+    m_Context = context;
+    m_Source = source;
+
+    m_SampleRate = sample_rate;
+    m_Format = format;
+    switch (format) {
+      case AL_FORMAT_MONO8:    m_SampleSize = 1; break;
+      case AL_FORMAT_MONO16:   m_SampleSize = 2; break;
+      case AL_FORMAT_STEREO8:  m_SampleSize = 2; break;
+      case AL_FORMAT_STEREO16: m_SampleSize = 4; break;
+    }
+
+    m_LastSample = new ALubyte[m_SampleSize];
+    memset(m_LastSample, 0, m_SampleSize);
+
+    m_ALSource = al_source;
+    m_Buffers  = buffers;
+
+    m_IsPlaying = false;
+    m_Volume    = ADR_VOLUME_MAX;
+
+    // calculate the desired length (in samples) of each buffer
+    m_BufferLength = BUFFER_MILLISECONDS * m_SampleRate / 1000;
+
+    FillBuffers();
+
+    // queue up the source's buffers
+    alSourceQueueBuffers(m_ALSource, BUFFER_COUNT, m_Buffers);
   }
 
-  ALOutputStream* stream = new ALOutputStream(
-    this,
-    source,
-    al_source,
-    buffers,
-    format,
-    sample_rate);
-  m_OpenStreams.push_back(stream);
-  return stream;
-}
 
-////////////////////////////////////////////////////////////////////////////////
-
-ALOutputStream::ALOutputStream(
-  ALOutputContext* context,
-  ISampleSource* source,
-  ALuint al_source,
-  ALuint* buffers,
-  ALenum format,
-  int sample_rate)
-{
-  // fill the members
-  m_Context = context;
-  m_Source = source;
-
-  m_SampleRate = sample_rate;
-  m_Format = format;
-  switch (format) {
-    case AL_FORMAT_MONO8:    m_SampleSize = 1; break;
-    case AL_FORMAT_MONO16:   m_SampleSize = 2; break;
-    case AL_FORMAT_STEREO8:  m_SampleSize = 2; break;
-    case AL_FORMAT_STEREO16: m_SampleSize = 4; break;
-  }
-
-  m_LastSample = new ALubyte[m_SampleSize];
-  memset(m_LastSample, 0, m_SampleSize);
-
-  m_ALSource = al_source;
-  m_Buffers  = buffers;
-
-  m_IsPlaying = false;
-  m_Volume    = ADR_VOLUME_MAX;
-
-  // calculate the desired length (in samples) of each buffer
-  m_BufferLength = BUFFER_MILLISECONDS * m_SampleRate / 1000;
-
-  FillBuffers();
-
-  // queue up the source's buffers
-  alSourceQueueBuffers(m_ALSource, BUFFER_COUNT, m_Buffers);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-ALOutputStream::~ALOutputStream()
+  ALOutputStream::~ALOutputStream()
 {
   // remove ourself from the list
-  ALOutputContext::StreamList::iterator i = m_Context->m_OpenStreams.begin();
+  ALAudioDevice::StreamList::iterator i = m_Context->m_OpenStreams.begin();
   while (i != m_Context->m_OpenStreams.end()) {
     if (*i == this) {
       m_Context->m_OpenStreams.erase(i);
@@ -382,7 +369,6 @@ ALOutputStream::SetVolume(int volume)
   alSourcef(m_ALSource, AL_GAIN, v);
 }
 
-////////////////////////////////////////////////////////////////////////////////
 
 int
 ALOutputStream::GetVolume()
@@ -390,6 +376,3 @@ ALOutputStream::GetVolume()
   return m_Volume;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-#endif // WITH_OPENAL

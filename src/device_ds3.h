@@ -1,5 +1,5 @@
-#ifndef OUTPUT_DS3_HPP
-#define OUTPUT_DS3_HPP
+#ifndef DEVICE_DS3_HPP
+#define DEVICE_DS3_HPP
 
 
 #include "device_ds.h"

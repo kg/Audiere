@@ -51,7 +51,7 @@ namespace audiere {
 
     s16 normal_to_s16(double d) {
       d = (d + 1) / 2; // convert from [-1, 1] to [0, 1]
-      return d * 32767 - 16384;
+      return s16(d * 32767 - 16384);
     }
 
     double m_frequency;

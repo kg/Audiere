@@ -1,5 +1,5 @@
-#ifndef OUTPUT_OSS_HPP
-#define OUTPUT_OSS_HPP
+#ifndef DEVICE_OSS_HPP
+#define DEVICE_OSS_HPP
 
 
 #include <memory>

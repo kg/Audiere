@@ -1,5 +1,5 @@
-#ifndef OUTPUT_NULL_HPP
-#define OUTPUT_NULL_HPP
+#ifndef DEVICE_NULL_HPP
+#define DEVICE_NULL_HPP
 
 
 #include <set>

@@ -22,8 +22,6 @@ public:
   void SetVolume(ISampleSource* source, int volume);
 
 private:
-  //  char m_last_sample[4];  // make this an int someday?
-
   struct SourceAttributes {
     // mutable (set by external calls)
     bool is_playing;
@@ -43,7 +41,7 @@ private:
   void Read(ISampleSource* source,
 	    const SourceAttributes& attr,
 	    int to_mix,
-	    adr_u16* buffer);
+	    adr_s16* buffer);
 
 private:
   SourceMap m_sources;

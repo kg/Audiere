@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <algorithm>
 #include "audiere.h"
 #include "mixer.hpp"
@@ -10,7 +8,6 @@
 
 Mixer::Mixer()
 {
-  //  memset(m_last_sample, 0, 4);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,8 +22,6 @@ Mixer::~Mixer()
 void
 Mixer::Read(void* buffer, const int sample_count)
 {
-  puts("trying...");
-
   if (m_sources.size() == 0) {
     memset(buffer, 0, 4 * sample_count);
     return;
@@ -35,41 +30,36 @@ Mixer::Read(void* buffer, const int sample_count)
   static const int BUFFER_SIZE = 4096;
 
   // create buffers in which to mix
-  adr_u32 mix_buffer[BUFFER_SIZE];
-  adr_u16 stream_buffer[BUFFER_SIZE];
+  adr_s32 mix_buffer[BUFFER_SIZE];
+  adr_s16 stream_buffer[BUFFER_SIZE * 2];
   std::fill(mix_buffer, mix_buffer + BUFFER_SIZE, 0);
 
-  adr_u16* out = (adr_u16*)buffer;
-
-  puts("here?");
-
+  adr_s16* out = (adr_s16*)buffer;
   int left = sample_count;
   while (left > 0) {
-    puts("?");
-    int to_mix = std::max(BUFFER_SIZE, left);
+    int playing = 0;
+    int to_mix = std::min(BUFFER_SIZE, left);
+
     SourceMap::iterator s = m_sources.begin();
     for (; s != m_sources.end(); ++s) {
-      puts("sourcey");
-      Read(s->first, s->second, to_mix, stream_buffer);
-      for (int i = 0; i < to_mix; ++i) {
-	mix_buffer[i] += stream_buffer[i];
+      if (s->second.is_playing) {
+	Read(s->first, s->second, to_mix, stream_buffer);
+	for (int i = 0; i < to_mix * 2; ++i) {
+          mix_buffer[i] += stream_buffer[i];
+	}
+	++playing;
       }
     }
-    puts(":");
 
     // do the division
-    for (int i = 0; i < to_mix; ++i) {
-      // this is freezing the thread?
-      //      *out++ = mix_buffer[i] / m_sources.size();
-      printf("%d %d\n", to_mix, i);
+    if (playing != 0) {
+      for (int i = 0; i < to_mix * 2; ++i) {
+	*out++ = mix_buffer[i] / playing;
+      }
     }
 
     left -= to_mix;
-
-    printf("%d\n", left);
   }
-
-  puts("out");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,13 +109,9 @@ void
 Mixer::Read(ISampleSource* source,
 	    const SourceAttributes& attr,
 	    int to_mix,
-	    adr_u16* buffer)
+	    adr_s16* buffer)
 {
-  if (!attr.is_playing) {
-    return;
-  }
-
-  memset(buffer, 0, to_mix * 2);
+  //  memset(buffer, 0, to_mix * 2);
 
   if (attr.bits_per_sample == 16 &&
       attr.sample_rate == 44100 &&
@@ -133,9 +119,11 @@ Mixer::Read(ISampleSource* source,
     source->Read(to_mix, buffer);
   }
 
+  /*
   for (int i = 0; i < to_mix; ++i) {
     buffer[i] = buffer[i] * attr.volume / 255;
   }
+  */
 }
 
 ////////////////////////////////////////////////////////////////////////////////

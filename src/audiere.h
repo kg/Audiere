@@ -24,7 +24,7 @@ typedef int ADR_BOOL;
 
 /* file callback types */
 struct ADR_FileHandle;
-typedef ADR_FileHandle* ADR_FILE;
+typedef struct ADR_FileHandle* ADR_FILE;
 
 typedef enum {
   ADR_BEGIN,   // stdio SEEK_SET

@@ -95,7 +95,7 @@ public:
 
     // create a timer to update the current position
     m_timer = new wxTimer(this, STREAM_UPDATE);
-    m_timer->Start(200);
+    m_timer->Start(500);
   }
 
   ~StreamFrame() {

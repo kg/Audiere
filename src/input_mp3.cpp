@@ -119,9 +119,7 @@ namespace audiere {
     m_decoder = new Mpegtoraw(m_loader, this);
 
     // empty filename because we don't use it
-    if (!m_decoder->initialize("")) {
-      return false;
-    }
+    m_decoder->initialize("");
 
     // this should call setsoundtype with the format of the stream
     if (!m_decoder->run(1)) {
@@ -195,14 +193,19 @@ namespace audiere {
     m_decoder = new Mpegtoraw(m_loader, this);
 
     // empty filename because we don't use it
-    if (!m_decoder->initialize("")) {
-      return;
-    }
+    m_decoder->initialize("");
 
     // this should call setsoundtype with the format of the stream
     if (!m_decoder->run(1)) {
       return;
     }
+  }
+
+
+  bool
+  MP3InputStream::initialize(char* /*filename*/) {
+    // nothing!
+    return true;
   }
 
 
@@ -223,21 +226,10 @@ namespace audiere {
   }
 
 
-  void
-  MP3InputStream::set8bitmode() {
-    m_sample_format = SF_U8;
-    // what?
-  }
-
   bool
   MP3InputStream::putblock(void* buffer, int size) {
-    return putblock_nt(buffer, size) == size;
-  }
-
-  int
-  MP3InputStream::putblock_nt(void* buffer, int size) {
     m_buffer.write(buffer, size);
-    return size;
+    return true;
   }
 
 }

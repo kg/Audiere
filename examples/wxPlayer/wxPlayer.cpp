@@ -256,7 +256,7 @@ std::string Join(
 {
   std::string result;
 
-  T::iterator i = cont.begin();
+  typename T::iterator i = cont.begin();
   for (;;) {
     result += prefix + *i++;
     if (i == cont.end()) {
@@ -318,8 +318,8 @@ public:
 
     // combine all of the supported extensions into one collection
     std::set<std::string> all_extensions;
-    for (int i = 0; i < formats.size(); ++i) {
-      for (int j = 0; j < formats[i].extensions.size(); ++j) {
+    for (unsigned i = 0; i < formats.size(); ++i) {
+      for (unsigned j = 0; j < formats[i].extensions.size(); ++j) {
         all_extensions.insert("*." + formats[i].extensions[j]);
       }
     }
@@ -329,7 +329,7 @@ public:
     wildcards = "Sound Files (" + Join(all_extensions, ",") + ")|";
     wildcards += Join(all_extensions, ";") + "|";
 
-    for (int i = 0; i < formats.size(); ++i) {
+    for (unsigned i = 0; i < formats.size(); ++i) {
       FileFormatDesc& ffd = formats[i];
       wildcards += ffd.description + " ";
       wildcards += "(" + Join(ffd.extensions, ",", "*.") + ")|";

@@ -3,8 +3,9 @@
 
 namespace audiere {
 
-  Resampler::Resampler(SampleSource* source) {
+  Resampler::Resampler(SampleSource* source, int rate) {
     m_source = source;
+    m_rate = rate;
     m_source->getFormat(
       m_native_channel_count,
       m_native_sample_rate,
@@ -21,8 +22,8 @@ namespace audiere {
     SampleFormat& sample_format)
   {
     channel_count = 2;
-    sample_rate = 44100;
-    sample_format = SF_S16_LE;
+    sample_rate = m_rate;
+    sample_format = SF_S16;
   }
 
   int
@@ -55,7 +56,7 @@ namespace audiere {
       m_sr = *m_position++;
       --m_samples_left;
 
-      m_time += 44100;
+      m_time += m_rate;
       while (m_time > m_native_sample_rate && left > 0) {
         m_time -= m_native_sample_rate;
         *out++ = m_sl;
@@ -76,7 +77,7 @@ namespace audiere {
 
 
   inline s16 u8tos16(u8 u) {
-    return (s16(u) - 127) * (1 << 8);
+    return (s16(u) - 128) * 256;
   }
 
   void

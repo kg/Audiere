@@ -1,8 +1,7 @@
-#ifndef DEVICE_OSS_HPP
-#define DEVICE_OSS_HPP
+#ifndef DEVICE_OSS_H
+#define DEVICE_OSS_H
 
 
-#include <memory>
 #include "audiere.h"
 #include "mixer.h"
 

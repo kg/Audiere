@@ -1,5 +1,5 @@
-#ifndef DEVICE_AL_HPP
-#define DEVICE_AL_HPP
+#ifndef DEVICE_OAL_H
+#define DEVICE_OAL_H
 
 
 #include <list>
@@ -12,16 +12,16 @@
 
 namespace audiere {
 
-  class ALOutputStream;
+  class OALOutputStream;
 
 
-  class ALAudioDevice : public RefImplementation<AudioDevice> {
+  class OALAudioDevice : public RefImplementation<AudioDevice> {
   public:
-    static ALAudioDevice* create(const ParameterList& list);
+    static OALAudioDevice* create(const ParameterList& list);
 
   private:
-    ALAudioDevice(ALCdevice* device, ALCcontext* context);
-    ~ALAudioDevice();
+    OALAudioDevice(ALCdevice* device, ALCcontext* context);
+    ~OALAudioDevice();
 
   public:
     void update();
@@ -43,7 +43,7 @@ namespace audiere {
   };
 
 
-  class ALOutputStream : public RefImplementation<OutputStream> {
+  class OALOutputStream : public RefImplementation<OutputStream> {
   public:
     void  play();
     void  stop();
@@ -62,14 +62,14 @@ namespace audiere {
     int getPosition();
 
   private:
-    ALOutputStream(
+    OALOutputStream(
       ALAudioDevice* device,
       SampleSource* source,
       ALuint al_source,
       ALuint* buffers,
       ALenum format,
       int sample_rate);
-    ~ALOutputStream();
+    ~OALOutputStream();
 
     void update();
     int read(void* samples, int sample_count);

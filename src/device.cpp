@@ -25,6 +25,10 @@
 #endif
 
 #ifdef HAVE_OPENAL
+  #include "device_oal.h"
+#endif
+
+#ifdef HAVE_AL
   #include "device_al.h"
 #endif
 
@@ -88,6 +92,8 @@ namespace audiere {
     #else  // not Win32 - assume autoconf UNIX
 
       if (name == "" || name == "autodetect") {
+        // in decreasing order of sound API quality
+        TRY_GROUP("al");
         TRY_GROUP("oss");
         TRY_GROUP("openal");
         return 0;
@@ -102,6 +108,13 @@ namespace audiere {
 
       #ifdef HAVE_OPENAL
         if (name == "openal") {
+          TRY_DEVICE(OALAudioDevice);
+          return 0;
+        }
+      #endif
+
+      #ifdef HAVE_AL
+        if (name == "al") {
           TRY_DEVICE(ALAudioDevice);
           return 0;
         }

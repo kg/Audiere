@@ -163,7 +163,7 @@ namespace audiere {
         if (bits_per_sample == 8) {
           m_sample_format = SF_U8;
         } else if (bits_per_sample == 16) {
-          m_sample_format = SF_S16_LE;
+          m_sample_format = SF_S16;
         } else {
           return false;
         }

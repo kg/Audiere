@@ -22,7 +22,7 @@ namespace audiere {
     {
       channel_count = 1;
       sample_rate   = 44100;
-      sample_format = SF_S16_LE;
+      sample_format = SF_S16;
     }
 
     int read(int sample_count, void* samples) {

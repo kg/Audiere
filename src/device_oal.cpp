@@ -8,8 +8,8 @@ static const int BUFFER_MILLISECONDS = 250;
 
 namespace audiere {
 
-  ALAudioDevice*
-  ALAudioDevice::create(const ParameterList& parameters) {
+  OALAudioDevice*
+  OALAudioDevice::create(const ParameterList& parameters) {
     // open an output device
     ALCdevice* device = alcOpenDevice(0);
     if (!device) {
@@ -59,13 +59,13 @@ namespace audiere {
   }
 
 
-  ALAudioDevice::ALAudioDevice(ALCdevice* device, ALCcontext* context) {
+  OALAudioDevice::ALAudioDevice(ALCdevice* device, ALCcontext* context) {
     m_device  = device;
     m_context = context;
   }
 
 
-  ALAudioDevice::~ALAudioDevice() {
+  OALAudioDevice::~ALAudioDevice() {
     if (m_context) {
       alcMakeContextCurrent(0);
       alcDestroyContext(m_context);
@@ -80,7 +80,7 @@ namespace audiere {
 
 
   void
-  ALAudioDevice::update() {
+  OALAudioDevice::update() {
     // enumerate all open streams
     StreamList::iterator i = m_open_streams.begin();
     while (i != m_open_streams.end()) {
@@ -91,7 +91,7 @@ namespace audiere {
 
 
   OutputStream*
-  ALAudioDevice::openStream(SampleSource* source) {
+  OALAudioDevice::openStream(SampleSource* source) {
     int channel_count, sample_rate;
     SampleFormat sample_format;
     source->getFormat(channel_count, sample_rate, sample_format);
@@ -128,7 +128,7 @@ namespace audiere {
       return NULL;
     }
 
-    ALOutputStream* stream = new ALOutputStream(
+    OALOutputStream* stream = new OALOutputStream(
       this,
       source,
       al_source,
@@ -141,7 +141,7 @@ namespace audiere {
 
 
   OutputStream*
-  ALAudioDevice::openBuffer(
+  OALAudioDevice::openBuffer(
     void* samples, int sample_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
@@ -151,12 +151,12 @@ namespace audiere {
 
 
   void
-  ALAudioDevice::removeStream(ALOutputStream* stream) {
+  OALAudioDevice::removeStream(ALOutputStream* stream) {
     m_open_streams.remove(stream);
   }
 
 
-  ALOutputStream::ALOutputStream(
+  OALOutputStream::ALOutputStream(
     ALAudioDevice* device,
     SampleSource* source,
     ALuint al_source,
@@ -196,7 +196,7 @@ namespace audiere {
   }
 
 
-  ALOutputStream::~ALOutputStream() {
+  OALOutputStream::~ALOutputStream() {
     m_device->removeStream(this);
 
     alDeleteSources(1, &m_ALsource);
@@ -207,7 +207,7 @@ namespace audiere {
 
 
   void
-  ALOutputStream::update() {
+  OALOutputStream::update() {
     // are there any buffers that have been processed?
     ALint processed_buffers;
 #ifdef _WIN32 // XXX more OpenAL hacks
@@ -254,7 +254,7 @@ namespace audiere {
 
 
   int
-  ALOutputStream::read(void* samples, int sample_count) {
+  OALOutputStream::read(void* samples, int sample_count) {
     // try to read from the stream
     int samples_read = m_source->read(sample_count, samples);
 
@@ -279,7 +279,7 @@ namespace audiere {
 
 
   void
-  ALOutputStream::fillBuffers() {
+  OALOutputStream::fillBuffers() {
     int samples_to_read = m_buffer_length * BUFFER_COUNT;
     int allocate = samples_to_read * m_sample_size;
     ALubyte* sample_buffer = new ALubyte[allocate];
@@ -299,27 +299,27 @@ namespace audiere {
 
 
   void
-  ALOutputStream::play() {
+  OALOutputStream::play() {
     alSourcePlay(m_ALsource);
     m_is_playing = true;
   }
 
 
   void
-  ALOutputStream::stop() {
+  OALOutputStream::stop() {
     alSourcePause(m_ALsource);
     m_is_playing = false;
   }
 
 
   bool
-  ALOutputStream::isPlaying() {
+  OALOutputStream::isPlaying() {
     return m_is_playing;
   }
 
 
   void
-  ALOutputStream::reset() {
+  OALOutputStream::reset() {
     bool is_playing = isPlaying();
     if (is_playing) {
       stop();
@@ -334,66 +334,66 @@ namespace audiere {
 
 
   void
-  ALOutputStream::setRepeat(bool repeat) {
+  OALOutputStream::setRepeat(bool repeat) {
     /// @todo  implement ALOutputStream::setRepeat
   }
 
 
   bool
-  ALOutputStream::getRepeat() {
+  OALOutputStream::getRepeat() {
     /// @todo  implement ALOutputStream::getRepeat
     return false;
   }
 
 
   void
-  ALOutputStream::setVolume(float volume) {
+  OALOutputStream::setVolume(float volume) {
     m_volume = volume;
     alSourcef(m_ALsource, AL_GAIN, volume);
   }
 
 
   float
-  ALOutputStream::getVolume() {
+  OALOutputStream::getVolume() {
     return m_volume;
   }
 
 
   void
-  ALOutputStream::setPan(float pan) {
+  OALOutputStream::setPan(float pan) {
     /// @todo  implement ALOutputStream::setPan
   }
 
 
   float
-  ALOutputStream::getPan() {
+  OALOutputStream::getPan() {
     /// @todo  implement ALOutputStream::getPan
     return 0.0f;
   }
 
 
   bool
-  ALOutputStream::isSeekable() {
+  OALOutputStream::isSeekable() {
     /// @todo  implement ALOutputStream::isSeekable
     return false;
   }
 
 
   int
-  ALOutputStream::getLength() {
+  OALOutputStream::getLength() {
     /// @todo  implement ALOutputStream::getLength
     return 0;
   }
 
 
   void
-  ALOutputStream::setPosition(int /*position*/) {
+  OALOutputStream::setPosition(int /*position*/) {
     /// @todo  implement ALOutputStream::setPosition
   }
 
 
   int
-  ALOutputStream::getPosition() {
+  OALOutputStream::getPosition() {
     /// @todo  implement ALOutputStream::getPosition
     return 0;
   }

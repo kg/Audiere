@@ -8,7 +8,11 @@ lib_LTLIBRARIES = libaudiere.la
 include_HEADERS = audiere.h
 
 if HAVE_OPENAL
-OPENAL_SOURCES = device_al.cpp device_al.h
+OPENAL_SOURCES = device_oal.cpp device_oal.h
+endif
+
+if HAVE_AL
+AL_SOURCES = device_al.cpp device_al.h
 endif
 
 if HAVE_OSS
@@ -25,6 +29,7 @@ libaudiere_la_SOURCES = \
 	device_null.cpp \
 	device_null.h \
 	$(OPENAL_SOURCES) \
+	$(AL_SOURCES) \
 	$(OSS_SOURCES) \
 	file_ansi.cpp \
 	input.cpp \

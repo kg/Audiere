@@ -14,7 +14,7 @@ namespace audiere {
 
     m_channel_count = 0;
     m_sample_rate   = 0;
-    m_sample_format = SF_S16_LE;
+    m_sample_format = SF_S16;
   }
 
 
@@ -54,7 +54,7 @@ namespace audiere {
 
     m_channel_count = vi->channels;
     m_sample_rate   = vi->rate;
-    m_sample_format = SF_S16_LE; // see constructor
+    m_sample_format = SF_S16; // see constructor
 
     return true;
   }

@@ -202,8 +202,8 @@ namespace audiere {
 
   /// Storage formats for sample data.
   enum SampleFormat {
-    SF_U8,     ///< unsigned 8-bit integer [0,255]
-    SF_S16_LE, ///< little-endian, signed 16-bit integer [-32768,32767]
+    SF_U8,  ///< unsigned 8-bit integer [0,255]
+    SF_S16, ///< signed 16-bit integer in host endianness [-32768,32767]
   };
 
 

@@ -42,21 +42,32 @@ dnl Checks for libraries.
 dnl If building on Cygwin, link with winmm when using OpenAL
 case $host in
   *cygwin*)
-    AL_LIBS=-lwinmm
+    OPENAL_LIBS=-lwinmm
     ;;
 esac
 
+dnl Look for pthreads
 AC_CHECK_LIB(pthread, pthread_create,,AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find pthread library))
+
+dnl Look for OpenAL
 AC_CHECK_LIB(openal, alBufferData,
     HAVE_OPENAL=true
     AC_DEFINE(HAVE_OPENAL)
-    LIBS="$LIBS -lopenal $AL_LIBS",, $AL_LIBS)
+    LIBS="$LIBS -lopenal $OPENAL_LIBS",, $OPENAL_LIBS)
+AM_CONDITIONAL(HAVE_OPENAL, test "x$HAVE_OPENAL" = "xtrue")
+
+
+dnl Look for the POSIX realtime clock
 AC_SEARCH_LIBS(clock_gettime, rt,
     AC_DEFINE(HAVE_CLOCK_GETTIME))
 
-AM_CONDITIONAL(HAVE_OPENAL, test "x$HAVE_OPENAL" = "xtrue")
-
+dnl Look for SGI audio
+AC_CHECK_LIB(audio, alNewConfig,
+    HAVE_AL=true
+    AC_DEFINE(HAVE_AL)
+    LIBS="$LIBS -laudio")
+AM_CONDITIONAL(HAVE_AL, test "x$HAVE_AL" = "xtrue")
 
 dnl Look for wxWindows
 AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin)

@@ -11,7 +11,8 @@
 
 namespace audiere {
 
-  Mixer::Mixer() {
+  Mixer::Mixer(int rate) {
+    m_rate = rate;
   }
 
 
@@ -22,8 +23,8 @@ namespace audiere {
     SampleFormat& sample_format)
   {
     channel_count = 2;
-    sample_rate = 44100;
-    sample_format = SF_S16_LE;
+    sample_rate = m_rate;
+    sample_format = SF_S16;
   }
 
 
@@ -45,8 +46,6 @@ namespace audiere {
 
     // buffer in which to mix the audio
     static const int BUFFER_SIZE = 4096;
-    s32 mix_buffer[BUFFER_SIZE];
-    memset(mix_buffer, 0, sizeof(mix_buffer));
 
     // mix the output in chunks of BUFFER_SIZE samples
     s16* out = (s16*)samples;
@@ -54,6 +53,9 @@ namespace audiere {
     while (left > 0) {
       int to_mix = std::min(BUFFER_SIZE, left);
 
+      s32 mix_buffer[BUFFER_SIZE];
+      memset(mix_buffer, 0, sizeof(mix_buffer));
+    
       for (SourceMap::iterator s = m_sources.begin();
            s != m_sources.end();
            ++s)
@@ -97,7 +99,7 @@ namespace audiere {
   Mixer::addSource(SampleSource* source) {
     // initial source attributes
     SourceAttributes sa;
-    sa.source = new RepeatableStream(new Resampler(source));
+    sa.source = new RepeatableStream(new Resampler(source, m_rate));
     sa.last_l = 0;
     sa.last_r = 0;
     sa.is_playing = false;

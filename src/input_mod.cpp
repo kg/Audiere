@@ -210,7 +210,7 @@ namespace audiere {
   {
     channel_count = 2;
     sample_rate   = 44100;
-    sample_format = SF_S16_LE;
+    sample_format = SF_S16;
   }
 
 

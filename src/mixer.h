@@ -16,10 +16,10 @@
 
 namespace audiere {
 
-  /// Always produce 44.1 KHz, 16-bit, stereo audio.
+  /// Always produce 16-bit, stereo audio at the specified rate.
   class Mixer : public UnseekableSource {
   public:
-    Mixer();
+    Mixer(int rate);
 
     void getFormat(
       int& channel_count,
@@ -67,6 +67,7 @@ namespace audiere {
               s16* buffer);
 
   private:
+    int m_rate;
     SourceMap m_sources;
   };
 

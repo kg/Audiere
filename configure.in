@@ -46,6 +46,14 @@ case $host in
     ;;
 esac
 
+dnl If building with gcc, build with all warnings
+if [[ "x$GXX" = "xyes" ]]; then
+   CXXFLAGS="$CXXFLAGS -Wall"
+fi
+if [[ "x$GCC" = "xyes" ]]; then
+   CFLAGS="$CFLAGS -Wall"
+fi
+
 dnl Look for pthreads
 AC_CHECK_LIB(pthread, pthread_create,,AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find pthread library))

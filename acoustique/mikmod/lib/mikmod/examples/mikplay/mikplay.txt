@@ -1,3 +1,0 @@
-Mikmod > virtch > Entering Initialization Sequence.
-Mikmod > virtch > Initialization successful!
-Mikmod > unimod_load > Loading Module : M:\digital\alioth\arcane.it

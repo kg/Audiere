@@ -29,6 +29,8 @@ Mpegtoraw::Mpegtoraw(Soundinputstream *loader,Soundplayer *player)
   forcetomonoflag=false;
   downfrequency=0;
 
+  lastfrequency = -1;
+
   this->loader=loader;
   this->player=player;
 }
@@ -99,17 +101,17 @@ void Mpegtoraw::setdownfrequency(int value)
   if(value)downfrequency=1;
 }
 
-bool Mpegtoraw::getforcetomono(void)
+bool Mpegtoraw::getforcetomono()
 {
   return forcetomonoflag;
 }
 
-int Mpegtoraw::getdownfrequency(void)
+int Mpegtoraw::getdownfrequency()
 {
   return downfrequency;
 }
 
-int  Mpegtoraw::getpcmperframe(void)
+int  Mpegtoraw::getpcmperframe()
 {
   int s;
 
@@ -128,7 +130,7 @@ int  Mpegtoraw::getpcmperframe(void)
   return s;
 }
 
-inline void Mpegtoraw::flushrawdata(void)
+inline void Mpegtoraw::flushrawdata()
 {
   player->putblock((char *)rawdata,rawdataoffset<<1);
   currentframe++;
@@ -154,7 +156,7 @@ inline void stripfilename(char *dtr,char *str,int max)
 
 // Convert mpeg to raw
 // Mpeg headder class
-void Mpegtoraw::initialize(char *)
+void Mpegtoraw::initialize()
 {
   static bool initialized=false;
 
@@ -239,13 +241,13 @@ void Mpegtoraw::setframe(int framenumber)
   decodeframe=currentframe=framenumber;
 }
 
-void Mpegtoraw::clearbuffer(void)
+void Mpegtoraw::clearbuffer()
 {
   player->abort();
   player->resetsoundtype();
 }
 
-bool Mpegtoraw::loadheader(void)
+bool Mpegtoraw::loadheader()
 {
   register int c;
   bool flag;

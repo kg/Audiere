@@ -24,32 +24,16 @@
 #define SOUND_ERROR_OK                0
 #define SOUND_ERROR_FINISH           -1
 
-// Device error (for player)
-#define SOUND_ERROR_DEVOPENFAIL       1
-#define SOUND_ERROR_DEVBUSY           2
-#define SOUND_ERROR_DEVBADBUFFERSIZE  3
-#define SOUND_ERROR_DEVCTRLERROR      4
-
 // Sound file (for reader)
 #define SOUND_ERROR_FILEOPENFAIL      5
 #define SOUND_ERROR_FILEREADFAIL      6
-
-// Network
-#define SOUND_ERROR_UNKNOWNPROXY      7
-#define SOUND_ERROR_UNKNOWNHOST       8
-#define SOUND_ERROR_SOCKET            9
-#define SOUND_ERROR_CONNECT          10
-#define SOUND_ERROR_FDOPEN           11
-#define SOUND_ERROR_HTTPFAIL         12
-#define SOUND_ERROR_HTTPWRITEFAIL    13
-#define SOUND_ERROR_TOOMANYRELOC     14
 
 // Miscellneous (for translater)
 #define SOUND_ERROR_MEMORYNOTENOUGH  15
 #define SOUND_ERROR_EOF              16
 #define SOUND_ERROR_BAD              17
 
-#define SOUND_ERROR_THREADFAIL       18
+//#define SOUND_ERROR_THREADFAIL       18
 
 #define SOUND_ERROR_UNKNOWN          19
 
@@ -144,15 +128,15 @@ public:
 
   virtual ~Soundinputstream() { }
 
-  int geterrorcode(void)  {return __errorcode;};
+  int geterrorcode()  {return __errorcode;};
 
-  virtual int  getbytedirect(void)               =0;
+  virtual int  getbytedirect()               =0;
   virtual bool _readbuffer(char *buffer,int size)=0;
-  virtual bool eof(void)                         =0;
+  virtual bool eof()                         =0;
   virtual int  getblock(char *buffer,int size)   =0;
 
-  virtual int  getsize(void)                     =0;
-  virtual int  getposition(void)                 =0;
+  virtual int  getsize()                     =0;
+  virtual int  getposition()                 =0;
   virtual void setposition(int pos)              =0;
 
 protected:
@@ -172,7 +156,6 @@ public:
   Soundplayer() {__errorcode=SOUND_ERROR_OK;};
   virtual ~Soundplayer() { }
 
-  virtual bool initialize(char *filename)                       =0;
   virtual void abort() { }
   virtual int  getprocessed() { return 0; }
 
@@ -202,13 +185,13 @@ class Mpegbitwindow
 public:
   Mpegbitwindow(){bitindex=point=0;};
 
-  void initialize(void)  {bitindex=point=0;};
-  int  gettotalbit(void) const {return bitindex;};
+  void initialize()  {bitindex=point=0;};
+  int  gettotalbit() const {return bitindex;};
   void putbyte(int c)    {buffer[point&(WINDOWSIZE-1)]=c;point++;};
-  void wrap(void);
+  void wrap();
   void rewind(int bits)  {bitindex-=bits;};
   void forward(int bits) {bitindex+=bits;};
-  int  getbit(void);
+  int  getbit();
   int  getbits9(int bits);
   int  getbits(int bits);
 
@@ -246,15 +229,15 @@ private:
   /*******************************************/
 public:
   // General
-  int  getversion(void)   const {return version;};
-  int  getlayer(void)     const {return layer;};
-  bool getcrccheck(void)  const {return (!protection);};
+  int  getversion()   const {return version;};
+  int  getlayer()     const {return layer;};
+  bool getcrccheck()  const {return (!protection);};
   // Stereo or not
-  int  getmode(void)      const {return mode;};
-  bool isstereo(void)     const {return (getmode()!=single);};
+  int  getmode()      const {return mode;};
+  bool isstereo()     const {return (getmode()!=single);};
   // Frequency and bitrate
-  int  getfrequency(void) const {return frequencies[version][frequency];};
-  int  getbitrate(void)   const {return bitrate[version][layer-1][bitrateindex];};
+  int  getfrequency() const {return frequencies[version][frequency];};
+  int  getbitrate()   const {return bitrate[version][layer-1][bitrateindex];};
 
   /***************************************/
   /* Interface for setting music quality */
@@ -271,9 +254,9 @@ public:
   /* Functions getting other MPEG variables */
   /******************************************/
 public:
-  bool getforcetomono(void);
-  int  getdownfrequency(void);
-  int  getpcmperframe(void);
+  bool getforcetomono();
+  int  getdownfrequency();
+  int  getpcmperframe();
 
   /******************************/
   /* Frame management variables */
@@ -287,8 +270,8 @@ private:
   /* Frame management functions */
   /******************************/
 public:
-  int  getcurrentframe(void) const {return currentframe;};
-  int  gettotalframe(void)   const {return totalframe;};
+  int  getcurrentframe() const {return currentframe;};
+  int  gettotalframe()   const {return totalframe;};
   void setframe(int framenumber);
 
   /***************************************/
@@ -306,10 +289,10 @@ private:
 public:
   Mpegtoraw(Soundinputstream *loader,Soundplayer *player);
   ~Mpegtoraw();
-  void initialize(char *filename);
+  void initialize();
   bool run(int frames);
-  int  geterrorcode(void) {return __errorcode;};
-  void clearbuffer(void);
+  int  geterrorcode() {return __errorcode;};
+  void clearbuffer();
 
 private:
   int __errorcode;
@@ -328,13 +311,13 @@ private:
   char buffer[4096];
   int  bitindex;
   bool fillbuffer(int size){bitindex=0;return loader->_readbuffer(buffer,size);};
-  void sync(void)  {bitindex=(bitindex+7)&0xFFFFFFF8;};
-  bool issync(void){return (bitindex&7) != 0;};
-  int getbyte(void);
+  void sync()  {bitindex=(bitindex+7)&0xFFFFFFF8;};
+  bool issync(){return (bitindex&7) != 0;};
+  int getbyte();
   int getbits(int bits);
   int getbits9(int bits);
-  int getbits8(void);
-  int getbit(void);
+  int getbits8();
+  int getbit();
 
   /********************/
   /* Global variables */
@@ -350,7 +333,7 @@ private:
   layer3scalefactor scalefactors[2];
 
   Mpegbitwindow bitwindow;
-  int wgetbit(void);
+  int wgetbit();
   int wgetbits9(int bits);
   int wgetbits(int bits);
 
@@ -359,7 +342,7 @@ private:
   /* Decoding functions for each layer */
   /*************************************/
 private:
-  bool loadheader(void);
+  bool loadheader();
 
   //
   // Subbandsynthesis
@@ -368,26 +351,26 @@ private:
   int  currentcalcbuffer,calcbufferoffset;
 
   void computebuffer(REAL *fraction,REAL buffer[2][CALCBUFFERSIZE]);
-  void generatesingle(void);
-  void generate(void);
+  void generatesingle();
+  void generate();
   void subbandsynthesis(REAL *fractionL,REAL *fractionR);
 
   void computebuffer_2(REAL *fraction,REAL buffer[2][CALCBUFFERSIZE]);
-  void generatesingle_2(void);
-  void generate_2(void);
+  void generatesingle_2();
+  void generate_2();
   void subbandsynthesis_2(REAL *fractionL,REAL *fractionR);
 
   // Extarctor
-  void extractlayer1(void);    // MPEG-1
-  void extractlayer2(void);
-  void extractlayer3(void);
-  void extractlayer3_2(void);  // MPEG-2
+  void extractlayer1();    // MPEG-1
+  void extractlayer2();
+  void extractlayer3();
+  void extractlayer3_2();  // MPEG-2
 
 
   // Functions for layer 3
-  void layer3initialize(void);
-  bool layer3getsideinfo(void);
-  bool layer3getsideinfo_2(void);
+  void layer3initialize();
+  bool layer3getsideinfo();
+  bool layer3getsideinfo_2();
   void layer3getscalefactors(int ch,int gr);
   void layer3getscalefactors_2(int ch);
   void layer3huffmandecode(int ch,int gr,int out[SBLIMIT][SSLIMIT]);
@@ -413,9 +396,9 @@ private:
   int       rawdataoffset;
   short int rawdata[RAWDATASIZE];
 
-  void clearrawdata(void)    {rawdataoffset=0;};
+  void clearrawdata()    {rawdataoffset=0;};
   void putraw(short int pcm) {rawdata[rawdataoffset++]=pcm;};
-  void flushrawdata(void);
+  void flushrawdata();
 };
 
 

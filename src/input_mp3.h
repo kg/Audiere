@@ -22,7 +22,6 @@ namespace audiere {
     int ADR_CALL read(int frame_count, void* samples);
     void ADR_CALL reset();
 
-    bool initialize(char* filename);
     bool setsoundtype(int stereo, int samplesize, int speed);
     bool putblock(void *buffer,int size);
 

@@ -100,12 +100,8 @@ namespace audiere {
 
   
   MP3InputStream::~MP3InputStream() {
-    if (m_decoder) {
-      delete m_decoder;
-    }
-    if (m_loader) {
-      delete m_loader;
-    }
+    delete m_decoder;
+    delete m_loader;
   }
 
 
@@ -115,8 +111,7 @@ namespace audiere {
     m_loader = new MyLoader(file);
     m_decoder = new Mpegtoraw(m_loader, this);
 
-    // empty filename because we don't use it
-    m_decoder->initialize("");
+    m_decoder->initialize();
 
     // this should call setsoundtype with the format of the stream
     if (!m_decoder->run(FRAME_COUNT)) {
@@ -179,30 +174,23 @@ namespace audiere {
   MP3InputStream::reset() {
     m_file->seek(0, File::BEGIN);
 
-    if (m_decoder) {
-      delete m_decoder;
-    }
-    if (m_loader) {
-      delete m_loader;
-    }
+    m_buffer.clear();
+    m_channel_count = 2;
+    m_sample_rate = 44100;
+    m_sample_format = SF_S16;
+
+    delete m_decoder;
+    delete m_loader;
 
     m_loader = new MyLoader(m_file.get());
     m_decoder = new Mpegtoraw(m_loader, this);
 
-    // empty filename because we don't use it
-    m_decoder->initialize("");
+    m_decoder->initialize();
 
     // this should call setsoundtype with the format of the stream
     if (!m_decoder->run(FRAME_COUNT)) {
       return;
     }
-  }
-
-
-  bool
-  MP3InputStream::initialize(char* /*filename*/) {
-    // nothing!
-    return true;
   }
 
 

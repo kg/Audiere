@@ -1,3 +1,8 @@
+2003.05.30
+
+  fixed bug where resetting an MP3 input stream would emit a short burst
+    of static
+
 2003.05.27
 
   you can now specify what format you are loading for efficiency reasons

@@ -790,14 +790,6 @@ SOURCE=..\..\src\mpegsound\mpegtable.cpp
 
 SOURCE=..\..\src\mpegsound\mpegtoraw.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mpegsound\soundinputstream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mpegsound\soundplayer.cpp
-# End Source File
 # End Group
 # Begin Group "FLAC"
 

@@ -40,7 +40,7 @@ namespace audiere {
     };
 
     HWAVEOUT m_device;
-    Mixer m_mixer;
+    RefPtr<Mixer> m_mixer;
 
     int m_current_buffer;
     WAVEHDR m_buffers[BUFFER_COUNT];

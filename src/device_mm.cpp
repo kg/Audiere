@@ -31,6 +31,7 @@ namespace audiere {
     ADR_GUARD("MMAudioDevice::MMAudioDevice");
 
     m_device = device;
+    m_mixer = new Mixer(44100);
     m_current_buffer = 0;
 
     // fill each buffer with samples and prepare it for output
@@ -40,7 +41,7 @@ namespace audiere {
       wh.lpData         = (char*)m_samples + i * BUFFER_LENGTH;
       wh.dwBufferLength = BUFFER_LENGTH;
 
-      m_mixer.read(BUFFER_LENGTH / 4, wh.lpData);
+      m_mixer->read(BUFFER_LENGTH / 4, wh.lpData);
 
       MMRESULT result = waveOutPrepareHeader(m_device, &wh, sizeof(wh));
       if (result != MMSYSERR_NOERROR) {
@@ -83,7 +84,7 @@ namespace audiere {
         }
 
         // fill with new samples
-        m_mixer.read(BUFFER_LENGTH / 4, wh.lpData);
+        m_mixer->read(BUFFER_LENGTH / 4, wh.lpData);
         wh.dwFlags = 0;
 
         // prepare
@@ -222,7 +223,7 @@ namespace audiere {
 
   Mixer&
   MMOutputStream::getMixer() {
-    return m_device->m_mixer;
+    return *(m_device->m_mixer);
   }
 
 

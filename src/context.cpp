@@ -37,7 +37,11 @@ Context::Context()
 
 Context::~Context()
 {
+  ADR_GUARD("Context::~Context");
+
   if (m_thread_exists) {
+    ADR_LOG("asking thread to die...");
+
     // ask the thread to die
     m_thread_should_die = true;
 
@@ -45,6 +49,8 @@ Context::~Context()
     while (m_thread_should_die) {
       AI_Sleep(50);
     }
+
+    ADR_LOG("thread is dead");
   }
 
   delete m_output_context;
@@ -103,6 +109,8 @@ Context::AddRef()
 void
 Context::Release()
 {
+  ADR_GUARD("Context::Release");
+
   if (--m_ref_count == 0) {
     delete this;
   }

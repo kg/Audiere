@@ -135,6 +135,7 @@ void ADR_CALL AdrDestroyContext(ADR_CONTEXT context)
   ADR_GUARD("AdrDestroyContext");
 
   ImportContext(context)->Release();
+  ADR_LOG("done releasing context");
 }
 
 ////////////////////////////////////////////////////////////////////////////////

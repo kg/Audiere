@@ -2,6 +2,7 @@
 #define DEBUG_HPP
 
 
+#include <assert.h>
 #include <stdio.h>
 #include <string>
 
@@ -53,7 +54,7 @@
   #ifdef _MSC_VER
     #define ADR_ASSERT(condition, label) if (!(condition)) { __asm int 3 }
   #else  // assume x86 gcc
-    #define ADR_ASSERT(condition, label) if (!(condition)) { asm("int 3"); }
+    #define ADR_ASSERT(condition, label) assert(condition && label);
   #endif
 
 #else

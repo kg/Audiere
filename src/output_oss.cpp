@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 #include "output_oss.hpp"
+#include "debug.hpp"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,8 @@ OSSOutputContext::OSSOutputContext()
 
 OSSOutputContext::~OSSOutputContext()
 {
+  ADR_GUARD("OSSOutputContext::~OSSOutputContext");
+
   if (m_output_device != -1) {
     close(m_output_device);
   }

@@ -12,7 +12,23 @@ vc6die() {
 }
 
 echo
-echo "Building VC6 workspace..."
+echo "Building Java bindings..."
+echo
+
+cd bindings/java || die
+make || die
+cd ../.. || die
+
+echo
+echo "Building XPCOM bindings..."
+echo
+
+cd bindings/xpcom || die
+scons || die
+cd ../.. || die
+
+echo
+echo "Building Audiere VC6 workspace..."
 
 msdev vc6/audiere.dsw /MAKE ALL /OUT vc6-build.log || vc6die
 

@@ -163,7 +163,7 @@ OGGInputStream::FileRead(void* buffer, size_t size, size_t n, void* opaque)
 ////////////////////////////////////////////////////////////////////////////////
 
 int
-OGGInputStream::FileSeek(void* opaque, int64_t offset, int whence)
+OGGInputStream::FileSeek(void* opaque, ogg_int64_t offset, int whence)
 {
   IFile* file = reinterpret_cast<IFile*>(opaque);
   ADR_SEEK_TYPE type;

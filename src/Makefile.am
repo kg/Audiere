@@ -24,7 +24,6 @@ libaudiere_la_SOURCES = \
 	device_null.h \
 	$(OPENAL_SOURCES) \
 	$(OSS_SOURCES) \
-	endian.h \
 	file_ansi.cpp \
 	input.cpp \
 	input_mod.cpp \

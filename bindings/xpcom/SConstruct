@@ -1,18 +1,22 @@
 import os
 
+MOZILLA_BASE = 'D:/mozilla/mozilla'
+
 INTERFACES = [
-    'mozIAudioContext',
-    'mozIAudioService',
-    'mozIAudioStream']
+    'adrIAudiereService',
+    'adrIAudioDevice',
+    'adrIOutputStream']
 
 TypeLib = Builder(action = '${XPIDL} -m typelib $XPIDLFLAGS $SOURCE')
 Header  = Builder(action = '${XPIDL} -m header $XPIDLFLAGS $SOURCE')
 
+XPIDL = os.path.join(MOZILLA_BASE, 'dist', 'bin', 'xpidl')
+
 env = Environment(
     ENV = os.environ,
     BUILDERS = { 'TypeLib' : TypeLib, 'Header' : Header },
-    XPIDL = 'xpidl',
-    XPIDLFLAGS = '-ID:/mozilla/mozilla/dist/idl')
+    XPIDL = XPIDL,
+    XPIDLFLAGS = '-I%s' % os.path.join(MOZILLA_BASE, 'dist', 'idl'))
 
 for i in INTERFACES:
     env.TypeLib(i + '.xpt', i + '.idl')

@@ -42,10 +42,9 @@ Stream::Initialize(Context* context, const char* filename)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Stream::~Stream()
+void
+Stream::Destructor()
 {
-  AI_Lock l__(m_context);
-
   delete m_output_stream;
   m_output_stream = 0;
 
@@ -55,6 +54,18 @@ Stream::~Stream()
   if (m_context) {
     m_context->Release();
     m_context = 0;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+Stream::~Stream()
+{
+  if (m_context) {
+    AI_Lock l__(m_context);
+    Destructor();
+  } else {
+    Destructor();
   }
 }
 

@@ -17,6 +17,7 @@ class Stream
 private:
   Stream();
   bool Initialize(Context* context, const char* filename);
+  void Destructor();
 
 public:
   ~Stream();

@@ -18,7 +18,6 @@
 class DSOutputStream;
 
 
-// context
 class DSOutputContext : public IOutputContext
 {
 public:
@@ -32,10 +31,8 @@ public:
 private:
   typedef std::list<DSOutputStream*> StreamList;
 
-private:
   void RemoveStream(DSOutputStream* stream);
 
-private:
   IDirectSound* m_DirectSound;
   StreamList    m_OpenStreams;
 
@@ -43,26 +40,18 @@ private:
 
   HWND m_AnonymousWindow;
 
-private:  // these must be overridden
+
+  // these must be overridden
   virtual REFCLSID GetCLSID() = 0;
   virtual DWORD GetCooperativeLevel() = 0;
   virtual bool CreatePrimarySoundBuffer(IDirectSound* ds) = 0;
 
-  friend DSOutputStream;
+  friend class DSOutputStream;
 };
 
 
-// stream
 class DSOutputStream : public IOutputStream
 {
-  void Play();
-  void Stop();
-  void Reset();
-  void ResetInput();
-  bool IsPlaying();
-  void SetVolume(int volume);
-  int  GetVolume();
-
 private:
   DSOutputStream(
     DSOutputContext* context,
@@ -71,6 +60,14 @@ private:
     int buffer_length, // in samples
     ISampleSource* source);
   ~DSOutputStream();
+
+public:
+  void Play();
+  void Stop();
+  void Reset();
+  bool IsPlaying();
+  void SetVolume(int volume);
+  int  GetVolume();
 
   void FillStream();
   void Update();
@@ -98,7 +95,7 @@ private:
 
   BYTE* m_LastSample; // the last sample read (used for clickless silence)
 
-  friend DSOutputContext;
+  friend class DSOutputContext;
 };
 
 

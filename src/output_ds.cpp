@@ -68,15 +68,6 @@ DSOutputContext::~DSOutputContext()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static LRESULT CALLBACK WindowProc(
-  HWND window,
-  UINT message,
-  WPARAM wparam,
-  LPARAM lparam)
-{
-  return DefWindowProc(window, message, wparam, lparam);
-}
-
 bool
 DSOutputContext::Initialize(const char* parameters)
 {
@@ -91,6 +82,9 @@ DSOutputContext::Initialize(const char* parameters)
     
     if (i->first.c_str() == "buffer") {
       m_BufferLength = atoi(i->second.c_str());
+      if (m_BufferLength == 0) {
+        m_BufferLength = 1000;
+      }
     }
 
     ++i;
@@ -108,7 +102,7 @@ DSOutputContext::Initialize(const char* parameters)
   // don't worry about failure, if it fails, the window creation will fail
   WNDCLASS wc;
   wc.style          = 0;
-  wc.lpfnWndProc    = WindowProc;
+  wc.lpfnWndProc    = DefWindowProc;
   wc.cbClsExtra     = 0;
   wc.cbWndExtra     = 0;
   wc.hInstance      = GetModuleHandle(NULL);

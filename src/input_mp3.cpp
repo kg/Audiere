@@ -5,6 +5,8 @@
   In short, this is some wierd shit I wrote up because Chad
   didn't want to touch this. Also, I have no idea what I've
   done as well to get it work as well.
+
+  I've since done a bunch of work on it.  :)  -Chad
 */
 
 #include <string.h>

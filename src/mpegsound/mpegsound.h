@@ -13,15 +13,6 @@
 #include <sys/types.h>
 #include <string.h>
 
-#ifdef PTHREADEDMPEG
-#ifdef HAVE_PTHREAD_H
-#include <pthread.h>
-#else
-#ifdef HAVE_PTHREAD_MIT_PTHREAD_H
-#include <pthread/mit/pthread.h>
-#endif
-#endif
-#endif
 
 #ifndef _L__SOUND__
 #define _L__SOUND__
@@ -422,42 +413,6 @@ private:
   void clearrawdata(void)    {rawdataoffset=0;};
   void putraw(short int pcm) {rawdata[rawdataoffset++]=pcm;};
   void flushrawdata(void);
-
-  /***************************/
-  /* Interface for threading */
-  /***************************/
-#ifdef PTHREADEDMPEG
-private:
-  struct
-  {
-    short int *buffer;
-    int framenumber,frametail;
-    int head,tail;
-    int *sizes;
-  }threadqueue;
-
-  struct
-  {
-    bool thread;
-    bool quit,done;
-    bool pause;
-    bool criticallock,criticalflag;
-  }threadflags;
-
-  pthread_t thread;
-
-public:
-  void threadedplayer(void);
-  bool makethreadedplayer(int framenumbers);
-  void freethreadedplayer(void);
-
-  void stopthreadedplayer(void);
-  void pausethreadedplayer(void);
-  void unpausethreadedplayer(void);
-
-  bool existthread(void);
-  int  getframesaved(void);
-#endif
 };
 
 

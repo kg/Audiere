@@ -13,10 +13,6 @@
 #include "config.h"
 #endif
 
-#ifdef PTHREADEDMPEG
-#include <pthread.h>
-#endif
-
 #include <math.h>
 #include <stdlib.h>
 
@@ -133,37 +129,11 @@ int  Mpegtoraw::getpcmperframe(void)
 }
 
 inline void Mpegtoraw::flushrawdata(void)
-#ifdef PTHREADEDMPEG
-{
-  if(threadflags.thread)
-  {
-    if(((threadqueue.tail+1)%threadqueue.framenumber)==threadqueue.head)
-    {
-      while(((threadqueue.tail+1)%threadqueue.framenumber)==threadqueue.head)
-	usleep(200);
-    }
-    memcpy(threadqueue.buffer+(threadqueue.tail*RAWDATASIZE),rawdata,
-	   RAWDATASIZE*sizeof(short int));
-    threadqueue.sizes[threadqueue.tail]=(rawdataoffset<<1);
-    
-    if(threadqueue.tail>=threadqueue.frametail)
-      threadqueue.tail=0;
-    else threadqueue.tail++;
-  }
-  else
-  {
-    player->putblock((char *)rawdata,rawdataoffset<<1);
-    currentframe++;
-  }
-  rawdataoffset=0;
-}
-#else
 {
   player->putblock((char *)rawdata,rawdataoffset<<1);
   currentframe++;
   rawdataoffset=0;
 };
-#endif
 
 inline void stripfilename(char *dtr,char *str,int max)
 {
@@ -233,11 +203,6 @@ void Mpegtoraw::initialize(char *)
   }
   else frameoffsets=NULL;
 
-#ifdef PTHREADEDMPEG
-  threadflags.thread=false;
-  threadqueue.buffer=NULL;
-  threadqueue.sizes=NULL;
-#endif
 };
 
 void Mpegtoraw::setframe(int framenumber)
@@ -276,16 +241,6 @@ void Mpegtoraw::setframe(int framenumber)
 
 void Mpegtoraw::clearbuffer(void)
 {
-#ifdef PTHREADEDMPEG
-  if(threadflags.thread)
-  {
-    threadflags.criticalflag=false;
-    threadflags.criticallock=true;
-    while(!threadflags.criticalflag)usleep(1);
-    threadqueue.head=threadqueue.tail=0;
-    threadflags.criticallock=false;
-  }
-#endif
   player->abort();
   player->resetsoundtype();
 }
@@ -445,114 +400,6 @@ bool Mpegtoraw::loadheader(void)
   return true;
 }
 
-/***************************/
-/* Playing in multi-thread */
-/***************************/
-#ifdef PTHREADEDMPEG
-/* Player routine */
-void Mpegtoraw::threadedplayer(void)
-{
-  while(!threadflags.quit)
-  {
-    while(threadflags.pause || threadflags.criticallock)
-    {
-      threadflags.criticalflag=true;
-      usleep(200);
-    }
-
-    if(threadqueue.head!=threadqueue.tail)
-    {
-      player->putblock(threadqueue.buffer+threadqueue.head*RAWDATASIZE,
-      		       threadqueue.sizes[threadqueue.head]);
-      currentframe++;
-      if(threadqueue.head==threadqueue.frametail)
-	threadqueue.head=0;
-      else threadqueue.head++;
-    }
-    else
-    {
-      if(threadflags.done)break;  // Terminate when done
-      usleep(200);
-    }
-  }
-  threadflags.thread=false;
-}
-
-static void *threadlinker(void *arg)
-{
-  ((Mpegtoraw *)arg)->threadedplayer();
-
-  return NULL;
-}
-
-bool Mpegtoraw::makethreadedplayer(int framenumbers)
-{
-  threadqueue.buffer=
-    (short int *)malloc(sizeof(short int)*RAWDATASIZE*framenumbers);
-  if(threadqueue.buffer==NULL)
-    seterrorcode(SOUND_ERROR_MEMORYNOTENOUGH);
-  threadqueue.sizes=(int *)malloc(sizeof(int)*framenumbers);
-  if(threadqueue.sizes==NULL)
-    seterrorcode(SOUND_ERROR_MEMORYNOTENOUGH);
-  threadqueue.framenumber=framenumbers;
-  threadqueue.frametail=framenumbers-1;
-  threadqueue.head=threadqueue.tail=0;
-
-
-  threadflags.quit=threadflags.done=
-  threadflags.pause=threadflags.criticallock=false;
-
-  threadflags.thread=true;
-  if(pthread_create(&thread,0,threadlinker,this))
-    seterrorcode(SOUND_ERROR_THREADFAIL);
-
-  return true;
-}
-
-void Mpegtoraw::freethreadedplayer(void)
-{
-  threadflags.criticallock=
-  threadflags.pause=false;
-  threadflags.done=true;               // Terminate thread player
-  while(threadflags.thread)usleep(10); // Wait for done...
-  if(threadqueue.buffer)free(threadqueue.buffer);
-  if(threadqueue.sizes)free(threadqueue.sizes);
-}
-
-
-
-
-void Mpegtoraw::stopthreadedplayer(void)
-{
-  threadflags.quit=true;
-};
-
-void Mpegtoraw::pausethreadedplayer(void)
-{
-  threadflags.pause=true;
-};
-
-void Mpegtoraw::unpausethreadedplayer(void)
-{
-  threadflags.pause=false;
-};
-
-
-bool Mpegtoraw::existthread(void)
-{
-  return threadflags.thread;
-}
-
-int  Mpegtoraw::getframesaved(void)
-{
-  if(threadqueue.framenumber)
-    return
-      ((threadqueue.tail+threadqueue.framenumber-threadqueue.head)
-       %threadqueue.framenumber);
-  return 0;
-}
-
-#endif
 
 
 // Convert mpeg to raw

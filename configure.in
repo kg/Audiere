@@ -155,12 +155,6 @@ AC_OUTPUT(
         examples/simple/Makefile
         examples/wxPlayer/Makefile
         src/Makefile
-        src/mikmod/Makefile
-        src/mikmod/mikmod/Makefile
-        src/mikmod/mikmod/loaders/Makefile
-        src/mikmod/mikmod/virtch/Makefile
-        src/mikmod/mikmod/virtch/resfilter/Makefile
-        src/mikmod/mmio/Makefile
         src/mpegsound/Makefile
         test/Makefile
         test/buffer/Makefile

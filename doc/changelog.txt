@@ -1,66 +1,92 @@
+2003.06.12
+
+  Replaced MikMod with an actively-maintained MOD decoding engine:
+    DUMB (http://dumb.sf.net) Overall, the change is for the better,
+    but there are a few important changes to be noted:
+      - fixed a crash in certain Impulse Tracker files
+      - mod looping now works correctly
+      - some previously-unsupported effects now work
+      - opening a mod stream now takes significantly longer, since
+        DUMB builds up an internal seek table, which is currently
+        unused
+      - playing mod files now takes roughly five times more CPU time
+        than it used to
+      - DUMB works on big-endian architectures (such as MIPS (sgi) and
+        PowerPC (mac)), where MikMod did not
+      - DUMB tries to match the exact behavior of the "official"
+        trackers (that is, Impulse Tracker, Scream Tracker 3, and Fast
+        Tracker), so some mods that sounded fine in ModPlug Tracker or
+        Winamp (MikMod) may sound strange.  For example, some of the
+        Amstrocity remixes of Squaresoft songs have distortion caused
+        by volume range clipping when played in DUMB.
+
 2003.06.02
 
-  fixed some edge cases involving small sounds, DirectSound streams,
-    and the repeating flag
-  added min_buffer_length device parameter to DirectSound device to
-    prevent static in very small sounds
+  Fixed some edge cases involving small sounds, DirectSound streams,
+  and the repeating flag.
+
+  Added min_buffer_length device parameter to DirectSound device to
+  prevent static in very small sounds.
 
 2003.06.01
 
-  fixed short bursts of periodic static while decoding MP3s.  it
-    appears to be a result of the Visual C++ optimizer interacting
-    with the MP3 decoder code.
+  Fixed short bursts of periodic static while decoding MP3s.  it
+  appears to be a result of the Visual C++ optimizer interacting with
+  the MP3 decoder code.  (I can't claim that is an optimization bug
+  yet...  there could be some invalid aliasing going on in the code.)
 
 2003.05.30
 
-  fixed bug where resetting an MP3 input stream would emit a short burst
-    of static
-  fixed static between repeats in repeatable streams (thanks
-    valgrind!)
-  fixed an exit crash on some systems by adding a CoUninitialize call
-    to the DirectSound device destructor
+  Fixed bug where resetting an MP3 input stream would emit a short
+  burst of static.
+
+  Fixed static between repeats in repeatable streams (thanks
+  valgrind!)
+
+  Fixed an exit crash on some systems by adding a CoUninitialize call
+  to the DirectSound device destructor.
 
 2003.05.27
 
-  you can now specify what format you are loading for efficiency reasons
+  You can now specify what format you are loading for efficiency reasons.
 
 2003.05.25
 
-  fixed a bug in the DirectSound streaming code where you would hear the
-    beginning of some sounds before they actually stopped
+  Fixed a bug in the DirectSound streaming code where you would hear
+  the beginning of some sounds before they actually stopped.
 
 2003.04.22
 
-  added getName() method to AudioDevice
+  Added getName() method to AudioDevice.
 
 2003.03.11
 
-  you can pass smart pointers straight into API calls, for example:
+  You can now pass smart pointers straight into API calls, for example:
     AudioDevicePtr device = OpenDevice();
     OutputStreamPtr sound = OpenSound(device, "blah.wav");
     sound->play();
 
 2003.02.17
 
-  added support for MemoryFile objects
+  Added support for MemoryFile objects.
 
 2003.01.27
 
-  removed support for OpenAL because it was causing compile issues on
-    systems with different and incompatible versions of OpenAL
+  Removed support for OpenAL because it was causing compile issues on
+  systems with different and incompatible versions of OpenAL.
 
 2003.01.09
 
-  no longer use the MTM or STM mikmod loaders because they crash on
-    certain wav files
+  No longer use the MTM or STM mikmod loaders because they crash on
+  certain wav files.
 
 2003.01.05
 
-  many general improvements to wxPlayer
+  Many general improvements to wxPlayer.
 
 2003.01.04
 
-  use __declspec instead of def files for mingw compatiblity
+  Use __declspec instead of def files for mingw compatiblity.
 
 2002.12.30
   build the winmm audio device in Cygwin if it's available

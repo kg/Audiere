@@ -61,11 +61,7 @@ dnl Output makefiles.
 AC_SUBST(WORDS_BIGENDIAN)
 AC_OUTPUT(
 	Makefile
-	documentation/Makefile
-	mikmod/Makefile
-	mikmod/mikmod/Makefile
-	mikmod/mikmod/loaders/Makefile
-	mikmod/mikmod/virtch/Makefile
-	mikmod/mikmod/virtch/resfilter/Makefile
-	mikmod/mmio/Makefile
+	doc/Makefile
+        src/Makefile
+        examples/Makefile
 )

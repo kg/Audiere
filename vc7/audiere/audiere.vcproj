@@ -3,8 +3,8 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="audiere"
-	SccProjectName=""
-	SccLocalPath="">
+	ProjectGUID="{31F3D9BD-DB00-418B-A86E-D643D323AB0D}"
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
 			Name="Win32"/>
@@ -12,47 +12,37 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="../bin/Debug"
+			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\src\mikmod\mmio,..\..\src\mikmod\mikmod,..\..\src\libogg-1.0rc3\include,..\..\src\libvorbis-1.0rc3\include"
+				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/audiere.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"
-				CompileAs="0"/>
+				Detect64BitPortabilityProblems="FALSE"
+				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="dxguid.lib odbc32.lib odbccp32.lib"
-				OutputFile=".\Debug/audiere.dll"
+				AdditionalDependencies="dxguid.lib winmm.lib"
+				OutputFile="$(OutDir)/audiere.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
-				ModuleDefinitionFile="..\..\src\audiere.def"
+				ModuleDefinitionFile="../../src/audiere.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/audiere.pdb"
-				ImportLibrary=".\Debug/audiere.lib"/>
+				ProgramDatabaseFile="$(OutDir)/audiere.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)/audiere.lib"
+				TargetMachine="1"/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/audiere.tlb"/>
+				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -60,9 +50,7 @@
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -70,46 +58,42 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="../bin/Release"
+			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="2"
+				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\src\mikmod\mmio,..\..\src\mikmod\mikmod,..\..\src\libogg-1.0rc3\include,..\..\src\libvorbis-1.0rc3\include"
+				OmitFramePointers="TRUE"
+				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\Release/audiere.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
-				CompileAs="0"/>
+				Detect64BitPortabilityProblems="FALSE"
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="dxguid.lib odbc32.lib odbccp32.lib"
-				OutputFile=".\Release/audiere.dll"
+				AdditionalDependencies="dxguid.lib winmm.lib"
+				OutputFile="$(OutDir)/audiere.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				ModuleDefinitionFile="..\..\src\audiere.def"
-				ProgramDatabaseFile=".\Release/audiere.pdb"
-				ImportLibrary=".\Release/audiere.lib"/>
+				ModuleDefinitionFile="../../src/audiere.def"
+				GenerateDebugInformation="FALSE"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				ImportLibrary="$(OutDir)/audiere.lib"
+				TargetMachine="1"/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release/audiere.tlb"/>
+				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -117,9 +101,7 @@
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -132,9 +114,6 @@
 			Filter="">
 			<File
 				RelativePath="..\..\src\audiere.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\audiere.def">
 			</File>
 			<File
 				RelativePath="..\..\src\audiere.h">
@@ -237,6 +216,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\threads_win32.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\timer.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\timer_win32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\utility.cpp">
@@ -467,16 +452,7 @@
 				RelativePath="..\..\src\libogg-1.0rc3\src\bitwise.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libogg-1.0rc3\include\ogg\config_types.h">
-			</File>
-			<File
 				RelativePath="..\..\src\libogg-1.0rc3\src\framing.c">
-			</File>
-			<File
-				RelativePath="..\..\src\libogg-1.0rc3\include\ogg\ogg.h">
-			</File>
-			<File
-				RelativePath="..\..\src\libogg-1.0rc3\include\ogg\os_types.h">
 			</File>
 		</Filter>
 		<Filter
@@ -502,9 +478,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\libvorbis-1.0rc3\lib\codebook.h">
-			</File>
-			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\include\vorbis\codec.h">
 			</File>
 			<File
 				RelativePath="..\..\src\libvorbis-1.0rc3\lib\codec_internal.h">
@@ -604,9 +577,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\libvorbis-1.0rc3\lib\vorbisfile.c">
-			</File>
-			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\include\vorbis\vorbisfile.h">
 			</File>
 			<File
 				RelativePath="..\..\src\libvorbis-1.0rc3\lib\window.c">

@@ -1,5 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 7.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audiere", "audiere\audiere.vcproj", "{FD66FE8C-8C55-4DAE-9827-10009A53E6C4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audiere", "audiere\audiere.vcproj", "{31F3D9BD-DB00-418B-A86E-D643D323AB0D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "interactive", "interactive\interactive.vcproj", "{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
@@ -7,12 +9,17 @@ Global
 		ConfigName.1 = Release
 	EndGlobalSection
 	GlobalSection(ProjectDependencies) = postSolution
+		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.0 = {31F3D9BD-DB00-418B-A86E-D643D323AB0D}
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{FD66FE8C-8C55-4DAE-9827-10009A53E6C4}.Debug.ActiveCfg = Debug|Win32
-		{FD66FE8C-8C55-4DAE-9827-10009A53E6C4}.Debug.Build.0 = Debug|Win32
-		{FD66FE8C-8C55-4DAE-9827-10009A53E6C4}.Release.ActiveCfg = Release|Win32
-		{FD66FE8C-8C55-4DAE-9827-10009A53E6C4}.Release.Build.0 = Release|Win32
+		{31F3D9BD-DB00-418B-A86E-D643D323AB0D}.Debug.ActiveCfg = Debug|Win32
+		{31F3D9BD-DB00-418B-A86E-D643D323AB0D}.Debug.Build.0 = Debug|Win32
+		{31F3D9BD-DB00-418B-A86E-D643D323AB0D}.Release.ActiveCfg = Release|Win32
+		{31F3D9BD-DB00-418B-A86E-D643D323AB0D}.Release.Build.0 = Release|Win32
+		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.Debug.ActiveCfg = Debug|Win32
+		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.Debug.Build.0 = Debug|Win32
+		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.Release.ActiveCfg = Release|Win32
+		{8DDD5B90-76D5-4298-A52A-DF64B40A08A3}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

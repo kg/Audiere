@@ -37,20 +37,6 @@ static inline acq_u32 Read32(acq_u8* m) {
   );
 }
 
-static inline bool IsValidSampleRate(acq_u32 rate) {
-  return (
-    rate == 48000 ||
-    rate == 44100 ||
-    rate == 32000 ||
-    rate == 24000 ||
-    rate == 22050 ||
-    rate == 16000 ||
-    rate == 12000 ||
-    rate == 11025 ||
-    rate == 8000
-  );
-}
-
 static inline bool IsValidSampleSize(acq_u32 size) {
   return (size == 8 || size == 16);
 }
@@ -151,7 +137,6 @@ bool WAV_Open(ACQ_STREAM stream)
       // we only support mono and stereo
       if (format_tag != 1 ||
           channel_count > 2 ||
-          !IsValidSampleRate(samples_per_second) ||
           !IsValidSampleSize(bits_per_sample)) {
         break;
       }

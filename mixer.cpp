@@ -33,7 +33,16 @@ Mixer::GetFormat(int& channel_count, int& sample_rate, int& bits_per_sample)
 int
 Mixer::Read(const int sample_count, void* samples)
 {
-  if (m_sources.size() == 0) {
+  // are any sources playing?
+  bool any_playing = false;
+  SourceMap::iterator i = m_sources.begin();
+  while (i != m_sources.end()) {
+    any_playing |= i->second.is_playing;
+    ++i;
+  }
+  
+  // if not, return zeroed samples
+  if (!any_playing) {
     memset(samples, 0, 4 * sample_count);
     return sample_count;
   }

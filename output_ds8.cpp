@@ -77,7 +77,7 @@ DS8OutputContext::Initialize(const char* parameters)
   ParameterList::iterator i = pl.begin();
   while (i != pl.end()) {
     
-    if (strcmp(i->first.c_str(), "buffer") == 0) {
+    if (i->first.c_str() == "buffer") {
       m_BufferLength = atoi(i->second.c_str());
     }
 

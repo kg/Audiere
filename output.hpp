@@ -16,41 +16,31 @@
 
 // types
 
-typedef int (ADR_CALL *ADR_SAMPLE_SOURCE)(
-  void* opaque,
-  int sample_count,
-  void* samples);
-
-typedef void (ADR_CALL *ADR_SAMPLE_RESET)(
-  void* opaque);
-
-
 class IOutputStream;
+
+class ISampleSource
+{
+  virtual void GetFormat(
+    int& channel_count,
+    int& sample_rate,
+    int& bits_per_sample) = 0;
+  virtual int Read(int sample_count, void* samples) = 0;
+  virtual void Reset() = 0;
+};
 
 class IOutputContext
 {
 public:
   virtual ~IOutputContext() { }
-
   virtual bool Initialize(const char* parameters) = 0;
-
   virtual void Update() = 0;
-
-  virtual IOutputStream* OpenStream(
-    int channel_count,
-    int sample_rate,
-    int bits_per_sample,
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
-    void* opaque
-  ) = 0;
+  virtual IOutputStream* OpenStream(ISampleSource source) = 0;
 };
 
 class IOutputStream
 {
 public:
   virtual ~IOutputStream() { }
-
   virtual void Play() = 0;
   virtual void Stop() = 0;
   virtual void Reset() = 0;

@@ -24,17 +24,8 @@ public:
   ~ALOutputContext();
 
   bool Initialize(const char* parameters);
-
   void Update();
-
-  IOutputStream* OpenStream(
-    int channel_count,
-    int sample_rate,
-    int bits_per_sample,
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
-    void* opaque
-  );
+  IOutputStream* OpenStream(ISampleSource source);
 
 private:
   ALCdevice*  m_Device;
@@ -56,15 +47,11 @@ public:
   bool IsPlaying();
   void SetVolume(int volume);
   int  GetVolume();
-  void SetPan(int pan);
-  int  GetPan();
 
 private:
   ALOutputStream(
     ALOutputContext* context,
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
-    void* opaque,
+    ISampleSource source,
     ALuint al_source,
     ALuint* buffers,
     ALenum format,
@@ -79,12 +66,9 @@ private:
   ALOutputContext* m_Context;
 
   // sample stream
-  ADR_SAMPLE_SOURCE m_Source;
-  ADR_SAMPLE_RESET  m_Reset;
-  void*             m_Opaque;
+  ISampleSource* m_Source;
 
-  // informational
-  int    m_SampleRate;
+  // informational (convenience)
   ALenum m_Format;
   int    m_SampleSize;  // (num channels * bits per sample / 8)
 

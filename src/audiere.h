@@ -94,19 +94,19 @@ namespace audiere {
       return *this;
     }
 
-    T* operator->() {
+    T* operator->() const {
       return m_ptr;
     }
 
-    T& operator*() {
+    T& operator*() const {
       return *m_ptr;
     }
 
-    operator bool() {
+    operator bool() const {
       return (m_ptr != 0);
     }
 
-    T* get() {
+    T* get() const {
       return m_ptr;
     }
 

@@ -48,12 +48,14 @@ libaudiere_la_SOURCES = \
 	input_wav.cpp \
 	input_wav.h \
 	internal.h \
+	noise.cpp \
 	repeatable.cpp \
 	repeatable.h \
 	resampler.cpp \
 	resampler.h \
 	sample_buffer.cpp \
 	sound.cpp \
+	square_wave.cpp \
 	threads_posix.cpp \
 	threads.h \
 	timer_posix.cpp \

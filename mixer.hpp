@@ -20,7 +20,11 @@ public:
 
   void AddSource(ISampleSource* source);
   void RemoveSource(ISampleSource* source);
+
+  bool IsPlaying(ISampleSource* source);
   void SetPlaying(ISampleSource* source, bool is_playing);
+
+  int GetVolume(ISampleSource* source);
   void SetVolume(ISampleSource* source, int volume);
 
 private:

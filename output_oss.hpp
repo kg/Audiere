@@ -27,51 +27,6 @@ private:
 class OSSOutputStream : public IOutputStream
 {
 private:
-  class Stopper : public ISampleSource {
-  public:
-    Stopper(ISampleSource* source) {
-      m_source = source;
-      m_stopped = false;
-    }
-
-    ~Stopper() {
-      delete m_source;
-    }
-
-    bool IsStopped() {
-      return m_stopped;
-    }
-
-    void SetStopped(bool stopped) {
-      m_stopped = stopped;
-    }
-    
-    void GetFormat(
-      int& channel_count,
-      int& sample_rate,
-      int& bits_per_sample) {
-      m_source->GetFormat(channel_count, sample_rate, bits_per_sample);
-    }
-
-    int Read(int sample_count, void* samples) {
-      int read = m_source->Read(sample_count, samples);
-      if (read == 0) {
-	m_stopped = true;
-      }
-      return read;
-    }
-
-    bool Reset() {
-      return m_source->Reset();
-    }
-
-  private:
-    ISampleSource* m_source;
-    bool m_stopped;
-  };
-
-
-private:
   OSSOutputStream(Mixer* mixer, ISampleSource* source);
   ~OSSOutputStream();
 
@@ -86,7 +41,7 @@ public:
 
 private:
   Mixer* m_mixer;
-  Stopper* m_source;
+  ISampleSource* m_source;
   int m_volume;
 
   friend OSSOutputContext;

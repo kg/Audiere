@@ -110,10 +110,26 @@ Mixer::RemoveSource(ISampleSource* source)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+bool
+Mixer::IsPlaying(ISampleSource* source)
+{
+  return m_sources[source].is_playing;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void
 Mixer::SetPlaying(ISampleSource* source, bool is_playing)
 {
   m_sources[source].is_playing = is_playing;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+int
+Mixer::GetVolume(ISampleSource* source)
+{
+  return m_sources[source].volume;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +149,10 @@ Mixer::Read(ISampleSource* source,
 	    adr_s16* buffer)  // size = to_mix * 4
 {
   unsigned read = attr.resampler->Read(to_mix, buffer);
+
+  if (read == 0) {
+    attr.is_playing = false;
+  }
 
   // grab them early so we don't lose optimizations due to aliasing
   adr_s16 l = attr.last_l;

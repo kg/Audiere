@@ -52,6 +52,12 @@ namespace audiere {
       return 0;
     }
 
+    int fragsize = 0x0004000b; // 4 buffers of 2048 bytes each
+    if (ioctl(output_device, SNDCTL_DSP_SETFRAGMENT, &fragsize) == -1) {
+      perror("SNDCTL_DSP_SETFRAGMENT");
+      return 0;
+    }
+
     return new OSSAudioDevice(output_device);
   }
 
@@ -71,28 +77,10 @@ namespace audiere {
 
   void ADR_CALL
   OSSAudioDevice::update() {
-    // find out how much data we can write to the device before it blocks
-    audio_buf_info info;
-    if (ioctl(m_output_device, SNDCTL_DSP_GETOSPACE, &info) == -1) {
-      return;
-    }
-
-    // how many samples is that?
-    int sample_count = info.bytes / 4;
-
-    // write to the OSS device, 1024 samples at a time
-    static const int BUFFER_SIZE = 1024;
+    static const int BUFFER_SIZE = 512;
     char buffer[BUFFER_SIZE * 4];
-    while (sample_count > 0) {
-      int transfer_count = std::min(sample_count, BUFFER_SIZE);
-
-      read(transfer_count, buffer);
-      write(m_output_device, buffer, transfer_count * 4);
-
-      sample_count -= transfer_count;
-    }
-
-    usleep(50000);  // 50 milliseconds
+    read(BUFFER_SIZE, buffer);
+    write(m_output_device, buffer, BUFFER_SIZE * 4);
   }
 
 

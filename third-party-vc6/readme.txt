@@ -7,3 +7,10 @@ For use in the core Audiere DLL, libraries should be built statically
 using the /MT (release, multithreaded) and /MTd (debug, multithreaded)
 options.  audiere.dll should not depend on any external, nonsystem
 DLLs.
+
+
+Version dependencies of third-party software should be maintained in
+this file:
+
+DUMB (CVS from 2003.06.12)
+Ogg Vorbis 1.0

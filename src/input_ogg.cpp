@@ -95,12 +95,18 @@ namespace audiere {
         break;
       }
 
+#ifdef WORDS_BIGENDIAN
+#define ENDIANNESS 1
+#else
+#define ENDIANNESS 0
+#endif
+
       int bitstream;
       long result = ov_read(
         &m_vorbis_file,
         (char*)out,
         samples_left * sample_size,
-        0,  // little endian
+        ENDIANNESS,
         2,  // 16-bit
         1,  // signed
         &bitstream);

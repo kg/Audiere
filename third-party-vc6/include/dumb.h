@@ -114,7 +114,7 @@
 
 
 #ifndef LONG_LONG
-#if defined __GNUC__ || defined __INTEL_COMPILER
+#if defined __GNUC__ || defined __INTEL_COMPILER || defined __MWERKS__
 #define LONG_LONG long long
 #elif defined _MSC_VER || defined __WATCOMC__
 #define LONG_LONG __int64
@@ -494,6 +494,11 @@ DUH_SIGRENDERER *duh_encapsulate_raw_sigrenderer(sigrenderer_t *vsigrenderer, DU
 sigrenderer_t *duh_get_raw_sigrenderer(DUH_SIGRENDERER *sigrenderer, long type);
 
 
+/* Standard Signal Types */
+
+void dumb_register_sigtype_sample(void);
+
+
 /* Sample Buffer Allocation Helpers */
 
 sample_t **create_sample_buffer(int n_channels, long length);
@@ -537,7 +542,7 @@ typedef void (*DUMB_RESAMPLE_PICKUP)(DUMB_RESAMPLER *resampler, void *data);
 
 struct DUMB_RESAMPLER
 {
-	sample_t *src;
+	void *src;
 	long pos;
 	int subpos;
 	long start, end;
@@ -547,7 +552,11 @@ struct DUMB_RESAMPLER
 	int min_quality;
 	int max_quality;
 	/* Everything below this point is internal: do not use. */
-	sample_t x[3];
+	union {
+		sample_t x24[3];
+		short x16[3];
+		signed char x8[3];
+	} x;
 	int overshot;
 };
 
@@ -556,6 +565,24 @@ DUMB_RESAMPLER *dumb_start_resampler(sample_t *src, long pos, long start, long e
 long dumb_resample(DUMB_RESAMPLER *resampler, sample_t *dst, long dst_size, float volume, float delta);
 sample_t dumb_resample_get_current_sample(DUMB_RESAMPLER *resampler, float volume);
 void dumb_end_resampler(DUMB_RESAMPLER *resampler);
+
+void dumb_reset_resampler_16(DUMB_RESAMPLER *resampler, short *src, long pos, long start, long end);
+DUMB_RESAMPLER *dumb_start_resampler_16(short *src, long pos, long start, long end);
+long dumb_resample_16(DUMB_RESAMPLER *resampler, sample_t *dst, long dst_size, float volume, float delta);
+sample_t dumb_resample_get_current_sample_16(DUMB_RESAMPLER *resampler, float volume);
+void dumb_end_resampler_16(DUMB_RESAMPLER *resampler);
+
+void dumb_reset_resampler_8(DUMB_RESAMPLER *resampler, signed char *src, long pos, long start, long end);
+DUMB_RESAMPLER *dumb_start_resampler_8(signed char *src, long pos, long start, long end);
+long dumb_resample_8(DUMB_RESAMPLER *resampler, sample_t *dst, long dst_size, float volume, float delta);
+sample_t dumb_resample_get_current_sample_8(DUMB_RESAMPLER *resampler, float volume);
+void dumb_end_resampler_8(DUMB_RESAMPLER *resampler);
+
+void dumb_reset_resampler_n(int n, DUMB_RESAMPLER *resampler, void *src, long pos, long start, long end);
+DUMB_RESAMPLER *dumb_start_resampler_n(int n, void *src, long pos, long start, long end);
+long dumb_resample_n(int n, DUMB_RESAMPLER *resampler, sample_t *dst, long dst_size, float volume, float delta);
+sample_t dumb_resample_get_current_sample_n(int n, DUMB_RESAMPLER *resampler, float volume);
+void dumb_end_resampler_n(int n, DUMB_RESAMPLER *resampler);
 
 
 /* DUH Construction */

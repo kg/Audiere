@@ -11,6 +11,12 @@ else
 FLAC_DIST    = input_flac.cpp input_flac.h
 endif
 
+if HAVE_DUMB
+DUMB_SOURCES = input_mod.cpp input_mod.h
+else
+DUMB_DIST    = input_mod.cpp input_mod.h
+endif
+
 if HAVE_OGG
 OGG_SOURCES = input_ogg.cpp input_ogg.h
 else
@@ -49,7 +55,7 @@ endif
 
 
 EXTRA_DIST = \
-	$(FLAC_DIST) $(OGG_DIST) $(AL_DIST) $(OSS_DIST) \
+	$(FLAC_DIST) $(DUMB_DIST) $(OGG_DIST) $(AL_DIST) $(OSS_DIST) \
 	$(DSOUND_DIST) $(WINMM_DIST)
 
 libaudiere_la_SOURCES = \
@@ -68,8 +74,7 @@ libaudiere_la_SOURCES = \
 	file_ansi.cpp \
 	input.cpp \
 	$(FLAC_SOURCES) \
-	input_mod.cpp \
-	input_mod.h \
+	$(DUMB_SOURCES) \
 	input_mp3.cpp \
 	input_mp3.h \
 	$(OGG_SOURCES) \

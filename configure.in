@@ -37,6 +37,9 @@ AC_PROG_CXXCPP
 AC_PROG_MAKE_SET
 AM_PROG_LIBTOOL
 
+dnl We test with C++ libraries, so use the C++ compiler...
+CC="$CXX"
+
 dnl Checks for libraries.
 
 dnl If building on Cygwin, don't let windows.h define min() or max()
@@ -74,6 +77,16 @@ AC_CHECK_LIB(FLAC, FLAC__seekable_stream_decoder_process_single,
   ,
     -lm)
 AM_CONDITIONAL(HAVE_FLAC, test "x$HAVE_FLAC" = "xtrue")
+
+dnl Look for DUMB
+AC_CHECK_LIB(dumb, duh_start_renderer,
+    LIBS="-ldumb"
+    HAVE_DUMB=true
+  ,
+    AC_MSG_WARN([libdumb not found.  Install DUMB from http://dumb.sourceforge.net/])
+    AC_MSG_WARN([Disabling DUMB support.])
+    AC_DEFINE(NO_DUMB))
+AM_CONDITIONAL(HAVE_DUMB, test "x$HAVE_DUMB" = "xtrue")
 
 dnl Look for the POSIX realtime clock
 AC_SEARCH_LIBS(clock_gettime, rt,

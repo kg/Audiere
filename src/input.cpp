@@ -5,7 +5,7 @@
 #ifndef NO_FLAC
 #include "input_flac.h"
 #endif
-#ifndef NO_MIKMOD
+#ifndef NO_DUMB
 #include "input_mod.h"
 #endif
 #ifndef NO_MP3
@@ -33,7 +33,7 @@ namespace audiere {
 #ifndef NO_FLAC
       "FLAC Files:flac"  ";"
 #endif
-#ifndef NO_MIKMOD
+#ifndef NO_DUMB
       "Mod Files:mod,s3m,xm,it"  ";"
 #endif
       "WAV Files:wav";
@@ -138,7 +138,7 @@ namespace audiere {
         TRY_OPEN(FF_FLAC);
         return 0;
 
-#ifndef NO_MIKMOD
+#ifndef NO_DUMB
       case FF_MOD:
         TRY_SOURCE(MODInputStream);
         return 0;

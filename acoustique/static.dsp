@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "output/Static_Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/lib/mikmod/include" /I "mikmod/lib/mmio/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/mikmod" /I "mikmod/mmio" /D "NDEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "output/Static_Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/lib/mikmod/include" /I "mikmod/lib/mmio/include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/mikmod" /I "mikmod/mmio" /D "_DEBUG" /D "_LIB" /D "WIN32" /D "_MBCS" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /D "MIKMOD_STATIC" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -267,233 +267,193 @@ SOURCE=".\mad-0.13.0b\libmad\version.h"
 # Begin Group "mikmod"
 
 # PROP Default_Filter ""
+# Begin Group "loaders"
+
+# PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\resfilter\16.c
+SOURCE=.\mikmod\mikmod\loaders\Load_it.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\resfilter\8.c
+SOURCE=.\mikmod\mikmod\loaders\Load_mod.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\drivers\drv_nos.c
+SOURCE=.\mikmod\mikmod\loaders\Load_s3m.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\loaders\itshare.h
+SOURCE=.\mikmod\mikmod\loaders\Load_stm.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\loaders\Load_it.c
+SOURCE=.\mikmod\mikmod\loaders\Load_xm.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\loaders\Load_mod.c
+SOURCE=.\mikmod\mikmod\loaders\S3m_it.c
+# End Source File
+# End Group
+# Begin Group "virtch"
+
+# PROP Default_Filter ""
+# Begin Group "resfilter"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\mikmod\mikmod\virtch\resfilter\16.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\loaders\Load_mtm.c
+SOURCE=.\mikmod\mikmod\virtch\resfilter\8.c
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\mikmod\mikmod\virtch\nc16.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\loaders\Load_s3m.c
+SOURCE=.\mikmod\mikmod\virtch\nc8.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\loaders\Load_stm.c
+SOURCE=.\mikmod\mikmod\virtch\placebo.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\loaders\Load_xm.c
+SOURCE=.\mikmod\mikmod\virtch\vc16.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\src\log.c
+SOURCE=.\mikmod\mikmod\virtch\vc8.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\include\log.h
+SOURCE=.\mikmod\mikmod\virtch\virtch.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\mdreg.c
+SOURCE=.\mikmod\mikmod\virtch\wrap16.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\mdriver.c
+SOURCE=.\mikmod\mikmod\virtch\wrap8.c
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\mikmod\mikmod\drv_nos.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\include\mikmod.h
+SOURCE=.\mikmod\mikmod\mdriver.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\mloader.c
+SOURCE=.\mikmod\mikmod\mikmod.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\mlreg.c
+SOURCE=.\mikmod\mikmod\mloader.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\src\mmalloc.c
+SOURCE=.\mikmod\mikmod\mpforbid.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\src\mmconfig.c
+SOURCE=.\mikmod\mikmod\mplayer.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\include\mmconfig.h
+SOURCE=.\mikmod\mikmod\mplayer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\src\mmcopy.c
+SOURCE=.\mikmod\mikmod\munitrk.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\src\mmerror.c
+SOURCE=.\mikmod\mikmod\npertab.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\src\win32\mmforbid.c
+SOURCE=.\mikmod\mikmod\sloader.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\include\mmforbid.h
+SOURCE=.\mikmod\mikmod\uniform.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\include\mminline.h
+SOURCE=.\mikmod\mikmod\unimod.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\src\mmio.c
+SOURCE=.\mikmod\mikmod\virtch\vchcrap.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\include\mmio.h
+SOURCE=.\mikmod\mikmod\virtch.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mmio\include\mmtypes.h
+SOURCE=.\mikmod\mikmod\voiceset.c
+# End Source File
+# End Group
+# Begin Group "mmio"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\mikmod\mmio\log.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\mpforbid.h
+SOURCE=.\mikmod\mmio\log.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\mplayer.c
+SOURCE=.\mikmod\mmio\mmalloc.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\include\mplayer.h
+SOURCE=.\mikmod\mmio\mmconfig.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\munitrk.c
+SOURCE=.\mikmod\mmio\mmcopy.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\nc16.c
+SOURCE=.\mikmod\mmio\mmerror.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\nc16ss.c
+SOURCE=.\mikmod\mmio\mmforbid.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\nc8.c
+SOURCE=.\mikmod\mmio\mminline.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\nc8ss.c
+SOURCE=.\mikmod\mmio\mmio.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\npertab.c
+SOURCE=.\mikmod\mmio\mmio.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\placebo.c
+SOURCE=.\mikmod\mmio\mmtypes.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\mikmod\lib\mikmod\src\virtch\resfilter\resshare.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\loaders\S3m_it.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\sloader.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\ssmix.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\stdmix.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\include\uniform.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\unimod.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\vc16.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\vc16ss.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\vc8.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\vc8ss.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\vchcrap.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\virtch.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\include\virtch.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\voiceset.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\wrap16.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\wrap16.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\wrap8.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\mikmod\lib\mikmod\src\virtch\wrap8.h
+SOURCE=.\mikmod\mmio\win32_mmforbid.c
 # End Source File
 # End Group
 # End Target

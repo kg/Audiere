@@ -1,22 +1,24 @@
 #include <string>
 #include <string.h>
 #include <ctype.h>
-#include <acoustique.h>
 #include "audiere.h"
 #include "context.hpp"
+#include "default_file.hpp"
 #include "stream.hpp"
 #include "file.hpp"
 
 
-inline Context* CONTEXT(ADR_CONTEXT c) { return reinterpret_cast<Context*>(c); }
-inline Stream*  STREAM(ADR_STREAM s)   { return reinterpret_cast<Stream*>(s);  }
+inline Context* ImportContext(ADR_CONTEXT c) { return reinterpret_cast<Context*>(c); }
+inline Stream*  ImportStream(ADR_STREAM s)   { return reinterpret_cast<Stream*>(s);  }
+inline ADR_CONTEXT ExportContext(Context* c) { return reinterpret_cast<ADR_CONTEXT>(c); }
+inline ADR_STREAM  ExportStream(Stream* s)   { return reinterpret_cast<ADR_STREAM>(s);  }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const char* ADR_CALL AdrGetVersion()
 {
-  return "1.0.3";
+  return "1.0.4";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,8 +99,7 @@ void ADR_CALL AdrContextAttrSetFileCallbacks(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ADR_CONTEXT ADR_CALL AdrCreateContext(
-  ADR_CONTEXT_ATTR attr)
+ADR_CONTEXT ADR_CALL AdrCreateContext(ADR_CONTEXT_ATTR attr)
 {
   ADR_GUARD("AdrCreateContext");
 
@@ -108,9 +109,23 @@ ADR_CONTEXT ADR_CALL AdrCreateContext(
     attr = delete_attr;
   }
 
-  Context* context = Context::Create(attr);
+  // the context always consumes the filesystem in some way or another,
+  // so we don't have to worry about cleaning it up
+  IFileSystem* fs = new ADRFileSystem(
+    attr->opaque,
+    attr->open,
+    attr->close,
+    attr->read,
+    attr->seek,
+    attr->tell);
+
+  Context* context = Context::Create(
+    attr->output_device.c_str(),
+    attr->parameters.c_str(),
+    fs);
+
   delete delete_attr;
-  return reinterpret_cast<ADR_CONTEXT>(context);
+  return ExportContext(context);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +134,7 @@ void ADR_CALL AdrDestroyContext(ADR_CONTEXT context)
 {
   ADR_GUARD("AdrDestroyContext");
 
-  CONTEXT(context)->Release();
+  ImportContext(context)->Release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +143,7 @@ ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
 {
   ADR_GUARD("AdrOpenStream");
 
-  return reinterpret_cast<ADR_STREAM>(CONTEXT(context)->OpenStream(filename));
+  return ExportStream(ImportContext(context)->OpenStream(filename));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +152,7 @@ void ADR_CALL AdrCloseStream(ADR_STREAM stream)
 {
   ADR_GUARD("AdrCloseStream");
 
-  delete STREAM(stream);
+  delete ImportStream(stream);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +161,7 @@ void ADR_CALL AdrPlayStream(ADR_STREAM stream)
 {
   ADR_GUARD("AdrPlayStream");
 
-  STREAM(stream)->Play();
+  ImportStream(stream)->Play();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,8 +169,8 @@ void ADR_CALL AdrPlayStream(ADR_STREAM stream)
 void ADR_CALL AdrPauseStream(ADR_STREAM stream)
 {
   ADR_GUARD("AdrPauseStream");
-
-  STREAM(stream)->Pause();
+  
+  ImportStream(stream)->Pause();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -164,7 +179,7 @@ void ADR_CALL AdrResetStream(ADR_STREAM stream)
 {
   ADR_GUARD("AdrResetStream");
 
-  STREAM(stream)->ResetInputAndOutput();
+  ImportStream(stream)->Reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +188,7 @@ ADR_BOOL ADR_CALL AdrIsStreamPlaying(ADR_STREAM stream)
 {
   ADR_GUARD("AdrIsStreamPlaying");
 
-  return STREAM(stream)->IsPlaying() ? ADR_TRUE : ADR_FALSE;
+  return ImportStream(stream)->IsPlaying() ? ADR_TRUE : ADR_FALSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +197,7 @@ void ADR_CALL AdrSetStreamRepeat(ADR_STREAM stream, ADR_BOOL repeat)
 {
   ADR_GUARD("AdrSetStreamRepeat");
 
-  STREAM(stream)->SetRepeat(repeat == ADR_TRUE);
+  ImportStream(stream)->SetRepeat(repeat == ADR_TRUE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -191,7 +206,7 @@ ADR_BOOL ADR_CALL AdrGetStreamRepeat(ADR_STREAM stream)
 {
   ADR_GUARD("AdrGetStreamRepeat");
 
-  return STREAM(stream)->IsRepeating() ? ADR_TRUE : ADR_FALSE;
+  return ImportStream(stream)->IsRepeating() ? ADR_TRUE : ADR_FALSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +222,7 @@ void ADR_CALL AdrSetStreamVolume(ADR_STREAM stream, int volume)
     volume = ADR_VOLUME_MAX;
   }
 
-  STREAM(stream)->SetVolume(volume);
+  ImportStream(stream)->SetVolume(volume);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +231,7 @@ int ADR_CALL AdrGetStreamVolume(ADR_STREAM stream)
 {
   ADR_GUARD("AdrGetStreamVolume");
 
-  return STREAM(stream)->GetVolume();
+  return ImportStream(stream)->GetVolume();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

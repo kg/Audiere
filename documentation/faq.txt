@@ -11,3 +11,12 @@ Why did you make this?  We already have FMOD.
 
 I'm not a fan of FMOD's API, and it's not open source.
 It's a lot of fun, too.  :)
+
+
+Why not support MIDI?
+--
+
+I'd like to keep every supported decoder inside of Acoustique (i.e. not using
+an external program).  The only good software MIDI decoder I've found is
+timidity++, and that requires megs upon megs of patch files.  I think having
+a 20 meg sound library isn't really feasible.

@@ -12,7 +12,7 @@
 #endif
 
 
-#include "acq_internal.hpp"
+#include "config.h"
 
 
 // these aren't implemented in the nicest ways...
@@ -24,8 +24,8 @@ void Swap(T& a, T& b) {
 }
 
 
-inline acq_u32 SwapEndianness32(acq_u32 value) {
-  acq_u8* u8 = (acq_u8*)value;
+inline adr_u32 SwapEndianness32(adr_u32 value) {
+  adr_u8* u8 = (adr_u8*)value;
   Swap(u8[0], u8[3]);
   Swap(u8[1], u8[2]);
   return value;
@@ -35,11 +35,11 @@ inline acq_u32 SwapEndianness32(acq_u32 value) {
 #ifdef LITTLE_ENDIAN
 
 
-  inline acq_u32 LittleToHost32(acq_u32 value) {
+  inline adr_u32 LittleToHost32(adr_u32 value) {
     return value;
   }
 
-  inline acq_u32 BigToHost32(acq_u32 value) {
+  inline adr_u32 BigToHost32(adr_u32 value) {
     return SwapEndianness32(value);
   }
 
@@ -47,11 +47,11 @@ inline acq_u32 SwapEndianness32(acq_u32 value) {
 #elif defined(BIG_ENDIAN)
 
 
-  inline acq_u32 LittleToHost32(acq_u32 value) {
+  inline adr_u32 LittleToHost32(adr_u32 value) {
     return SwapEndianness32(value);
   }
 
-  inline acq_u32 BigToHost32(acq_u32 value) {
+  inline adr_u32 BigToHost32(adr_u32 value) {
     return value;
   }
 

@@ -9,11 +9,15 @@
 #include "output_null.hpp"
 
 #ifdef _WIN32
-  // include this before DS8, because it includes <dsound.h>
+
+  // include this before DS8, because it includes <dsound.h>, which defines
+  // DIRECTSOUND_VERSION
   #include "output_ds3.hpp"
+
   #if DIRECTSOUND_VERSION >= 0x0800
     #include "output_ds8.hpp"
   #endif
+
 #else
   #include "output_oss.hpp"
 #endif
@@ -25,18 +29,30 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+template<typename T>
+static T* TryOutputContext(const char* parameters)
+{
+  T* context = new T();
+  if (context->Initialize(parameters)) {
+    return context;
+  } else {
+    delete context;
+    return 0;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 IOutputContext* OpenContext(const char* device, const char* parameters)
 {
   ADR_GUARD("OpenContext");
 
   IOutputContext* context;
 
-  #define TRY_CONTEXT(context_type)            \
-    context = new context_type();              \
-    if (context->Initialize(parameters)) {     \
-      return context;                          \
-    } else {                                   \
-      delete context;                          \
+  #define TRY_CONTEXT(context_type)                         \
+    context = TryOutputContext<context_type>(parameters);   \
+    if (context) {                                          \
+      return context;                                       \
     }
 
 #ifdef _WIN32
@@ -100,9 +116,7 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void ParseParameters(
-  const char* parameter_string,
-  ParameterList& parameters)
+void ParseParameters(const char* parameter_string, ParameterList& parameters)
 {
   std::string key;
   std::string value;

@@ -2,18 +2,20 @@
 #define STREAM_HPP
 
 
-#include <acoustique.h>
-#include "output.hpp"
+#include <audiere.h>
+#include "input.hpp"
+#include "repeatable.hpp"
 #include "threads.hpp"
 
 
 class Context;
+class IOutputStream;
 
 
-class Stream : public Synchronized, public ISampleSource
+class Stream
 {
 private:
-  Stream() { }  // Initialize() is the constructor
+  Stream();
   bool Initialize(Context* context, const char* filename);
 
 public:
@@ -21,7 +23,7 @@ public:
 
   void Play();
   void Pause();
-  void ResetInputAndOutput(); // annoying name - conflict with ISampleSource
+  void Reset();
   bool IsPlaying();
   void SetRepeat(bool repeat);
   bool IsRepeating();
@@ -29,26 +31,11 @@ public:
   int  GetVolume();
 
 private:
-  // ISampleSource implementation
-  void GetFormat(int& channel_count, int& sample_rate, int& bits_per_sample);
-  int Read(int sample_count, void* samples);
-  void Reset();
+  Context* m_context;
 
-  static int  ACQ_CALL FileRead(void* opaque, void* bytes, int byte_count);
-  static void ACQ_CALL FileReset(void* opaque);
-  
-  static int GetFileFormat(const char* filename);
+  RepeatableStream* m_input_stream;
+  IOutputStream*    m_output_stream;
 
-private:
-  Context*       m_context;
-  ADR_FILE       m_file;
-  ACQ_STREAM     m_input_stream;
-  IOutputStream* m_output_stream;
-
-  int m_sample_size;  // convenience
-  bool m_repeat;
-
-private:
   friend Context;
 };
 

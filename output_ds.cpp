@@ -21,6 +21,7 @@
 #include <math.h>
 #include "output_ds.hpp"
 #include "debug.hpp"
+#include "input.hpp"
 
 
 static const int DS_DefaultBufferLength = 1000;  // one second

@@ -4,6 +4,7 @@
 
 #include <string>
 #include "audiere.h"
+#include "input.hpp"
 #include "output.hpp"
 #include "threads.hpp"
 
@@ -27,12 +28,18 @@ class Stream;
 class Context : public Synchronized
 {
 public:
-  static Context* Create(ADR_CONTEXT_ATTR attr);
+  static Context* Create(
+    const char* output_device,
+    const char* parameters,
+    IFileSystem* file_system);
 
 private:
-  Context() { }  // Initialize() is the constructor
+  Context();
   ~Context();
-  bool Initialize(ADR_CONTEXT_ATTR attr);
+  bool Initialize(
+    const char* output_device,
+    const char* parameters,
+    IFileSystem* file_system);
 
 public:
   void AddRef();
@@ -48,14 +55,7 @@ private:
   int m_ref_count;
   volatile bool m_thread_should_die;
 
-  // file I/O
-  void*          m_opaque;
-  ADR_FILE_OPEN  m_open;
-  ADR_FILE_CLOSE m_close;
-  ADR_FILE_READ  m_read;
-  ADR_FILE_SEEK  m_seek;
-  ADR_FILE_TELL  m_tell;
-
+  IFileSystem* m_file_system;
   IOutputContext* m_output_context;
 
   friend Stream;

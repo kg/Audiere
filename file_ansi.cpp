@@ -25,9 +25,20 @@ int ADR_CALL DefaultFileRead(ADR_FILE file, void* buffer, int size)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ADR_CALL DefaultFileSeek(ADR_FILE file, int destination)
+int ADR_CALL DefaultFileSeek(
+  ADR_FILE file,
+  int destination,
+  ADR_SEEK_TYPE origin)
 {
-  return (0 == fseek((FILE*)file, destination, SEEK_SET));
+  int o;
+  switch (origin) {
+    case ADR_BEGIN:   o = SEEK_SET; break;
+    case ADR_CURRENT: o = SEEK_CUR; break;
+    case ADR_END:     o = SEEK_END; break;
+    default: return -1;
+  }
+
+  return (0 == fseek((FILE*)file, destination, o));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

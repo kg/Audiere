@@ -15,15 +15,42 @@ extern "C" {
 #  define ADR_CALL
 #endif
 
+
+/* boolean */
+typedef int ADR_BOOL;
+#define ADR_TRUE  1
+#define ADR_FALSE 0
+
+
 /* file callback types */
 struct ADR_FileHandle;
 typedef ADR_FileHandle* ADR_FILE;
 
-typedef ADR_FILE (ADR_CALL *ADR_FILE_OPEN)(void* opaque, const char* filename);
-typedef void (ADR_CALL *ADR_FILE_CLOSE)(ADR_FILE file);
-typedef int  (ADR_CALL *ADR_FILE_READ)(ADR_FILE file, void* buffer, int size);
-typedef int  (ADR_CALL *ADR_FILE_SEEK)(ADR_FILE file, int destination);
-typedef int  (ADR_CALL *ADR_FILE_TELL)(ADR_FILE file);
+typedef enum {
+  ADR_BEGIN,   // stdio SEEK_SET
+  ADR_CURRENT, // stdio SEEK_CUR
+  ADR_END,     // stdio SEEK_END
+} ADR_SEEK_TYPE;
+
+typedef ADR_FILE (ADR_CALL *ADR_FILE_OPEN)(
+  void* opaque,
+  const char* filename);
+
+typedef void (ADR_CALL *ADR_FILE_CLOSE)(
+  ADR_FILE file);
+
+typedef int (ADR_CALL *ADR_FILE_READ)(
+  ADR_FILE file,
+  void* buffer,
+  int size);
+
+typedef ADR_BOOL (ADR_CALL *ADR_FILE_SEEK)(
+  ADR_FILE file,
+  int offset,
+  ADR_SEEK_TYPE type);
+
+typedef int (ADR_CALL *ADR_FILE_TELL)(
+  ADR_FILE file);
 
 
 /* constants */
@@ -35,13 +62,6 @@ typedef int  (ADR_CALL *ADR_FILE_TELL)(ADR_FILE file);
 typedef struct ADR_CONTEXT_ATTRimp* ADR_CONTEXT_ATTR;
 typedef struct ADR_CONTEXTimp*      ADR_CONTEXT;
 typedef struct ADR_STREAMimp*       ADR_STREAM;
-
-
-/* boolean */
-typedef int ADR_BOOL;
-#define ADR_TRUE  1
-#define ADR_FALSE 0
-
 
 
 /*

@@ -128,7 +128,7 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
     "",
     "",
     "",
-    "Sound Files (*.wav,*.mp3,*.ogg,*.mod,*.it,*.xm,*.s3m)|*.wav;*.mp3;*.ogg;*.mod;*.it;*.xm;*.s3m",
+    "Sound Files (*.wav,*.ogg,*.mod,*.it,*.xm,*.s3m)|*.wav;*.ogg;*.mod;*.it;*.xm;*.s3m",
     wxOPEN,
     this
   );

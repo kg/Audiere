@@ -17,26 +17,12 @@
 // types
 
 class IOutputStream;
-
-class ISampleSource
-{
-public:
-  virtual void GetFormat(
-    int& channel_count,
-    int& sample_rate,
-    int& bits_per_sample) = 0;
-
-  // |samples| should be
-  // (sample_count * bits_per_sample * channel_count / 8) bytes
-  virtual int Read(int sample_count, void* samples) = 0;
-  virtual void Reset() = 0;
-};
+class ISampleSource;
 
 class IOutputContext
 {
 public:
-  virtual ~IOutputContext() { }
-  virtual bool Initialize(const char* parameters) = 0;
+  virtual ~IOutputContext() { };
   virtual void Update() = 0;
   virtual IOutputStream* OpenStream(ISampleSource* source) = 0;
 };

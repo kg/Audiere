@@ -5,15 +5,28 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Context* Context::Create(ADR_CONTEXT_ATTR attr)
+Context* Context::Create(
+  const char* output_device,
+  const char* parameters,
+  IFileSystem* file_system)
 {
   Context* context = new Context();
-  if (context->Initialize(attr)) {
+  if (context->Initialize(output_device, parameters, file_system)) {
     return context;
   } else {
     delete context;
     return 0;
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+Context::Context()
+{
+  m_ref_count = 0;
+  m_thread_should_die = false;
+  m_file_system = 0;
+  m_output_context = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,26 +42,23 @@ Context::~Context()
   }
 
   delete m_output_context;
+  delete m_file_system;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 bool
-Context::Initialize(ADR_CONTEXT_ATTR attr)
+Context::Initialize(
+  const char* output_device,
+  const char* parameters,
+  IFileSystem* file_system)
 {
   m_ref_count = 1;
   m_thread_should_die = false;
 
-  m_opaque = attr->opaque;
-  m_open   = attr->open;
-  m_close  = attr->close;
-  m_read   = attr->read;
-  m_seek   = attr->seek;
-  m_tell   = attr->tell;
+  m_file_system = file_system;
 
-  m_output_context = OpenContext(
-    attr->output_device.c_str(),
-    attr->parameters.c_str());
+  m_output_context = OpenContext(output_device, parameters);
   if (!m_output_context) {
     return false;
   }
@@ -57,6 +67,8 @@ Context::Initialize(ADR_CONTEXT_ATTR attr)
   // this is particularly odd:  don't create a thread with higher priority than
   // 0 on Win9x, or some race condition occurs and the update thread completely
   // starves the main thread of the program.
+  //
+  // the race condition is related to the locks (critical sections)...
   bool result = AI_CreateThread(ThreadRoutine, this, 0);  /* +4  */
   if (!result) {
     delete m_output_context;

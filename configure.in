@@ -42,6 +42,7 @@ AC_CHECK_LIB(pthread, pthread_create,,AC_MSG_RESULT(no)
 AC_CHECK_LIB(openal, alBufferData,
     LIBS="$LIBS -lopenal"
     AC_DEFINE(WITH_OPENAL))
+AC_CHECK_LIB(rt, clock_gettime)
 
 dnl Checks for header files.
 

@@ -46,6 +46,8 @@ namespace audiere {
 
   OutputStream*
   NullAudioDevice::openStream(SampleSource* source) {
+    ADR_GUARD("NullAudioDevice::openStream");
+    
     if (!source) {
       return 0;
     }
@@ -53,7 +55,7 @@ namespace audiere {
     SYNCHRONIZED(this);
 
     NullOutputStream* stream = new NullOutputStream(this, source);
-    m_streams.insert(stream);
+    m_streams.push_back(stream);
     return stream;
   }
 
@@ -63,17 +65,19 @@ namespace audiere {
     void* samples, int frame_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
-    return openStream(OpenBufferStream(
+    ADR_GUARD("NullAudioDevice::openBuffer");
+
+    RefPtr<SampleSource> source(OpenBufferStream(
       samples, frame_count,
       channel_count, sample_rate, sample_format));
+    return openStream(source.get());
   }
 
 
   void
   NullAudioDevice::removeStream(NullOutputStream* stream) {
     SYNCHRONIZED(this);
-
-    m_streams.erase(stream);
+    m_streams.remove(stream);
   }
 
 
@@ -88,20 +92,19 @@ namespace audiere {
   , m_shift(1)
   , m_last_update(0)
   {
+    ADR_GUARD("NullOutputStream::NullOutputStream");
     m_source->getFormat(m_channel_count, m_sample_rate, m_sample_format);
   }
 
 
   NullOutputStream::~NullOutputStream() {
     m_device->removeStream(this);
-
-    delete m_source;
   }
 
 
   void
   NullOutputStream::play() {
-    ADR_GUARD("NullOutputStream::Play");
+    ADR_GUARD("NullOutputStream::play");
     m_is_playing = true;
     resetTimer();
   }
@@ -211,7 +214,7 @@ namespace audiere {
 
   void
   NullOutputStream::update() {
-    ADR_GUARD("NullOutputStream::Update");
+    ADR_GUARD("NullOutputStream::update");
 
     if (m_is_playing) {
       ADR_LOG("Null output stream is playing");

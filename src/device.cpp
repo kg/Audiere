@@ -135,6 +135,13 @@ namespace audiere {
   class ThreadedDevice : public RefImplementation<AudioDevice> {
   public:
     ThreadedDevice(AudioDevice* device) {
+      ADR_GUARD("ThreadedDevice::ThreadedDevice");
+      if (device) {
+        ADR_LOG("Device is valid");
+      } else {
+        ADR_LOG("Device is not valid");
+      }
+
       m_device = device;
       m_thread_exists = false;
       m_thread_should_die = false;
@@ -177,6 +184,13 @@ namespace audiere {
     }
 
     static void threadRoutine(void* arg) {
+      ADR_GUARD("ThreadedDevice::threadRoutine");
+      if (arg) {
+        ADR_LOG("arg is valid");
+      } else {
+        ADR_LOG("arg is not valid");
+      }
+
       ThreadedDevice* This = (ThreadedDevice*)arg;
       This->run();
     }
@@ -206,9 +220,11 @@ namespace audiere {
       std::string(name),
       ParameterList(parameters));
     if (!device) {
+      ADR_LOG("Could not open device");
       return 0;
     }
 
+    ADR_LOG("creating threaded device");
     return new ThreadedDevice(device);
   }
 

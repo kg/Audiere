@@ -2,7 +2,7 @@
 #define DEVICE_NULL_H
 
 
-#include <set>
+#include <list>
 #include "audiere.h"
 #include "internal.h"
 #include "repeatable.h"
@@ -36,7 +36,7 @@ namespace audiere {
   private:
     void removeStream(NullOutputStream* stream);
 
-    typedef std::set<NullOutputStream*> StreamList;
+    typedef std::list<NullOutputStream*> StreamList;
     StreamList m_streams;
 
     friend class NullOutputStream;
@@ -75,7 +75,7 @@ namespace audiere {
 
     RefPtr<NullAudioDevice> m_device;
                           
-    RepeatableStream* m_source;
+    RefPtr<RepeatableStream> m_source;
     int m_channel_count;           //
     int m_sample_rate;             // cached stream format
     SampleFormat m_sample_format;  //

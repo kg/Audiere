@@ -109,7 +109,8 @@ namespace audiere {
 
     for (char device = 'A'; device <= 'Z'; ++device) {
       char name[] = {device, ':', 0};
-      if (GetDriveType(name) == DRIVE_CDROM) {
+      UINT type = GetDriveType(name);
+      if (type == DRIVE_CDROM) {
         *out++ = device;
         *out++ = ':';
         *out++ = 0;

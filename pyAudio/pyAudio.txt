@@ -13,19 +13,19 @@ How do I install it?
 --
 
 Into ActiveState's Python 2.1:
-  Copy the pyAudio.pyd into Python21/DLLs.
+  Copy the audiere.pyd into Python21/Lib.
 
 Into v27:
-  Just copy pyAudio.pyd into your VERGE folder.
+  Just copy audiere.pyd into your VERGE folder.
 
 
 How do I use it?
 --
 
-import audiere                                   # brings in the Audiere module
-context = audiere.open_context("autodetect", "") # creates an Audiere context object
-song = context.open_stream("song.mp3")           # opens a song
-song.play()                                      # begins playback
+import audiere                           # brings in the Audiere module
+context = audiere.open_context()         # creates an Audiere context object
+song = context.open_stream("song.mp3")   # opens a song
+song.play()                              # begins playback
 
 
 Cool!  What else can I do?

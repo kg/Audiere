@@ -95,7 +95,51 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\examples\wxPlayer\Commands.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\DeviceFrame.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\DeviceFrame.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\NewDeviceDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\NewDeviceDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\SoundEffectFrame.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\SoundEffectFrame.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\StreamFrame.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\StreamFrame.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wx.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\examples\wxPlayer\wxPlayer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\wxPlayer.h
 # End Source File
 # Begin Source File
 

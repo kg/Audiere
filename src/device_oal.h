@@ -55,6 +55,8 @@ namespace audiere {
     float getVolume();
     void  setPan(float pan);
     float getPan();
+    void  setPitchShift(float shift);
+    float getPitchShift();
 
     bool isSeekable();
     int getLength();

@@ -376,6 +376,19 @@ namespace audiere {
   }
 
 
+  void
+  OALOutputStream::setPitchShift(float shift) {
+    /// @todo  implement OALOutputStream::setPitchShift
+  }
+
+
+  float
+  OALOutputStream::getPitchShift() {
+    /// @todo  implement OALOutputStream::getPitchShift
+    return 0;
+  }
+
+
   bool
   OALOutputStream::isSeekable() {
     /// @todo  implement OALOutputStream::isSeekable

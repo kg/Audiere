@@ -1,8 +1,9 @@
-SUBDIRS = mikmod
+SUBDIRS = mikmod mpglib
 
 INCLUDES = \
 	-I $(top_srcdir)/src/mikmod/mmio \
-	-I $(top_srcdir)/src/mikmod/mikmod
+	-I $(top_srcdir)/src/mikmod/mikmod \
+	-I $(top_srcdir)/src/mpglib
 
 lib_LTLIBRARIES = libaudiere.la
 include_HEADERS = audiere.h
@@ -43,6 +44,8 @@ libaudiere_la_SOURCES = \
 	input.cpp \
 	input_mod.cpp \
 	input_mod.h \
+	input_mp3.cpp \
+	input_mp3.h \
 	input_ogg.cpp \
 	input_ogg.h \
 	input_wav.cpp \
@@ -75,4 +78,5 @@ libaudiere_la_LDFLAGS = \
 
 libaudiere_la_LIBADD = \
 	mikmod/mmio/libmmio.la \
-	mikmod/mikmod/libmikmod.la
+	mikmod/mikmod/libmikmod.la \
+	mpglib/libmpg.la

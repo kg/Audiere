@@ -1,3 +1,8 @@
+2002.10.02
+
+  added MP3 support again via mpglib (mpg123), thanks to Jacky Chong.
+    He had to hack the mpglib code a lot to get it to work.  :)
+
 2002.09.20
 
   added the SoundEffect convenience class for simple sound playback

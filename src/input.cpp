@@ -5,6 +5,7 @@
 #ifndef NO_MIKMOD
 #include "input_mod.h"
 #endif
+#include "input_mp3.h"
 #include "input_ogg.h"
 #include "input_wav.h"
 #include "internal.h"
@@ -77,6 +78,10 @@ namespace audiere {
 
         TRY_SOURCE(MODInputStream);
 #endif
+      } else if (end_is(filename, ".mp3")) {
+
+        TRY_SOURCE(MP3InputStream);
+
       }
     }
 
@@ -86,6 +91,7 @@ namespace audiere {
 #endif
     TRY_SOURCE(WAVInputStream);
     TRY_SOURCE(OGGInputStream);
+    TRY_SOURCE(MP3InputStream);
 
     return 0;
   }

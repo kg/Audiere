@@ -23,11 +23,13 @@ AC_ARG_WITH(mp3, [  --with-mp3    Support MP3 decoding via libMAD ],
   MADLIB="-lmad"
   MP3SRC="acq_mp3.cpp"
   RESAMPLE="resample"
+  RESAMPLELIB="resample/libresample.la"
 ,
   WITH_MP3=0
   MADLIB=""
   MP3SRC=""
   RESAMPLE=""
+  RESAMPLELIB=""
 )
 
 AC_SUBST(MADLIB)
@@ -77,4 +79,5 @@ AC_OUTPUT(
 	mikmod/mmio/Makefile
 	resample/Makefile
 )
+
 

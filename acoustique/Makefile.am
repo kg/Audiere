@@ -27,4 +27,5 @@ libacoustique_la_LDFLAGS = \
 libacoustique_la_LIBADD = \
 	mikmod/mmio/libmmio.la \
 	mikmod/mikmod/libmikmod.la \
-	resample/libresample.la
+	@RESAMPLELIB@
+	@RESAMPLELIB@

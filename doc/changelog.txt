@@ -1,3 +1,11 @@
+2002.09.19
+
+  added square wave generation
+
+2002.09.07
+
+  1.9.0 release
+
 2002.09.06
 
   updated Java bindings

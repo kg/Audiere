@@ -83,28 +83,7 @@ namespace audiere {
   DSOutputStream::reset() {
     ADR_GUARD("DSOutputStream::reset");
     SYNCHRONIZED(this);
-
-    // figure out if we're playing or not
-    bool is_playing = isPlaying();
-
-    // if we're playing, stop
-    if (is_playing) {
-      stop();
-    }
-
-    m_buffer->SetCurrentPosition(0);
-    m_last_play = 0;
-
-    m_source->reset();
-    m_total_read = 0;
-    m_total_written = 0;
-    m_next_read = 0;
-    fillStream();
-
-    // if we were playing, restart
-    if (is_playing) {
-      play();
-    }
+    doReset();
   }
 
 
@@ -113,7 +92,7 @@ namespace audiere {
     SYNCHRONIZED(this);
     m_source->setRepeat(repeat);
     if (!isPlaying()) {
-      reset();
+      doReset();
     }
   }
 
@@ -215,6 +194,32 @@ namespace audiere {
       pos += m_buffer_length;
     }
     return pos;
+  }
+
+
+  void
+  DSOutputStream::doReset() {
+    // figure out if we're playing or not
+    bool is_playing = isPlaying();
+
+    // if we're playing, stop
+    if (is_playing) {
+      stop();
+    }
+
+    m_buffer->SetCurrentPosition(0);
+    m_last_play = 0;
+
+    m_source->reset();
+    m_total_read = 0;
+    m_total_written = 0;
+    m_next_read = 0;
+    fillStream();
+
+    // if we were playing, restart
+    if (is_playing) {
+      play();
+    }
   }
 
 

@@ -47,6 +47,7 @@ namespace audiere {
     int  ADR_CALL getPosition();
 
   private:
+    void doReset();  ///< thread-unsafe version of reset()
     void fillStream();
     void update();
     int streamRead(int samples_to_read, void* buffer);

@@ -1,3 +1,8 @@
+2003.06.02
+
+  fixed some edge cases involving small sounds, DirectSound streams,
+    and the repeating flag
+
 2003.06.01
 
   fixed short bursts of periodic static while decoding MP3s.  it

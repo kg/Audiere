@@ -5,6 +5,7 @@
 
 #include <ctype.h>
 #include "utility.h"
+#include "internal.h"
 
 
 namespace audiere {
@@ -64,6 +65,15 @@ namespace audiere {
     char c = tolower(*a);
     char d = tolower(*b);
     return (c - d);
+  }
+
+
+  ADR_EXPORT(int, AdrGetSampleSize)(SampleFormat format) {
+    switch (format) {
+      case SF_U8:     return 1;
+      case SF_S16_LE: return 2;
+      default:        return 0;
+    }
   }
 
 }

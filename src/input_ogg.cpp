@@ -77,7 +77,7 @@ namespace audiere {
 
   int
   OGGInputStream::read(int sample_count, void* samples) {
-    int sample_size = m_channel_count * GetBytesPerSample(m_sample_format);
+    int sample_size = m_channel_count * GetSampleSize(m_sample_format);
 
     // if we're at the end of the file, we have no more samples
   //  if (m_eof) {

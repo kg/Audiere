@@ -30,12 +30,6 @@ namespace audiere {
   }
 
 
-  bool
-  NullAudioDevice::supportsStreaming() {
-    return true;
-  }
-
-
   void
   NullAudioDevice::update() {
     ADR_GUARD("NullAudioDevice::update");
@@ -67,6 +61,16 @@ namespace audiere {
     NullOutputStream* stream = new NullOutputStream(this, source);
     m_streams.insert(stream);
     return stream;
+  }
+
+
+  OutputStream*
+  NullAudioDevice::openBuffer(
+    void* samples, int sample_count,
+    int channel_count, int sample_rate, SampleFormat sample_format)
+  {
+    /// @todo implement openBuffer
+    return 0;
   }
 
 
@@ -239,7 +243,7 @@ namespace audiere {
   NullOutputStream::dummyRead(int samples_to_read) {
     int total = 0;  // number of samples read so far
 
-    const int bytes_per_sample = GetBytesPerSample(m_sample_format);
+    const int bytes_per_sample = GetSampleSize(m_sample_format);
 
     // read samples into dummy buffer, counting the number we actually read
     u8* dummy = new u8[1024 * m_channel_count * bytes_per_sample];

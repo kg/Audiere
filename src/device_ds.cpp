@@ -185,12 +185,6 @@ namespace audiere {
   }
 
 
-  bool
-  DSAudioDevice::supportsStreaming() {
-    return true;
-  }
-
-
   void
   DSAudioDevice::update() {
     ADR_GUARD("DSAudioDevice::Update");
@@ -218,7 +212,7 @@ namespace audiere {
     SampleFormat sample_format;
     source->getFormat(channel_count, sample_rate, sample_format);
 
-    int sample_size = channel_count * GetBytesPerSample(sample_format);
+    int sample_size = channel_count * GetSampleSize(sample_format);
 
     // calculate an ideal buffer size
     int buffer_length = sample_rate * m_buffer_length / 1000;
@@ -231,7 +225,7 @@ namespace audiere {
     wfx.nSamplesPerSec  = sample_rate;
     wfx.nAvgBytesPerSec = sample_rate * sample_size;
     wfx.nBlockAlign     = sample_size;
-    wfx.wBitsPerSample  = GetBytesPerSample(sample_format) * 8;
+    wfx.wBitsPerSample  = GetSampleSize(sample_format) * 8;
     wfx.cbSize          = sizeof(wfx);
 
     // define the DirectSound buffer type
@@ -265,6 +259,16 @@ namespace audiere {
     // add ourselves to the list of streams and return
     m_open_streams.push_back(stream);
     return stream;
+  }
+
+
+  OutputStream*
+  DSAudioDevice::openBuffer(
+    void* samples, int sample_count,
+    int channel_count, int sample_rate, SampleFormat sample_format)
+  {
+    /// @todo implement openBuffer
+    return 0;
   }
 
 

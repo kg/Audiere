@@ -23,9 +23,11 @@ namespace audiere {
     ~NullAudioDevice();
 
     bool initialize(const char* parameters);
-    bool supportsStreaming();
     void update();
     OutputStream* openStream(SampleSource* source);
+    OutputStream* openBuffer(
+      void* samples, int sample_count,
+      int channel_count, int sample_rate, SampleFormat sample_format);
 
   private:
     void removeStream(NullOutputStream* stream);

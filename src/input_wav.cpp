@@ -85,7 +85,7 @@ namespace audiere {
 
     const int samples_to_read = Min(sample_count, m_samples_left_in_chunk);
     const int sample_size =
-      m_channel_count * GetBytesPerSample(m_sample_format);
+      m_channel_count * GetSampleSize(m_sample_format);
     const int bytes_to_read = samples_to_read * sample_size;
   
     const int read = m_file->read(samples, bytes_to_read);
@@ -215,7 +215,7 @@ namespace audiere {
       if (memcmp(chunk_id, "data", 4) == 0) {
 
         // calculate the sample size so we can truncate the data chunk
-        int sample_size = m_channel_count * GetBytesPerSample(m_sample_format);
+        int sample_size = m_channel_count * GetSampleSize(m_sample_format);
 
         m_data_chunk_location   = m_file->tell();
         m_data_chunk_length     = chunk_length / sample_size;

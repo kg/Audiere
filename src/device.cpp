@@ -150,16 +150,21 @@ namespace audiere {
       delete m_device;
     }
 
-    bool supportsStreaming() {
-      return m_device->supportsStreaming();
-    }
-
     // don't need to update the device...  the thread does it for us
     void update() {
     }
 
     OutputStream* openStream(SampleSource* source) {
       return m_device->openStream(source);
+    }
+
+    OutputStream* openBuffer(
+      void* samples, int sample_count,
+      int channel_count, int sample_rate, SampleFormat sample_format)
+    {
+      return m_device->openBuffer(
+        samples, sample_count,
+        channel_count, sample_rate, sample_format);
     }
 
   private:

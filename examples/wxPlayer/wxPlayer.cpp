@@ -145,8 +145,7 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
     return;
   }
 
-  SampleSource* source = OpenSampleSource(result.c_str());
-  OutputStream* sound = OpenSound(g_device, source, STREAM);
+  OutputStream* sound = OpenSound(g_device, result.c_str());
   if (!sound) {
     wxMessageBox("Could not open stream");
   } else {

@@ -15,7 +15,7 @@ namespace audiere {
     int channel_count, sample_rate;
     SampleFormat sample_format;
     m_source->getFormat(channel_count, sample_rate, sample_format);
-    m_sample_size = channel_count * GetBytesPerSample(sample_format);
+    m_sample_size = channel_count * GetSampleSize(sample_format);
   }
 
 

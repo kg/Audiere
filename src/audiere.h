@@ -323,11 +323,6 @@ namespace audiere {
   class AudioDevice : public DLLInterface {
   public:
     /**
-     * @return  true if this device supports streaming audio
-     */
-    virtual bool supportsStreaming() = 0;
-
-    /**
      * Tell the device to do any internal state updates.  Some devices
      * update on an internal thread.  If that is the case, this method
      * does nothing.
@@ -343,29 +338,38 @@ namespace audiere {
      * opening the output stream fails (in which case the source is
      * immediately deleted).
      *
-     * @note  Not all audio devices support streaming audio.  At this time,
-     *        they all do, but in the future this may not be the case.
-     *
      * @param  source  the source used to feed the output stream with samples
      *
-     * @return  new output stream, or 0 if failure
+     * @return  new output stream if successful, 0 if failure
      */
     virtual OutputStream* openStream(SampleSource* source) = 0;
 
     /**
-     * @todo  support opening a single buffer where all PCM data is
-     *        available immediately.  This facilitates efficient DS
-     *        and OpenAL support, as long as working with AudioWorks.
+     * Open a single buffer with the specified PCM data.  This is more
+     * efficient than streaming and works on a larger variety of audio
+     * devices.  In some implementations, this may download the audio
+     * data to the sound card's memory itself.
+     *
+     * @param samples  Buffer containing sample data.  openBuffer() does
+     *                 not take ownership of the memory.  The application
+     *                 is responsible for freeing it.  There must be at
+     *                 least |sample_count * channel_count *
+     *                 GetSampleSize(sample_format)| bytes in the buffer.
+     *
+     * @param sample_count  Number of samples in the buffer.
+     *
+     * @param channel_count  Number of audio channels.  1 = mono, 2 = stereo.
+     *
+     * @param sample_rate  Number of samples per second.
+     *
+     * @return  new output stream if successful, 0 if failure
      */
-  };
-
-
-  enum SoundMode {
-    /// Stream the sound from its file.
-    STREAM,
-
-    /// Read the sound samples into a buffer in memory and read from that.
-    BUFFER,
+    virtual OutputStream* openBuffer(
+      void* samples,
+      int sample_count,
+      int channel_count,
+      int sample_rate,
+      SampleFormat sample_format) = 0;
   };
 
 
@@ -389,6 +393,8 @@ namespace audiere {
     // these are extern "C" so we don't mangle the names
 
     ADR_FUNCTION(const char*, AdrGetVersion)();
+    ADR_FUNCTION(int, AdrGetSampleSize)(SampleFormat format);
+
     ADR_FUNCTION(AudioDevice*, AdrOpenDevice)(
       const char* name,
       const char* parameters);
@@ -402,8 +408,7 @@ namespace audiere {
 
     ADR_FUNCTION(OutputStream*, AdrOpenSound)(
       AudioDevice* device,
-      SampleSource* source,
-      SoundMode mode);
+      SampleSource* source);
   }
 
 
@@ -417,6 +422,18 @@ namespace audiere {
    */
   inline const char* GetVersion() {
     return hidden::AdrGetVersion();
+  }
+
+  /**
+   * Get the size of a sample in a specific sample format.
+   * This is commonly used to know how many bytes a chunk of
+   * PCM data will take.
+   *
+   * @return  Number of bytes a single sample in the specified format
+   *          takes.
+   */
+  inline int GetSampleSize(SampleFormat format) {
+    return hidden::AdrGetSampleSize(format);
   }
 
   /**
@@ -474,7 +491,7 @@ namespace audiere {
   /**
    * Create a tone sample source with the specified frequency.
    *
-   * @param  frequency  The frequency of the tone in Hz
+   * @param  frequency  Frequency of the tone in Hz.
    *
    * @return  tone sample source
    */
@@ -483,31 +500,39 @@ namespace audiere {
   }
 
   /**
-   * Create a convenience sound object using the specified AudioDevice and
-   * sample source.
+   * Try to open a sound buffer using the specified AudioDevice and
+   * sample source.  If the specified sample source is seekable, it
+   * loads it into memory and uses AudioDevice::openBuffer to create
+   * the output stream.  If the stream is not seekable, it uses
+   * AudioDevice::openStream to create the output stream.
    *
-   * @param device  AudioDevice to open the sound on
+   * @param device  AudioDevice in which to open the output stream.
    *
    * @param source  SampleSource used to generate samples for the sound
    *                object.  OpenSound takes ownership of source, even
-   *                if it returns 0.  (in that case, OpenSound immediately
+   *                if it returns 0.  (In that case, OpenSound immediately
    *                deletes the SampleSource.)
    *
-   * @param mode    There are two ways to open a sound.  One is STREAM,
-   *                and the other is BUFFER.  STREAM streams the sound from
-   *                the file, and BUFFER tries to read the entire sound into
-   *                memory and play that.  These are just hints, so if
-   *                STREAMing fails, it will then try BUFFER, and if BUFFER
-   *                fails, it will try STREAM.
-   *                
-   * @return  A new sound object if OpenSound succeeds, and 0 otherwise
+   * @return  new output stream if successful, 0 otherwise
    */
-  inline OutputStream* OpenSound(
-    AudioDevice* device,
-    SampleSource* source,
-    SoundMode mode)
-  {
-    return hidden::AdrOpenSound(device, source, mode);
+  inline OutputStream* OpenSound(AudioDevice* device, SampleSource* source) {
+    return hidden::AdrOpenSound(device, source);
+  }
+
+  /**
+   * Calls OpenSound(AudioDevice*, SampleSource*) with a sample source
+   * created via OpenSampleSource(const char*).
+   */
+  inline OutputStream* OpenSound(AudioDevice* device, const char* filename) {
+    return OpenSound(device, OpenSampleSource(filename));
+  }
+
+  /**
+   * Calls OpenSound(AudioDevice*, SampleSource*) with a sample source
+   * created via OpenSampleSource(File* file).
+   */
+  inline OutputStream* OpenSound(AudioDevice* device, File* file) {
+    return OpenSound(device, OpenSampleSource(file));
   }
 }
 

@@ -1,6 +1,6 @@
 /**
  * Audiere Sound System
- * Version 1.9.1
+ * Version 1.9.2
  * (c) 2002 Chad Austin
  *
  * This API uses principles explained at

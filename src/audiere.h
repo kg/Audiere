@@ -1,3 +1,13 @@
+/**
+ * Audiere Sound System
+ * (c) 2002 Chad Austin
+ *
+ * This API uses principles explained at
+ * http://aegisknight.org/cppinterface.html
+ *
+ * This code licensed under the terms of the LGPL.  See license.txt.
+ */
+
 #ifndef AUDIERE_H
 #define AUDIERE_H
 

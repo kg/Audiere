@@ -305,9 +305,7 @@ namespace audiere {
 
     /**
      * Reset the output stream's internal buffer, causing it to buffer new
-     * samples from its sample source.  This should be called when the sample
-     * source has been changed in some way and the internal buffer's cached
-     * data made invalid.
+     * samples from its sample source.
      *
      * On some output streams, this operation can be moderately slow, as up to
      * several seconds of PCM buffer must be refilled.

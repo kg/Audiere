@@ -173,7 +173,7 @@ OGGInputStream::FileSeek(void* opaque, int64_t offset, int whence)
     case SEEK_END: type = ADR_END;     break;
     default: return -1;
   }
-  return (file->Seek(offset, type) ? 0 : -1);
+  return (file->Seek((int)offset, type) ? 0 : -1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

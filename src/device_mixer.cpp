@@ -47,7 +47,7 @@ namespace audiere {
          i != m_streams.end();
          ++i)
     {
-      any_playing |= (*i)->isPlaying();
+      any_playing |= (*i)->m_is_playing;
     }
   
     // if not, return zeroed samples
@@ -74,7 +74,7 @@ namespace audiere {
            s != m_streams.end();
            ++s)
       {
-        if ((*s)->isPlaying()) {
+        if ((*s)->m_is_playing) {
           s16 stream_buffer[BUFFER_SIZE * 2];
           (*s)->read(to_mix, stream_buffer);
           for (int i = 0; i < to_mix * 2; ++i) {

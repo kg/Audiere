@@ -15,10 +15,9 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  ContextAttr attr;
-  attr.setOutputDevice("openal");
+  cerr << "initializing..." << endl;
 
-  auto_ptr<Context> context(CreateContext(&attr));
+  auto_ptr<Context> context(CreateContext(0));
   if (!context.get()) {
     cerr << "CreateContext() failed" << endl;
     return EXIT_FAILURE;

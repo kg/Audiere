@@ -54,6 +54,7 @@ private:
 private:
   int m_ref_count;
   volatile bool m_thread_should_die;
+  volatile bool m_thread_exists;
 
   IFileSystem* m_file_system;
   IOutputContext* m_output_context;

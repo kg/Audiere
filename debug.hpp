@@ -6,7 +6,7 @@
 #include <string>
 
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 
   class Log {
   public:
@@ -49,7 +49,12 @@
   #define ADR_GUARD(label) Guard guard_obj__(label)
   #define ADR_LOG(label)   (Log::Write(label))
   #define ADR_IF_DEBUG     if (true)
-  #define ADR_ASSERT(condition, label) if (!(condition)) { __asm int 3 }
+
+  #ifdef _MSC_VER
+    #define ADR_ASSERT(condition, label) if (!(condition)) { __asm int 3 }
+  #else  // assume x86 gcc
+    #define ADR_ASSERT(condition, label) if (!(condition)) { asm("int 3"); }
+  #endif
 
 #else
 

@@ -1,4 +1,4 @@
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 
 #include "debug.hpp"
 
@@ -31,7 +31,14 @@ void
 Log::EnsureOpen()
 {
   if (!handle) {
-    handle = fopen("C:/audiere_debug.log", "w");
+
+    #ifdef WIN32
+      handle = fopen("C:/audiere_debug.log", "w");
+    #else
+      std::string home(getenv("HOME"));
+      handle = fopen((home + "/audiere_debug.log").c_str(), "w");
+    #endif
+
     atexit(Close);
   }
 }

@@ -10,10 +10,13 @@ Context* Context::Create(
   const char* parameters,
   IFileSystem* file_system)
 {
+  ADR_GUARD("Context::Create");
+
   Context* context = new Context();
   if (context->Initialize(output_device, parameters, file_system)) {
     return context;
   } else {
+    ADR_LOG("deleting context object");
     delete context;
     return 0;
   }
@@ -25,6 +28,7 @@ Context::Context()
 {
   m_ref_count = 0;
   m_thread_should_die = false;
+  m_thread_exists = false;
   m_file_system = 0;
   m_output_context = 0;
 }
@@ -33,12 +37,14 @@ Context::Context()
 
 Context::~Context()
 {
-  // ask the thread to die
-  m_thread_should_die = true;
+  if (m_thread_exists) {
+    // ask the thread to die
+    m_thread_should_die = true;
 
-  // wait until the thread is dead
-  while (m_thread_should_die) {
-    AI_Sleep(50);
+    // wait until the thread is dead
+    while (m_thread_should_die) {
+      AI_Sleep(50);
+    }
   }
 
   delete m_output_context;
@@ -55,13 +61,17 @@ Context::Initialize(
 {
   m_ref_count = 1;
   m_thread_should_die = false;
+  m_thread_exists = false;
 
   m_file_system = file_system;
 
   m_output_context = OpenContext(output_device, parameters);
   if (!m_output_context) {
+    ADR_LOG("could not open output context");
     return false;
   }
+
+  ADR_LOG("creating thread...");
 
   // create a thread
   // this is particularly odd:  don't create a thread with higher priority than
@@ -71,10 +81,12 @@ Context::Initialize(
   // the race condition is related to the locks (critical sections)...
   bool result = AI_CreateThread(ThreadRoutine, this, 0);  /* +4  */
   if (!result) {
+    ADR_LOG("thread creation failed!");
     delete m_output_context;
     return false;
   }
 
+  ADR_LOG("thread creation succeeded");
   return true;
 }
 
@@ -110,6 +122,8 @@ Context::ThreadRoutine(void* opaque)
 void
 Context::ThreadRoutine()
 {
+  m_thread_exists = true;
+
   // while we're not dead, process the sound update loop
   while (!m_thread_should_die) {
     ADR_LOG("Updating output context...");
@@ -119,6 +133,7 @@ Context::ThreadRoutine()
 
   // okay, we're dead now
   m_thread_should_die = false;
+  m_thread_exists = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

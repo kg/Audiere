@@ -7,6 +7,11 @@
  * http://aegisknight.org/cppinterface.html
  *
  * This code licensed under the terms of the LGPL.  See doc/license.txt.
+ *
+ *
+ * Note: When compiling this header in gcc, you may want to use the
+ * -Wno-non-virtual-dtor flag to get rid of those annoying "class has
+ * virtual functions but no virtual destructor" warnings.
  */
 
 #ifndef AUDIERE_H

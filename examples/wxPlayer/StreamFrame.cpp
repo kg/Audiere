@@ -25,7 +25,7 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
   EVT_COMMAND_SCROLL(STREAM_PITCH,  StreamFrame::OnChangePitch)
   EVT_COMMAND_SCROLL(STREAM_POS,    StreamFrame::OnChangePos)
 
-//  EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdateStatus)
+  EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdateStatus)
 END_EVENT_TABLE()
 
 

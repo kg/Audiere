@@ -223,10 +223,11 @@ namespace audiere {
           return true;
         }
       }
-      int rv = mpaudec_decode_frame(m_context, (s16*)m_decode_buffer,
-                                    &output_size,
-                                    (unsigned char*)m_input_buffer + m_input_position,
-                                    m_input_length - m_input_position);
+      int rv = mpaudec_decode_frame(
+          m_context, (s16*)m_decode_buffer,
+          &output_size,
+          (unsigned char*)m_input_buffer + m_input_position,
+          m_input_length - m_input_position);
       if (rv < 0)
         return false;
       m_input_position += rv;

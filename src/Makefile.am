@@ -75,8 +75,10 @@ libaudiere_la_SOURCES = \
 	$(WINMM_SOURCES) \
 	file_ansi.cpp \
 	input.cpp \
-	$(FLAC_SOURCES) \
+	input_aiff.cpp \
+	input_aiff.h \
 	$(DUMB_SOURCES) \
+	$(FLAC_SOURCES) \
 	input_mp3.cpp \
 	input_mp3.h \
 	$(OGG_SOURCES) \

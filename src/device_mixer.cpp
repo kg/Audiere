@@ -35,11 +35,11 @@ namespace audiere {
 
   int
   MixerDevice::read(const int sample_count, void* samples) {
-    ADR_GUARD("MixerDevice::read");
+//    ADR_GUARD("MixerDevice::read");
 
     SYNCHRONIZED(this);
 
-    ADR_LOG("done locking mixer device");
+//    ADR_LOG("done locking mixer device");
 
     // are any sources playing?
     bool any_playing = false;

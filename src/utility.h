@@ -79,6 +79,21 @@ namespace audiere {
     return (read16_be(b) << 16) + read16_be(b + 2);
   }
 
+  /// Converts an 80-bit IEEE 754 floating point number to a u32.
+  inline u32 readLD_be(const u8* b) {
+    u32 mantissa = read32_be(b + 2);
+    u8 exp = 30 - b[1];
+    u32 last = 0;
+    while (exp--) {
+      last = mantissa;
+      mantissa >>= 1;
+    }
+    if (last & 0x1) {
+      mantissa++;
+    }
+    return mantissa;
+  }
+
 
   inline int GetFileLength(File* file) {
     int pos = file->tell();

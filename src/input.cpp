@@ -15,6 +15,7 @@
 #include "input_ogg.h"
 #endif
 #include "input_wav.h"
+#include "input_aiff.h"
 #include "internal.h"
 #include "utility.h"
 
@@ -24,6 +25,7 @@ namespace audiere {
 
   ADR_EXPORT(const char*) AdrGetSupportedFileFormats() {
     return
+      "AIFF Files:aiff,aifc"  ";"
 #ifndef NO_MP3
       "MP3 Files:mp3"  ";"
 #endif
@@ -85,7 +87,9 @@ namespace audiere {
 
 
   FileFormat GuessFormat(const char* filename) {
-    if (end_is(filename, ".wav")) {
+    if (end_is(filename, ".aiff")) {
+      return FF_AIFF;
+    } else if (end_is(filename, ".wav")) {
       return FF_WAV;
     } else if (end_is(filename, ".ogg")) {
       return FF_OGG;
@@ -132,6 +136,7 @@ namespace audiere {
 
         // autodetect otherwise, in decreasing order of possibility of failure
         TRY_OPEN(FF_MOD);
+        TRY_OPEN(FF_AIFF);
         TRY_OPEN(FF_WAV);
         TRY_OPEN(FF_OGG);
         TRY_OPEN(FF_MP3);
@@ -143,6 +148,10 @@ namespace audiere {
         TRY_SOURCE(MODInputStream);
         return 0;
 #endif
+
+      case FF_AIFF:
+        TRY_SOURCE(AIFFInputStream);
+        return 0;
 
       case FF_WAV:
         TRY_SOURCE(WAVInputStream);

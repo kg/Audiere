@@ -247,6 +247,7 @@ namespace audiere {
     FF_FLAC,
     FF_MP3,
     FF_MOD,
+    FF_AIFF,
   };
 
 

@@ -1,17 +1,22 @@
+/**
+ * This file is roughly based on the WAVInputStream implementation,
+ * since AIFF and WAV files are so alike.
+ */
+
 #include <string.h>
 #include "debug.h"
-#include "input_wav.h"
+#include "input_aiff.h"
 #include "utility.h"
 
 
 namespace audiere {
 
-  static inline bool IsValidSampleSize(u32 size) {
+  static inline bool isValidSampleSize(u32 size) {
     return (size == 8 || size == 16);
   }
 
 
-  WAVInputStream::WAVInputStream() {
+  AIFFInputStream::AIFFInputStream() {
     m_file = 0;
 
     m_channel_count = 0;
@@ -27,34 +32,28 @@ namespace audiere {
 
   /// @todo  this really should be replaced with a factory function
   bool
-  WAVInputStream::initialize(FilePtr file) {
+  AIFFInputStream::initialize(FilePtr file) {
+    ADR_GUARD("AIFFInputStream::initialize");
+
     m_file = file;
 
-    // read the RIFF header
-    char riff_id[4];
-    u8   riff_length_buffer[4];
-    char riff_datatype[4];
-
-    u32 size = 0;
-    size += file->read(riff_id, 4);
-    size += file->read(riff_length_buffer, 4);
-    size += file->read(riff_datatype, 4);
-
-    int riff_length = read32_le(riff_length_buffer);
-
-    if (size != 12 ||
-        memcmp(riff_id, "RIFF", 4) != 0 ||
-        riff_length == 0 ||
-        memcmp(riff_datatype, "WAVE", 4) != 0) {
-
-      ADR_LOG("Couldn't read RIFF header");
-
-      // so we don't destroy the file
+    u8 header[12];
+    if (file->read(header, 12) != 12) {
+      ADR_LOG("Failed to read AIFF header");
       m_file = 0;
       return false;
     }
 
-    if (findFormatChunk() && findDataChunk()) {
+    if (memcmp(header, "FORM", 4) != 0 ||
+        read32_be(header + 4) == 0 ||
+        memcmp(header, "AIFF", 4) != 0)
+    {
+      ADR_LOG("Invalid AIFF header");
+      m_file = 0;
+      return false;
+    }
+
+    if (findCommonChunk() && findSoundChunk()) {
       return true;
     } else {
       m_file = 0;
@@ -64,7 +63,7 @@ namespace audiere {
 
 
   void
-  WAVInputStream::getFormat(
+  AIFFInputStream::getFormat(
     int& channel_count,
     int& sample_rate,
     SampleFormat& sample_format)
@@ -76,7 +75,7 @@ namespace audiere {
 
 
   int
-  WAVInputStream::doRead(int frame_count, void* buffer) {
+  AIFFInputStream::doRead(int frame_count, void* buffer) {
     if (m_frames_left_in_chunk == 0) {
       return 0;
     }
@@ -111,27 +110,29 @@ namespace audiere {
 
 
   void
-  WAVInputStream::reset() {
+  AIFFInputStream::reset() {
     // seek to the beginning of the data chunk
     m_frames_left_in_chunk = m_data_chunk_length;
-    m_file->seek(m_data_chunk_location, File::BEGIN);
+    if (!m_file->seek(m_data_chunk_location, File::BEGIN)) {
+      ADR_LOG("Seek in AIFFInputStream::reset");
+    }
   }
 
 
   bool
-  WAVInputStream::isSeekable() {
+  AIFFInputStream::isSeekable() {
     return true;
   }
 
 
   int
-  WAVInputStream::getLength() {
+  AIFFInputStream::getLength() {
     return m_data_chunk_length;
   }
 
 
   void
-  WAVInputStream::setPosition(int position) {
+  AIFFInputStream::setPosition(int position) {
     int frame_size = m_channel_count * GetSampleSize(m_sample_format);
     m_frames_left_in_chunk = m_data_chunk_length - position;
     m_file->seek(m_data_chunk_location + position * frame_size, File::BEGIN);
@@ -139,68 +140,54 @@ namespace audiere {
 
 
   int
-  WAVInputStream::getPosition() {
+  AIFFInputStream::getPosition() {
     return m_data_chunk_length - m_frames_left_in_chunk;
   }
 
 
   bool
-  WAVInputStream::findFormatChunk() {
-    ADR_GUARD("WAVInputStream::findFormatChunk");
+  AIFFInputStream::findCommonChunk() {
+    ADR_GUARD("AIFFInputStream::findCommonChunk");
 
-    // seek to just after the RIFF header
+    // seek to just after the IFF header
     m_file->seek(12, File::BEGIN);
 
-    // search for a format chunk
+    // search for a common chunk
     for (;;) {
-      char chunk_id[4];
-      u8   chunk_length_buffer[4];
-
-      int size = m_file->read(chunk_id, 4);
-      size    += m_file->read(chunk_length_buffer, 4);
-      u32 chunk_length = read32_le(chunk_length_buffer);
-
-      // if we couldn't read enough, we're done
-      if (size != 8) {
+      u8 chunk_header[8];
+      if (m_file->read(chunk_header, 8) != 8) {
         return false;
       }
+      u32 chunk_length = read32_be(chunk_header + 4);
 
       // if we found a format chunk, excellent!
-      if (memcmp(chunk_id, "fmt ", 4) == 0 && chunk_length >= 16) {
+      if (memcmp(chunk_header, "COMM", 4) == 0 && chunk_length >= 18) {
+        ADR_LOG("Found common chunk");
 
-        ADR_LOG("Found format chunk");
-
-        // read format chunk
-        u8 chunk[16];
-        size = m_file->read(chunk, 16);
-
-        // could we read the entire format chunk?
-        if (size < 16) {
+        // read common chunk
+        u8 chunk[18];
+        if (m_file->read(chunk, 18) != 18) {
           return false;
         }
 
-        chunk_length -= size;
+        chunk_length -= 18;
 
         // parse the memory into useful information
-        u16 format_tag         = read16_le(chunk + 0);
-        u16 channel_count      = read16_le(chunk + 2);
-        u32 samples_per_second = read32_le(chunk + 4);
-        //u32 bytes_per_second   = read32_le(chunk + 8);
-        //u16 block_align        = read16_le(chunk + 12);
-        u16 bits_per_sample    = read16_le(chunk + 14);
+        u16 channel_count   = read16_be(chunk + 0);
+        //u32 frame_count     = read32_be(chunk + 2);
+        u16 bits_per_sample = read16_be(chunk + 6);
+        u32 sample_rate     = readLD_be(chunk + 8);
 
-        // format_tag must be 1 (WAVE_FORMAT_PCM)
-        // we only support mono and stereo
-        if (format_tag != 1 ||
-            channel_count > 2 ||
-            !IsValidSampleSize(bits_per_sample)) {
-          ADR_LOG("Invalid WAV");
+        // we only support mono and stereo, 8-bit or 16-bit
+        if (channel_count > 2 ||
+            !isValidSampleSize(bits_per_sample)) {
+          ADR_LOG("Invalid AIFF");
           return false;
         }
 
         // skip the rest of the chunk
         if (!skipBytes(chunk_length)) {
-          // oops, end of stream
+          ADR_LOG("failed skipping rest of common chunk");
           return false;
         }
 
@@ -213,9 +200,9 @@ namespace audiere {
           return false;
         }
 
-        // store the other important .wav attributes
+        // store the other important attributes
         m_channel_count = channel_count;
-        m_sample_rate   = samples_per_second;
+        m_sample_rate   = sample_rate;
         return true;
 
       } else {
@@ -232,47 +219,52 @@ namespace audiere {
 
 
   bool
-  WAVInputStream::findDataChunk() {
-    ADR_GUARD("WAVInputStream::findDataChunk");
+  AIFFInputStream::findSoundChunk() {
+    ADR_GUARD("AIFFInputStream::findSoundChunk");
 
-    // seek to just after the RIFF header
+    // seek to just after the IFF header
     m_file->seek(12, File::BEGIN);
 
-    // search for a data chunk
+    // search for a sound chunk
     while (true) {
-      char chunk_id[4];
-      u8   chunk_length_buffer[4];
-
-      int size = m_file->read(chunk_id, 4);
-      size    += m_file->read(chunk_length_buffer, 4);
-      u32 chunk_length = read32_le(chunk_length_buffer);
-
-      // if we couldn't read enough, we're done
-      if (size != 8) {
-        ADR_LOG("Couldn't read chunk header");
+      u8 chunk_header[8];
+      if (m_file->read(chunk_header, 8) != 8) {
+        ADR_LOG("Couldn't read SSND chunk header");
         return false;
       }
+      u32 chunk_length = read32_be(chunk_header + 4);
 
       // if we found a data chunk, excellent!
-      if (memcmp(chunk_id, "data", 4) == 0) {
+      if (memcmp(chunk_header, "SSND", 4) == 0) {
+        ADR_LOG("Found sound chunk");
 
-        ADR_LOG("Found data chunk");
+        u8 chunk_contents[8];
+        if (m_file->read(chunk_contents, 8) != 8) {
+          ADR_LOG("Couldn't read SSND chunk contents");
+          return false;
+        }
+        if (read32_be(chunk_contents + 0) != 0 ||
+            read32_be(chunk_contents + 4) != 0)
+        {
+          ADR_LOG("Block-aligned AIFF files not supported!");
+          return false;
+        }
 
         // calculate the frame size so we can truncate the data chunk
         int frame_size = m_channel_count * GetSampleSize(m_sample_format);
 
         m_data_chunk_location  = m_file->tell();
-        m_data_chunk_length    = chunk_length / frame_size;
+        m_data_chunk_length    = (chunk_length - 8) / frame_size;
         m_frames_left_in_chunk = m_data_chunk_length;
         return true;
 
       } else {
 
         ADR_IF_DEBUG {
+          const u8* ci = chunk_header;
           char str[80];
           sprintf(str, "Skipping: %d bytes in chunk '%c%c%c%c'",
-                  (int)chunk_length,
-                  chunk_id[0], chunk_id[1], chunk_id[2], chunk_id[3]);
+                  (int)chunk_length, ci[0], ci[1], ci[2], ci[3]);
           ADR_LOG(str);
         }
 
@@ -288,9 +280,8 @@ namespace audiere {
 
 
   bool
-  WAVInputStream::skipBytes(int size) {
+  AIFFInputStream::skipBytes(int size) {
     return m_file->seek(size, File::CURRENT);
   }
-
 
 }

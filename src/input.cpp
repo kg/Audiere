@@ -26,6 +26,18 @@ namespace audiere {
   }
 
 
+  ADR_EXPORT(const char*, AdrGetSupportedFileFormats)() {
+    return
+      "MP3 Files:mp3"  ";"
+      "Ogg Vorbis Files:ogg"  ";"
+      "FLAC Files:flac"  ";"
+#ifndef NO_MIKMOD
+      "Mod Files:mod,s3m,xm,it"  ";"
+#endif
+      "WAV Files:wav";
+  }
+
+
   template<typename T>
   static T* TryInputStream(File* file) {
 

@@ -1,3 +1,7 @@
+2002.10.11
+
+  added GetSupportedFileFormats for file format enumeration
+
 2002.10.04
 
   use the mpegsound library instead of mpglib because it sounds and

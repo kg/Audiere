@@ -1,9 +1,14 @@
-// for some reason, we have to include windows.h for this to run
 #ifdef _MSC_VER
+
+#pragma warning(disable : 4786)
+
+// for some reason, we have to include windows.h for this to run
 #include <windows.h>
+
 #endif
 
 
+#include <set>
 #include <wx/wx.h>
 #include <audiere.h>
 using namespace audiere;
@@ -243,6 +248,26 @@ BEGIN_EVENT_TABLE(SoundEffectFrame, wxMDIChildFrame)
 END_EVENT_TABLE()
 
 
+template<typename T>
+std::string Join(
+  T cont,
+  const std::string& joiner,
+  const std::string& prefix = "")
+{
+  std::string result;
+
+  T::iterator i = cont.begin();
+  for (;;) {
+    result += prefix + *i++;
+    if (i == cont.end()) {
+      return result;
+    } else {
+      result += joiner;
+    }
+  }
+}
+
+
 class DeviceFrame : public wxMDIParentFrame {
 public:
   DeviceFrame(AudioDevice* device, const wxString& device_name)
@@ -288,11 +313,34 @@ public:
   }
 
   wxString GetSoundFile() {
+    std::vector<FileFormatDesc> formats;
+    GetSupportedFileFormats(formats);
+
+    // combine all of the supported extensions into one collection
+    std::set<std::string> all_extensions;
+    for (int i = 0; i < formats.size(); ++i) {
+      for (int j = 0; j < formats[i].extensions.size(); ++j) {
+        all_extensions.insert("*." + formats[i].extensions[j]);
+      }
+    }
+
+    // build a string of wildcards for wxWindows
+    std::string wildcards;
+    wildcards = "Sound Files (" + Join(all_extensions, ",") + ")|";
+    wildcards += Join(all_extensions, ";") + "|";
+
+    for (int i = 0; i < formats.size(); ++i) {
+      FileFormatDesc& ffd = formats[i];
+      wildcards += ffd.description + " ";
+      wildcards += "(" + Join(ffd.extensions, ",", "*.") + ")|";
+      wildcards += Join(ffd.extensions, ";", "*.") + "|";
+    }
+
+    wildcards += "All Files (*.*)|*.*";
+
     return wxFileSelector(
       "Select a sound file", "", "", "",
-      "Sound Files (*.mp3,*.wav,*.flac,*.ogg,*.mod,*.it,*.xm,*.s3m)|"  \
-      "*.mp3;*.wav;*.flac;*.ogg;*.mod;*.it;*.xm;*.s3m",
-      wxOPEN, this);
+      wildcards.c_str(), wxOPEN, this);
   }
 
   void OnDeviceOpenStream() {

@@ -13,6 +13,14 @@
 #define AUDIERE_H
 
 
+#include <vector>
+#include <string>
+
+#ifdef _MSC_VER
+#pragma warning(disable : 4786)
+#endif
+
+
 #ifndef __cplusplus
   #error Audiere requires C++
 #endif
@@ -546,6 +554,17 @@ namespace audiere {
     // these are extern "C" so we don't mangle the names
 
     ADR_FUNCTION(const char*, AdrGetVersion)();
+
+    /**
+     * Returns a formatted a string that lists the file formats that Audiere
+     * supports.  This function is DLL-safe.
+     *
+     * It is formatted in the following way:
+     *
+     * description1:ext1,ext2,ext3;description2:ext1,ext2,ext3
+     */
+    ADR_FUNCTION(const char*, AdrGetSupportedFileFormats)();
+
     ADR_FUNCTION(int, AdrGetSampleSize)(SampleFormat format);
 
     ADR_FUNCTION(AudioDevice*, AdrOpenDevice)(
@@ -584,12 +603,57 @@ namespace audiere {
 
 
   /**
-   * Return the Audiere version string.
+   * Returns the Audiere version string.
    *
    * @return  Audiere version information
    */
   inline const char* GetVersion() {
     return hidden::AdrGetVersion();
+  }
+
+
+  /// Describes a file format that Audiere supports.
+  struct FileFormatDesc {
+    /// Short description of format, such as "MP3 Files" or "Mod Files"
+    std::string description;
+
+    /// List of support extensions, such as {"mod", "it", "xm"}
+    std::vector<std::string> extensions;
+  };
+
+  inline void _SplitString(
+    std::vector<std::string>& out,
+    const char* in,
+    char delim)
+  {
+    out.clear();
+    while (*in) {
+      const char* next = strchr(in, delim);
+      if (next) {
+        out.push_back(std::string(in, next));
+      } else {
+        out.push_back(in);
+      }
+
+      in = (next ? next + 1 : "");
+    }
+  }
+
+  /**
+   * Populates a vector of FileFormatDesc structs.
+   */
+  inline void GetSupportedFileFormats(std::vector<FileFormatDesc>& formats) {
+    std::vector<std::string> descriptions;
+    _SplitString(descriptions, hidden::AdrGetSupportedFileFormats(), ';');
+
+    formats.resize(descriptions.size());
+    for (int i = 0; i < formats.size(); ++i) {
+      const char* d = descriptions[i].c_str();
+      const char* colon = strchr(d, ':');
+      formats[i].description.assign(d, colon);
+
+      _SplitString(formats[i].extensions, colon + 1, ',');
+    }
   }
 
   /**

@@ -1,7 +1,7 @@
 2004.01.19
 
   Rewrote the Resampler class to use DUMB's cubic interpolation
-  resampler.
+  resampler.  (Matt Campbell)
 
 2004.01.17
 

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "types.h"
 
 #ifdef DEBUGMODE
 
@@ -23,15 +24,8 @@
 
 #endif
 
-#ifndef LONG_LONG
-#ifdef __GNUC__
-#define LONG_LONG long long
-#elif defined _MSC_VER
-#define LONG_LONG __int64
-#else
-#error 64-bit integer type unknown
-#endif
-#endif
+typedef audiere::s64 LONG_LONG;
+
 
 namespace audiere {
 

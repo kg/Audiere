@@ -202,6 +202,10 @@ SOURCE=..\..\src\internal.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\noise.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\repeatable.cpp
 # End Source File
 # Begin Source File

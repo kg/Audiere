@@ -336,7 +336,7 @@ namespace audiere {
   private:
     ADR_STREAM m_stream;
 
-    friend Context;
+    friend class Context;
   };
 
 

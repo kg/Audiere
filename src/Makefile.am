@@ -32,6 +32,7 @@ libaudiere_la_SOURCES = \
 	input_ogg.h \
 	input_wav.cpp \
 	input_wav.h \
+	internal.h \
 	mixer.cpp \
 	mixer.h \
 	repeatable.cpp \

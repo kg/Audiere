@@ -2,9 +2,19 @@ lib_LTLIBRARIES = libaudiere.la
 
 libaudiere_la_SOURCES = \
 	audiere.cpp \
+	audiere.h \
 	data_types.cpp \
+	data_types.hpp \
 	file_ansi.cpp \
+	file.hpp \
 	output.cpp \
+	output.hpp \
 	output_al.cpp \
+	output_al.hpp \
 	output_null.cpp \
-	threads_posix.cpp
+	output_null.hpp \
+	threads_posix.cpp \
+	threads.hpp
+
+libaudiere_la_LDFLAGS = \
+	-release $(VERSION)

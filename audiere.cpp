@@ -55,7 +55,7 @@ static void ADR_CALL SampleReset(void* opaque);
 
 const char* ADR_CALL AdrGetVersion()
 {
-  return "Audiere v1.01";
+  return "1.0.3";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

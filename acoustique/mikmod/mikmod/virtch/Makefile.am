@@ -13,7 +13,12 @@ libvirtch_la_SOURCES = \
 	vc8.c \
 	virtch.c \
 	wrap16.c \
-	wrap8.c
+	wrap8.c \
+	ssmix.h \
+	stdmix.h \
+	vchcrap.h \
+	wrap16.h \
+	wrap8.h
 
 libvirtch_la_LIBADD = \
 	resfilter/libresfilter.la

@@ -3,4 +3,5 @@ INCLUDES = \
 
 noinst_LTLIBRARIES = libresample.la
 libresample_la_SOURCES = \
-	resample.c
+	resample.c \
+	resample.h

@@ -13,7 +13,14 @@ libmikmod_la_SOURCES = \
 	npertab.c \
 	sloader.c \
 	unimod.c \
-	voiceset.c
+	voiceset.c \
+	mdsfx.h \
+	mikmod.h \
+	mpforbid.h \
+	mplayer.h \
+	mwav.h \
+	uniform.h \
+	virtch.h
 
 libmikmod_la_LIBADD = \
 	loaders/libloaders.la \

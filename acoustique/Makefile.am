@@ -12,7 +12,10 @@ libacoustique_la_SOURCES = \
 	acq_mod.cpp \
 	acq_mp3.cpp \
 	acq_ogg.cpp \
-	acq_wav.cpp
+	acq_wav.cpp \
+	acoustique.h \
+	acq_internal.hpp \
+	endian.hpp
 
 libacoustique_la_LDFLAGS = \
 	-release $(VERSION) \

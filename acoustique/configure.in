@@ -29,6 +29,11 @@ dnl Checks for libraries.
 dnl Checks for header files.
 AC_HEADER_STDC
 
+dnl We check for headers instead of libraries because AC_CHECK_LIB
+dnl modifies LIBS, which causes EVERY convenience library to link
+dnl against the static libmad, which gives thousands upon
+dnl thousands of "multiple definition" errors.
+
 AC_CHECK_HEADER(mad.h,,AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find mad library))
 AC_CHECK_HEADER(vorbis/vorbisfile.h,,AC_MSG_RESULT(no)

@@ -9,4 +9,5 @@ libloaders_la_SOURCES = \
 	Load_s3m.c \
 	Load_stm.c \
 	Load_xm.c \
-	S3m_it.c
+	S3m_it.c \
+	itshare.h

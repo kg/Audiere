@@ -1,40 +1,66 @@
-This a very simple introduction to a very simple API.
+This is a very simple introduction to a very simple API.
 
-First, #include <audiere.h>
+Some basic concepts:  Audiere has a C++ API.  You, as a user,
+interact with Audiere through a set of abstract classes
+(i.e. interfaces) defined in audiere.h.  All Audiere objects are
+reference counted.  This means that when you want to hold on to an
+object, you call ref() on it, and when you are done, you call
+unref().  To make this easier, Audiere provides a RefPtr class that
+calls ref() on construction and unref() on destruction.  Otherwise, it
+acts just like a normal pointer, greatly simplifying your code.
 
-(make sure the Audiere header is in your compiler include path somewhere)
+Now, on to the good stuff...
 
-You need an Audiere context before you can play sounds...
+Make sure the Audiere header is in your compiler include path.  Every
+Audiere symbol is contained within the namespace 'audiere', so if you
+want your code to be a little clearer, you can bring the entire
+audiere namespace into global scope.
 
+  #include <audiere.h>
+  using namespace audiere;
 
-ADR_CONTEXT context = AdrCreateContext(NULL);
-if (!context) {
-  // failure
-} 
+You need to open an AudioDevice before you can play sounds...
 
+  RefPtr<AudioDevice> device(OpenDevice());
+  if (!device) {
+    // failure
+  }
 
-Now that we have a context, we can actually open and play songs.
+Now that we have a device, we can actually open and play sounds.
 
+  /*
+   * If OpenSound is called with the last parameter = true, then
+   * Audiere tries to load the sound into memory.  If it can't do
+   * that, it will just stream it.
+   */
+  RefPtr<OutputStream> sound(OpenSound(device, "effect.wav", true));
+  if (!sound) {
+    // failure
+  }
 
-ADR_STREAM stream = AdrOpenStream(context, "American Jesus.mp3");
-if (!stream) {
-  // failure
-}
+  /*
+   * Since this file is background music, we don't need to load the
+   * whole thing into memory.
+   */
+  RefPtr<OutputStream> stream(OpenSound(device, "music.ogg", false));
+  if (!stream) {
+    // failure
+  }
 
-AdrPlayStream(stream);
+Great, we have some opened streams!  What do we do with them?
 
-bool done = false;
-while (!done) {
-  // do something until the user wants to quit
-}
+  // let's start the background music first
+  stream->setRepeat(true);
+  stream->setVolume(0.5f); // 50% volume
+  stream->play();
 
+  // now play a sound effect
+  sound->play();
 
-Okay, now that we're done, destroy the stream and then destroy the context.
-You can even destroy the context before you close the stream!
+When you are done using Audiere, just let the RefPtr objects go out of
+scope, and they will automatically clean themselves up.  If you really
+_must_ delete an object before its pointer goes out of scope, just set
+the pointer to 0.
 
-
-AdrCloseStream(stream);
-AdrDestroyContext(context);
-
-
-That's it!  Look in audiere.h for descriptions of the remaining functions.
+That's it!  Look in audiere.h or the doxygen documentation for
+descriptions of the remaining interfaces and methods.

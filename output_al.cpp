@@ -372,12 +372,6 @@ ALOutputStream::IsPlaying()
 void
 ALOutputStream::SetVolume(int volume)
 {
-  if (volume < ADR_VOLUME_MIN) {
-    volume = ADR_VOLUME_MIN;
-  } else if (volume > ADR_VOLUME_MAX) {
-    volume = ADR_VOLUME_MAX;
-  }
-
   m_Volume = volume;
 
   float v = (float)m_Volume / ADR_VOLUME_MAX;

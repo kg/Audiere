@@ -416,6 +416,13 @@ ADR_BOOL ADR_CALL AdrGetStreamRepeat(ADR_STREAM stream)
 
 void ADR_CALL AdrSetStreamVolume(ADR_STREAM stream, int volume)
 {
+  // make sure the volume is within a valid range
+  if (volume < ADR_VOLUME_MIN) {
+    volume = ADR_VOLUME_MIN;
+  } else if (volume > ADR_VOLUME_MAX) {
+    volume = ADR_VOLUME_MAX;
+  }
+
   stream->output_stream->SetVolume(volume);
 }
 

@@ -499,12 +499,6 @@ DS8OutputStream::IsPlaying()
 void
 DS8OutputStream::SetVolume(int volume)
 {
-  if (volume < ADR_VOLUME_MIN) {
-    volume = ADR_VOLUME_MIN;
-  } else if (volume > ADR_VOLUME_MAX) {
-    volume = ADR_VOLUME_MAX;
-  }
-
   m_Volume = volume;
   m_Buffer->SetVolume(Volume_AudiereToDirectSound(volume));
 }

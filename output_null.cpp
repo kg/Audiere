@@ -67,12 +67,6 @@ NullOutputStream::IsPlaying()
 void
 NullOutputStream::SetVolume(int volume)
 {
-  if (volume < ADR_VOLUME_MIN) {
-    volume = ADR_VOLUME_MIN;
-  } else if (volume > ADR_VOLUME_MAX) {
-    volume = ADR_VOLUME_MAX;
-  }
-
   m_volume = volume;
 }
 

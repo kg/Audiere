@@ -529,7 +529,7 @@ namespace audiere {
 
 
   /**
-   * SoundEffect is a conveneence class which provides a simple
+   * SoundEffect is a convenience class which provides a simple
    * mechanism for basic sound playback.  There are two types of sound
    * effects: SINGLE and MULTIPLE.  SINGLE sound effects only allow
    * the sound to be played once at a time.  MULTIPLE sound effects

@@ -30,7 +30,7 @@ namespace audiere {
     return
       "AIFF Files:aiff,aifc"  ";"
 #ifndef NO_MP3
-      "MP3 Files:mp3"  ";"
+      "MP3 Files:mp3,mp2"  ";"
 #endif
 #ifndef NO_OGG
       "Ogg Vorbis Files:ogg"  ";"

@@ -1,3 +1,8 @@
+2004.01.12
+
+  Added MP2 to the list of supported file types, since mpegsound can
+  play them.
+
 2004.01.10
 
   Added Speex support.

@@ -89,41 +89,6 @@ namespace audiere {
     friend class MixerDevice;
   };
 
-/*
-    int read(int sample_count, void* samples);
-
-    void ADR_CALL addSource(SampleSource* source);
-    void ADR_CALL removeSource(SampleSource* source);
-
-    void ADR_CALL resetSource(SampleSource* source);
-
-  private:
-    struct SourceAttributes {
-      // internal
-      RefPtr<RepeatableStream> source;
-      s16 last_l;  // left
-      s16 last_r;  // right
-
-      // set by external calls
-      bool is_playing;
-      int volume;  // [0, 255]
-      int pan;     // [-255, 255]
-    };
-
-    typedef std::map<SampleSource*, SourceAttributes> SourceMap;
-
-  private:
-    void read(SampleSource* source,
-              SourceAttributes& attr,
-              int to_mix,
-              s16* buffer);
-
-  private:
-    int m_rate;
-    SourceMap m_sources;
-  };
-*/
-
 }
 
 #endif

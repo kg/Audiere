@@ -61,3 +61,13 @@ Why doesn't Audiere 1.0.4 or 1.9.0 support MP3 when Audiere 1.0.3 did?
   there that works across a wide range of MP3s and hardware.  I highly
   recommend using Ogg Vorbis for all of your music needs.  It uses
   less CPU time by about a factor of five *and* sounds better.
+
+
+How do I load a sound into memory so that it isn't streamed?
+--
+
+  The OpenSound function has two modes of operation.  If the third
+  argument 'streaming' is true, it just streams audio from the source.
+  If 'streaming' is passed as false, it tries to load the sound into
+  memory.  You probably want streaming to be true for background
+  music, but false for sound effects.

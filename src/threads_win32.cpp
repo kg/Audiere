@@ -7,8 +7,7 @@ namespace audiere {
 
   struct ThreadInternal {
     AI_ThreadRoutine routine;
-    void*         opaque;
-    int           priority;
+    void*            opaque;
   };
 
   struct AI_CriticalSectionStruct {
@@ -16,8 +15,40 @@ namespace audiere {
   };
 
 
-  static void __cdecl InternalThreadRoutine(void* opaque);
+  static DWORD WINAPI InternalThreadRoutine(void* opaque);
 
+
+  bool SupportsThreadPriority() {
+    // For some reason or another, Windows 95, 98, and ME always
+    // deadlock when Audiere tries to use a thread priority other
+    // than 0.  Therefore, disable the higher priority on those
+    // operating systems.
+    OSVERSIONINFO info;
+    info.dwOSVersionInfoSize = sizeof(info);
+    if (GetVersionEx(&info) &&
+        info.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
+  int GetWin32Priority(int priority) {
+    if (priority < -2) {
+      return THREAD_PRIORITY_IDLE;
+    } else if (priority == -2) {
+      return THREAD_PRIORITY_LOWEST;
+    } else if (priority == -1) {
+      return THREAD_PRIORITY_BELOW_NORMAL;
+    } else if (priority == 0) {
+      return THREAD_PRIORITY_NORMAL;
+    } else if (priority == 1) {
+      return THREAD_PRIORITY_ABOVE_NORMAL;
+    } else {
+      return THREAD_PRIORITY_HIGHEST;
+    }
+  }
 
 
   bool AI_CreateThread(AI_ThreadRoutine routine, void* opaque, int priority) {
@@ -25,39 +56,33 @@ namespace audiere {
     ThreadInternal* internal = new ThreadInternal;
     internal->routine  = routine;
     internal->opaque   = opaque;
-    internal->priority = priority;
-
+    
     // create the actual thread
     // use _beginthread because it makes a thread-safe C library
-    unsigned long handle = ::_beginthread(InternalThreadRoutine, 0, internal);
-    return (handle != -1);
+    DWORD threadid;
+    HANDLE handle = CreateThread(
+      0, 0, InternalThreadRoutine, internal,
+      CREATE_SUSPENDED, &threadid);
+    if (handle) {
+      if (SupportsThreadPriority()) {
+        SetThreadPriority(handle, GetWin32Priority(priority));
+      }
+      ResumeThread(handle);
+      CloseHandle(handle);
+      return true;
+    } else {
+      return false;
+    }
   }
 
 
-  void __cdecl InternalThreadRoutine(void* opaque) {
+  DWORD WINAPI InternalThreadRoutine(void* opaque) {
     ThreadInternal* internal = (ThreadInternal*)opaque;
-
-    int priority;
-    if (internal->priority < -2) {
-      priority = THREAD_PRIORITY_IDLE;
-    } else if (internal->priority == -2) {
-      priority = THREAD_PRIORITY_LOWEST;
-    } else if (internal->priority == -1) {
-      priority = THREAD_PRIORITY_BELOW_NORMAL;
-    } else if (internal->priority == 0) {
-      priority = THREAD_PRIORITY_NORMAL;
-    } else if (internal->priority == 1) {
-      priority = THREAD_PRIORITY_ABOVE_NORMAL;
-    } else {
-      priority = THREAD_PRIORITY_HIGHEST;
-    }
-
-    // set the priority
-    SetThreadPriority(GetCurrentThread(), priority);
 
     // call the function passed 
     internal->routine(internal->opaque);
     delete internal;
+    return 0;
   }
 
 

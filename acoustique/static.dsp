@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "output/Static_Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "libogg-1.0beta4/include" /I "libvorbis-1.0beta4/include" /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/lib/mikmod/include" /I "mikmod/lib/mmio/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/lib/mikmod/include" /I "mikmod/lib/mmio/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "output/Static_Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "libogg-1.0beta4/include" /I "libvorbis-1.0beta4/include" /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/lib/mikmod/include" /I "mikmod/lib/mmio/include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "mad-0.13.0b/libmad" /I "mad-0.13.0b" /I "mikmod/lib/mikmod/include" /I "mikmod/lib/mmio/include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FPM_DEFAULT" /D "LITTLE_ENDIAN" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -262,178 +262,6 @@ SOURCE=".\mad-0.13.0b\libmad\version.c"
 # Begin Source File
 
 SOURCE=".\mad-0.13.0b\libmad\version.h"
-# End Source File
-# End Group
-# Begin Group "libogg"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\analysis.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\backends.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\bitbuffer.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libogg-1.0beta4\src\bitwise.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\block.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\codebook.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\codebook.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\include\vorbis\codec.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\codec_internal.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\envelope.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\envelope.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\floor0.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libogg-1.0beta4\src\framing.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\info.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\lookup.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\lpc.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\lpc.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\lsp.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\lsp.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\mapping0.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\masking.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\mdct.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\mdct.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\misc.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libogg-1.0beta4\include\ogg\ogg.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\os.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libogg-1.0beta4\include\ogg\os_types.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\psy.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\psy.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\registry.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\registry.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\res0.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\scales.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\sharedbook.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\smallft.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\smallft.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\synthesis.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\time0.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\vorbisfile.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\include\vorbis\vorbisfile.h"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\window.c"
-# End Source File
-# Begin Source File
-
-SOURCE=".\libvorbis-1.0beta4\lib\window.h"
 # End Source File
 # End Group
 # Begin Group "mikmod"
@@ -669,5 +497,4 @@ SOURCE=.\mikmod\lib\mikmod\src\virtch\wrap8.h
 # End Source File
 # End Group
 # End Target
-# End Project
 # End Project

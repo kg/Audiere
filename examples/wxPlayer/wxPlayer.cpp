@@ -19,6 +19,7 @@ enum {
   DEVICE_CREATE_TONE,
   DEVICE_CREATE_SQUARE_WAVE,
   DEVICE_CREATE_WHITE_NOISE,
+  DEVICE_CREATE_PINK_NOISE,
   DEVICE_CLOSE,
 
   STREAM_PLAY,
@@ -198,6 +199,7 @@ public:
     fileMenu->Append(DEVICE_CREATE_TONE,        "Create &Tone...");
     fileMenu->Append(DEVICE_CREATE_SQUARE_WAVE, "Create S&quare Wave...");
     fileMenu->Append(DEVICE_CREATE_WHITE_NOISE, "Create &White Noise");
+    fileMenu->Append(DEVICE_CREATE_PINK_NOISE,  "Create &Pink Noise");
     fileMenu->AppendSeparator();
     fileMenu->Append(DEVICE_CLOSE,              "&Close Device");
 
@@ -320,6 +322,17 @@ public:
     }
   }
 
+  void OnDeviceCreatePinkNoise() {
+    OutputStream* stream = m_device->openStream(CreatePinkNoise());
+    if (!stream) {
+      wxMessageBox(
+        "Could not open output stream",
+        "Create Pink Noise", wxOK | wxCENTRE, this);
+    } else {
+      new StreamFrame(this, "Pink Noise", stream);
+    }
+  }
+
   void OnDeviceClose() {
     Close();
   }
@@ -338,6 +351,7 @@ BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
   EVT_MENU(DEVICE_CREATE_TONE,        DeviceFrame::OnDeviceCreateTone)
   EVT_MENU(DEVICE_CREATE_SQUARE_WAVE, DeviceFrame::OnDeviceCreateSquareWave)
   EVT_MENU(DEVICE_CREATE_WHITE_NOISE, DeviceFrame::OnDeviceCreateWhiteNoise)
+  EVT_MENU(DEVICE_CREATE_PINK_NOISE,  DeviceFrame::OnDeviceCreatePinkNoise)
   EVT_MENU(DEVICE_CLOSE,              DeviceFrame::OnDeviceClose)
 END_EVENT_TABLE()
 

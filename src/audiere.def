@@ -7,5 +7,6 @@ EXPORTS
   AdrCreateTone
   AdrCreateSquareWave
   AdrCreateWhiteNoise
+  AdrCreatePinkNoise
   AdrOpenSound
   AdrCreateSampleBuffer

@@ -507,6 +507,7 @@ namespace audiere {
     ADR_FUNCTION(SampleSource*, AdrCreateTone)(double frequency);
     ADR_FUNCTION(SampleSource*, AdrCreateSquareWave)(double frequency);
     ADR_FUNCTION(SampleSource*, AdrCreateWhiteNoise)();
+    ADR_FUNCTION(SampleSource*, AdrCreatePinkNoise)();
 
     ADR_FUNCTION(OutputStream*, AdrOpenSound)(
       AudioDevice* device,
@@ -620,6 +621,16 @@ namespace audiere {
    */
   inline SampleSource* CreateWhiteNoise() {
     return hidden::AdrCreateWhiteNoise();
+  }
+
+  /**
+   * Create a pink noise sample source.  Pink noise is noise with equal
+   * power distribution among octaves (logarithmic), not frequencies.
+   *
+   * @return  pink noise sample source
+   */
+  inline SampleSource* CreatePinkNoise() {
+    return hidden::AdrCreatePinkNoise();
   }
 
   /**

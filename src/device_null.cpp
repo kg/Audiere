@@ -79,6 +79,8 @@ namespace audiere {
   NullOutputStream::~NullOutputStream() {
     m_device->removeStream(this);
     m_device->unref();
+
+    delete m_source;
   }
 
 

@@ -58,7 +58,7 @@ namespace audiere {
       ::operator delete(p);
     }
   };
-  
+
 
   class File : public DLLInterface {
   public:

@@ -292,6 +292,8 @@ namespace audiere {
     // destroy the sound buffer interface
     m_buffer->Release();
     delete[] m_last_sample;
+
+    delete m_source;
   }
 
 

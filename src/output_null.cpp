@@ -162,7 +162,7 @@ NullOutputStream::Update()
     adr_u64 now = GetNow();
     adr_u64 elapsed = now - m_last_update;
 
-    int samples_to_read = m_sample_rate * elapsed / 1000000;
+    int samples_to_read = m_sample_rate * int(elapsed / 1000000);
     int samples_read = DummyRead(samples_to_read);
 
     if (samples_read != samples_to_read) {

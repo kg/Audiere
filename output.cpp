@@ -3,16 +3,18 @@
 #include "output_null.hpp"
 
 #ifdef _WIN32
-#include "output_ds8.hpp"
-#include "output_ds3.hpp"
-#include "output_dll.hpp"
+#  ifdef USE_DIRECTX8
+#    include "output_ds8.hpp"
+#  endif
+#  include "output_ds3.hpp"
+#  include "output_dll.hpp"
 #else
-#include "output_oss.hpp"
+#  include "output_oss.hpp"
 #endif
 
 
 #ifdef WITH_OPENAL
-#include "output_al.hpp"
+#  include "output_al.hpp"
 #endif
 
 
@@ -36,14 +38,18 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
   if (strcmp(device, "") == 0 ||
       strcmp(device, "autodetect") == 0) {
 
+    #ifdef USE_DIRECTX8
     TRY_CONTEXT(DS8OutputContext)
+    #endif
     TRY_CONTEXT(DS3OutputContext)
     TRY_CONTEXT(NullOutputContext)
 
   // DirectSound
   } else if (strcmp(device, "directsound") == 0) {
 
+    #ifdef USE_DIRECTX8
     TRY_CONTEXT(DS8OutputContext)
+    #endif
     TRY_CONTEXT(DS3OutputContext)
 
 #ifdef WITH_OPENAL

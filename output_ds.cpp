@@ -40,7 +40,6 @@ inline int Volume_AudiereToDirectSound(int volume) {
 DSOutputContext::DSOutputContext()
 {
   m_DirectSound     = NULL;
-  m_PrimaryBuffer   = NULL;
   m_BufferLength    = DS_DefaultBufferLength;
   m_AnonymousWindow = NULL;
 }
@@ -62,11 +61,6 @@ DSOutputContext::~DSOutputContext()
     ++i;
   }
   m_OpenStreams.clear();
-
-  if (m_PrimaryBuffer) {
-    m_PrimaryBuffer->Release();
-    m_PrimaryBuffer = NULL;
-  }
 
   // shut down DirectSound
   if (m_DirectSound) {
@@ -168,7 +162,15 @@ DSOutputContext::Initialize(const char* parameters)
     return false;
   }
 
-  return CreatePrimarySoundBuffer();
+  if (!CreatePrimarySoundBuffer()) {
+    DestroyWindow(m_AnonymousWindow);
+    m_AnonymousWindow = NULL;
+    m_DirectSound->Release();
+    m_DirectSound = NULL;
+    return false;
+  }
+
+  return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

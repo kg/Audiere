@@ -33,9 +33,8 @@ protected:
   typedef std::list<DSOutputStream*> StreamList;
 
 protected:
-  IDirectSound*       m_DirectSound;
-  IDirectSoundBuffer* m_PrimaryBuffer;
-  StreamList          m_OpenStreams;
+  IDirectSound* m_DirectSound;
+  StreamList    m_OpenStreams;
 
   int m_BufferLength;  // in milliseconds
 

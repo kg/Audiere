@@ -3,6 +3,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+DS3OutputContext::~DS3OutputContext()
+{
+  if (m_PrimaryBuffer) {
+    m_PrimaryBuffer->Release();
+    m_PrimaryBuffer = 0;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 bool
 DS3OutputContext::CreatePrimarySoundBuffer()
 {
@@ -13,10 +23,6 @@ DS3OutputContext::CreatePrimarySoundBuffer()
   dsbd.dwFlags = DSBCAPS_PRIMARYBUFFER;
   HRESULT rv = m_DirectSound->CreateSoundBuffer(&dsbd, &m_PrimaryBuffer, NULL);
   if (FAILED(rv)) {
-    DestroyWindow(m_AnonymousWindow);
-    m_AnonymousWindow = NULL;
-    m_DirectSound->Release();
-    m_DirectSound = NULL;
     return false;
   }
 
@@ -31,7 +37,10 @@ DS3OutputContext::CreatePrimarySoundBuffer()
   wf.nBlockAlign = wf.wBitsPerSample / 8 * wf.nChannels;
   wf.nAvgBytesPerSec = wf.nSamplesPerSec * wf.nBlockAlign;
 
-  m_PrimaryBuffer->SetFormat(&wf); 
+  rv = m_PrimaryBuffer->SetFormat(&wf); 
+  if (FAILED(rv)) {
+    return false;
+  }
 
   return true;
 }

@@ -10,6 +10,10 @@ class DS3OutputStream;
 
 class DS3OutputContext : public DSOutputContext
 {
+public:
+  DS3OutputContext() { m_PrimaryBuffer = 0; }
+  ~DS3OutputContext();
+
 private:
   virtual REFCLSID GetCLSID() { return CLSID_DirectSound; };
 
@@ -17,6 +21,9 @@ private:
   virtual DWORD GetCooperativeLevel() { return DSSCL_PRIORITY; }
 
   virtual bool CreatePrimarySoundBuffer();
+
+private:
+  IDirectSoundBuffer* m_PrimaryBuffer;
 };
 
 

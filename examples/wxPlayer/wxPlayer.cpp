@@ -480,7 +480,7 @@ public:
       return;
     }
 
-    OutputStream* stream = OpenSound(m_device.get(), filename, true);
+    OutputStream* stream = OpenSound(m_device, filename, true);
     if (!stream) {
       wxMessageBox(
         "Could not open stream: " + filename,
@@ -502,7 +502,7 @@ public:
       return;
     }
 
-    OutputStream* stream = OpenSound(m_device.get(), filename);
+    OutputStream* stream = OpenSound(m_device, filename);
     if (!stream) {
       wxMessageBox(
         "Could not open sound: " + filename,
@@ -590,7 +590,7 @@ public:
       return;
     }
 
-    SoundEffect* effect = OpenSoundEffect(m_device.get(), filename, type);
+    SoundEffect* effect = OpenSoundEffect(m_device, filename, type);
     if (effect) {
       wxString basename = wxFileNameFromPath(filename);
       wxString title;

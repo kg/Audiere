@@ -262,7 +262,7 @@ namespace audiere {
     r_volume *= m_volume;
 
     s16* out = buffer;
-    for (int i = 0; i < read; ++i) {
+    for (unsigned i = 0; i < read; ++i) {
       *out = *out * l_volume / 255 / 255;
       ++out;
       *out = *out * r_volume / 255 / 255;

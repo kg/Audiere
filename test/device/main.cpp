@@ -30,17 +30,17 @@ int main(int argc, char** argv) {
     device_name = argv[1];
   }
 
-  RefPtr<AudioDevice> device(OpenDevice(device_name.c_str()));
+  AudioDevicePtr device(OpenDevice(device_name.c_str()));
   if (!device.get()) {
     cerr << "Opening output device failed" << endl;
     return EXIT_FAILURE;
   }
 
-  RefPtr<OutputStream> stream1(device->openStream(CreateTone(256)));
-  RefPtr<OutputStream> stream2(device->openStream(CreateTone(512)));
-  RefPtr<OutputStream> stream3(device->openStream(CreateTone(515)));
+  OutputStreamPtr stream1(device->openStream(CreateTone(256)));
+  OutputStreamPtr stream2(device->openStream(CreateTone(512)));
+  OutputStreamPtr stream3(device->openStream(CreateTone(515)));
 
-  if (!stream1.get() || !stream2.get() || !stream3.get()) {
+  if (!stream1 || !stream2 || !stream3) {
     cerr << "openStream() failed" << endl;
     return EXIT_FAILURE;
   }

@@ -814,8 +814,8 @@ namespace audiere {
    *
    * @return  new SampleSource if OpenSampleSource succeeds, 0 otherwise
    */
-  inline SampleSource* OpenSampleSource(File* file) {
-    return hidden::AdrOpenSampleSourceFromFile(file);
+  inline SampleSource* OpenSampleSource(const FilePtr& file) {
+    return hidden::AdrOpenSampleSourceFromFile(file.get());
   }
 
   /**
@@ -886,11 +886,11 @@ namespace audiere {
    * @return  new output stream if successful, 0 otherwise
    */
   inline OutputStream* OpenSound(
-    AudioDevice* device,
-    SampleSource* source,
+    const AudioDevicePtr& device,
+    const SampleSourcePtr& source,
     bool streaming = false)
   {
-    return hidden::AdrOpenSound(device, source, streaming);
+    return hidden::AdrOpenSound(device.get(), source.get(), streaming);
   }
 
   /**
@@ -898,7 +898,7 @@ namespace audiere {
    * created via OpenSampleSource(const char*).
    */
   inline OutputStream* OpenSound(
-    AudioDevice* device,
+    const AudioDevicePtr& device,
     const char* filename,
     bool streaming = false)
   {
@@ -910,8 +910,8 @@ namespace audiere {
    * created via OpenSampleSource(File* file).
    */
   inline OutputStream* OpenSound(
-    AudioDevice* device,
-    File* file,
+    const AudioDevicePtr& device,
+    const FilePtr& file,
     bool streaming = false)
   {
     return OpenSound(device, OpenSampleSource(file), streaming);
@@ -955,8 +955,8 @@ namespace audiere {
    *
    * @return  new sample buffer if success, 0 otherwise
    */
-  inline SampleBuffer* CreateSampleBuffer(SampleSource* source) {
-    return hidden::AdrCreateSampleBufferFromSource(source);
+  inline SampleBuffer* CreateSampleBuffer(const SampleSourcePtr& source) {
+    return hidden::AdrCreateSampleBufferFromSource(source.get());
   }
 
   /**
@@ -974,11 +974,11 @@ namespace audiere {
    * @return  new SoundEffect object if successful, 0 otherwise
    */
   inline SoundEffect* OpenSoundEffect(
-    AudioDevice* device,
-    SampleSource* source,
+    const AudioDevicePtr& device,
+    const SampleSourcePtr& source,
     SoundEffectType type)
   {
-    return hidden::AdrOpenSoundEffect(device, source, type);
+    return hidden::AdrOpenSoundEffect(device.get(), source.get(), type);
   }
 
   /**
@@ -986,7 +986,7 @@ namespace audiere {
    * SoundEffectType) with a sample source created from the filename.
    */
   inline SoundEffect* OpenSoundEffect(
-    AudioDevice* device,
+    const AudioDevicePtr& device,
     const char* filename,
     SoundEffectType type)
   {
@@ -998,8 +998,8 @@ namespace audiere {
    * SoundEffectType) with a sample source created from the file.
    */
   inline SoundEffect* OpenSoundEffect(
-    AudioDevice* device,
-    File* file,
+    const AudioDevicePtr& device,
+    const FilePtr& file,
     SoundEffectType type)
   {
     return OpenSoundEffect(device, OpenSampleSource(file), type);

@@ -1,3 +1,10 @@
+2003.03.11
+
+  you can pass smart pointers straight into API calls, for example:
+    AudioDevicePtr device = OpenDevice();
+    OutputStreamPtr sound = OpenSound(device, "blah.wav");
+    sound->play();
+
 2003.02.17
 
   added support for MemoryFile objects

@@ -35,7 +35,7 @@ Now that we have a device, we can actually open and play sounds.
    * Audiere tries to load the sound into memory.  If it can't do
    * that, it will just stream it.
    */
-  OutputStreamPtr sound(OpenSound(device.get(), "effect.wav", false));
+  OutputStreamPtr sound(OpenSound(device, "effect.wav", false));
   if (!sound) {
     // failure
   }
@@ -44,7 +44,7 @@ Now that we have a device, we can actually open and play sounds.
    * Since this file is background music, we don't need to load the
    * whole thing into memory.
    */
-  OutputStreamPtr stream(OpenSound(device.get(), "music.ogg", true));
+  OutputStreamPtr stream(OpenSound(device, "music.ogg", true));
   if (!stream) {
     // failure
   }

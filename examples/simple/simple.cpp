@@ -46,7 +46,7 @@ int main(int argc, const char** argv) {
 
   cerr << "opened device" << endl;
 
-  OutputStreamPtr sound = OpenSound(device.get(), argv[1]);
+  OutputStreamPtr sound = OpenSound(device, argv[1]);
   if (!sound) {
     cerr << "OpenSound() failed" << endl;
     return EXIT_FAILURE;

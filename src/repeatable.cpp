@@ -12,7 +12,7 @@ namespace audiere {
     int channel_count, sample_rate;
     SampleFormat sample_format;
     m_source->getFormat(channel_count, sample_rate, sample_format);
-    m_sample_size = channel_count * GetSampleSize(sample_format);
+    m_frame_size = channel_count * GetSampleSize(sample_format);
   }
 
 
@@ -61,7 +61,7 @@ namespace audiere {
         }
 
         samples_left -= samples_read;
-        out += samples_read * m_sample_size;
+        out += samples_read * m_frame_size;
       }
 
       return frame_count - samples_left;

@@ -30,7 +30,7 @@ namespace audiere {
   private:
     bool m_repeat;
     RefPtr<SampleSource> m_source;
-    int m_sample_size;  // convenience
+    int m_frame_size;  // convenience
   };
 
 }

@@ -181,6 +181,8 @@ namespace audiere {
   DSAudioDevice::update() {
     ADR_GUARD("DSAudioDevice::Update");
 
+    Lock l__(this);
+
     // enumerate all open streams
     StreamList::iterator i = m_open_streams.begin();
     while (i != m_open_streams.end()) {
@@ -196,10 +198,13 @@ namespace audiere {
   DSAudioDevice::openStream(SampleSource* source) {
     ADR_GUARD("DSAudioDevice::OpenStream");
 
-    int channel_count, sample_rate, bits_per_sample;
-    source->getFormat(channel_count, sample_rate, bits_per_sample);
+    Lock l__(this);
 
-    int sample_size = channel_count * bits_per_sample / 8;
+    int channel_count, sample_rate;
+    SampleFormat sample_format;
+    source->getFormat(channel_count, sample_rate, sample_format);
+
+    int sample_size = channel_count * GetBytesPerSample(sample_format);
 
     // calculate an ideal buffer size
     int buffer_length = sample_rate * m_buffer_length / 1000;
@@ -212,7 +217,7 @@ namespace audiere {
     wfx.nSamplesPerSec  = sample_rate;
     wfx.nAvgBytesPerSec = sample_rate * sample_size;
     wfx.nBlockAlign     = sample_size;
-    wfx.wBitsPerSample  = bits_per_sample;
+    wfx.wBitsPerSample  = GetBytesPerSample(sample_format) * 8;
     wfx.cbSize          = sizeof(wfx);
 
     // define the DirectSound buffer type
@@ -251,6 +256,8 @@ namespace audiere {
 
   void
   DSAudioDevice::RemoveStream(DSOutputStream* stream) {
+    Lock l__(this);
+
     m_open_streams.remove(stream);
   }
 

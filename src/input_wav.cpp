@@ -30,9 +30,9 @@ namespace audiere {
   WAVInputStream::WAVInputStream() {
     m_file = 0;
 
-    m_channel_count   = 0;
-    m_bits_per_sample = 0;
-    m_sample_rate     = 0;
+    m_channel_count = 0;
+    m_sample_rate   = 0;
+    m_sample_format = SF_U8;  // reasonable default?
 
     m_data_chunk_location = 0;
     m_data_chunk_length   = 0;
@@ -52,9 +52,9 @@ namespace audiere {
     m_file = file;
 
     // read the RIFF header
-    char    riff_id[4];
-    u32 riff_length;
-    char    riff_datatype[4];
+    char riff_id[4];
+    u32  riff_length;
+    char riff_datatype[4];
 
     u32 size = 0;
     size += file->read(riff_id, 4);
@@ -86,11 +86,11 @@ namespace audiere {
   WAVInputStream::getFormat(
     int& channel_count,
     int& sample_rate,
-    int& bits_per_sample)
+    SampleFormat& sample_format)
   {
-    channel_count   = m_channel_count;
-    sample_rate     = m_sample_rate;
-    bits_per_sample = m_bits_per_sample;
+    channel_count = m_channel_count;
+    sample_rate   = m_sample_rate;
+    sample_format = m_sample_format;
   }
 
 
@@ -101,7 +101,8 @@ namespace audiere {
     }
 
     const int samples_to_read = Min(sample_count, m_samples_left_in_chunk);
-    const int sample_size = m_channel_count * m_bits_per_sample / 8;
+    const int sample_size =
+      m_channel_count * GetBytesPerSample(m_sample_format);
     const int bytes_to_read = samples_to_read * sample_size;
   
     const int read = m_file->read(samples, bytes_to_read);
@@ -133,8 +134,8 @@ namespace audiere {
 
     // search for a format chunk
     for (;;) {
-      char    chunk_id[4];
-      u32 chunk_length;
+      char chunk_id[4];
+      u32  chunk_length;
 
       int size = m_file->read(chunk_id, 4);
       size    += m_file->read(&chunk_length, 4);
@@ -181,10 +182,18 @@ namespace audiere {
           return false;
         }
 
-        // set format
-        m_channel_count   = channel_count;
-        m_bits_per_sample = bits_per_sample;
-        m_sample_rate     = samples_per_second;
+        // figure out the sample format
+        if (bits_per_sample == 8) {
+          m_sample_format = SF_U8;
+        } else if (bits_per_sample == 16) {
+          m_sample_format = SF_S16_LE;
+        } else {
+          return false;
+        }
+
+        // store the other important .wav attributes
+        m_channel_count = channel_count;
+        m_sample_rate   = samples_per_second;
         return true;
 
       } else {
@@ -223,7 +232,7 @@ namespace audiere {
       if (memcmp(chunk_id, "data", 4) == 0) {
 
         // calculate the sample size so we can truncate the data chunk
-        int sample_size = m_channel_count * m_bits_per_sample / 8;
+        int sample_size = m_channel_count * GetBytesPerSample(m_sample_format);
 
         m_data_chunk_location   = m_file->tell();
         m_data_chunk_length     = chunk_length / sample_size;

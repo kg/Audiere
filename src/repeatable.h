@@ -19,7 +19,7 @@ namespace audiere {
     void getFormat(
       int& channel_count,
       int& sample_rate,
-      int& bits_per_sample);
+      SampleFormat& bits_per_sample);
 
     int read(int sample_count, void* samples);
     void reset();

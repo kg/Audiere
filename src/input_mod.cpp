@@ -207,11 +207,11 @@ namespace audiere {
   MODInputStream::getFormat(
     int& channel_count,
     int& sample_rate,
-    int& bits_per_sample)
+    SampleFormat& sample_format)
   {
-    channel_count   = 2;
-    sample_rate     = 44100;
-    bits_per_sample = 16;
+    channel_count = 2;
+    sample_rate   = 44100;
+    sample_format = SF_S16_LE;
   }
 
 

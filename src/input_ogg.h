@@ -19,7 +19,7 @@ namespace audiere {
     void getFormat(
       int& channel_count,
       int& sample_rate,
-      int& bits_per_sample);
+      SampleFormat& sample_format);
     int read(int sample_count, void* samples);
     void reset();
 
@@ -33,11 +33,10 @@ namespace audiere {
     File* m_file;
 
     OggVorbis_File m_vorbis_file;
-  //  bool           m_eof;
 
     int m_channel_count;
     int m_sample_rate;
-    int m_bits_per_sample;
+    SampleFormat m_sample_format;
   };
 
 }

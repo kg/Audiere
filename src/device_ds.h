@@ -14,13 +14,17 @@
 #include <list>
 #include "audiere.h"
 #include "internal.h"
+#include "threads.h"
 
 
 namespace audiere {
 
   class DSOutputStream;
 
-  class DSAudioDevice : public RefCountedImplementation<AudioDevice> {
+  class DSAudioDevice
+    : public RefCountedImplementation<AudioDevice>
+    , public Synchronized
+  {
   public:
     DSAudioDevice();
     ~DSAudioDevice();
@@ -88,7 +92,7 @@ namespace audiere {
     int m_sample_size;  // convenience: bits per sample * channel count / 8
 
     int m_volume;
-    BYTE* m_last_sample; // the last sample read (used for clickless silence)
+    ::BYTE* m_last_sample; // the last sample read (used for clickless silence)
 
     friend class DSAudioDevice;
   };

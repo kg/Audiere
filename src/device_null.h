@@ -5,6 +5,7 @@
 #include <set>
 #include "audiere.h"
 #include "internal.h"
+#include "threads.h"
 #include "types.h"
 
 
@@ -12,7 +13,10 @@ namespace audiere {
 
   class NullOutputStream;
 
-  class NullAudioDevice : public RefCountedImplementation<AudioDevice> {
+  class NullAudioDevice
+    : public RefCountedImplementation<AudioDevice>
+    , public Synchronized
+  {
   public:
     NullAudioDevice();
     ~NullAudioDevice();
@@ -51,9 +55,9 @@ namespace audiere {
     NullAudioDevice* m_device;
                           
     SampleSource* m_source;
-    int m_channel_count;    //
-    int m_sample_rate;      // cached stream format
-    int m_bits_per_sample;  //
+    int m_channel_count;           //
+    int m_sample_rate;             // cached stream format
+    SampleFormat m_sample_format;  //
 
     bool m_is_playing;
     int m_volume;

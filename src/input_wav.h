@@ -19,7 +19,7 @@ namespace audiere {
     void getFormat(
       int& channel_count,
       int& sample_rate,
-      int& bits_per_sample);
+      SampleFormat& sample_format);
     int read(int sample_count, void* samples);
     void reset();
 
@@ -33,8 +33,8 @@ namespace audiere {
 
     // from format chunk
     int m_channel_count;
-    int m_bits_per_sample;
     int m_sample_rate;
+    SampleFormat m_sample_format;
 
     // from data chunk
     int m_data_chunk_location; // bytes

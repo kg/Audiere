@@ -1,4 +1,5 @@
 #include "repeatable.h"
+#include "utility.h"
 
 
 namespace audiere {
@@ -11,9 +12,10 @@ namespace audiere {
     m_source = source;
 
     // grab the sample size in bytes
-    int channel_count, sample_rate, bits_per_sample;
-    m_source->getFormat(channel_count, sample_rate, bits_per_sample);
-    m_sample_size = channel_count * bits_per_sample / 8;
+    int channel_count, sample_rate;
+    SampleFormat sample_format;
+    m_source->getFormat(channel_count, sample_rate, sample_format);
+    m_sample_size = channel_count * GetBytesPerSample(sample_format);
   }
 
 
@@ -38,9 +40,9 @@ namespace audiere {
   RepeatableStream::getFormat(
     int& channel_count,
     int& sample_rate,
-    int& bits_per_sample)
+    SampleFormat& sample_format)
   {
-    m_source->getFormat(channel_count, sample_rate, bits_per_sample);
+    m_source->getFormat(channel_count, sample_rate, sample_format);
   }
 
 

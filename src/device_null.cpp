@@ -30,6 +30,8 @@ namespace audiere {
 
   void
   NullAudioDevice::update() {
+    Lock l__(this);
+
     /*
       UGH.  We can't use VC6 here because you can't use mem_fun with void
       functions.  :(
@@ -50,6 +52,8 @@ namespace audiere {
 
   OutputStream*
   NullAudioDevice::openStream(SampleSource* source) {
+    Lock l__(this);
+
     NullOutputStream* stream = new NullOutputStream(this, source);
     m_streams.insert(stream);
     return stream;
@@ -58,6 +62,8 @@ namespace audiere {
 
   void
   NullAudioDevice::removeStream(NullOutputStream* stream) {
+    Lock l__(this);
+
     m_streams.erase(stream);
   }
 
@@ -72,7 +78,7 @@ namespace audiere {
   , m_last_update(0)
   {
     m_device->ref();
-    m_source->getFormat(m_channel_count, m_sample_rate, m_bits_per_sample);
+    m_source->getFormat(m_channel_count, m_sample_rate, m_sample_format);
   }
 
 
@@ -171,8 +177,10 @@ namespace audiere {
   NullOutputStream::dummyRead(int samples_to_read) {
     int total = 0;  // number of samples read so far
 
+    const int bytes_per_sample = GetBytesPerSample(m_sample_format);
+
     // read samples into dummy buffer, counting the number we actually read
-    u8* dummy = new u8[1024 * m_channel_count * m_bits_per_sample / 8];
+    u8* dummy = new u8[1024 * m_channel_count * bytes_per_sample];
     while (samples_to_read > 0) {
       int read = Min(1024, samples_to_read);
       int actual_read = m_source->read(read, dummy);

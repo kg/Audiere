@@ -74,12 +74,19 @@ namespace audiere {
   };
 
 
+  enum SampleFormat {
+    SF_U8,
+    SF_S16_LE,
+    SF_S16_BE,
+  };
+
+
   class SampleSource : public DLLInterface {
   public:
     virtual void getFormat(
       int& channel_count,
       int& sample_rate,
-      int& bits_per_sample) = 0;
+      SampleFormat& sample_format) = 0;
     virtual int read(int sample_count, void* buffer) = 0;
     virtual void reset() = 0;
 

@@ -6,23 +6,15 @@
 
 namespace audiere {
 
-  struct OGG_INTERNAL {
-    OggVorbis_File vf;
-    u32 location;
-    bool eof;
-  };
-
-
   typedef ogg_int64_t int64_t;
 
 
   OGGInputStream::OGGInputStream() {
     m_file = 0;
-  //  m_eof  = false;
 
-    m_channel_count   = 0;
-    m_sample_rate     = 0;
-    m_bits_per_sample = 0;
+    m_channel_count = 0;
+    m_sample_rate   = 0;
+    m_sample_format = SF_S16_LE;
   }
 
 
@@ -63,9 +55,9 @@ namespace audiere {
       return false;
     }
 
-    m_channel_count   = vi->channels;
-    m_bits_per_sample = 16;
-    m_sample_rate     = vi->rate;
+    m_channel_count = vi->channels;
+    m_sample_rate   = vi->rate;
+    m_sample_format = SF_S16_LE; // see constructor
 
     return true;
   }
@@ -75,17 +67,17 @@ namespace audiere {
   OGGInputStream::getFormat(
     int& channel_count,
     int& sample_rate,
-    int& bits_per_sample)
+    SampleFormat& sample_format)
   {
-    channel_count   = m_channel_count;
-    sample_rate     = m_sample_rate;
-    bits_per_sample = m_bits_per_sample;
+    channel_count = m_channel_count;
+    sample_rate   = m_sample_rate;
+    sample_format = m_sample_format;
   }
 
 
   int
   OGGInputStream::read(int sample_count, void* samples) {
-    int sample_size = m_bits_per_sample * m_channel_count / 8;
+    int sample_size = m_channel_count * GetBytesPerSample(m_sample_format);
 
     // if we're at the end of the file, we have no more samples
   //  if (m_eof) {

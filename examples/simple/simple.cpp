@@ -24,25 +24,34 @@ inline void sleepSecond() {
 #endif
 
 
-int main(int argc, char** argv) {
+int main(int argc, const char** argv) {
 
-  if (argc != 2) {
-    cerr << "usage: simple <filename>" << endl;
+  const char* args[] = { "", "/desktop/Midworld.ogg", "null" };
+  argc = 3;
+  argv = args;
+
+  if (argc != 2 && argc != 3) {
+    cerr << "usage: simple <filename> [<device>]" << endl;
     return EXIT_FAILURE;
   }
 
   cerr << "initializing..." << endl;
 
-  RefPtr<AudioDevice> device(OpenDevice());
-  if (!device.get()) {
+  const char* device_name = "";
+  if (argc == 3) {
+    device_name = argv[2];
+  }
+
+  RefPtr<AudioDevice> device(OpenDevice(device_name));
+  if (!device) {
     cerr << "OpenDevice() failed" << endl;
     return EXIT_FAILURE;
   }
 
-  cerr << "created context" << endl;
+  cerr << "opened device" << endl;
 
   RefPtr<OutputStream> sound(OpenSound(device.get(), argv[1]));
-  if (!sound.get()) {
+  if (!sound) {
     cerr << "OpenSound() failed" << endl;
     return EXIT_FAILURE;
   }

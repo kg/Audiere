@@ -39,6 +39,7 @@ public:
 
     int slider_max = (m_stream->isSeekable() ? m_stream->getLength() : 1);
     
+    m_playing_label = new wxStaticText(this, -1, "Stopped");
     m_repeating = new wxCheckBox(this, STREAM_REPEAT, "Repeating");
     m_volume_pan_label = new wxStaticText(this, -1, "Volume - Pan");
     m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
@@ -56,6 +57,7 @@ public:
     sizer->Add(
       new wxButton(this, STREAM_RESET, "Reset"),
       1, wxEXPAND | wxALL, 4);
+    sizer->Add(m_playing_label, 1, wxEXPAND | wxALL, 4);
     sizer->Add(m_repeating, 1, wxEXPAND | wxALL, 4);
     sizer->Add(m_volume_pan_label, 1, wxEXPAND | wxALL, 4);
     sizer->Add(m_volume, 1, wxEXPAND | wxALL, 4);
@@ -116,11 +118,14 @@ public:
     m_stream->setPosition(m_pos->GetValue());
   }
 
-  void OnUpdatePosition() {
+  void OnUpdateStatus() {
     if (m_stream->isSeekable()) {
       m_pos->SetValue(m_stream->getPosition());
     }
     UpdateLengthPosLabel();
+
+    // update the playing label
+    m_playing_label->SetLabel(m_stream->isPlaying() ? "Playing" : "Stopped");
   }
 
   void UpdateVolumePanLabel() {
@@ -150,6 +155,7 @@ private:
 
   wxTimer* m_timer;
 
+  wxStaticText* m_playing_label;
   wxCheckBox*   m_repeating;
   wxStaticText* m_volume_pan_label;
   wxSlider*     m_volume;
@@ -172,7 +178,7 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
   EVT_COMMAND_SCROLL(STREAM_PAN,    StreamFrame::OnChangePan)
   EVT_COMMAND_SCROLL(STREAM_POS,    StreamFrame::OnChangePos)
 
-  EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdatePosition)
+  EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdateStatus)
 END_EVENT_TABLE()
 
 

@@ -105,9 +105,13 @@ namespace audiere {
     IDirectSoundBuffer* m_buffer;
     int m_buffer_length;  // in samples
     int m_next_read;  // offset (in samples) where we will read next
+    int m_last_play;  // offset (in samples) where the play cursor was
 
     RepeatableStream* m_source;
-    int m_sample_size;  // convenience: bits per sample * channel count / 8
+    int m_sample_size;  // convenience: bytes per sample * channel count
+
+    int m_total_read;    // total number of samples read from the stream
+    int m_total_written; // total number of samples written 
 
     float m_volume;
     float m_pan;

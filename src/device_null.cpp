@@ -91,6 +91,7 @@ namespace audiere {
   , m_source(new RepeatableStream(source, false))
   , m_is_playing(false)
   , m_volume(1)
+  , m_pan(0)
   , m_last_update(0)
   {
     m_device->ref();

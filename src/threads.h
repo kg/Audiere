@@ -45,13 +45,13 @@ namespace audiere {
 
     void lock() {
    
-      ADR_LOG("--> Trying to lock");
+      //ADR_LOG("--> Trying to lock");
       AI_EnterCriticalSection(m_cs);
-      ADR_LOG("-->:: LOCKED ::");
+      //ADR_LOG("-->:: LOCKED ::");
     }
 
     void unlock() {
-      ADR_LOG("<-- Unlocking...");
+      //ADR_LOG("<-- Unlocking...");
       AI_LeaveCriticalSection(m_cs);
     }
 

@@ -188,7 +188,7 @@ namespace audiere {
 
   void
   DSAudioDevice::update() {
-    ADR_GUARD("DSAudioDevice::Update");
+    ADR_GUARD("DSAudioDevice::update");
 
     Lock l__(this);
 
@@ -205,7 +205,7 @@ namespace audiere {
 
   OutputStream*
   DSAudioDevice::openStream(SampleSource* source) {
-    ADR_GUARD("DSAudioDevice::OpenStream");
+    ADR_GUARD("DSAudioDevice::openStream");
 
     Lock l__(this);
 
@@ -295,15 +295,21 @@ namespace audiere {
     m_device->ref();
 
     m_buffer        = buffer;
-    m_next_read     = 0;
     m_buffer_length = buffer_length;
+    m_next_read     = 0;
+    m_last_play     = 0;
 
     m_source = new RepeatableStream(source, false);
 
     m_sample_size = sample_size;
+
+    m_total_read    = 0;
+    m_total_written = 0;
+
     m_last_sample = new BYTE[sample_size];
 
     setVolume(1);
+    setPan(0);
 
     // fill the buffer with data
     fillStream();
@@ -326,19 +332,21 @@ namespace audiere {
   
   void
   DSOutputStream::play() {
+    ADR_GUARD("DSOutputStream::play");
     m_buffer->Play(0, 0, DSBPLAY_LOOPING);
   }
 
 
   void
   DSOutputStream::stop() {
+    ADR_GUARD("DSOutputStream::stop");
     m_buffer->Stop();
   }
 
 
   void
   DSOutputStream::reset() {
-    ADR_GUARD("DSOutputStream::Reset");
+    ADR_GUARD("DSOutputStream::reset");
 
     // figure out if we're playing or not
     bool is_playing = isPlaying();
@@ -349,7 +357,11 @@ namespace audiere {
     }
 
     m_buffer->SetCurrentPosition(0);
+    m_last_play = 0;
+
     m_source->reset();
+    m_total_read = 0;
+    m_total_written = 0;
     m_next_read = 0;
     fillStream();
 
@@ -480,18 +492,17 @@ namespace audiere {
 
   void
   DSOutputStream::update() {
-    ADR_GUARD("DSOutputStream::Update");
-
     // if it's not playing, don't do anything
     if (!isPlaying()) {
       return;
     }
 
+    ADR_GUARD("DSOutputStream::update");
+
     /* this method reads more PCM data into the stream if it is required */
 
     // read the stream's play and write cursors
-    DWORD play;
-    DWORD write;
+    DWORD play, write;
     HRESULT result = m_buffer->GetCurrentPosition(&play, &write);
     if (FAILED(result)) {
       ADR_LOG("GetCurrentPosition failed");
@@ -500,13 +511,23 @@ namespace audiere {
 
     ADR_IF_DEBUG {
       char str[160];
-      sprintf(str, "play: %d  write: %d", play, write);
+      sprintf(str,
+        "play: %d  write: %d  nextread: %d",
+        play, write, m_next_read);
       ADR_LOG(str);
     }
 
     // deal with them in samples, not bytes
     play  /= m_sample_size;
     write /= m_sample_size;
+
+    // how many samples have we written since the last update?
+    if (play < m_last_play) {
+      m_total_written += play + m_buffer_length - m_last_play;
+    } else {
+      m_total_written += play - m_last_play;
+    }
+    m_last_play = play;
 
     // read from |m_next_read| to |play|
     int read_length = play - m_next_read;
@@ -526,12 +547,9 @@ namespace audiere {
     result = m_buffer->Lock(
       m_next_read * m_sample_size,
       read_length * m_sample_size,
-      &buffer1,
-      &buffer1_length,
-      &buffer2,
-      &buffer2_length,
-      0
-    );
+      &buffer1, &buffer1_length,
+      &buffer2, &buffer2_length,
+      0);
     if (FAILED(result)) {
       ADR_LOG("Lock() failed!");
       return;
@@ -563,17 +581,18 @@ namespace audiere {
     m_buffer->Unlock(buffer1, buffer1_length, buffer2, buffer2_length);
 
   
-    // Should we stop?  If we didn't read any data, and if the read cursor
-    // is between the play and the write cursors, we should.
-    if (read == 0 && isBetween(m_next_read, play, write)) {
-
+    // Should we stop?
+    if (m_total_written > m_total_read) {
       ADR_LOG("Stopping stream!");
 
       m_buffer->Stop();
       m_buffer->SetCurrentPosition(0);
+      m_last_play = 0;
 
       m_source->reset();
 
+      m_total_written = 0;
+      m_total_read = 0;
       m_next_read = 0;
       fillStream();
 
@@ -585,7 +604,7 @@ namespace audiere {
   // read as much as possible from the stream source, fill the rest with 0
   int
   DSOutputStream::streamRead(int sample_count, void* samples) {
-    ADR_GUARD("StreamRead");
+    ADR_GUARD("streamRead");
 
     // try to read from the stream
     int samples_read = m_source->read(sample_count, samples);
@@ -606,6 +625,7 @@ namespace audiere {
       out += m_sample_size;
     }
 
+    m_total_read += samples_read;
     return samples_read;
   }
 

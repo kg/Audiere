@@ -265,7 +265,7 @@ namespace audiere {
     ADR_GUARD("DSOutputStream::DSOutputStream");
 
     m_device = device;
-    m_device->addRef();
+    m_device->ref();
 
     m_buffer        = buffer;
     m_next_read     = 0;
@@ -287,7 +287,7 @@ namespace audiere {
     ADR_GUARD("DSOutputStream::~DSOutputStream");
 
     m_device->RemoveStream(this);
-    delete m_device;
+    m_device->unref();
 
     // destroy the sound buffer interface
     m_buffer->Release();

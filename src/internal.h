@@ -17,14 +17,18 @@ namespace audiere {
       m_ref_count = 1;
     }
 
-    void addRef() {
+    void ref() {
       ++m_ref_count;
     }
 
-    void destroy() {
+    void unref() {
       if (--m_ref_count <= 0) {
         delete this;
       }
+    }
+
+    void destroy() {
+      unref();
     }
 
   private:

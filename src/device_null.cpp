@@ -71,14 +71,14 @@ namespace audiere {
   , m_volume(MaximumVolume)
   , m_last_update(0)
   {
-    m_device->addRef();
+    m_device->ref();
     m_source->getFormat(m_channel_count, m_sample_rate, m_bits_per_sample);
   }
 
 
   NullOutputStream::~NullOutputStream() {
     m_device->removeStream(this);
-    delete m_device;
+    m_device->unref();
   }
 
 

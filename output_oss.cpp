@@ -101,7 +101,7 @@ OSSOutputContext::Update()
   while (sample_count > 0) {
     int transfer_count = std::min(sample_count, BUFFER_SIZE);
 
-    m_mixer->Read(buffer, transfer_count);
+    m_mixer.Read(buffer, transfer_count);
     write(m_output_device, buffer, transfer_count * 4);
 
     sample_count -= transfer_count;
@@ -115,7 +115,7 @@ OSSOutputContext::Update()
 IOutputStream*
 OSSOutputContext::OpenStream(ISampleSource* source)
 {
-  return new OSSOutputStream(m_mixer.get(), source);
+  return new OSSOutputStream(&m_mixer, source);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

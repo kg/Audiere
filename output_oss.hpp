@@ -20,7 +20,7 @@ public:
 private:
   int m_output_device;
 
-  std::auto_ptr<Mixer> m_mixer;
+  Mixer m_mixer;
 };
 
 

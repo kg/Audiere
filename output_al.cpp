@@ -1,3 +1,5 @@
+#ifdef WITH_OPENAL
+
 #include <limits.h>
 #include "output_al.hpp"
 #include "threads.hpp"
@@ -387,3 +389,5 @@ ALOutputStream::GetVolume()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+#endif // WITH_OPENAL

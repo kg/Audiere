@@ -8,9 +8,12 @@ libaudiere_la_SOURCES = \
 	audiere.cpp \
 	file_ansi.cpp \
 	file.hpp \
+	mixer.cpp \
+	mixer.hpp \
 	output.cpp \
 	output.hpp \
-	@AL_SOURCES@ \
+	output_al.cpp \
+	output_al.hpp \
 	output_oss.cpp \
 	output_oss.hpp \
 	output_null.cpp \

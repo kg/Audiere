@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\src\mpglib" /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "LAYER1" /D "LAYER2" /D "LAYER3" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\src\mpglib" /I "..\..\src\mikmod\mmio" /I "..\..\src\mikmod\mikmod" /I "..\..\src\libogg-1.0\include" /I "..\..\src\libvorbis-1.0\include" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "LAYER1" /D "LAYER2" /D "LAYER3" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -179,6 +179,14 @@ SOURCE=..\..\src\input_mod.cpp
 # Begin Source File
 
 SOURCE=..\..\src\input_mod.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\input_mp3.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\input_mp3.h
 # End Source File
 # Begin Source File
 
@@ -743,6 +751,58 @@ SOURCE="..\..\src\libvorbis-1.0\lib\window.c"
 # Begin Source File
 
 SOURCE="..\..\src\libvorbis-1.0\lib\window.h"
+# End Source File
+# End Group
+# Begin Group "mpglib"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\common.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\dct64_i386.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\decode_i386.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\huffman.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\interface.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\l2tables.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\layer1.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\layer2.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\layer3.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\mpg123.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\mpglib.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\mpglib\tabinit.c
 # End Source File
 # End Group
 # End Target

@@ -5,13 +5,19 @@ die() {
     exit 1
 }
 
+vc6die() {
+    echo "Error building audiere.dsw"
+    echo "See build log: vc6-build.log"
+    exit 1
+}
+
 echo
 echo "Building VC6 workspace..."
 
-msdev vc6/audiere.dsw /MAKE ALL /OUT vc6-build.log || die
+msdev vc6/audiere.dsw /MAKE ALL /OUT vc6-build.log || vc6die
 
 echo
-echo "Build log written to vc6-build.log"
+echo "Build complete"
 echo
 
 NAME=audiere-1.9.3-win32

@@ -2,6 +2,7 @@ EXTRA_DIST = \
 	architecture.txt \
 	changelog.txt \
 	cvs.txt \
+	dependencies.txt \
 	faq.txt \
 	license.txt \
 	readme.txt \

@@ -7,7 +7,8 @@ How do I install it?
 --
 
 Into the Windows distribution of Python 2.2:
-  Copy audiere.dll and audiere.pyd into Python22/DLLs.
+  Copy audiere.dll and audiere.pyd into your Python22 directory (or
+  perhaps Python22/DLLs, depending on your system).
 
 
 How do I use it?

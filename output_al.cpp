@@ -1,5 +1,6 @@
 #include <limits.h>
 #include "output_al.hpp"
+#include "threads.hpp"
 
 
 static const int BUFFER_COUNT = 4;
@@ -260,6 +261,8 @@ ALOutputStream::Update()
   }
 
   delete[] sample_buffer;
+
+  AI_Sleep(50);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

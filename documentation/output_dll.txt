@@ -110,7 +110,8 @@ void AO_Update(void)
 
   Asks the driver to update its state and output more data if necessary.
 
-  Should be called as many times a second as possible.
+  Audiere will call this function over and over again.  Therefore, AO_Update
+  is responsible for throttling itself (via Sleep() or sleep/usleep).
 
 ------------------------------------------------------------------------------
 

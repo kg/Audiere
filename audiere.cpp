@@ -199,7 +199,6 @@ void ThreadRoutine(void* opaque)
     AI_EnterCriticalSection(context->cs);
     context->output_context->Update();
     AI_LeaveCriticalSection(context->cs);
-    AI_Sleep(50);
 
   }
 

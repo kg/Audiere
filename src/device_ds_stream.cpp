@@ -209,7 +209,7 @@ namespace audiere {
     SYNCHRONIZED(this);
     int pos = m_source->getPosition() - (m_total_read - m_total_written);
     if (pos < 0) {
-      pos += m_source->getLength();
+      pos += m_buffer_length;
     }
     return pos;
   }

@@ -3,6 +3,7 @@
 
 
 #include <map>
+#include "config.h"
 
 
 class ISampleSource;  // #include "output.hpp"
@@ -21,7 +22,7 @@ public:
   void SetVolume(ISampleSource* source, int volume);
 
 private:
-  char m_last_sample[4];  // make this an int someday?
+  //  char m_last_sample[4];  // make this an int someday?
 
   struct SourceAttributes {
     // mutable (set by external calls)
@@ -29,7 +30,6 @@ private:
     int volume;
 
     // mutable, internal (updated by mixing process)
-    int something;
 
     // immutable, set when source is added to the list
     int channel_count;
@@ -37,7 +37,16 @@ private:
     int bits_per_sample;
   };
 
-  std::map<ISampleSource*, SourceAttributes> m_sources;
+  typedef std::map<ISampleSource*, SourceAttributes> SourceMap;
+
+private:
+  void Read(ISampleSource* source,
+	    const SourceAttributes& attr,
+	    int to_mix,
+	    adr_u16* buffer);
+
+private:
+  SourceMap m_sources;
 };
 
 

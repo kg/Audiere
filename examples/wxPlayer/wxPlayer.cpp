@@ -1,4 +1,8 @@
+// we need to include windows.h to use Windows common controls without
+// crashing?  what the heck...
+#ifdef WIN32
 #include <windows.h>
+#endif
 
 #include <vector>
 #include <wx/wx.h>

@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "audiere.h"
 #include "mixer.h"
-#include "resampler.hpp"
+#include "resampler.h"
 
 
 namespace audiere {
@@ -19,11 +19,11 @@ namespace audiere {
   Mixer::getFormat(
     int& channel_count,
     int& sample_rate,
-    int& bits_per_sample)
+    SampleFormat& sample_format)
   {
     channel_count = 2;
     sample_rate = 44100;
-    bits_per_sample = 16;
+    sample_format = SF_S16_LE;
   }
 
 
@@ -46,11 +46,11 @@ namespace audiere {
     static const int BUFFER_SIZE = 4096;
 
     // create buffers in which to mix
-    adr_s32 mix_buffer[BUFFER_SIZE];
-    adr_s16 stream_buffer[BUFFER_SIZE * 2];
+    s32 mix_buffer[BUFFER_SIZE];
+    s16 stream_buffer[BUFFER_SIZE * 2];
     std::fill(mix_buffer, mix_buffer + BUFFER_SIZE, 0);
 
-    adr_s16* out = (adr_s16*)samples;
+    s16* out = (s16*)samples;
     int left = sample_count;
     while (left > 0) {
       int playing = 0;
@@ -59,7 +59,7 @@ namespace audiere {
       SourceMap::iterator s = m_sources.begin();
       for (; s != m_sources.end(); ++s) {
         if (s->second.is_playing) {
-          Read(s->first, s->second, to_mix, stream_buffer);
+          read(s->first, s->second, to_mix, stream_buffer);
           for (int i = 0; i < to_mix * 2; ++i) {
             mix_buffer[i] += stream_buffer[i];
           }
@@ -82,8 +82,7 @@ namespace audiere {
 
 
   void
-  Mixer::Reset() {
-    return true;
+  Mixer::reset() {
   }
 
 
@@ -95,7 +94,7 @@ namespace audiere {
     sa.last_l = 0;
     sa.last_r = 0;
     sa.is_playing = true;
-    sa.volume = ADR_VOLUME_MAX;
+    sa.volume = OutputStream::MaximumVolume;
 
     m_sources[source] = sa;
   }
@@ -109,25 +108,25 @@ namespace audiere {
 
 
   bool
-  Mixer::isPlaying(ISampleSource* source) {
+  Mixer::isPlaying(SampleSource* source) {
     return m_sources[source].is_playing;
   }
 
 
   void
-  Mixer::setPlaying(ISampleSource* source, bool is_playing) {
+  Mixer::setPlaying(SampleSource* source, bool is_playing) {
     m_sources[source].is_playing = is_playing;
   }
 
 
   int
-  Mixer::getVolume(ISampleSource* source) {
+  Mixer::getVolume(SampleSource* source) {
     return m_sources[source].volume;
   }
 
 
   void
-  Mixer::setVolume(ISampleSource* source, int volume) {
+  Mixer::setVolume(SampleSource* source, int volume) {
     m_sources[source].volume = volume;
   }
 
@@ -137,19 +136,19 @@ namespace audiere {
     SampleSource* source,
     SourceAttributes& attr,
     int to_mix,
-    adr_s16* buffer)  // size = to_mix * 4
+    s16* buffer)  // size = to_mix * 4
   {
-    unsigned read = attr.resampler->Read(to_mix, buffer);
+    unsigned read = attr.resampler->read(to_mix, buffer);
 
     if (read == 0) {
       attr.is_playing = false;
     }
 
     // grab them early so we don't lose optimizations due to aliasing
-    adr_s16 l = attr.last_l;
-    adr_s16 r = attr.last_r;
+    s16 l = attr.last_l;
+    s16 r = attr.last_r;
 
-    adr_s16* out = buffer;
+    s16* out = buffer;
     for (int i = 0; i < read; ++i) {
       *out = *out * attr.volume / 255;
       ++out;

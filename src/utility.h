@@ -53,7 +53,6 @@ namespace audiere {
     switch (format) {
       case SF_U8:     return 1;
       case SF_S16_LE: return 2;
-      case SF_S16_BE: return 2;
       default:        return 0;
     }
   }

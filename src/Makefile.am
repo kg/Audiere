@@ -17,7 +17,7 @@ endif
 
 libaudiere_la_SOURCES = \
 	debug.cpp \
-	debug.hpp \
+	debug.h \
 	default_file.h \
 	device.cpp \
 	device_null.cpp \
@@ -28,7 +28,7 @@ libaudiere_la_SOURCES = \
 	file_ansi.cpp \
 	input.cpp \
 	input_mod.cpp \
-	input_mod.hpp \
+	input_mod.h \
 	input_ogg.cpp \
 	input_ogg.h \
 	input_wav.cpp \
@@ -39,10 +39,12 @@ libaudiere_la_SOURCES = \
 	repeatable.h \
 	resampler.cpp \
 	resampler.h \
+	sound.cpp \
 	threads_posix.cpp \
 	threads.h \
 	timer_posix.cpp \
 	timer.h \
+	tone.cpp \
 	types.h \
 	utility.cpp \
 	utility.h \

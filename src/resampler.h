@@ -2,41 +2,47 @@
 #define RESAMPLER_HPP
 
 
-#include "config.h"
-#include "input.hpp"
+#include "audiere.h"
+#include "types.h"
+#include "utility.h"
 
 
-class Resampler : public ISampleSource
-{
-public:
-  Resampler(ISampleSource* source);
-  ~Resampler();
+namespace audiere {
 
-  // for now, resamplers always return (2, 44100, 16)
-  void GetFormat(int& channel_count, int& sample_rate, int& bits_per_sample);
+  class Resampler : public UnseekableSource {
+  public:
+    Resampler(SampleSource* source);
+    ~Resampler();
 
-  int Read(int sample_count, void* samples);
-  bool Reset();
+    // for now, resamplers always return (2, 44100, 16LE)
+    void getFormat(
+      int& channel_count,
+      int& sample_rate,
+      SampleFormat& sample_format);
 
-private:
-  void FillBuffer();
-  void ResetState();
+    int read(int sample_count, void* samples);
+    void reset();
 
-private:
-  ISampleSource* m_source;
-  int m_native_channel_count;
-  int m_native_sample_rate;
-  int m_native_bits_per_sample;
+  private:
+    void fillBuffer();
+    void resetState();
 
-  static const int NATIVE_BUFFER_SIZE = 4096;
-  adr_s16 m_native_buffer[NATIVE_BUFFER_SIZE * 2];
-  adr_s16* m_position;
-  unsigned m_samples_left;  // number of samples left to consume
+  private:
+    SampleSource* m_source;
+    int m_native_channel_count;
+    int m_native_sample_rate;
+    SampleFormat m_native_sample_format;
 
-  unsigned m_time;
-  adr_s16 m_sl; // left channel
-  adr_s16 m_sr; // right channel
-};
+    static const int NATIVE_BUFFER_SIZE = 4096;
+    s16 m_native_buffer[NATIVE_BUFFER_SIZE * 2];
+    s16* m_position;
+    unsigned m_samples_left;  // number of samples left to consume
 
+    unsigned m_time;
+    s16 m_sl; // left channel
+    s16 m_sr; // right channel
+  };
+
+}
 
 #endif

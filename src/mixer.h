@@ -15,25 +15,28 @@ namespace audiere {
     Mixer();
     ~Mixer();
 
-    void getFormat(int& channel_count, int& sample_rate, int& bits_per_sample);
+    void getFormat(
+      int& channel_count,
+      int& sample_rate,
+      SampleFormat& sample_format);
     int read(int sample_count, void* samples);
-    bool reset();
+    void reset();
 
-    void addSource(ISampleSource* source);
-    void removeSource(ISampleSource* source);
+    void addSource(SampleSource* source);
+    void removeSource(SampleSource* source);
 
-    bool isPlaying(ISampleSource* source);
-    void setPlaying(ISampleSource* source, bool is_playing);
+    bool isPlaying(SampleSource* source);
+    void setPlaying(SampleSource* source, bool is_playing);
 
-    int getVolume(ISampleSource* source);
-    void setVolume(ISampleSource* source, int volume);
+    int getVolume(SampleSource* source);
+    void setVolume(SampleSource* source, int volume);
 
   private:
     struct SourceAttributes {
       // immutable
-      ISampleSource* resampler;
-      adr_s16 last_l;  // left
-      adr_s16 last_r;  // right
+      SampleSource* resampler;
+      s16 last_l;  // left
+      s16 last_r;  // right
 
       // mutable (set by external calls)
       bool is_playing;
@@ -46,7 +49,7 @@ namespace audiere {
     void read(SampleSource* source,
               SourceAttributes& attr,
               int to_mix,
-              adr_s16* buffer);
+              s16* buffer);
 
   private:
     SourceMap m_sources;

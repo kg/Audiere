@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 libFLAC++_static.lib libFLAC_static.lib dumb_static.lib vorbisfile_static.lib vorbis_static.lib ogg_static.lib dxguid.lib rpcrt4.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /out:"../bin/Release/audiere.dll" /libpath:"../../third-party-vc6/lib"
+# ADD LINK32 libspeex.lib libFLAC++_static.lib libFLAC_static.lib dumb_static.lib vorbisfile_static.lib vorbis_static.lib ogg_static.lib dxguid.lib rpcrt4.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /out:"../bin/Release/audiere.dll" /libpath:"../../third-party-vc6/lib"
 
 !ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
 
@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 libFLAC++_static_d.lib libFLAC_static_d.lib dumbd_static.lib vorbisfile_static_d.lib vorbis_static_d.lib ogg_static_d.lib dxguid.lib rpcrt4.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"../bin/Debug/audiere.dll" /pdbtype:sept /libpath:"../../third-party-vc6/lib"
+# ADD LINK32 libspeexd.lib libFLAC++_static_d.lib libFLAC_static_d.lib dumbd_static.lib vorbisfile_static_d.lib vorbis_static_d.lib ogg_static_d.lib dxguid.lib rpcrt4.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"../bin/Debug/audiere.dll" /pdbtype:sept /libpath:"../../third-party-vc6/lib"
 
 !ENDIF 
 
@@ -217,6 +217,14 @@ SOURCE=..\..\src\input_ogg.cpp
 # Begin Source File
 
 SOURCE=..\..\src\input_ogg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\input_speex.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\input_speex.h
 # End Source File
 # Begin Source File
 
@@ -438,6 +446,18 @@ SOURCE=..\..\src\mpegsound\mpegtoraw.cpp
 
 !ENDIF 
 
+# End Source File
+# End Group
+# Begin Group "speexfile"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\src\speexfile\speexfile.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\speexfile\speexfile.h
 # End Source File
 # End Group
 # End Target

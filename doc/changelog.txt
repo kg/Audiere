@@ -1,3 +1,7 @@
+2004.01.10
+
+  Added Speex support.
+
 2003.11.08
 
   Fixed: Some MP3 files were returning incorrect sample format

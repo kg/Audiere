@@ -14,6 +14,9 @@
 #ifndef NO_OGG
 #include "input_ogg.h"
 #endif
+#ifndef NO_SPEEX
+#include "input_speex.h"
+#endif
 #include "input_wav.h"
 #include "input_aiff.h"
 #include "internal.h"
@@ -37,6 +40,9 @@ namespace audiere {
 #endif
 #ifndef NO_DUMB
       "Mod Files:mod,s3m,xm,it"  ";"
+#endif
+#ifndef NO_SPEEX
+      "Speex Files:spx"  ";"
 #endif
       "WAV Files:wav";
   }
@@ -102,6 +108,8 @@ namespace audiere {
                end_is(filename, ".s3m") ||
                end_is(filename, ".mod")) {
       return FF_MOD;
+    } else if (end_is(filename, ".spx")) {
+      return FF_SPEEX;
     } else {
       return FF_AUTODETECT;
     }
@@ -139,6 +147,7 @@ namespace audiere {
         TRY_OPEN(FF_WAV);
         TRY_OPEN(FF_OGG);
         TRY_OPEN(FF_FLAC);
+        TRY_OPEN(FF_SPEEX);
         TRY_OPEN(FF_MP3);
         TRY_OPEN(FF_MOD);
         return 0;
@@ -172,6 +181,12 @@ namespace audiere {
 #ifndef NO_FLAC
       case FF_FLAC:
         TRY_SOURCE(FLACInputStream);
+        return 0;
+#endif
+
+#ifndef NO_SPEEX
+      case FF_SPEEX:
+        TRY_SOURCE(SpeexInputStream);
         return 0;
 #endif
 

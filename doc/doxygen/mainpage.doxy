@@ -8,6 +8,7 @@ It supports several audio file formats:
 <li>Ogg Vorbis (requires the <a href="http://vorbis.com/">vorbisfile</a> libraries)</li>
 <li>MP3</li>
 <li>FLAC (requires <a href="http://flac.sourceforge.net/">libFLAC</a>)</li>
+<li>Speex (requires <a href="http://speex.org/">libspeex</a>)</li>
 <li>uncompressed WAV</li>
 <li>AIFF</li>
 <li>MOD, S3M, XM, IT</li>

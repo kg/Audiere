@@ -150,7 +150,7 @@ namespace audiere {
       return m_size;
     }
 
-    void write(void* buffer, int size) {
+    void write(const void* buffer, int size) {
       bool need_realloc = false;
       while (size + m_size > m_capacity) {
         m_capacity *= 2;

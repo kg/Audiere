@@ -248,6 +248,7 @@ namespace audiere {
     FF_MP3,
     FF_MOD,
     FF_AIFF,
+    FF_SPEEX,
   };
 
 

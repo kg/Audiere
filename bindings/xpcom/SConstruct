@@ -1,6 +1,6 @@
 import os
 
-XPCOM_BASE = 'D:/libraries/gecko-sdk-win32-1.4/xpcom'
+XPCOM_BASE = 'D:/Libraries/gecko-sdk/xpcom'
 XPIDL = os.path.join(XPCOM_BASE, 'bin', 'xpidl')
 
 TypeLib = Builder(action = '${XPIDL} -m typelib $XPIDLFLAGS $SOURCE')

@@ -1,13 +1,15 @@
 This is a very simple introduction to a very simple API.
 
-Some basic concepts:  Audiere has a C++ API.  You, as a user,
-interact with Audiere through a set of abstract classes
-(i.e. interfaces) defined in audiere.h.  All Audiere objects are
-reference counted.  This means that when you want to hold on to an
-object, you call ref() on it, and when you are done, you call
-unref().  To make this easier, Audiere provides a RefPtr class that
-calls ref() on construction and unref() on destruction.  Otherwise, it
-acts just like a normal pointer, greatly simplifying your code.
+Some basic concepts: Audiere has a C++ API.  You, as a user, interact
+with Audiere through a set of abstract classes (i.e. interfaces)
+defined in audiere.h.  All Audiere objects are reference counted.
+This means that when you want to hold on to an object, you call ref()
+on it, and when you are done, you call unref().  To make this easier,
+Audiere provides a RefPtr class that calls ref() on construction and
+unref() on destruction.  Otherwise, it acts just like a normal
+pointer, greatly simplifying your code.  For even greater convenience,
+each interface type has an associated InterfacePtr type which is just
+like RefPtr<Interface>.
 
 Now, on to the good stuff...
 
@@ -21,7 +23,7 @@ audiere namespace into global scope.
 
 You need to open an AudioDevice before you can play sounds...
 
-  RefPtr<AudioDevice> device(OpenDevice());
+  AudioDevicePtr device(OpenDevice());
   if (!device) {
     // failure
   }
@@ -33,7 +35,7 @@ Now that we have a device, we can actually open and play sounds.
    * Audiere tries to load the sound into memory.  If it can't do
    * that, it will just stream it.
    */
-  RefPtr<OutputStream> sound(OpenSound(device.get(), "effect.wav", false));
+  OutputStreamPtr sound(OpenSound(device.get(), "effect.wav", false));
   if (!sound) {
     // failure
   }
@@ -42,7 +44,7 @@ Now that we have a device, we can actually open and play sounds.
    * Since this file is background music, we don't need to load the
    * whole thing into memory.
    */
-  RefPtr<OutputStream> stream(OpenSound(device.get(), "music.ogg", true));
+  OutputStreamPtr stream(OpenSound(device.get(), "music.ogg", true));
   if (!stream) {
     // failure
   }

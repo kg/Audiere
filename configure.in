@@ -33,12 +33,10 @@ AM_PROG_LIBTOOL
 
 dnl Checks for libraries.
 
-dnl If building on Cygwin, link with winmm when using OpenAL and don't let
-dnl windows.h define min() or max()
+dnl If building on Cygwin, don't let windows.h define min() or max()
 case $host in
   *cygwin*)
-    OPENAL_LIBS=-lwinmm
-    CXXFLAGS="-DWIN32_LEAN_AND_MEAN -DNOMINMAX -DADR_CALL= $CXXFLAGS"
+    CXXFLAGS="-DWIN32_LEAN_AND_MEAN -DNOMINMAX $CXXFLAGS"
     ;;
 esac
 
@@ -57,14 +55,6 @@ AC_CHECK_LIB(pthread, pthread_create,
     EXTRA_LIBS="-lpthread $EXTRA_LIBS"
   ,
     AC_MSG_ERROR(could not find pthread library))
-
-dnl Look for OpenAL
-AC_CHECK_LIB(openal, alBufferData,
-    HAVE_OPENAL=true
-    AC_DEFINE(HAVE_OPENAL)
-    LIBS="-lopenal $OPENAL_LIBS $LIBS"
-    EXTRA_LIBS="-lopenal $OPENAL_LIBS $EXTRA_LIBS",, $OPENAL_LIBS)
-AM_CONDITIONAL(HAVE_OPENAL, test "x$HAVE_OPENAL" = "xtrue")
 
 dnl Look for FLAC
 AC_CHECK_LIB(FLAC, FLAC__seekable_stream_decoder_process_single,

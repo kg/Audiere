@@ -20,12 +20,6 @@ else
 OGG_DIST    = input_ogg.cpp input_ogg.h
 endif
 
-if HAVE_OPENAL
-OPENAL_SOURCES = device_oal.cpp device_oal.h
-else
-OPENAL_DIST    = device_oal.cpp device_oal.h
-endif
-
 if HAVE_AL
 AL_SOURCES = device_al.cpp device_al.h
 else
@@ -58,7 +52,7 @@ endif
 
 
 EXTRA_DIST = \
-	$(FLAC_DIST) $(OGG_DIST) $(OPENAL_DIST) $(AL_DIST) $(OSS_DIST) \
+	$(FLAC_DIST) $(OGG_DIST) $(AL_DIST) $(OSS_DIST) \
 	$(DSOUND_DIST) $(WINMM_DIST)
 
 libaudiere_la_SOURCES = \
@@ -71,7 +65,6 @@ libaudiere_la_SOURCES = \
 	device_mixer.h \
 	device_null.cpp \
 	device_null.h \
-	$(OPENAL_SOURCES) \
 	$(AL_SOURCES) \
 	$(OSS_SOURCES) \
 	$(WINMM_SOURCES) \

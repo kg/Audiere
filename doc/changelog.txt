@@ -1,3 +1,8 @@
+2003.01.27
+
+  removed support for OpenAL because it was causing compile issues on
+    systems with different and incompatible versions of OpenAL
+
 2003.01.09
 
   no longer use the MTM or STM mikmod loaders because they crash on

@@ -24,10 +24,6 @@
   #include "device_oss.h"
 #endif
 
-#ifdef HAVE_OPENAL
-  #include "device_oal.h"
-#endif
-
 #ifdef HAVE_AL
   #include "device_al.h"
 #endif
@@ -58,9 +54,6 @@ namespace audiere {
 #endif
 #ifdef HAVE_WINMM
       "winmm:Windows Multimedia (compatible)"  ";"
-#endif
-#ifdef HAVE_OPENAL
-      "openal:OpenAL"  ";"
 #endif
 #ifdef HAVE_AL
       "al:SGI AL"  ";"
@@ -98,7 +91,6 @@ namespace audiere {
       if (name == "" || name == "autodetect") {
         TRY_GROUP("directsound");
         TRY_GROUP("winmm");
-        TRY_GROUP("openal");
         return 0;
       }
 
@@ -111,13 +103,6 @@ namespace audiere {
         TRY_DEVICE(MMAudioDevice);
         return 0;
       }
-
-      #ifdef HAVE_OPENAL
-        if (name == "openal") {
-          TRY_DEVICE(ALAudioDevice);
-          return 0;
-        }
-      #endif
 
       if (name == "null") {
         TRY_DEVICE(NullAudioDevice);
@@ -132,7 +117,6 @@ namespace audiere {
         TRY_GROUP("directsound");
         TRY_GROUP("winmm");
         TRY_GROUP("oss");
-        TRY_GROUP("openal");
         return 0;
       }
 
@@ -153,13 +137,6 @@ namespace audiere {
       #ifdef HAVE_WINMM
         if (name == "winmm") {
           TRY_DEVICE(MMAudioDevice);
-          return 0;
-        }
-      #endif
-
-      #ifdef HAVE_OPENAL
-        if (name == "openal") {
-          TRY_DEVICE(OALAudioDevice);
           return 0;
         }
       #endif

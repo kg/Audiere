@@ -1,0 +1,12 @@
+This document will eventually describe how to release a new version of
+Audiere.  For now, it just lists some information that will be useful
+when the time to release comes around.
+
+
+== Bumping the Version Number ==
+
+The following files contain version information:
+  configure.in
+  doc/doxygen/audiere.doxy
+  doc/doxygen/mainpage.doxy
+  src/audiere.cpp

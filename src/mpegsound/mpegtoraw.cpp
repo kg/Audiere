@@ -29,6 +29,11 @@ Mpegtoraw::Mpegtoraw(Soundinputstream *loader,Soundplayer *player)
 
   this->loader=loader;
   this->player=player;
+
+  // Initialize in case something goes wrong.
+  version = mpeg1;
+  mode = fullstereo;
+  frequency = frequency44100;
 }
 
 Mpegtoraw::~Mpegtoraw()

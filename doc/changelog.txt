@@ -1,5 +1,7 @@
 2004.01.19
 
+  Fix an mpegsound crash when loading corrupt MP3s (or text files).
+
   Use _beginthreadex instead of CreateThread.
 
   Added a button to see the format of streams and sounds in wxPlayer.

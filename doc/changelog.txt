@@ -1,3 +1,9 @@
+2003.09.04
+
+  Opens MP3 files with ID3v2 tags with the MP3 decoder, not the MOD
+  decoder.  The MOD decoder seems to be the most lenient, so it has
+  been placed at the end of the autodetect list, behind MP3.
+
 2003.07.17
 
   Made thread priority work when using pthreads.

@@ -135,12 +135,12 @@ namespace audiere {
         }
 
         // autodetect otherwise, in decreasing order of possibility of failure
-        TRY_OPEN(FF_MOD);
         TRY_OPEN(FF_AIFF);
         TRY_OPEN(FF_WAV);
         TRY_OPEN(FF_OGG);
-        TRY_OPEN(FF_MP3);
         TRY_OPEN(FF_FLAC);
+        TRY_OPEN(FF_MP3);
+        TRY_OPEN(FF_MOD);
         return 0;
 
 #ifndef NO_DUMB

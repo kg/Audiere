@@ -43,24 +43,24 @@ StreamFrame::StreamFrame(
   m_stream_is_seekable = stream->isSeekable();
   m_stream_length = stream->getLength();
 
-  m_playing_label = new wxStaticText(this, -1, "Stopped");
-  m_repeating = new wxCheckBox(this, STREAM_REPEAT, "Repeating");
-  m_vpp_label = new wxStaticText(this, -1, "Volume - Pan - Pitch");
+  m_playing_label = new wxStaticText(this, -1, wxT("Stopped"));
+  m_repeating = new wxCheckBox(this, STREAM_REPEAT, wxT("Repeating"));
+  m_vpp_label = new wxStaticText(this, -1, wxT("Volume - Pan - Pitch"));
   m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
   m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
   m_pitch  = new wxSlider(this, STREAM_PITCH,  100, 50, 200);
-  m_length_pos_label = new wxStaticText(this, -1, "Length - Pos");
+  m_length_pos_label = new wxStaticText(this, -1, wxT("Length - Pos"));
   m_pos    = new wxSlider(this, STREAM_POS,    0, 0, 1000);
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(
-    new wxButton(this, STREAM_PLAY, "Play"),
+    new wxButton(this, STREAM_PLAY, wxT("Play")),
     1, wxEXPAND | wxALL, 4);
   sizer->Add(
-    new wxButton(this, STREAM_STOP, "Stop"),
+    new wxButton(this, STREAM_STOP, wxT("Stop")),
     1, wxEXPAND | wxALL, 4);
   sizer->Add(
-    new wxButton(this, STREAM_RESET, "Reset"),
+    new wxButton(this, STREAM_RESET, wxT("Reset")),
     1, wxEXPAND | wxALL, 4);
   sizer->Add(m_playing_label,    1, wxEXPAND | wxALL, 4);
   sizer->Add(m_repeating,        1, wxEXPAND | wxALL, 4);
@@ -72,18 +72,18 @@ StreamFrame::StreamFrame(
   sizer->Add(m_pos,              1, wxEXPAND | wxALL, 4);
 
   wxButton* infoButton = new wxButton(
-    this, STREAM_VIEW_INFO, "View Info");
+    this, STREAM_VIEW_INFO, wxT("View Info"));
   sizer->Add(infoButton, 1, wxEXPAND | wxALL, 4);
   
   wxButton* editButton = new wxButton(
-    this, STREAM_EDIT_LOOP_POINTS, "Edit Loop Points...");
+    this, STREAM_EDIT_LOOP_POINTS, wxT("Edit Loop Points..."));
   sizer->Add(editButton, 1, wxEXPAND | wxALL, 4);
   if (!loop_source) {
     editButton->Enable(false);
   }
 
   wxButton* tagsButton = new wxButton(
-    this, STREAM_VIEW_TAGS, "View Tags...");
+    this, STREAM_VIEW_TAGS, wxT("View Tags..."));
   sizer->Add(tagsButton, 1, wxEXPAND | wxALL, 4);
 
   if (!m_stream_is_seekable) {
@@ -111,22 +111,22 @@ StreamFrame::~StreamFrame() {
 }
 
 
-void StreamFrame::OnPlay() {
+void StreamFrame::OnPlay(wxCommandEvent&) {
   m_stream->play();
 }
 
 
-void StreamFrame::OnStop() {
+void StreamFrame::OnStop(wxCommandEvent&) {
   m_stream->stop();
 }
 
 
-void StreamFrame::OnReset() {
+void StreamFrame::OnReset(wxCommandEvent&) {
   m_stream->reset();
 }
 
 
-void StreamFrame::OnViewInfo() {
+void StreamFrame::OnViewInfo(wxCommandEvent&) {
   int channel_count, sample_rate;
   audiere::SampleFormat format;
   m_source->getFormat(channel_count, sample_rate, format);
@@ -144,50 +144,50 @@ void StreamFrame::OnViewInfo() {
   ss << "Channel Count: " << channel_count << std::endl;
   ss << "Sample Rate: " << sample_rate << std::endl;
   ss << "Format: " << format_name << std::endl;
-  wxMessageBox(ss.str().c_str(), "Stream Info", wxOK, this);
+  wxMessageBox(CStr2wxString(ss.str().c_str()), wxT("Stream Info"), wxOK, this);
 }
 
 
-void StreamFrame::OnEditLoopPoints() {
+void StreamFrame::OnEditLoopPoints(wxCommandEvent&) {
   EditLoopPointsDialog(this, m_loop_source.get()).ShowModal();
 }
 
 
-void StreamFrame::OnViewTags() {
+void StreamFrame::OnViewTags(wxCommandEvent&) {
   TagsDialog(this, m_source.get()).ShowModal();
 }
 
 
-void StreamFrame::OnRepeat() {
+void StreamFrame::OnRepeat(wxCommandEvent&) {
   m_stream->setRepeat(m_repeating->GetValue());
 }
 
 
-void StreamFrame::OnChangeVolume() {
+void StreamFrame::OnChangeVolume(wxScrollEvent&) {
   m_stream->setVolume(m_volume->GetValue() / 100.0f);
   UpdateVPPLabel();
 }
 
 
-void StreamFrame::OnChangePan() {
+void StreamFrame::OnChangePan(wxScrollEvent&) {
   m_stream->setPan(m_pan->GetValue() / 100.0f);
   UpdateVPPLabel();
 }
 
 
-void StreamFrame::OnChangePitch() {
+void StreamFrame::OnChangePitch(wxScrollEvent&) {
   m_stream->setPitchShift(m_pitch->GetValue() / 100.0f);
   UpdateVPPLabel();
 }
 
 
-void StreamFrame::OnChangePos() {
+void StreamFrame::OnChangePos(wxScrollEvent&) {
   float pos = float(m_pos->GetValue()) / 1000;
   m_stream->setPosition(int(pos * m_stream_length));
 }
 
 
-void StreamFrame::OnUpdateStatus() {
+void StreamFrame::OnUpdateStatus(wxTimerEvent&) {
   if (m_stream_is_seekable) {
     float pos = float(m_stream->getPosition()) / m_stream_length;
     m_pos->SetValue(int(1000 * pos));
@@ -195,14 +195,14 @@ void StreamFrame::OnUpdateStatus() {
   UpdateLengthPosLabel();
 
   // update the playing label
-  m_playing_label->SetLabel(m_stream->isPlaying() ? "Playing" : "Stopped");
+  m_playing_label->SetLabel(m_stream->isPlaying() ? wxT("Playing") : wxT("Stopped"));
 }
 
 
 void StreamFrame::UpdateVPPLabel() {
   wxString label;
   label.Printf(
-    "Vol: %1.2f  Pan: %1.2f  Pitch: %1.2f",
+    wxT("Vol: %1.2f  Pan: %1.2f  Pitch: %1.2f"),
     m_volume->GetValue() / 100.0f,
     m_pan->GetValue() / 100.0f,
     m_pitch->GetValue() / 100.0f);
@@ -214,11 +214,11 @@ void StreamFrame::UpdateLengthPosLabel() {
   if (m_stream_is_seekable) {
     wxString label;
     label.Printf(
-      "Pos/Len: %d / %d",
+      wxT("Pos/Len: %d / %d"),
       m_stream->getPosition(),
       m_stream_length);
     m_length_pos_label->SetLabel(label);
   } else {
-    m_length_pos_label->SetLabel("Unseekable Stream");
+    m_length_pos_label->SetLabel(wxT("Unseekable Stream"));
   }
 }

@@ -1,3 +1,9 @@
+2004.11.27
+
+  Added VC7 build system.
+
+  wxPlayer now compiles against unicode wxWidgets.  (Emanuel Dejanu)
+
 2004.11.07
 
   Replaced mpegsound with a stand-alone version of the MPEG audio decoder

@@ -7,15 +7,15 @@ END_EVENT_TABLE()
 
 
 MIDIDeviceDialog::MIDIDeviceDialog(wxWindow* parent)
-: wxDialog(parent, -1, wxString("New MIDI Device"))
+: wxDialog(parent, -1, wxString(wxT("New MIDI Device")))
 {
   // size of text controls
   static const wxSize size(300, 22);
 
-  m_name   = new wxTextCtrl(this, -1, "", wxDefaultPosition, size);
+  m_name   = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, size);
 
-  m_ok     = new wxButton(this, -1, "OK");
-  m_cancel = new wxButton(this, -1, "Cancel");
+  m_ok     = new wxButton(this, -1, wxT("OK"));
+  m_cancel = new wxButton(this, -1, wxT("Cancel"));
   wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   buttonSizer->Add(m_ok,     0, wxALIGN_CENTER | wxALL, 5);
   buttonSizer->Add(m_cancel, 0, wxALIGN_CENTER | wxALL, 5);
@@ -37,7 +37,7 @@ MIDIDeviceDialog::MIDIDeviceDialog(wxWindow* parent)
 
 void MIDIDeviceDialog::OnButton(wxCommandEvent& event) {
   if (event.GetEventObject() == m_ok) {
-    m_name_str = m_name->GetValue();
+    m_name_str = wxString2CStr(m_name->GetValue());
     EndModal(wxID_OK);
   } else if (event.GetEventObject() == m_cancel) {
     EndModal(wxID_CANCEL);

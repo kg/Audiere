@@ -10,11 +10,11 @@ class SoundEffectFrame : public wxMDIChildFrame {
 public:
   SoundEffectFrame(wxMDIParentFrame* parent, const wxString& title, audiere::SoundEffectPtr effect);
 
-  void OnPlay();
-  void OnStop();
-  void OnChangeVolume();
-  void OnChangePan();
-  void OnChangePitch();
+  void OnPlay(wxCommandEvent&);
+  void OnStop(wxCommandEvent&);
+  void OnChangeVolume(wxScrollEvent&);
+  void OnChangePan(wxScrollEvent&);
+  void OnChangePitch(wxScrollEvent&);
   void UpdateVPPLabel();
 
 private:

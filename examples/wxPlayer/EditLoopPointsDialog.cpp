@@ -16,7 +16,7 @@ END_EVENT_TABLE()
 EditLoopPointsDialog::EditLoopPointsDialog(
   wxWindow* parent,
   audiere::LoopPointSourcePtr loop_source)
-: wxDialog(parent, -1, wxString("Edit Loop Points"), wxDefaultPosition,
+: wxDialog(parent, -1, wxString(wxT("Edit Loop Points")), wxDefaultPosition,
            wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
   m_loop_source = loop_source;
@@ -25,9 +25,9 @@ EditLoopPointsDialog::EditLoopPointsDialog(
   m_location   = new wxTextCtrl(this, -1);
   m_target     = new wxTextCtrl(this, -1);
   m_loop_count = new wxTextCtrl(this, -1);
-  m_add        = new wxButton(this, -1, "Add");
-  m_remove     = new wxButton(this, -1, "Remove");
-  m_close      = new wxButton(this, -1, "Close");
+  m_add        = new wxButton(this, -1, wxT("Add"));
+  m_remove     = new wxButton(this, -1, wxT("Remove"));
+  m_close      = new wxButton(this, -1, wxT("Close"));
 
   const int CA = wxALIGN_CENTER | wxALL;
 
@@ -38,11 +38,11 @@ EditLoopPointsDialog::EditLoopPointsDialog(
   const int LEFT_STYLE = CA | wxALIGN_CENTER_VERTICAL;
 
   wxFlexGridSizer* fieldSizer = new wxFlexGridSizer(2);
-  fieldSizer->Add(new wxStaticText(this, -1, "Location"),   0, LEFT_STYLE, 0);
+  fieldSizer->Add(new wxStaticText(this, -1, wxT("Location")),   0, LEFT_STYLE, 0);
   fieldSizer->Add(m_location,   0, CA, 1);
-  fieldSizer->Add(new wxStaticText(this, -1, "Target"),     0, LEFT_STYLE, 0);
+  fieldSizer->Add(new wxStaticText(this, -1, wxT("Target")),     0, LEFT_STYLE, 0);
   fieldSizer->Add(m_target,     0, CA, 1);
-  fieldSizer->Add(new wxStaticText(this, -1, "Loop Count"), 0, LEFT_STYLE, 0);
+  fieldSizer->Add(new wxStaticText(this, -1, wxT("Loop Count")), 0, LEFT_STYLE, 0);
   fieldSizer->Add(m_loop_count, 0, CA, 1);
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -68,9 +68,9 @@ EditLoopPointsDialog::EditLoopPointsDialog(
 void EditLoopPointsDialog::OnButton(wxCommandEvent& event) {
   if (event.GetEventObject() == m_add) {
 
-    int location   = atoi(m_location  ->GetValue());
-    int target     = atoi(m_target    ->GetValue());
-    int loop_count = atoi(m_loop_count->GetValue());
+    int location   = wxAtoi(m_location  ->GetValue());
+    int target     = wxAtoi(m_target    ->GetValue());
+    int loop_count = wxAtoi(m_loop_count->GetValue());
     m_loop_source->addLoopPoint(location, target, loop_count);
 
     resetFields();
@@ -98,9 +98,9 @@ void EditLoopPointsDialog::OnClose(wxCloseEvent& event) {
 
 
 void EditLoopPointsDialog::resetFields() {
-  m_location  ->SetValue("0");
-  m_target    ->SetValue("0");
-  m_loop_count->SetValue("0");
+  m_location  ->SetValue(wxT("0"));
+  m_target    ->SetValue(wxT("0"));
+  m_loop_count->SetValue(wxT("0"));
 }
 
 
@@ -111,7 +111,7 @@ void EditLoopPointsDialog::refreshLoopPoints() {
     int location, target, loopCount;
     if (m_loop_source->getLoopPoint(i, location, target, loopCount)) {
       wxString str;
-      str.Printf("%d  %d  %d", location, target, loopCount);
+      str.Printf(wxT("%d  %d  %d"), location, target, loopCount);
       m_points->Append(str);
     }
   }

@@ -21,67 +21,67 @@ END_EVENT_TABLE()
 
 
 MIDIDeviceFrame::MIDIDeviceFrame(audiere::MIDIDevicePtr device)
-: wxMDIParentFrame(0, -1, "MIDI Device - " + wxString(device->getName()))
+: wxMDIParentFrame(0, -1, wxT("MIDI Device - ") + CStr2wxString(device->getName()))
 {
   m_device = device;
 
   wxMenu* deviceMenu = new wxMenu;
-  deviceMenu->Append(DEVICE_NEW_DEVICE,     "&New Device...");
-  deviceMenu->Append(DEVICE_NEW_CDDEVICE,   "New C&D Device...");
-  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE, "New &MIDI Device...");
+  deviceMenu->Append(DEVICE_NEW_DEVICE,     wxT("&New Device..."));
+  deviceMenu->Append(DEVICE_NEW_CDDEVICE,   wxT("New C&D Device..."));
+  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE, wxT("New &MIDI Device..."));
   deviceMenu->AppendSeparator();
-  deviceMenu->Append(DEVICE_OPEN_SONG,      "Open &Song...");
+  deviceMenu->Append(DEVICE_OPEN_SONG,      wxT("Open &Song..."));
   deviceMenu->AppendSeparator();
-  deviceMenu->Append(DEVICE_CLOSE_WINDOW,   "Close C&urrent Window");
-  deviceMenu->Append(DEVICE_CLOSE,          "&Close Device");
+  deviceMenu->Append(DEVICE_CLOSE_WINDOW,   wxT("Close C&urrent Window"));
+  deviceMenu->Append(DEVICE_CLOSE,          wxT("&Close Device"));
   
   wxMenu* helpMenu = new wxMenu;
-  helpMenu->Append(HELP_ABOUT, "&About...");
+  helpMenu->Append(HELP_ABOUT, wxT("&About..."));
 
   wxMenuBar* menuBar = new wxMenuBar;
-  menuBar->Append(deviceMenu, "&Device");
-  menuBar->Append(helpMenu,   "&Help");
+  menuBar->Append(deviceMenu, wxT("&Device"));
+  menuBar->Append(helpMenu,   wxT("&Help"));
   SetMenuBar(menuBar);
 
   SetFocus();
 }
 
 
-void MIDIDeviceFrame::OnDeviceNewDevice() {
+void MIDIDeviceFrame::OnDeviceNewDevice(wxCommandEvent&) {
   wxGetApp().OnNewDevice(this);
 }
 
 
-void MIDIDeviceFrame::OnDeviceNewCDDevice() {
+void MIDIDeviceFrame::OnDeviceNewCDDevice(wxCommandEvent&) {
   wxGetApp().OnNewCDDevice(this);
 }
 
 
-void MIDIDeviceFrame::OnDeviceNewMIDIDevice() {
+void MIDIDeviceFrame::OnDeviceNewMIDIDevice(wxCommandEvent&) {
   wxGetApp().OnNewMIDIDevice(this);
 }
 
 
-void MIDIDeviceFrame::OnDeviceOpenSong() {
+void MIDIDeviceFrame::OnDeviceOpenSong(wxCommandEvent&) {
   wxString file = wxFileSelector(
-    "Select a MIDI file", "", "", "",
-    "MIDI Files (*.midi,*.mid,*.rmi)|*.midi;*.mid;*.rmi|"
-    "All Files (*.*)|*.*",
+    wxT("Select a MIDI file"), wxT(""), wxT(""), wxT(""),
+   wxT( "MIDI Files (*.midi,*.mid,*.rmi)|*.midi;*.mid;*.rmi|")
+    wxT("All Files (*.*)|*.*"),
     wxOPEN, this);
   if (!file.empty()) {
-    audiere::MIDIStreamPtr stream = m_device->openStream(file.c_str());
+    audiere::MIDIStreamPtr stream = m_device->openStream(wxString2CStr(file));
     if (!stream) {
       wxMessageBox(
-        "Could not open MIDI file: " + file,
-        "Open MIDI File", wxOK | wxCENTRE, this);
+        wxT("Could not open MIDI file: ") + file,
+        wxT("Open MIDI File"), wxOK | wxCENTRE, this);
     }
 
-    new MIDIStreamFrame(this, "MIDI File - " + file, stream);
+    new MIDIStreamFrame(this, wxT("MIDI File - ") + file, stream);
   }
 }
 
 
-void MIDIDeviceFrame::OnDeviceCloseCurrentWindow() {
+void MIDIDeviceFrame::OnDeviceCloseCurrentWindow(wxCommandEvent&) {
   wxMDIChildFrame* frame = GetActiveChild();
   if (frame) {
     frame->Close();
@@ -89,11 +89,11 @@ void MIDIDeviceFrame::OnDeviceCloseCurrentWindow() {
 }
 
 
-void MIDIDeviceFrame::OnDeviceClose() {
+void MIDIDeviceFrame::OnDeviceClose(wxCommandEvent&) {
   Close();
 }
 
 
-void MIDIDeviceFrame::OnHelpAbout() {
+void MIDIDeviceFrame::OnHelpAbout(wxCommandEvent&) {
   wxGetApp().ShowAboutDialog(this);
 }

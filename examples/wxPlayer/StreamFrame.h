@@ -16,19 +16,19 @@ public:
     audiere::LoopPointSourcePtr loop_source = 0);
   ~StreamFrame();
 
-  void OnPlay();
-  void OnStop();
-  void OnReset();
-  void OnViewInfo();
-  void OnEditLoopPoints();
-  void OnViewTags();
+  void OnPlay(wxCommandEvent&);
+  void OnStop(wxCommandEvent&);
+  void OnReset(wxCommandEvent&);
+  void OnViewInfo(wxCommandEvent&);
+  void OnEditLoopPoints(wxCommandEvent&);
+  void OnViewTags(wxCommandEvent&);
 
-  void OnRepeat();
-  void OnChangeVolume();
-  void OnChangePan();
-  void OnChangePitch();
-  void OnChangePos();
-  void OnUpdateStatus();
+  void OnRepeat(wxCommandEvent&);
+  void OnChangeVolume(wxScrollEvent&);
+  void OnChangePan(wxScrollEvent&);
+  void OnChangePitch(wxScrollEvent&);
+  void OnChangePos(wxScrollEvent&);
+  void OnUpdateStatus(wxTimerEvent&);
   void UpdateVPPLabel();
   void UpdateLengthPosLabel();
 

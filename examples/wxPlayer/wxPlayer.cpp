@@ -19,7 +19,7 @@ IMPLEMENT_APP(wxPlayer)
 bool wxPlayer::OnInit() {
   bool result = (TryDevice("autodetect") || TryDevice("null"));
   if (!result) {
-    wxMessageBox("Could not open output device", "wxPlayer");
+    wxMessageBox(wxT("Could not open output device"), wxT("wxPlayer"));
   }
   return result;
 }
@@ -42,7 +42,7 @@ void wxPlayer::OnNewDevice(wxWindow* parent) {
       dialog.getDevice().c_str(),
       dialog.getParameters().c_str());
     if (!result) {
-      wxMessageBox("Error opening new device", "New Device",
+      wxMessageBox(wxT("Error opening new device"), wxT("New Device"),
                    wxOK | wxICON_ERROR, parent);
     }
   }
@@ -54,7 +54,7 @@ void wxPlayer::OnNewCDDevice(wxWindow* parent) {
   if (dialog.ShowModal() == wxID_OK) {
     audiere::CDDevicePtr device = audiere::OpenCDDevice(dialog.getName().c_str());
     if (!device) {
-      wxMessageBox("Error opening CD device", "New CD Device",
+      wxMessageBox(wxT("Error opening CD device"), wxT("New CD Device"),
                    wxOK | wxICON_ERROR, parent);
       return;
     }
@@ -69,7 +69,7 @@ void wxPlayer::OnNewMIDIDevice(wxWindow* parent) {
   if (dialog.ShowModal() == wxID_OK) {
     audiere::MIDIDevicePtr device = audiere::OpenMIDIDevice(dialog.getName().c_str());
     if (!device) {
-      wxMessageBox("Error opening MIDI device", "New MIDI Device",
+      wxMessageBox(wxT("Error opening MIDI device"), wxT("New MIDI Device"),
                    wxOK | wxICON_ERROR, parent);
       return;
     }
@@ -81,9 +81,9 @@ void wxPlayer::OnNewMIDIDevice(wxWindow* parent) {
 
 void wxPlayer::ShowAboutDialog(wxWindow* parent) {
   wxString message =
-    "wxPlayer\n"
-    "Copyright (c) Chad Austin 2002-2004\n\n"
-    "Audiere Version: ";
-  message += audiere::GetVersion();
-  wxMessageBox(message, "About wxPlayer", wxOK | wxCENTRE, parent);
+    wxT("wxPlayer\n")
+    wxT("Copyright (c) Chad Austin 2002-2004\n\n")
+    wxT("Audiere Version: ");
+  message += CStr2wxString(audiere::GetVersion());
+  wxMessageBox(message, wxT("About wxPlayer"), wxOK | wxCENTRE, parent);
 }

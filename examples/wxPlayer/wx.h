@@ -12,5 +12,13 @@
 
 #include <wx/wx.h>
 
+#if defined(wxUSE_UNICODE) && wxUSE_UNICODE
+	#define CStr2wxString(x) wxString((const char *)x, wxConvUTF8)
+	#define wxString2CStr(x) x.mb_str(wxConvUTF8).data()
+#else
+	#define CStr2wxString(x) wxString((const char *)x)
+	#define wxString2CStr(x) x
+#endif
+
 
 #endif

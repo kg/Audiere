@@ -10,13 +10,13 @@ class MIDIDeviceFrame : public wxMDIParentFrame {
 public:
   MIDIDeviceFrame(audiere::MIDIDevicePtr device);
 
-  void OnDeviceNewDevice();
-  void OnDeviceNewCDDevice();
-  void OnDeviceNewMIDIDevice();
-  void OnDeviceOpenSong();
-  void OnDeviceCloseCurrentWindow();
-  void OnDeviceClose();
-  void OnHelpAbout();
+  void OnDeviceNewDevice(wxCommandEvent&);
+  void OnDeviceNewCDDevice(wxCommandEvent&);
+  void OnDeviceNewMIDIDevice(wxCommandEvent&);
+  void OnDeviceOpenSong(wxCommandEvent&);
+  void OnDeviceCloseCurrentWindow(wxCommandEvent&);
+  void OnDeviceClose(wxCommandEvent&);
+  void OnHelpAbout(wxCommandEvent&);
 
 private:
   audiere::MIDIDevicePtr m_device;

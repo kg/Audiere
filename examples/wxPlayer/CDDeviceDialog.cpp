@@ -12,7 +12,7 @@ END_EVENT_TABLE()
 
 
 CDDeviceDialog::CDDeviceDialog(wxWindow* parent)
-: wxDialog(parent, -1, wxString("New CD Device"))
+: wxDialog(parent, -1, wxString(wxT("New CD Device")))
 {
   audiere::EnumerateCDDevices(m_devices);
 
@@ -22,7 +22,7 @@ CDDeviceDialog::CDDeviceDialog(wxWindow* parent)
   if (m_devices.size()) {
     m_device = new wxChoice(this, -1, wxDefaultPosition, wxSize(300, 22));
     for (size_t i = 0; i < m_devices.size(); ++i) {
-      m_device->Append(m_devices[i].c_str());
+      m_device->Append(CStr2wxString(m_devices[i].c_str()));
     }
     m_device->SetSelection(0);
   } else {
@@ -30,8 +30,8 @@ CDDeviceDialog::CDDeviceDialog(wxWindow* parent)
   }
 
   // button bar
-  m_ok     = new wxButton(this, -1, "OK");
-  m_cancel = new wxButton(this, -1, "Cancel");
+  m_ok     = new wxButton(this, -1, wxT("OK"));
+  m_cancel = new wxButton(this, -1, wxT("Cancel"));
   wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   buttonSizer->Add(m_ok,     0, wxALIGN_CENTER | wxALL, 5);
   buttonSizer->Add(m_cancel, 0, wxALIGN_CENTER | wxALL, 5);
@@ -45,7 +45,7 @@ CDDeviceDialog::CDDeviceDialog(wxWindow* parent)
   }
   if (m_explicit_device) {
     sizer->Add(
-      new wxStaticText(this, -1, "No devices found.  Please enter one."),
+      new wxStaticText(this, -1, wxT("No devices found.  Please enter one.")),
       0, wxALIGN_CENTER | wxALL, 5);
     sizer->Add(
       m_explicit_device,
@@ -79,14 +79,14 @@ void CDDeviceDialog::OnButton(wxCommandEvent& event) {
     if (m_device) {
       int value = m_device->GetSelection();
       if (value < 0 || value >= static_cast<int>(m_devices.size())) {
-	wxMessageBox("No device selected", "New CD Device", wxOK | wxICON_ERROR, this);
+	wxMessageBox(wxT("No device selected"), wxT("New CD Device"), wxOK | wxICON_ERROR, this);
 	return;
       }
       m_name = m_devices[value];
       EndModal(wxID_OK);
     }
     if (m_explicit_device) {
-      m_name = m_explicit_device->GetValue();
+      m_name = wxString2CStr(m_explicit_device->GetValue());
       EndModal(wxID_OK);
     }
   } else {

@@ -26,36 +26,36 @@ END_EVENT_TABLE()
 
 
 CDDeviceFrame::CDDeviceFrame(audiere::CDDevicePtr device)
-: wxFrame(0, -1, "CD Device - " + wxString(device->getName()))
+: wxFrame(0, -1, wxT("CD Device - ") + CStr2wxString(device->getName()))
 {
   m_device = device;
 
   wxMenu* deviceMenu = new wxMenu;
-  deviceMenu->Append(DEVICE_NEW_DEVICE,           "&New Device...");
-  deviceMenu->Append(DEVICE_NEW_CDDEVICE,         "New C&D Device...");
-  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE,       "New &MIDI Device...");
+  deviceMenu->Append(DEVICE_NEW_DEVICE,           wxT("&New Device..."));
+  deviceMenu->Append(DEVICE_NEW_CDDEVICE,         wxT("New C&D Device..."));
+  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE,       wxT("New &MIDI Device..."));
 
   wxMenu* helpMenu = new wxMenu;
-  helpMenu->Append(HELP_ABOUT, "&About...");
+  helpMenu->Append(HELP_ABOUT, wxT("&About..."));
 
   wxMenuBar* menuBar = new wxMenuBar;
-  menuBar->Append(deviceMenu, "&Device");
-  menuBar->Append(helpMenu, "&Help");
+  menuBar->Append(deviceMenu, wxT("&Device"));
+  menuBar->Append(helpMenu, wxT("&Help"));
   SetMenuBar(menuBar);
 
   wxBoxSizer* playSizer = new wxBoxSizer(wxHORIZONTAL);
   playSizer->Add(
-    new wxButton(this, CD_PLAY, "Play"),
+    new wxButton(this, CD_PLAY, wxT("Play")),
     1, wxEXPAND | wxALL, 0);
-  m_track = new wxTextCtrl(this, -1, "1");
+  m_track = new wxTextCtrl(this, -1, wxT("1"));
   playSizer->Add(m_track, 1, wxADJUST_MINSIZE | wxALL, 0);
 
   wxBoxSizer* doorSizer = new wxBoxSizer(wxHORIZONTAL);
   doorSizer->Add(
-    new wxButton(this, CD_OPEN_DOOR, "Open Door"),
+    new wxButton(this, CD_OPEN_DOOR, wxT("Open Door")),
     1, wxEXPAND | wxALL, 0);
   doorSizer->Add(
-    new wxButton(this, CD_CLOSE_DOOR, "Close Door"),
+    new wxButton(this, CD_CLOSE_DOOR, wxT("Close Door")),
     1, wxEXPAND | wxALL, 0);
 
   const int border = 4;
@@ -65,19 +65,19 @@ CDDeviceFrame::CDDeviceFrame(audiere::CDDevicePtr device)
     playSizer,
     1, wxEXPAND | wxALL, border);
   sizer->Add(
-    new wxButton(this, CD_STOP, "Stop"),
+    new wxButton(this, CD_STOP, wxT("Stop")),
     1, wxEXPAND | wxALL, border);
   sizer->Add(
-    new wxButton(this, CD_PAUSE, "Pause"),
+    new wxButton(this, CD_PAUSE, wxT("Pause")),
     1, wxEXPAND | wxALL, border);
   sizer->Add(
-    new wxButton(this, CD_RESUME, "Resume"),
+    new wxButton(this, CD_RESUME, wxT("Resume")),
     1, wxEXPAND | wxALL, border);
   sizer->Add(
     doorSizer,
     1, wxEXPAND | wxALL, border);
   sizer->Add(
-    new wxButton(this, CD_CHECK_STATUS, "Check Status"),
+    new wxButton(this, CD_CHECK_STATUS, wxT("Check Status")),
     1, wxEXPAND | wxALL, border);
   
   SetAutoLayout(true);
@@ -90,28 +90,28 @@ CDDeviceFrame::CDDeviceFrame(audiere::CDDevicePtr device)
 }
 
 
-void CDDeviceFrame::OnDeviceNewDevice() {
+void CDDeviceFrame::OnDeviceNewDevice(wxCommandEvent&) {
   wxGetApp().OnNewDevice(this);
 }
 
 
-void CDDeviceFrame::OnDeviceNewCDDevice() {
+void CDDeviceFrame::OnDeviceNewCDDevice(wxCommandEvent&) {
   wxGetApp().OnNewCDDevice(this);
 }
 
 
-void CDDeviceFrame::OnDeviceNewMIDIDevice() {
+void CDDeviceFrame::OnDeviceNewMIDIDevice(wxCommandEvent&) {
   wxGetApp().OnNewMIDIDevice(this);
 }
 
 
-void CDDeviceFrame::OnHelpAbout() {
+void CDDeviceFrame::OnHelpAbout(wxCommandEvent&) {
   wxGetApp().ShowAboutDialog(this);
 }
 
 
-void CDDeviceFrame::OnPlay() {
-  int track = atoi(m_track->GetValue()) - 1;
+void CDDeviceFrame::OnPlay(wxCommandEvent&) {
+  int track = wxAtoi(m_track->GetValue()) - 1;
   if (track < 0) {
     track = 0;
   } else if (track >= m_device->getTrackCount()) {
@@ -122,32 +122,32 @@ void CDDeviceFrame::OnPlay() {
 }
 
 
-void CDDeviceFrame::OnStop() {
+void CDDeviceFrame::OnStop(wxCommandEvent&) {
   m_device->stop();
 }
 
 
-void CDDeviceFrame::OnPause() {
+void CDDeviceFrame::OnPause(wxCommandEvent&) {
   m_device->pause();
 }
 
 
-void CDDeviceFrame::OnResume() {
+void CDDeviceFrame::OnResume(wxCommandEvent&) {
   m_device->resume();
 }
 
 
-void CDDeviceFrame::OnOpenDoor() {
+void CDDeviceFrame::OnOpenDoor(wxCommandEvent&) {
   m_device->openDoor();
 }
 
 
-void CDDeviceFrame::OnCloseDoor() {
+void CDDeviceFrame::OnCloseDoor(wxCommandEvent&) {
   m_device->closeDoor();
 }
 
 
-void CDDeviceFrame::OnCheckStatus() {
+void CDDeviceFrame::OnCheckStatus(wxCommandEvent&) {
   std::ostringstream message;
 
   if (m_device->isDoorOpen()) {
@@ -170,5 +170,5 @@ void CDDeviceFrame::OnCheckStatus() {
     message << "Not Playing\n";
   }
 
-  wxMessageBox(message.str().c_str(), "Check Status", wxOK, this);
+  wxMessageBox(CStr2wxString(message.str().c_str()), wxT("Check Status"), wxOK, this);
 }

@@ -25,15 +25,15 @@ MIDIStreamFrame::MIDIStreamFrame(
 
   int f = wxEXPAND | wxALL;
 
-  m_is_playing_label = new wxStaticText(this, -1, "");
-  m_repeating        = new wxCheckBox(this, MIDI_REPEAT, "Repeating");
-  m_length_pos_label = new wxStaticText(this, -1, "");
+  m_is_playing_label = new wxStaticText(this, -1, wxT(""));
+  m_repeating        = new wxCheckBox(this, MIDI_REPEAT, wxT("Repeating"));
+  m_length_pos_label = new wxStaticText(this, -1, wxT(""));
   m_pos              = new wxSlider(this, MIDI_POS, 0, 0, 1000);
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(new wxButton(this, MIDI_PLAY, "Play"),   1, f, 4);
-  sizer->Add(new wxButton(this, MIDI_PAUSE, "Pause"), 1, f, 4);
-  sizer->Add(new wxButton(this, MIDI_STOP, "Stop"),   1, f, 4);
+  sizer->Add(new wxButton(this, MIDI_PLAY, wxT("Play")),   1, f, 4);
+  sizer->Add(new wxButton(this, MIDI_PAUSE, wxT("Pause")), 1, f, 4);
+  sizer->Add(new wxButton(this, MIDI_STOP, wxT("Stop")),   1, f, 4);
   sizer->Add(m_is_playing_label,                      1, f, 4);
   sizer->Add(m_repeating,                             1, f, 4);
   sizer->Add(m_length_pos_label,                      1, f, 4);
@@ -49,7 +49,7 @@ MIDIStreamFrame::MIDIStreamFrame(
   m_timer = new wxTimer(this, MIDI_UPDATE);
   m_timer->Start(100);
 
-  OnUpdateStatus();
+  UpdateStatus();
 }
 
 
@@ -59,41 +59,45 @@ MIDIStreamFrame::~MIDIStreamFrame() {
 }
 
 
-void MIDIStreamFrame::OnPlay() {
+void MIDIStreamFrame::OnPlay(wxCommandEvent&) {
   m_stream->play();
 }
 
 
-void MIDIStreamFrame::OnPause() {
+void MIDIStreamFrame::OnPause(wxCommandEvent&) {
   m_stream->pause();
 }
 
 
-void MIDIStreamFrame::OnStop() {
+void MIDIStreamFrame::OnStop(wxCommandEvent&) {
   m_stream->stop();
 }
 
 
-void MIDIStreamFrame::OnRepeat() {
+void MIDIStreamFrame::OnRepeat(wxCommandEvent&) {
   m_stream->setRepeat(m_repeating->GetValue());
 }
 
 
-void MIDIStreamFrame::OnChangePos() {
+void MIDIStreamFrame::OnChangePos(wxScrollEvent&) {
   float pos = m_pos->GetValue() / 1000.0f;
   int len = m_stream->getLength();
   m_stream->setPosition(int(pos * len));
 }
 
+void MIDIStreamFrame::OnUpdateStatus(wxTimerEvent&) {
+	UpdateStatus();
+}
 
-void MIDIStreamFrame::OnUpdateStatus() {
-  m_is_playing_label->SetLabel(m_stream->isPlaying() ? "Playing" : "Stopped");
+
+void MIDIStreamFrame::UpdateStatus() {
+  m_is_playing_label->SetLabel(m_stream->isPlaying() ? wxT("Playing") : wxT("Stopped"));
 
   int pos = m_stream->getPosition();
   int len = m_stream->getLength();
   
   wxString label;
-  label.Printf("Pos/Len:  %d / %d", pos, len);
+  label.Printf(wxT("Pos/Len:  %d / %d"), pos, len);
   m_length_pos_label->SetLabel(label);
 
   float l = (len == 0 ? 0.0f : float(pos) / len);

@@ -11,18 +11,18 @@ public:
   CDDeviceFrame(audiere::CDDevicePtr device);
 
 private:
-  void OnDeviceNewDevice();
-  void OnDeviceNewCDDevice();
-  void OnDeviceNewMIDIDevice();
-  void OnHelpAbout();
+  void OnDeviceNewDevice(wxCommandEvent&);
+  void OnDeviceNewCDDevice(wxCommandEvent&);
+  void OnDeviceNewMIDIDevice(wxCommandEvent&);
+  void OnHelpAbout(wxCommandEvent&);
 
-  void OnPlay();
-  void OnStop();
-  void OnPause();
-  void OnResume();
-  void OnOpenDoor();
-  void OnCloseDoor();
-  void OnCheckStatus();
+  void OnPlay(wxCommandEvent&);
+  void OnStop(wxCommandEvent&);
+  void OnPause(wxCommandEvent&);
+  void OnResume(wxCommandEvent&);
+  void OnOpenDoor(wxCommandEvent&);
+  void OnCloseDoor(wxCommandEvent&);
+  void OnCheckStatus(wxCommandEvent&);
 
   audiere::CDDevicePtr m_device;
 

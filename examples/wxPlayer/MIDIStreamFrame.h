@@ -14,13 +14,15 @@ public:
     audiere::MIDIStreamPtr stream);
   ~MIDIStreamFrame();
 
-  void OnPlay();
-  void OnPause();
-  void OnStop();
+  void OnPlay(wxCommandEvent&);
+  void OnPause(wxCommandEvent&);
+  void OnStop(wxCommandEvent&);
 
-  void OnRepeat();
-  void OnChangePos();
-  void OnUpdateStatus();
+  void OnRepeat(wxCommandEvent&);
+  void OnChangePos(wxScrollEvent&);
+  void OnUpdateStatus(wxTimerEvent&);
+
+  void UpdateStatus();
 
 private:
   audiere::MIDIStreamPtr m_stream;

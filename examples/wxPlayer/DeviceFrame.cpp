@@ -12,6 +12,9 @@
 #include "StreamFrame.h"
 #include "wxPlayer.h"
 
+#if wxCHECK_VERSION(2,5,3)
+#include "wx/generic/numdlgg.h"
+#endif
 
 template<typename T>
 std::string Join(
@@ -54,52 +57,52 @@ END_EVENT_TABLE()
 
 
 DeviceFrame::DeviceFrame(audiere::AudioDevicePtr device)
-: wxMDIParentFrame(0, -1, "Audio Device - " + wxString(device->getName()))
+: wxMDIParentFrame(0, -1, wxT("Audio Device - " + wxString(device->getName())))
 {
   m_device = device;
 
   wxMenu* deviceMenu = new wxMenu();
-  deviceMenu->Append(DEVICE_NEW_DEVICE,           "&New Device...");
-  deviceMenu->Append(DEVICE_NEW_CDDEVICE,         "New C&D Device...");
-  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE,       "New &MIDI Device...");
+  deviceMenu->Append(DEVICE_NEW_DEVICE,           wxT("&New Device..."));
+  deviceMenu->Append(DEVICE_NEW_CDDEVICE,         wxT("New C&D Device..."));
+  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE,       wxT("New &MIDI Device..."));
   deviceMenu->AppendSeparator();
-  deviceMenu->Append(DEVICE_OPEN_STREAM,          "&Open Stream...");
-  deviceMenu->Append(DEVICE_OPEN_SOUND,           "Open &Sound...");
+  deviceMenu->Append(DEVICE_OPEN_STREAM,          wxT("&Open Stream..."));
+  deviceMenu->Append(DEVICE_OPEN_SOUND,           wxT("Open &Sound..."));
   deviceMenu->AppendSeparator();
-  deviceMenu->Append(DEVICE_CREATE_TONE,          "Create &Tone...");
-  deviceMenu->Append(DEVICE_CREATE_SQUARE_WAVE,   "Create S&quare Wave...");
-  deviceMenu->Append(DEVICE_CREATE_WHITE_NOISE,   "Create &White Noise");
-  deviceMenu->Append(DEVICE_CREATE_PINK_NOISE,    "Create &Pink Noise");
+  deviceMenu->Append(DEVICE_CREATE_TONE,          wxT("Create &Tone..."));
+  deviceMenu->Append(DEVICE_CREATE_SQUARE_WAVE,   wxT("Create S&quare Wave..."));
+  deviceMenu->Append(DEVICE_CREATE_WHITE_NOISE,   wxT("Create &White Noise"));
+  deviceMenu->Append(DEVICE_CREATE_PINK_NOISE,    wxT("Create &Pink Noise"));
   deviceMenu->AppendSeparator();
-  deviceMenu->Append(DEVICE_OPEN_SINGLE_EFFECT,   "Open &Effect (Single)...");
-  deviceMenu->Append(DEVICE_OPEN_MULTIPLE_EFFECT, "Open Effect (&Multiple)...");
+  deviceMenu->Append(DEVICE_OPEN_SINGLE_EFFECT,   wxT("Open &Effect (Single)..."));
+  deviceMenu->Append(DEVICE_OPEN_MULTIPLE_EFFECT, wxT("Open Effect (&Multiple)..."));
   deviceMenu->AppendSeparator();
-  deviceMenu->Append(DEVICE_CLOSE_WINDOW,         "Close C&urrent Window");
-  deviceMenu->Append(DEVICE_CLOSE,                "&Close Device");
+  deviceMenu->Append(DEVICE_CLOSE_WINDOW,         wxT("Close C&urrent Window"));
+  deviceMenu->Append(DEVICE_CLOSE,                wxT("&Close Device"));
 
   wxMenu* helpMenu = new wxMenu();
-  helpMenu->Append(HELP_ABOUT, "&About...");
+  helpMenu->Append(HELP_ABOUT, wxT("&About..."));
 
   wxMenuBar* menuBar = new wxMenuBar();
-  menuBar->Append(deviceMenu, "&Device");
-  menuBar->Append(helpMenu,   "&Help");
+  menuBar->Append(deviceMenu, wxT("&Device"));
+  menuBar->Append(helpMenu,   wxT("&Help"));
   SetMenuBar(menuBar);
 
   SetFocus();
 }
 
 
-void DeviceFrame::OnDeviceNewDevice() {
+void DeviceFrame::OnDeviceNewDevice(wxCommandEvent&) {
   wxGetApp().OnNewDevice(this);
 }
 
 
-void DeviceFrame::OnDeviceNewCDDevice() {
+void DeviceFrame::OnDeviceNewCDDevice(wxCommandEvent&) {
   wxGetApp().OnNewCDDevice(this);
 }
 
 
-void DeviceFrame::OnDeviceNewMIDIDevice() {
+void DeviceFrame::OnDeviceNewMIDIDevice(wxCommandEvent&) {
   wxGetApp().OnNewMIDIDevice(this);
 }
 
@@ -131,22 +134,27 @@ wxString DeviceFrame::GetSoundFile() {
   wildcards += "All Files (*.*)|*.*";
 
   return wxFileSelector(
-    "Select a sound file", "", "", "",
-    wildcards.c_str(), wxOPEN, this);
+    wxT("Select a sound file"), wxT(""), wxT(""), wxT(""),
+    CStr2wxString(wildcards.c_str()), wxOPEN, this);
 }
 
 
-void DeviceFrame::OnDeviceOpenStream() {
+void DeviceFrame::OnDeviceOpenStream(wxCommandEvent &) {
   wxString filename(GetSoundFile());
   if (filename.empty()) {
     return;
   }
 
+#if wxUSE_UNICODE
+  wxCharBuffer buffFilename = filename.mb_str(wxConvUTF8);
+  audiere::SampleSourcePtr source = audiere::OpenSampleSource(buffFilename.data());
+#else
   audiere::SampleSourcePtr source = audiere::OpenSampleSource(filename);
+#endif
   if (!source) {
     wxMessageBox(
-      "Could not open sample source: " + filename,
-      "Open Stream", wxOK | wxCENTRE, this);
+      wxT("Could not open sample source: ") + filename,
+      wxT("Open Stream"), wxOK | wxCENTRE, this);
     return;
   }
 
@@ -162,150 +170,151 @@ void DeviceFrame::OnDeviceOpenStream() {
     true);
   if (!stream) {
     wxMessageBox(
-      "Could not open output stream: " + filename,
-      "Open Stream", wxOK | wxCENTRE, this);
+      wxT("Could not open output stream: ") + filename,
+      wxT("Open Stream"), wxOK | wxCENTRE, this);
     return;
   }
 
   // get the basename of the path for the window title
   wxString basename = wxFileNameFromPath(filename);
-  new StreamFrame(this, "Stream: " + basename, stream.get(), source.get(), loop_source.get());
+  new StreamFrame(this, wxT("Stream: ") + basename, stream.get(), source.get(), loop_source.get());
 }
 
 
-void DeviceFrame::OnDeviceOpenSound() {
+void DeviceFrame::OnDeviceOpenSound(wxCommandEvent &) {
   wxString filename(GetSoundFile());
   if (filename.empty()) {
-    return;
+	return;
   }
 
-  audiere::SampleSourcePtr source = audiere::OpenSampleSource(filename);
+  audiere::SampleSourcePtr source = audiere::OpenSampleSource(wxString2CStr(filename));
   if (!source) {
     wxMessageBox(
-      "Could not open source: " + filename,
-      "Open Sound", wxOK | wxCENTRE, this);
+      wxT("Could not open source: ") + filename,
+      wxT("Open Sound"), wxOK | wxCENTRE, this);
     return;
   }
 
   audiere::OutputStreamPtr stream = audiere::OpenSound(m_device, source);
   if (!stream) {
     wxMessageBox(
-      "Could not open sound: " + filename,
-      "Open Sound", wxOK | wxCENTRE, this);
+      wxT("Could not open sound: ") + filename,
+      wxT("Open Sound"), wxOK | wxCENTRE, this);
     return;
   }
 
   // get the basename of the path for the window title
   wxString basename = wxFileNameFromPath(filename);
-  new StreamFrame(this, "Sound: " + basename, stream.get(), source.get());
+  new StreamFrame(this, wxT("Sound: ") + basename, stream.get(), source.get());
 }
 
 
-void DeviceFrame::OnDeviceCreateTone() {
-  int frequency = wxGetNumberFromUser(
-    "Value must be between 1 and 30000.", "Enter frequency in Hz",
-    "Create Tone", 256, 1, 30000, this);
+void DeviceFrame::OnDeviceCreateTone(wxCommandEvent &) {
+  int frequency = ::wxGetNumberFromUser(
+    wxT("Value must be between 1 and 30000."), wxT("Enter frequency in Hz"),
+    wxT("Create Tone"), 256, 1, 30000, this);
   if (frequency != -1) {
     audiere::SampleSourcePtr source = audiere::CreateTone(frequency);
     if (!source) {
       wxMessageBox(
-        "Could not create tone",
-        "Create Tone", wxOK | wxCENTRE, this);
+        wxT("Could not create tone"),
+        wxT("Create Tone"), wxOK | wxCENTRE, this);
       return;
     }
 
     audiere::OutputStreamPtr stream = m_device->openStream(source.get());
     if (!stream) {
       wxMessageBox(
-        "Could not open output stream",
-        "Create Tone", wxOK | wxCENTRE, this);
+        wxT("Could not open output stream"),
+        wxT("Create Tone"), wxOK | wxCENTRE, this);
       return;
+
     }
 
     wxString title;
-    title.sprintf("Tone: %d Hz", frequency);
+    title.sprintf(wxT("Tone: %d Hz"), frequency);
     new StreamFrame(this, title, stream.get(), source.get());
   }
 }
 
 
-void DeviceFrame::OnDeviceCreateSquareWave() {
-  int frequency = wxGetNumberFromUser(
-    "Value must be between 1 and 30000.", "Enter frequency in Hz",
-    "Create Square Wave", 256, 1, 30000, this);
+void DeviceFrame::OnDeviceCreateSquareWave(wxCommandEvent &) {
+  int frequency = ::wxGetNumberFromUser(
+    wxT("Value must be between 1 and 30000."), wxT("Enter frequency in Hz"),
+    wxT("Create Square Wave"), 256, 1, 30000, this);
   if (frequency != -1) {
     audiere::SampleSourcePtr source = audiere::CreateSquareWave(frequency);
     if (!source) {
       wxMessageBox(
-        "Could not create square wave",
-        "Create Square Wave", wxOK | wxCENTRE, this);
+        wxT("Could not create square wave"),
+        wxT("Create Square Wave"), wxOK | wxCENTRE, this);
       return;
     }
 
     audiere::OutputStreamPtr stream = m_device->openStream(source.get());
     if (!stream) {
       wxMessageBox(
-        "Could not open output stream",
-        "Create Square Wave", wxOK | wxCENTRE, this);
+        wxT("Could not open output stream"),
+        wxT("Create Square Wave"), wxOK | wxCENTRE, this);
       return;
     }
 
     wxString title;
-    title.sprintf("Square Wave: %d Hz", frequency);
+    title.sprintf(wxT("Square Wave: %d Hz"), frequency);
     new StreamFrame(this, title, stream.get(), source.get());
   }
 }
 
 
-void DeviceFrame::OnDeviceCreateWhiteNoise() {
+void DeviceFrame::OnDeviceCreateWhiteNoise(wxCommandEvent &) {
   audiere::SampleSourcePtr source = audiere::CreateWhiteNoise();
   if (!source) {
     wxMessageBox(
-      "Could not create white noise",
-      "Create White Noise", wxOK | wxCENTRE, this);
+      wxT("Could not create white noise"),
+      wxT("Create White Noise"), wxOK | wxCENTRE, this);
     return;
   }
 
   audiere::OutputStreamPtr stream = m_device->openStream(source.get());
   if (!stream) {
     wxMessageBox(
-      "Could not open output stream",
-      "Create White Noise", wxOK | wxCENTRE, this);
+      wxT("Could not open output stream"),
+      wxT("Create White Noise"), wxOK | wxCENTRE, this);
     return;
   }
 
-  new StreamFrame(this, "White Noise", stream.get(), source.get());
+  new StreamFrame(this, wxT("White Noise"), stream.get(), source.get());
 }
 
 
-void DeviceFrame::OnDeviceCreatePinkNoise() {
+void DeviceFrame::OnDeviceCreatePinkNoise(wxCommandEvent &) {
   audiere::SampleSourcePtr source = audiere::CreatePinkNoise();
   if (!source) {
     wxMessageBox(
-      "Could not create white noise",
-      "Create Pink Noise", wxOK | wxCENTRE, this);
+      wxT("Could not create white noise"),
+      wxT("Create Pink Noise"), wxOK | wxCENTRE, this);
     return;
   }
 
   audiere::OutputStreamPtr stream = m_device->openStream(source.get());
   if (!stream) {
     wxMessageBox(
-      "Could not open output stream",
-      "Create Pink Noise", wxOK | wxCENTRE, this);
+      wxT("Could not open output stream"),
+      wxT("Create Pink Noise"), wxOK | wxCENTRE, this);
     return;
   }
 
-  new StreamFrame(this, "Pink Noise", stream.get(), source.get());
+  new StreamFrame(this, wxT("Pink Noise"), stream.get(), source.get());
 }
 
 
-void DeviceFrame::OnDeviceOpenSingleEffect() {
-  DoOpenEffect(audiere::SINGLE, "Single");
+void DeviceFrame::OnDeviceOpenSingleEffect(wxCommandEvent &) {
+  DoOpenEffect(audiere::SINGLE, wxT("Single"));
 }
 
 
-void DeviceFrame::OnDeviceOpenMultipleEffect() {
-  DoOpenEffect(audiere::MULTIPLE, "Multiple");
+void DeviceFrame::OnDeviceOpenMultipleEffect(wxCommandEvent &) {
+  DoOpenEffect(audiere::MULTIPLE, wxT("Multiple"));
 }
 
 
@@ -315,22 +324,22 @@ void DeviceFrame::DoOpenEffect(audiere::SoundEffectType type, wxString typestrin
     return;
   }
 
-  audiere::SoundEffectPtr effect = audiere::OpenSoundEffect(m_device, filename, type);
+  audiere::SoundEffectPtr effect = audiere::OpenSoundEffect(m_device, wxString2CStr(filename), type);
   if (effect) {
     wxString basename = wxFileNameFromPath(filename);
     wxString title;
-    title.sprintf("Sound Effect (%s): %s",
+    title.sprintf(wxT("Sound Effect (%s): %s"),
                   typestring.c_str(), basename.c_str());
     new SoundEffectFrame(this, title, effect);
   } else {
     wxMessageBox(
-      "Could not open sound effect: " + filename,
-      "Open Sound Effect", wxOK | wxCENTRE, this);
+      wxT("Could not open sound effect: ") + filename,
+      wxT("Open Sound Effect"), wxOK | wxCENTRE, this);
   }
 }
 
 
-void DeviceFrame::OnDeviceCloseCurrentWindow() {
+void DeviceFrame::OnDeviceCloseCurrentWindow(wxCommandEvent&) {
   wxMDIChildFrame* frame = GetActiveChild();
   if (frame) {
     frame->Close();
@@ -338,11 +347,11 @@ void DeviceFrame::OnDeviceCloseCurrentWindow() {
 }
 
 
-void DeviceFrame::OnDeviceClose() {
+void DeviceFrame::OnDeviceClose(wxCommandEvent &) {
   Close();
 }
 
 
-void DeviceFrame::OnHelpAbout() {
+void DeviceFrame::OnHelpAbout(wxCommandEvent &) {
   wxGetApp().ShowAboutDialog(this);
 }

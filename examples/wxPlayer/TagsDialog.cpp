@@ -16,7 +16,7 @@ END_EVENT_TABLE()
 TagsDialog::TagsDialog(
   wxWindow* parent,
   audiere::SampleSourcePtr source)
-: wxDialog(parent, -1, wxString("View Tags"), wxDefaultPosition,
+: wxDialog(parent, -1, wxString(wxT("View Tags")), wxDefaultPosition,
            wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
   m_tags  = new wxListBox(this, -1);
@@ -33,10 +33,10 @@ TagsDialog::TagsDialog(
   }
   std::sort(tags.begin(), tags.end());
   for (size_t i = 0; i < tags.size(); ++i) {
-    m_tags->Append(tags[i].c_str());
+    m_tags->Append(CStr2wxString(tags[i].c_str()));
   }
 
-  m_close = new wxButton(this, -1, "Close");
+  m_close = new wxButton(this, -1, wxT("Close"));
   m_close->SetDefault();
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);

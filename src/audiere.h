@@ -306,8 +306,8 @@ namespace audiere {
     virtual bool ADR_CALL isPlaying() = 0;
 
     /**
-     * Reset the output stream's internal buffer, causing it to buffer new
-     * samples from its sample source.
+     * Reset the sample source or buffer to the beginning. On seekable
+     * streams, this operation is equivalent to setPosition(0).
      *
      * On some output streams, this operation can be moderately slow, as up to
      * several seconds of PCM buffer must be refilled.

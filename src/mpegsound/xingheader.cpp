@@ -9,7 +9,6 @@ mod 12/7/98 add vbr scale
 
 Copyright 1998 Xing Technology Corp.
 -----------------------------------------------------------*/
-#include <config.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <float.h>

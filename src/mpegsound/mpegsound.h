@@ -11,7 +11,7 @@
 /************************************/
 #include <stdio.h>
 #include <sys/types.h>
-#include "config.h"
+#include "../types.h"
 
 #ifndef _L__SOUND__
 #define _L__SOUND__
@@ -159,21 +159,21 @@ struct buffer_node {
 enum soundtype { NONE, RAW, WAV };
 
 typedef struct _waveheader {
-  u_int32_t     main_chunk;  // 'RIFF'
-  u_int32_t     length;      // filelen
-  u_int32_t     chunk_type;  // 'WAVE'
+  audiere::u32     main_chunk;  // 'RIFF'
+  audiere::u32     length;      // filelen
+  audiere::u32     chunk_type;  // 'WAVE'
 
-  u_int32_t     sub_chunk;   // 'fmt '
-  u_int32_t     sc_len;      // length of sub_chunk, =16
-  u_int16_t     format;      // should be 1 for PCM-code
-  u_int16_t     modus;       // 1 Mono, 2 Stereo
-  u_int32_t     sample_fq;   // frequence of sample
-  u_int32_t     byte_p_sec;
-  u_int16_t     byte_p_spl;  // samplesize; 1 or 2 bytes
-  u_int16_t     bit_p_spl;   // 8, 12 or 16 bit
+  audiere::u32     sub_chunk;   // 'fmt '
+  audiere::u32     sc_len;      // length of sub_chunk, =16
+  audiere::u16     format;      // should be 1 for PCM-code
+  audiere::u16     modus;       // 1 Mono, 2 Stereo
+  audiere::u32     sample_fq;   // frequence of sample
+  audiere::u32     byte_p_sec;
+  audiere::u16     byte_p_spl;  // samplesize; 1 or 2 bytes
+  audiere::u16     bit_p_spl;   // 8, 12 or 16 bit
 
-  u_int32_t     data_chunk;  // 'data'
-  u_int32_t     data_length; // samplecount
+  audiere::u32     data_chunk;  // 'data'
+  audiere::u32     data_length; // samplecount
 }WAVEHEADER;
 
 typedef struct

@@ -125,7 +125,7 @@ AC_OUTPUT(
         src/mikmod/mikmod/virtch/Makefile
         src/mikmod/mikmod/virtch/resfilter/Makefile
         src/mikmod/mmio/Makefile
-        src/mpglib/Makefile
+        src/mpegsound/Makefile
         test/Makefile
         test/buffer/Makefile
         test/device/Makefile

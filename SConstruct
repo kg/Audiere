@@ -8,7 +8,7 @@ Default('.')
 # get installation prefix
 PREFIX = ARGUMENTS.get('prefix', '/usr/local')
 
-CXXFLAGS = ['-LANG:std', '-DHAVE_AL', '-DWORDS_BIGENDIAN']
+CXXFLAGS = ['-LANG:std', '-DHAVE_AL', '-DNO_MIKMOD', '-DWORDS_BIGENDIAN']
 
 # build debug?
 if ARGUMENTS.get('debug', 0):

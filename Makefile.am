@@ -1,6 +1,4 @@
-SUBDIRS = mikmod
-
-EXTRA_DIST = documentation
+SUBDIRS = documentation mikmod
 
 INCLUDES = \
 	-I mikmod/mmio \

@@ -113,10 +113,7 @@ static int Stream_setattr(PyObject* self, char* name, PyObject* value)
   // check read-only attributes
   } else if (strcmp(name, "playing")    == 0 ||
              strcmp(name, "VOLUME_MIN") == 0 ||
-             strcmp(name, "VOLUME_MAX") == 0 ||
-             strcmp(name, "PAN_LEFT")   == 0 ||
-             strcmp(name, "PAN_CENTER") == 0 ||
-             strcmp(name, "PAN_RIGHT")  == 0) {
+             strcmp(name, "VOLUME_MAX") == 0) {
 
     PyErr_SetString(PyExc_RuntimeError, "cannot modify read-only attribute");
     return -1;  // read-only

@@ -4,18 +4,8 @@
 
 static PyObject* Audiere_OpenContext(PyObject* self, PyObject* args)
 {
-  const char* output_device;
-  const char* parameters;
-  if (!PyArg_ParseTuple(args, "ss", &output_device, &parameters)) {
-    return NULL;
-  }
-
   // create context
-  ADR_CONTEXT context = AdrCreateContext(
-    output_device,
-    parameters,
-    NULL, NULL, NULL, NULL, NULL, NULL
-  );
+  ADR_CONTEXT context = AdrCreateContext(0);
   if (context) {
 
     // create and return python object
@@ -31,14 +21,16 @@ static PyObject* Audiere_OpenContext(PyObject* self, PyObject* args)
 
       // throw an exception
       AdrDestroyContext(context);
-      PyErr_SetString(PyExc_RuntimeError, "Could not create Python object, out of memory?");
+      PyErr_SetString(PyExc_RuntimeError,
+		      "Could not create Python object, out of memory?");
       return NULL;
     }
 
   } else {
 
     // throw an exception
-    PyErr_SetString(PyExc_RuntimeError, "Could not create Audiere context");
+    PyErr_SetString(PyExc_RuntimeError,
+		    "Could not create Audiere context");
     return NULL;
   }
 }
@@ -51,7 +43,13 @@ static PyMethodDef AudiereMethods[] = {
 };
 
 
-void __stdcall initaudiere()
+#ifdef WIN32
+#define STDCALL __stdcall
+#else
+#define STDCALL
+#endif
+
+void STDCALL initaudiere()
 {
   audiere_ContextType.ob_type = &PyType_Type;
   audiere_StreamType.ob_type  = &PyType_Type;

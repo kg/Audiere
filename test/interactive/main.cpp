@@ -34,7 +34,7 @@ void passOut(int milliseconds) {
 void testDriver(const char* driver) {
   string sound_names[] = {"kclick.wav", "knock.wav", "laugh.wav", "shot.wav"};
   const int sound_count = arraysize(sound_names);
-  Sound* sounds[sound_count];
+  OutputStream* sounds[sound_count];
 
   cout << "testDriver " << driver << "\n--" << endl;
 

@@ -44,7 +44,7 @@ private:
   wxButton* m_repeat;
   wxSlider* m_volume;
 
-  vector<Sound*> m_streams;
+  vector<OutputStream*> m_streams;
 
   DECLARE_EVENT_TABLE()
 };
@@ -146,7 +146,7 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
   }
 
   SampleSource* source = OpenSampleSource(result.c_str());
-  Sound* sound = OpenSound(g_device, source, STREAM);
+  OutputStream* sound = OpenSound(g_device, source, STREAM);
   if (!sound) {
     wxMessageBox("Could not open stream");
   } else {

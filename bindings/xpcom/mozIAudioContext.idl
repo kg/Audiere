@@ -1,9 +1,0 @@
-#include "nsISupports.idl"
-#include "mozIAudioStream.idl"
-
-
-[scriptable, uuid(cbb03328-1dd1-11b2-b3c0-c84d2496dd39)]
-interface mozIAudioContext : nsISupports
-{
-  mozIAudioStream openStream(in string path);
-};

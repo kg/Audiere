@@ -98,7 +98,7 @@ namespace audiere {
 
 
   bool
-  FLACInputStream::initialize(File* file) {
+  FLACInputStream::initialize(FilePtr file) {
     m_file = file;
 
     // initialize the decoder

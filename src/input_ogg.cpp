@@ -27,7 +27,7 @@ namespace audiere {
 
 
   bool
-  OGGInputStream::initialize(File* file) {
+  OGGInputStream::initialize(FilePtr file) {
     m_file = file;
 
     // custom ogg vorbis callbacks
@@ -38,7 +38,7 @@ namespace audiere {
     callbacks.tell_func  = FileTell;
 
     // open ogg vorbis stream
-    int result = ov_open_callbacks(file, &m_vorbis_file, 0, 0, callbacks);
+    int result = ov_open_callbacks(file.get(), &m_vorbis_file, 0, 0, callbacks);
     if (result) {
       m_file = 0;
       return false;

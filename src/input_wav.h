@@ -13,7 +13,7 @@ namespace audiere {
   public:
     WAVInputStream();
 
-    bool initialize(File* file);
+    bool initialize(FilePtr file);
 
     void ADR_CALL getFormat(
       int& channel_count,
@@ -33,7 +33,7 @@ namespace audiere {
     bool SkipBytes(int size);
 
   private:
-    RefPtr<File> m_file;
+    FilePtr m_file;
 
     // from format chunk
     int m_channel_count;

@@ -14,7 +14,7 @@ namespace audiere {
     OGGInputStream();
     ~OGGInputStream();
 
-    bool initialize(File* file);
+    bool initialize(FilePtr file);
 
     void ADR_CALL getFormat(
       int& channel_count,
@@ -35,7 +35,7 @@ namespace audiere {
     static long   FileTell(void* opaque);
 
   private:
-    RefPtr<File> m_file;
+    FilePtr m_file;
 
     OggVorbis_File m_vorbis_file;
 

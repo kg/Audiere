@@ -21,16 +21,6 @@
 
 namespace audiere {
 
-  bool end_is(const char* begin, const char* ext) {
-    const char* end = begin + strlen(begin);
-    int ext_length = strlen(ext);
-    if (ext_length > end - begin) {
-      return false;
-    } else {
-      return (strcmp_case(end - ext_length, ext) == 0);
-    }
-  }
-
 
   ADR_EXPORT(const char*) AdrGetSupportedFileFormats() {
     return
@@ -51,7 +41,7 @@ namespace audiere {
 
 
   template<typename T>
-  static T* TryInputStream(File* file) {
+  static T* TryInputStream(const FilePtr& file) {
 
     // initialize should never close the file
 
@@ -65,94 +55,146 @@ namespace audiere {
   }
 
 
+#define TRY_SOURCE(source_type) {                             \
+  source_type* source = TryInputStream<source_type>(file);    \
+  if (source) {                                               \
+    return source;                                            \
+  } else {                                                    \
+    file->seek(0, File::BEGIN);                               \
+  }                                                           \
+}
+
+
+#define TRY_OPEN(format) {                                    \
+  SampleSource* source = OpenSource(file, filename, format);  \
+  if (source) {                                               \
+    return source;                                            \
+  }                                                           \
+}
+
+
+  bool end_is(const char* begin, const char* ext) {
+    const char* end = begin + strlen(begin);
+    int ext_length = strlen(ext);
+    if (ext_length > end - begin) {
+      return false;
+    } else {
+      return (strcmp_case(end - ext_length, ext) == 0);
+    }
+  }
+
+
+  FileFormat GuessFormat(const char* filename) {
+    if (end_is(filename, ".wav")) {
+      return FF_WAV;
+    } else if (end_is(filename, ".ogg")) {
+      return FF_OGG;
+    } else if (end_is(filename, ".flac")) {
+      return FF_FLAC;
+    } else if (end_is(filename, ".mp3")) {
+      return FF_MP3;
+    } else if (end_is(filename, ".it") ||
+               end_is(filename, ".xm") ||
+               end_is(filename, ".s3m") ||
+               end_is(filename, ".mod")) {
+      return FF_MOD;
+    } else {
+      return FF_AUTODETECT;
+    }
+  }
+
+
   /**
    * The internal implementation of OpenSampleSource.
    *
-   * @param raw_file  the file to load from.  cannot be 0.
-   * @param filename  the name of the file, or 0 if it is not available
+   * @param file         the file to load from.  cannot be 0.
+   * @param filename     the name of the file, or 0 if it is not available
+   * @param file_format  the format of the file or FF_AUTODETECT
    */
-  SampleSource* OpenSource(File* raw_file, const char* filename) {
+  SampleSource* OpenSource(
+    const FilePtr& file,
+    const char* filename,
+    FileFormat file_format)
+  {
     ADR_GUARD("OpenSource");
+    ADR_ASSERT(file != 0, "file must not be null");
 
-    RefPtr<File> file(raw_file);
+    switch (file_format) {
+      case FF_AUTODETECT:
+        
+        // if filename is available, use it as a hint
+        if (filename) {
+          FileFormat format = GuessFormat(filename);
+          if (format != FF_AUTODETECT) {
+            TRY_OPEN(format);
+          }
+        }
 
-    #define TRY_SOURCE(source_type) {                                 \
-      source_type* source = TryInputStream<source_type>(file.get());  \
-      if (source) {                                                   \
-        return source;                                                \
-      } else {                                                        \
-        file->seek(0, File::BEGIN);                                   \
-      }                                                               \
-    }
+        // autodetect otherwise, in decreasing order of possibility of failure
+        TRY_OPEN(FF_MOD);
+        TRY_OPEN(FF_WAV);
+        TRY_OPEN(FF_OGG);
+        TRY_OPEN(FF_MP3);
+        TRY_OPEN(FF_FLAC);
+        return 0;
 
-    // if filename is available, use it as a hint
-    if (filename) {
-      if (end_is(filename, ".wav")) {
-
-        TRY_SOURCE(WAVInputStream);
-
-#ifndef NO_OGG
-      } else if (end_is(filename, ".ogg")) {
-
-        TRY_SOURCE(OGGInputStream);
-#endif
 #ifndef NO_MIKMOD
-      } else if (end_is(filename, ".it") ||
-          end_is(filename, ".xm") ||
-          end_is(filename, ".s3m") ||
-          end_is(filename, ".mod")) {
-
+      case FF_MOD:
         TRY_SOURCE(MODInputStream);
+        return 0;
 #endif
-#ifndef NO_MP3
-      } else if (end_is(filename, ".mp3")) {
 
-        TRY_SOURCE(MP3InputStream);
-#endif
-#ifndef NO_FLAC
-      } else if (end_is(filename, ".flac")) {
+      case FF_WAV:
+        TRY_SOURCE(WAVInputStream);
+        return 0;
 
-        TRY_SOURCE(FLACInputStream);
-#endif
-      }
-    }
-
-    // autodetect otherwise, in decreasing order of possibility of failure
-#ifndef NO_MIKMOD
-    TRY_SOURCE(MODInputStream);
-#endif
-    TRY_SOURCE(WAVInputStream);
 #ifndef NO_OGG
-    TRY_SOURCE(OGGInputStream);
-#endif
-#ifndef NO_MP3
-    TRY_SOURCE(MP3InputStream);
-#endif
-#ifndef NO_FLAC
-    TRY_SOURCE(FLACInputStream);
+      case FF_OGG:
+        TRY_SOURCE(OGGInputStream);
+        return 0;
 #endif
 
-    return 0;
+#ifndef NO_MP3
+      case FF_MP3:
+        TRY_SOURCE(MP3InputStream);
+        return 0;
+#endif
+
+#ifndef NO_FLAC
+      case FF_FLAC:
+        TRY_SOURCE(FLACInputStream);
+        return 0;
+#endif
+
+      default:
+        return 0;
+    }
   }
 
 
-  ADR_EXPORT(SampleSource*) AdrOpenSampleSource(const char* filename) {
+  ADR_EXPORT(SampleSource*) AdrOpenSampleSource(
+    const char* filename,
+    FileFormat file_format)
+  {
     if (!filename) {
       return 0;
     }
-    File* file = OpenFile(filename, false);
+    FilePtr file = OpenFile(filename, false);
     if (!file) {
       return 0;
     }
-    return OpenSource(file, filename);
+    return OpenSource(file, filename, file_format);
   }
 
 
-  ADR_EXPORT(SampleSource*) AdrOpenSampleSourceFromFile(File* file) {
+  ADR_EXPORT(SampleSource*) AdrOpenSampleSourceFromFile(
+    File* file,
+    FileFormat file_format)
+  {
     if (!file) {
       return 0;
     }
-    return OpenSource(file, 0);
+    return OpenSource(file, 0, file_format);
   }
 
 }

@@ -14,7 +14,7 @@ namespace audiere {
     FLACInputStream();
     ~FLACInputStream();
 
-    bool initialize(File* file);
+    bool initialize(FilePtr file);
 
     void ADR_CALL getFormat(
       int& channel_count, 
@@ -33,7 +33,7 @@ namespace audiere {
       const FLAC__Frame* frame,
       const FLAC__int32* const buffer[]);
 
-    RefPtr<File> m_file;
+    FilePtr m_file;
 
     FLAC::Decoder::SeekableStream* m_decoder;
 

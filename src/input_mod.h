@@ -26,7 +26,7 @@ namespace audiere {
     MODInputStream();
     ~MODInputStream();
 
-    bool initialize(File* file);
+    bool initialize(FilePtr file);
 
     void ADR_CALL getFormat(
       int& channel_count,
@@ -61,7 +61,7 @@ namespace audiere {
   private:
     enum { SAMPLE_BUFFER_SIZE = 4096 };
 
-    RefPtr<File> m_file;
+    FilePtr m_file;
 
     // MikMod handles
     MDRIVER* m_driver;

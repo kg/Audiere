@@ -13,7 +13,7 @@ namespace audiere {
     MP3InputStream();
     ~MP3InputStream();
 
-    bool initialize(File* file);
+    bool initialize(FilePtr file);
 
     void ADR_CALL getFormat(
       int& channel_count,
@@ -27,7 +27,7 @@ namespace audiere {
     bool putblock(void *buffer,int size);
 
   private:
-    RefPtr<File> m_file;
+    FilePtr m_file;
 
     // from format chunk
     int m_channel_count;

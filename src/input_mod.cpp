@@ -103,7 +103,7 @@ namespace audiere {
 
 
   bool
-  MODInputStream::initialize(File* file) {
+  MODInputStream::initialize(FilePtr file) {
     m_file = file;
 
     // first time we run, initialize MikMod

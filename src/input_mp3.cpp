@@ -24,7 +24,7 @@ namespace audiere {
 
   class MyLoader : public Soundinputstream {
   public:
-    MyLoader(File* file) {
+    MyLoader(FilePtr file) {
       m_file = file;
       m_eof = false;
     }
@@ -88,7 +88,7 @@ namespace audiere {
     }
 
   private:
-    RefPtr<File> m_file;
+    FilePtr m_file;
     bool m_eof;
   };
 
@@ -116,7 +116,7 @@ namespace audiere {
 
 
   bool
-  MP3InputStream::initialize(File* file) {
+  MP3InputStream::initialize(FilePtr file) {
     m_file = file;
     m_loader = new MyLoader(file);
     m_decoder = new Mpegtoraw(m_loader, this);

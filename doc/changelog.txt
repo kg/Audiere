@@ -1,3 +1,7 @@
+2003.05.27
+
+  you can now specify what format you are loading for efficiency reasons
+
 2003.05.25
 
   fixed a bug in the DirectSound streaming code where you would hear the

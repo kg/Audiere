@@ -25,7 +25,7 @@ namespace audiere {
 
 
   bool
-  WAVInputStream::initialize(File* file) {
+  WAVInputStream::initialize(FilePtr file) {
     m_file = file;
 
     // read the RIFF header

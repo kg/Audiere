@@ -234,6 +234,17 @@ namespace audiere {
   };
 
 
+  /// Supported audio file formats.
+  enum FileFormat {
+    FF_AUTODETECT,
+    FF_WAV,
+    FF_OGG,
+    FF_FLAC,
+    FF_MP3,
+    FF_MOD,
+  };
+
+
   /**
    * Source of raw PCM samples.  Sample sources have an intrinsic format
    * (@see SampleFormat), sample rate, and number of channels.  They can
@@ -652,8 +663,12 @@ namespace audiere {
       const char* name,
       const char* parameters);
 
-    ADR_FUNCTION(SampleSource*) AdrOpenSampleSource(const char* filename);
-    ADR_FUNCTION(SampleSource*) AdrOpenSampleSourceFromFile(File* file);
+    ADR_FUNCTION(SampleSource*) AdrOpenSampleSource(
+      const char* filename,
+      FileFormat file_format);
+    ADR_FUNCTION(SampleSource*) AdrOpenSampleSourceFromFile(
+      File* file,
+      FileFormat file_format);
     ADR_FUNCTION(SampleSource*) AdrCreateTone(double frequency);
     ADR_FUNCTION(SampleSource*) AdrCreateSquareWave(double frequency);
     ADR_FUNCTION(SampleSource*) AdrCreateWhiteNoise();
@@ -807,8 +822,11 @@ namespace audiere {
    *
    * @see OpenSampleSource(File*)
    */
-  inline SampleSource* OpenSampleSource(const char* filename) {
-    return hidden::AdrOpenSampleSource(filename);
+  inline SampleSource* OpenSampleSource(
+    const char* filename,
+    FileFormat file_format = FF_AUTODETECT)
+  {
+    return hidden::AdrOpenSampleSource(filename, file_format);
   }
 
   /**
@@ -817,12 +835,17 @@ namespace audiere {
    *
    * @note  Some sound files support seeking, while some don't.
    *
-   * @param file  File object from which to open the decoder
+   * @param file         File object from which to open the decoder
+   * @param file_format  Format of the file to load.  If FF_AUTODETECT,
+   *                     Audiere will try opening the file in each format.
    *
    * @return  new SampleSource if OpenSampleSource succeeds, 0 otherwise
    */
-  inline SampleSource* OpenSampleSource(const FilePtr& file) {
-    return hidden::AdrOpenSampleSourceFromFile(file.get());
+  inline SampleSource* OpenSampleSource(
+    const FilePtr& file,
+    FileFormat file_format = FF_AUTODETECT)
+  {
+    return hidden::AdrOpenSampleSourceFromFile(file.get(), file_format);
   }
 
   /**
@@ -907,9 +930,11 @@ namespace audiere {
   inline OutputStream* OpenSound(
     const AudioDevicePtr& device,
     const char* filename,
-    bool streaming = false)
+    bool streaming = false,
+    FileFormat file_format = FF_AUTODETECT)
   {
-    return OpenSound(device, OpenSampleSource(filename), streaming);
+    SampleSource* source = OpenSampleSource(filename, file_format);
+    return OpenSound(device, source, streaming);
   }
 
   /**
@@ -919,9 +944,11 @@ namespace audiere {
   inline OutputStream* OpenSound(
     const AudioDevicePtr& device,
     const FilePtr& file,
-    bool streaming = false)
+    bool streaming = false,
+    FileFormat file_format = FF_AUTODETECT)
   {
-    return OpenSound(device, OpenSampleSource(file), streaming);
+    SampleSource* source = OpenSampleSource(file, file_format);
+    return OpenSound(device, source, streaming);
   }
 
   /**
@@ -995,9 +1022,11 @@ namespace audiere {
   inline SoundEffect* OpenSoundEffect(
     const AudioDevicePtr& device,
     const char* filename,
-    SoundEffectType type)
+    SoundEffectType type,
+    FileFormat file_format = FF_AUTODETECT)
   {
-    return OpenSoundEffect(device, OpenSampleSource(filename), type);
+    SampleSource* source = OpenSampleSource(filename, file_format);
+    return OpenSoundEffect(device, source, type);
   }
 
   /**
@@ -1007,9 +1036,11 @@ namespace audiere {
   inline SoundEffect* OpenSoundEffect(
     const AudioDevicePtr& device,
     const FilePtr& file,
-    SoundEffectType type)
+    SoundEffectType type,
+    FileFormat file_format = FF_AUTODETECT)
   {
-    return OpenSoundEffect(device, OpenSampleSource(file), type);
+    SampleSource* source = OpenSampleSource(file, file_format);
+    return OpenSoundEffect(device, source, type);
   }
 
   /**

@@ -38,6 +38,15 @@ namespace audiere {
   }
 
 
+  inline int Pan_AudiereToDirectSound(float pan) {
+    if (pan < 0) {
+      return -Pan_AudiereToDirectSound(-pan);
+    } else {
+      return Volume_AudiereToDirectSound(1 - pan);
+    }
+  }
+
+
 
   DSAudioDevice::DSAudioDevice() {
     m_direct_sound     = NULL;
@@ -254,7 +263,7 @@ namespace audiere {
 
 
   void
-  DSAudioDevice::RemoveStream(DSOutputStream* stream) {
+  DSAudioDevice::removeStream(DSOutputStream* stream) {
     Lock l__(this);
 
     m_open_streams.remove(stream);
@@ -292,7 +301,7 @@ namespace audiere {
   DSOutputStream::~DSOutputStream() {
     ADR_GUARD("DSOutputStream::~DSOutputStream");
 
-    m_device->RemoveStream(this);
+    m_device->removeStream(this);
     m_device->unref();
 
     // destroy the sound buffer interface
@@ -542,6 +551,19 @@ namespace audiere {
   float
   DSOutputStream::getVolume() {
     return m_volume;
+  }
+
+
+  void
+  DSOutputStream::setPan(float pan) {
+    m_pan = pan;
+    m_buffer->SetPan(Pan_AudiereToDirectSound(pan));
+  }
+
+
+  float
+  DSOutputStream::getPan() {
+    return m_pan;
   }
 
 }

@@ -48,6 +48,9 @@ namespace audiere {
     void  setVolume(float volume);
     float getVolume();
 
+    void  setPan(float pan);
+    float getPan();
+
   private:
     void resetTimer();
     void update();
@@ -62,6 +65,7 @@ namespace audiere {
 
     bool m_is_playing;
     float m_volume;
+    float m_pan;
 
     u64 m_last_update;
 

@@ -251,7 +251,7 @@ namespace audiere {
     /**
      * Sets the stream's volume.
      *
-     * @param  volume  0.0 = silence, 1.0 = maximum volume
+     * @param  volume  0.0 = silence, 1.0 = maximum volume (default)
      */
     virtual void setVolume(float volume) = 0;
 
@@ -261,6 +261,18 @@ namespace audiere {
      * @return  current volume of the output stream
      */
     virtual float getVolume() = 0;
+
+    /**
+     * Set current pan.
+     *
+     * @param pan  -1.0 = left, 0.0 = center (default), 1.0 = right
+     */
+    virtual void setPan(float pan) = 0;
+
+    /**
+     * Get current pan.
+     */
+    virtual float getPan() = 0;
   };
 
 

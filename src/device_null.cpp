@@ -131,6 +131,18 @@ namespace audiere {
     return m_volume;
   }
 
+  
+  void
+  NullOutputStream::setPan(float pan) {
+    m_pan = pan;
+  }
+
+  
+  float
+  NullOutputStream::getPan() {
+    return m_pan;
+  }
+
 
   void
   NullOutputStream::resetTimer() {

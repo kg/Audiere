@@ -36,7 +36,7 @@ namespace audiere {
   private:
     typedef std::list<DSOutputStream*> StreamList;
 
-    void RemoveStream(DSOutputStream* stream);
+    void removeStream(DSOutputStream* stream);
 
     IDirectSound* m_direct_sound;
     StreamList    m_open_streams;
@@ -74,6 +74,11 @@ namespace audiere {
     void  setVolume(float volume);
     float getVolume();
 
+    void  setPan(float pan);
+    float getPan();
+
+  private:
+
     void fillStream();
     void update();
     int streamRead(int samples_to_read, void* buffer);
@@ -93,6 +98,7 @@ namespace audiere {
     int m_sample_size;  // convenience: bits per sample * channel count / 8
 
     float m_volume;
+    float m_pan;
     ::BYTE* m_last_sample; // the last sample read (used for clickless silence)
 
     friend class DSAudioDevice;

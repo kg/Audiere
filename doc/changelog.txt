@@ -5,6 +5,17 @@
     external library dependencies
   finer synchronization granularity on DirectSound output streams for
     lower-latency OutputStream calls
+  increase priority of Audiere update thread on all platforms but
+    Win9x, which deadlocks
+  switched from mp3blaster's mpegsound code to splay's mpegsound
+  read 10 MP3 frames for smoother playback on corrupt (?) files
+  added ClassPtr convenience typedefs so people can use them instead
+    of RefPtr<Class>
+
+2002.10.05
+
+  the configure script outputs the URLs for required libraries if it can't
+    find them
 
 2002.10.04
 
@@ -22,10 +33,13 @@
   added the SoundEffect convenience class for simple sound playback
   updated wxPlayer with SoundEffect stuff
   added menu item to close wxPlayer so you can close child windows in wxGTK
+  added pitch shifting to the OutputStream interface
 
 2002.09.19
 
   added square wave generation
+  added white noise generation
+  added pink noise generation
 
 2002.09.07
 

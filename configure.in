@@ -39,6 +39,9 @@ AM_PROG_LIBTOOL
 
 dnl Checks for libraries.
 
+dnl Always build with MikMod
+AC_DEFINE(HAVE_MIKMOD)
+
 dnl If building on Cygwin, link with winmm when using OpenAL
 case $host in
   *cygwin*)

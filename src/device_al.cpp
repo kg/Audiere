@@ -13,8 +13,12 @@ namespace audiere {
     // if anything goes wrong, assume 44100 Hz
     int rate = 44100;
 
+    ADR_LOG("Getting resource");
+
     int device = alGetResourceByName(AL_SYSTEM, "DefaultOut", AL_DEVICE_TYPE);
     if (device) {
+      ADR_LOG("Getting sampling rate");
+
       ALpv pv;
       pv.param = AL_RATE;
       if (-1 == alGetParams(device, &pv, 1)) {
@@ -27,12 +31,16 @@ namespace audiere {
               alGetErrorString(oserror()));
     }
 
+    ADR_LOG("Creating config");
+
     ALconfig config = alNewConfig();
     if (!config) {
       fprintf(stderr, "Couldn't create ALconfig: %s\n",
               alGetErrorString(oserror()));
       return 0;
     }
+
+    ADR_LOG("Setting channels");
 
     // stereo
     int result = alSetChannels(config, 2);
@@ -43,6 +51,8 @@ namespace audiere {
       return 0;
     }
 
+    ADR_LOG("Opening port");
+
     ALport port = alOpenPort("Audiere Output Port", "w", config);
     if (!port) {
       fprintf(stderr, "Couldn't open port: %s\n",
@@ -50,6 +60,8 @@ namespace audiere {
       alFreeConfig(config);
       return 0;
     }
+
+    ADR_LOG("Creating audio device");
 
     alFreeConfig(config);
     return new ALAudioDevice(port, rate);

@@ -148,6 +148,8 @@ namespace audiere {
 
   void
   DSAudioDevice::update() {
+    ADR_GUARD("DSAudioDevice::update");
+
     SYNCHRONIZED(this);
 
     // enumerate all open streams

@@ -44,14 +44,12 @@ namespace audiere {
     }
 
     void lock() {
-   
-      //ADR_LOG("--> Trying to lock");
+      //ADR_GUARD("Synchronized::lock()");
       AI_EnterCriticalSection(m_cs);
-      //ADR_LOG("-->:: LOCKED ::");
     }
 
     void unlock() {
-      //ADR_LOG("<-- Unlocking...");
+      //ADR_GUARD("Synchronized::unlock()");
       AI_LeaveCriticalSection(m_cs);
     }
 

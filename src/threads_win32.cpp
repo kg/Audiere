@@ -15,7 +15,7 @@ namespace audiere {
   };
 
 
-  static DWORD WINAPI InternalThreadRoutine(void* opaque);
+  static unsigned WINAPI InternalThreadRoutine(void* opaque);
 
 
   bool SupportsThreadPriority() {
@@ -58,11 +58,9 @@ namespace audiere {
     internal->opaque   = opaque;
     
     // create the actual thread
-    // use _beginthread because it makes a thread-safe C library
-    DWORD threadid;
-    HANDLE handle = CreateThread(
-      0, 0, InternalThreadRoutine, internal,
-      CREATE_SUSPENDED, &threadid);
+    unsigned threadid;
+    HANDLE handle = (HANDLE)_beginthreadex(
+      0, 0, InternalThreadRoutine, internal, CREATE_SUSPENDED, &threadid);
     if (handle) {
       if (SupportsThreadPriority()) {
         SetThreadPriority(handle, GetWin32Priority(priority));
@@ -76,7 +74,7 @@ namespace audiere {
   }
 
 
-  DWORD WINAPI InternalThreadRoutine(void* opaque) {
+  unsigned WINAPI InternalThreadRoutine(void* opaque) {
     ThreadInternal* internal = (ThreadInternal*)opaque;
 
     // call the function passed 

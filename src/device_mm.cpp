@@ -77,6 +77,8 @@ namespace audiere {
 
   void
   MMAudioDevice::update() {
+    ADR_GUARD("MMAudioDevice::update");
+
     // if a buffer is done playing, add it to the queue again
     for (int i = 0; i < BUFFER_COUNT; ++i) {
       WAVEHDR& wh = m_buffers[i];

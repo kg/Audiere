@@ -211,6 +211,7 @@ namespace audiere {
 
   private:
     void run() {
+      ADR_GUARD("ThreadedDevice::run");
       m_thread_exists = true;
       while (!m_thread_should_die) {
         m_device->update();

@@ -4,6 +4,7 @@
 
 #include <set>
 #include "audiere.h"
+#include "internal.h"
 #include "types.h"
 
 
@@ -11,7 +12,7 @@ namespace audiere {
 
   class NullOutputStream;
 
-  class NullAudioDevice : public DLLImplementation<AudioDevice> {
+  class NullAudioDevice : public RefCountedImplementation<AudioDevice> {
   public:
     NullAudioDevice();
     ~NullAudioDevice();

@@ -6,6 +6,7 @@
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 #include "device_oss.h"
+#include "buffer_stream.h"
 #include "debug.h"
 
 
@@ -117,8 +118,9 @@ namespace audiere {
     void* samples, int sample_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
-    /// @todo  implement OSSAudioDevice::openBuffer
-    return 0;
+    return openStream(new BufferStream(
+      samples, sample_count,
+      channel_count, sample_rate, sample_format));
   }
 
 

@@ -16,6 +16,8 @@ OSS_SOURCES = device_oss.cpp device_oss.h
 endif
 
 libaudiere_la_SOURCES = \
+	buffer_stream.cpp \
+	buffer_stream.h \
 	debug.cpp \
 	debug.h \
 	default_file.h \

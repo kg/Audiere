@@ -133,10 +133,6 @@ SOURCE=.\acq_wav.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\endian.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\endian.hpp
 # End Source File
 # End Group

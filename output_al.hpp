@@ -8,9 +8,6 @@
 #include "output.hpp"
 
 
-static const int AL_BUFFER_COUNT = 16;
-
-
 class ALOutputStream;
 
 
@@ -59,6 +56,9 @@ public:
 private:
   ALOutputStream(
     ALOutputContext* context,
+    ADR_SAMPLE_SOURCE source,
+    ADR_SAMPLE_RESET reset,
+    void* opaque,
     ALuint* buffers,
     ALuint* sources,
     int channel_count,
@@ -67,17 +67,34 @@ private:
   ~ALOutputStream();
   void Update();
 
+  void ReadDeinterleaved(
+    void* deinterleaved,
+    void* interleaved,  // so the read doesn't have to allocate (slow) anything
+    int block_count);
+  void FillBuffers();
+
 private:
   ALOutputContext* m_Context;
+
+  // sample stream
+  ADR_SAMPLE_SOURCE m_Source;
+  ADR_SAMPLE_RESET  m_Reset;
+  void*             m_Opaque;
 
   // informational
   int m_ChannelCount;
   int m_SampleRate;
   int m_BitsPerSample;
+  int m_SampleSize;    // convenience
+
+  // the last sample read
+  ALubyte* m_LastBlock;  
   
   // AL objects
   ALuint* m_Buffers;
   ALuint* m_Sources;
+
+  int m_BufferLength;  // in samples
 
   bool m_IsPlaying;
 

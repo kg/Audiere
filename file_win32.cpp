@@ -81,7 +81,7 @@ int ADR_CALL DefaultFileRead(void* file, void* buffer, int size)
   WIN32_FILE* f = (WIN32_FILE*)file;
   DWORD read;
   BOOL result = ReadFile(f->handle, buffer, size, &read, NULL);
-  if (result) {
+  if (!result) {
     return 0;
   } else {
     return read;

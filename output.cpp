@@ -1,12 +1,15 @@
 #include <string.h>
 #include "output.hpp"
-#include "output_al.hpp"
 #include "output_null.hpp"
 
 #ifdef _WIN32
 #include "output_ds8.hpp"
 #include "output_ds3.hpp"
 #include "output_dll.hpp"
+#endif
+
+#ifdef WITH_OPENAL
+#include "output_al.hpp"
 #endif
 
 
@@ -38,10 +41,14 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
     TRY_CONTEXT(DS8OutputContext)
     TRY_CONTEXT(DS3OutputContext)
 
+#ifdef WITH_OPENAL
+
   // OpenAL
   } else if (strcmp(device, "openal") == 0) {
   
     TRY_CONTEXT(ALOutputContext)
+
+#endif
 
   // null
   } else if (strcmp(device, "null") == 0) {

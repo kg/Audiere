@@ -27,7 +27,7 @@ int ADR_CALL DefaultFileRead(void* file, void* buffer, int size)
 
 int ADR_CALL DefaultFileSeek(void* file, int destination)
 {
-  return fseek((FILE*)file, destination, SEEK_SET);
+  return (0 == fseek((FILE*)file, destination, SEEK_SET));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

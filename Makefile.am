@@ -1,8 +1,10 @@
 lib_LTLIBRARIES = libaudiere.la
 
+include_HEADERS = \
+	audiere.h
+
 libaudiere_la_SOURCES = \
 	audiere.cpp \
-	audiere.h \
 	data_types.cpp \
 	data_types.hpp \
 	file_ansi.cpp \

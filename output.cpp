@@ -69,7 +69,8 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
 
 #else
 
-  if (strcmp(device, "autodetect") == 0) {
+  if (strcmp(device, "") == 0 ||
+      strcmp(device, "autodetect") == 0) {
     TRY_CONTEXT(ALOutputContext);
   } else if (strcmp(device, "openal") == 0) {
     TRY_CONTEXT(ALOutputContext);

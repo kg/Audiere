@@ -50,7 +50,7 @@ OutputStream methods and fields:
 
   field: playing :: boolean
     - If true, this stream is playing.  If false, this stream is not
-      playing.
+      playing.  Remember, 1 is true and 0 is false.
 
   method: reset()
     - Resets the stream to the beginning.

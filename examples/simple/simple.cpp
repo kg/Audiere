@@ -26,10 +26,6 @@ inline void sleepSecond() {
 
 int main(int argc, const char** argv) {
 
-  const char* args[] = { "", "/desktop/Midworld.ogg", "null" };
-  argc = 3;
-  argv = args;
-
   if (argc != 2 && argc != 3) {
     cerr << "usage: simple <filename> [<device>]" << endl;
     return EXIT_FAILURE;
@@ -64,4 +60,6 @@ int main(int argc, const char** argv) {
   while (sound->isPlaying()) {
     sleepSecond();
   }
+
+  return EXIT_SUCCESS;
 }

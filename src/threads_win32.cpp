@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <process.h>
-#include "threads.hpp"
+#include "threads.h"
 
 
 namespace audiere {

@@ -4,7 +4,7 @@
 
 #include "audiere.h"
 #include "types.h"
-#include "utility.hpp"
+#include "utility.h"
 
 
 namespace audiere {

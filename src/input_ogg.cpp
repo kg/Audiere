@@ -1,7 +1,7 @@
 #include <string.h>
-#include "input_ogg.hpp"
+#include "input_ogg.h"
 #include "types.h"
-#include "utility.hpp"
+#include "utility.h"
 
 
 namespace audiere {

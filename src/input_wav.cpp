@@ -1,7 +1,7 @@
 #include <string.h>
-#include "input_wav.hpp"
-#include "endian.hpp"
-#include "utility.hpp"
+#include "input_wav.h"
+#include "endian.h"
+#include "utility.h"
 
 
 namespace audiere {

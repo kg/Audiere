@@ -2,7 +2,7 @@
 #define OUTPUT_DS3_HPP
 
 
-#include "device_ds.hpp"
+#include "device_ds.h"
 
 
 namespace audiere {

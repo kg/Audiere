@@ -1,6 +1,6 @@
 #if defined(_DEBUG) || defined(DEBUG)
 
-#include "debug.hpp"
+#include "debug.h"
 
 
 FILE* Log::handle;

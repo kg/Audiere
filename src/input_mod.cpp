@@ -14,9 +14,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "input_mod.hpp"
-#include "debug.hpp"
-#include "utility.hpp"
+#include "input_mod.h"
+#include "debug.h"
+#include "utility.h"
 
 
 namespace audiere {

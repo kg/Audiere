@@ -7,7 +7,7 @@
 #include <mplayer.h> //
 #include "audiere.h"
 #include "types.h"
-#include "utility.hpp"
+#include "utility.h"
 
 
 // CRT_CALL should match the C runtime's calling convention

@@ -19,9 +19,9 @@
 
 
 #include <math.h>
-#include "device_ds.hpp"
-#include "debug.hpp"
-#include "utility.hpp"
+#include "device_ds.h"
+#include "debug.h"
+#include "utility.h"
 
 
 namespace audiere {

@@ -1,4 +1,4 @@
-#include "repeatable.hpp"
+#include "repeatable.h"
 
 
 namespace audiere {

@@ -1,12 +1,12 @@
 #include <memory>
 #include <string.h>
-#include "debug.hpp"
-#include "default_file.hpp"
-#include "input_mod.hpp"
-#include "input_ogg.hpp"
-#include "input_wav.hpp"
-#include "internal.hpp"
-#include "utility.hpp"
+#include "debug.h"
+#include "default_file.h"
+#include "input_mod.h"
+#include "input_ogg.h"
+#include "input_wav.h"
+#include "internal.h"
+#include "utility.h"
 
 
 namespace audiere {

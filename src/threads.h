@@ -4,7 +4,7 @@
 #define THREADS_HPP
 
 
-#include "debug.hpp"
+#include "debug.h"
 
 
 namespace audiere {

@@ -10,9 +10,11 @@
 #include <vector>
 #include <wx/wx.h>
 #include <audiere.h>
+using namespace audiere;
+using namespace std;
 
 
-static audiere::Context* g_context;
+static AudioDevice* g_device;
 
 
 class wxPlayerFrame : public wxFrame
@@ -42,7 +44,7 @@ private:
   wxButton* m_repeat;
   wxSlider* m_volume;
 
-  std::vector<audiere::Stream*> m_streams;
+  vector<Sound*> m_streams;
 
   DECLARE_EVENT_TABLE()
 };
@@ -89,7 +91,10 @@ wxPlayerFrame::wxPlayerFrame()
   m_pause  = new wxButton(this, event_Pause,  "pause",  wxDefaultPosition);
   m_reset  = new wxButton(this, event_Reset,  "reset",  wxDefaultPosition);
   m_repeat = new wxButton(this, event_Repeat, "repeat", wxDefaultPosition);
-  m_volume = new wxSlider(this, event_Volume, ADR_VOLUME_MAX, ADR_VOLUME_MIN, ADR_VOLUME_MAX);
+  m_volume = new wxSlider(this, event_Volume,
+    OutputStream::MaximumVolume,
+    OutputStream::MinimumVolume,
+    OutputStream::MaximumVolume);
 }
 
 
@@ -143,12 +148,12 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
     return;
   }
 
-  audiere::Stream* stream = g_context->openStream(result.c_str());
-  if (!stream) {
+  Sound* sound = OpenSound(g_device, result.c_str(), STREAM);
+  if (!sound) {
     wxMessageBox("Could not open stream");
   } else {
     m_songs->Append(result);
-    m_streams.push_back(stream);
+    m_streams.push_back(sound);
   }
 }
 
@@ -185,7 +190,7 @@ wxPlayerFrame::OnPause(wxCommandEvent& event)
   int sel = m_songs->GetSelection();
   if (sel >= 0 && sel < m_songs->Number()) {
 
-    m_streams[sel]->pause();
+    m_streams[sel]->stop();
 
   }
 }
@@ -232,9 +237,9 @@ class wxPlayer : public wxApp
 {
 public:
   bool OnInit() {
-    g_context = audiere::CreateContext(0);
-    if (!g_context) {
-      wxMessageBox("Could not create Audiere context");
+    g_device = audiere::OpenDevice();
+    if (!g_device) {
+      wxMessageBox("Could not open output device");
       return false;
     }
 
@@ -245,7 +250,7 @@ public:
   }
 
   int OnExit() {
-    delete g_context;
+    delete g_device;
     return 0;
   }
 };

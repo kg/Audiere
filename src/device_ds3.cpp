@@ -1,5 +1,5 @@
-#include "device_ds3.hpp"
-#include "debug.hpp"
+#include "device_ds3.h"
+#include "debug.h"
 
 
 namespace audiere {

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "default_file.hpp"
+#include "default_file.h"
 
 
 namespace audiere {

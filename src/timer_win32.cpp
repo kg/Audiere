@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <mmsystem.h>
-#include "timer.hpp"
+#include "timer.h"
 
 
 namespace audiere {

@@ -5,10 +5,10 @@
 
 #include <algorithm>
 #include <functional>
-#include "device_null.hpp"
-#include "timer.hpp"
-#include "threads.hpp"
-#include "utility.hpp"
+#include "device_null.h"
+#include "timer.h"
+#include "threads.h"
+#include "utility.h"
 
 namespace audiere {
 

@@ -6,28 +6,28 @@
 
 #include <string>
 #include "audiere.h"
-#include "debug.hpp"
-#include "device_null.hpp"
-#include "internal.hpp"
+#include "debug.h"
+#include "device_null.h"
+#include "internal.h"
 
 #ifdef WIN32
 
   // include this before DS8, because it includes <dsound.h>, which defines
   // DIRECTSOUND_VERSION
-  #include "device_ds3.hpp"
+  #include "device_ds3.h"
 
   #if DIRECTSOUND_VERSION >= 0x0800
-    #include "device_ds8.hpp"
+    #include "device_ds8.h"
   #endif
 
 #endif
 
 #ifdef WITH_OSS
-  #include "device_oss.hpp"
+  #include "device_oss.h"
 #endif
 
 #ifdef WITH_OPENAL
-  #include "device_al.hpp"
+  #include "device_al.h"
 #endif
 
 

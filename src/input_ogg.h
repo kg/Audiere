@@ -4,7 +4,7 @@
 
 #include <vorbis/vorbisfile.h>
 #include "audiere.h"
-#include "utility.hpp"
+#include "utility.h"
 
 
 namespace audiere {

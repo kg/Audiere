@@ -36,7 +36,7 @@ dnl Checks for libraries.
 dnl If building on Cygwin, don't let windows.h define min() or max()
 case $host in
   *cygwin*)
-    CXXFLAGS="-DWIN32_LEAN_AND_MEAN -DNOMINMAX $CXXFLAGS"
+    CXXFLAGS="-DWIN32_LEAN_AND_MEAN -DNOMINMAX -DADR_DECL= -DADR_CALL= $CXXFLAGS"
     ;;
 esac
 

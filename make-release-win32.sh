@@ -42,10 +42,8 @@ DIST=dist
 scons -f vc6/dist.py prefix=$DIST/$NAME || die
 find . -name .sconsign | xargs rm -f
 
-cd $DIST || die
-rm -f $NAME.zip || die
-zip -r $NAME.zip $NAME || die
-cd .. || die
+rm -f $DIST/$NAME.zip
+(cd $DIST && zip -r $NAME.zip $NAME) || die
 
 echo
 echo "Win32 release completed"

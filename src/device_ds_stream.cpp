@@ -161,8 +161,28 @@ namespace audiere {
   void
   DSOutputStream::setPosition(int position) {
     SYNCHRONIZED(m_device.get());
+
+    // figure out if we're playing or not
+    bool is_playing = isPlaying();
+
+    // if we're playing, stop
+    if (is_playing) {
+      stop();
+    }
+
     m_source->setPosition(position);
-    reset();
+    m_last_play = 0;
+
+    m_source->setPosition(position);
+    m_total_read = 0;
+    m_total_written = 0;
+    m_next_read = 0;
+    fillStream();
+
+    // if we were playing, restart
+    if (is_playing) {
+      play();
+    }
   }
 
 

@@ -13,4 +13,7 @@ Version dependencies of third-party software should be maintained in
 this file:
 
 DUMB (CVS from 2003.06.12)
-Ogg Vorbis 1.0
+libogg 1.0
+libvorbis 1.0
+libFLAC 1.1.0
+libFLAC++ 1.1.0

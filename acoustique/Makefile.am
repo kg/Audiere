@@ -17,7 +17,9 @@ libacoustique_la_SOURCES = \
 libacoustique_la_LDFLAGS = \
 	-release $(VERSION) \
 	-lmad \
-	-lvorbisfile
+	-lvorbisfile \
+	-lvorbis \
+	-logg
 
 libacoustique_la_LIBADD = \
 	mikmod/mmio/libmmio.la \

@@ -48,7 +48,9 @@ namespace audiere {
       initialized = true;
     }
 
-    m_duh = openDUH(file);
+    m_file = file;
+
+    m_duh = openDUH();
     if (!m_duh) {
       return false;
     }
@@ -103,20 +105,20 @@ namespace audiere {
 
 
   DUH*
-  MODInputStream::openDUH(FilePtr file) {
-    const char* filename = (const char*)file.get();
+  MODInputStream::openDUH() {
+    const char* filename = (const char*)m_file.get();
 
     DUH* duh = dumb_load_it(filename);
     if (duh) return duh;
-    file->seek(0, File::BEGIN);
+    m_file->seek(0, File::BEGIN);
 
     duh = dumb_load_xm(filename);
     if (duh) return duh;
-    file->seek(0, File::BEGIN);
+    m_file->seek(0, File::BEGIN);
 
     duh = dumb_load_s3m(filename);
     if (duh) return duh;
-    file->seek(0, File::BEGIN);
+    m_file->seek(0, File::BEGIN);
 
     return dumb_load_mod(filename);
   }

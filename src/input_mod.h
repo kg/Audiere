@@ -26,7 +26,7 @@ namespace audiere {
     int doRead(int frame_count, void* buffer);
 
   private:
-    DUH* openDUH(FilePtr file);
+    DUH* openDUH();
 
     static void* dfs_open(const char* filename);
     static int   dfs_skip(void* f, long n);
@@ -37,6 +37,7 @@ namespace audiere {
     static int loopCallback(void* ptr);
 
   private:
+    FilePtr          m_file;
     DUH*             m_duh;
     DUH_SIGRENDERER* m_renderer;
   };

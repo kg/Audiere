@@ -1,3 +1,7 @@
+2004.02.02
+
+  Fixed: Speex decoder never actually released its file handle.
+
 2004.01.19
 
   Fix an mpegsound crash when loading corrupt MP3s (or text files).

@@ -58,8 +58,12 @@ namespace audiere {
   /// @todo  this really should be replaced with a factory function
   bool
   SpeexInputStream::initialize(FilePtr file) {
-    FileReader* reader = new FileReader(file);
-    m_speexfile = new speexfile::speexfile(reader);
+#if defined(_MSC_VER) && (_MSC_VER <= 1200)
+    m_reader = std::auto_ptr<speexfile::Reader>(new FileReader(file));
+#else
+    m_reader.reset(new FileReader(file));
+#endif
+    m_speexfile = new speexfile::speexfile(m_reader.get());
 
     // @todo How should we handle files with multiple streams?
     if (m_speexfile->get_streams() != 1) {

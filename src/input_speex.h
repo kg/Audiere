@@ -40,6 +40,8 @@ namespace audiere {
     // Defined by speexfile API.
     enum { BUFFER_SIZE = 2000 };
 
+    std::auto_ptr<speexfile::Reader> m_reader;
+
     speexfile::speexfile* m_speexfile;
     int m_position;  // Need to remember this because m_speexfile doesn't.
 

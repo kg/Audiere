@@ -1,3 +1,5 @@
+EXTRA_DIST = documentation
+
 lib_LTLIBRARIES = libaudiere.la
 
 include_HEADERS = \

@@ -96,6 +96,10 @@ SOURCE=..\..\src\audiere.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\audiere.rc
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\debug.cpp
 # End Source File
 # Begin Source File

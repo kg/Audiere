@@ -118,6 +118,9 @@
 				RelativePath="..\..\src\audiere.h">
 			</File>
 			<File
+				RelativePath="..\..\src\audiere.rc">
+			</File>
+			<File
 				RelativePath="..\..\src\debug.cpp">
 			</File>
 			<File

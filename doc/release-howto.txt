@@ -12,6 +12,7 @@ The following files contain version information:
   doc/doxygen/doxygen-dist.sh
   doc/doxygen/mainpage.doxy
   src/audiere.h
+  src/audiere.rc
   src/version.cpp
 
 

@@ -9,7 +9,7 @@
 
 
 #include <windows.h>
-#include <mmreg.h>
+#include <mmsystem.h>
 #include <dsound.h>
 #include <list>
 #include "audiere.h"

@@ -38,13 +38,29 @@ else
 OSS_DIST    = device_oss.cpp device_oss.h
 endif
 
-EXTRA_DIST = $(FLAC_DIST) $(OGG_DIST) $(OPENAL_DIST) $(AL_DIST) $(OSS_DIST)
+DSOUND_SRC = \
+	device_ds.cpp device_ds.h \
+	device_ds_buffer.cpp device_ds_buffer.h \
+	device_ds_stream.cpp device_ds_stream.h \
+	dxguid.cpp
+
+if HAVE_DSOUND
+DSOUND_SOURCES = $(DSOUND_SRC)
+else
+DSOUND_DIST = $(DSOUND_SRC)
+endif
+
+
+EXTRA_DIST = \
+	$(FLAC_DIST) $(OGG_DIST) $(OPENAL_DIST) $(AL_DIST) $(OSS_DIST) \
+	$(DSOUND_DIST)
 
 libaudiere_la_SOURCES = \
 	debug.cpp \
 	debug.h \
 	default_file.h \
 	device.cpp \
+	$(DSOUND_SOURCES) \
 	device_mixer.cpp \
 	device_mixer.h \
 	device_null.cpp \

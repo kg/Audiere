@@ -3,7 +3,7 @@
 
 
 #include <windows.h>
-#include <mmreg.h>
+#include <mmsystem.h>
 #include <dsound.h>
 #include "audiere.h"
 #include "repeatable.h"

@@ -38,16 +38,16 @@ dnl windows.h define min() or max()
 case $host in
   *cygwin*)
     OPENAL_LIBS=-lwinmm
-    CXXFLAGS="-DNOMINMAX -DADR_CALL= $CXXFLAGS"
+    CXXFLAGS="-DWIN32_LEAN_AND_MEAN -DNOMINMAX -DADR_CALL= $CXXFLAGS"
     ;;
 esac
 
 dnl If building with gcc, build with all warnings except "class has virtual
 dnl functions but non-virtual destructor".
-if [[ "x$GXX" = "xyes" ]]; then
+if test "x$GXX" = "xyes" ; then
    CXXFLAGS="$CXXFLAGS -Wall -Wno-non-virtual-dtor"
 fi
-if [[ "x$GCC" = "xyes" ]]; then
+if test "x$GCC" = "xyes" ; then
    CFLAGS="$CFLAGS -Wall -Wno-non-virtual-dtor"
 fi
 
@@ -128,6 +128,15 @@ Get libvorbis from http://www.vorbis.com/])
     AC_MSG_WARN([Disabling Ogg Vorbis support.])
     AC_DEFINE(NO_OGG))
 AM_CONDITIONAL(HAVE_OGG, test "x$HAVE_OGG" = "xtrue")
+
+AC_CHECK_HEADER(dsound.h,
+    HAVE_DSOUND=true
+    AC_DEFINE(HAVE_DSOUND)
+    LIBS="-ldsound -lole32 -lrpcrt4 $LIBS"
+    EXTRA_LIBS="-ldsound -lole32 -lrpcrt4 $EXTRA_LIBS"
+  ,
+    AC_MSG_RESULT(no))
+AM_CONDITIONAL(HAVE_DSOUND, test "x$HAVE_DSOUND" = "xtrue")
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 

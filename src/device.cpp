@@ -11,7 +11,7 @@
 #include "internal.h"
 #include "threads.h"
 
-#ifdef WIN32
+#ifdef _MSC_VER
 
   #include <windows.h>
   #include <mmsystem.h>
@@ -32,24 +32,32 @@
   #include "device_al.h"
 #endif
 
+#ifdef HAVE_DSOUND
+  #include "device_ds.h"
+#endif
+
 
 namespace audiere {
 
 
   ADR_EXPORT(const char*, AdrGetSupportedAudioDevices)() {
     return
-#ifdef WIN32
+#ifdef _MSC_VER
       "directsound:DirectSound (high-performance)"  ";"
       "winmm:Windows Multimedia (compatible)"  ";"
-#endif
+#else
 #ifdef HAVE_OSS
       "oss:Open Sound System"  ";"
+#endif
+#ifdef HAVE_DSOUND
+      "directsound:DirectSound (high-performance)"  ";"
 #endif
 #ifdef HAVE_OPENAL
       "openal:OpenAL"  ";"
 #endif
 #ifdef HAVE_AL
       "al:SGI AL"  ";"
+#endif
 #endif
       "null:Null output (no sound)"  ;
   }
@@ -78,7 +86,7 @@ namespace audiere {
   {
     ADR_GUARD("DoOpenDevice");
 
-    #ifdef WIN32
+    #ifdef _MSC_VER
 
       if (name == "" || name == "autodetect") {
         TRY_GROUP("directsound");
@@ -114,6 +122,7 @@ namespace audiere {
       if (name == "" || name == "autodetect") {
         // in decreasing order of sound API quality
         TRY_GROUP("al");
+        TRY_GROUP("directsound");
         TRY_GROUP("oss");
         TRY_GROUP("openal");
         return 0;
@@ -122,6 +131,13 @@ namespace audiere {
       #ifdef HAVE_OSS
         if (name == "oss") {
           TRY_DEVICE(OSSAudioDevice);
+          return 0;
+        }
+      #endif
+
+      #ifdef HAVE_DSOUND
+        if (name == "directsound") {
+          TRY_DEVICE(DSAudioDevice);
           return 0;
         }
       #endif

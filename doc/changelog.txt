@@ -1,3 +1,7 @@
+2004.01.17
+
+  Dramatically reduced the latency of the OSS device.
+
 2004.01.12
 
   Added MP2 to the list of supported file types, since mpegsound can

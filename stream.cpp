@@ -237,8 +237,6 @@ Stream::GetFileFormat(const char* filename)
     const char* extension;
     int type;
   } extension_map[] = {
-    { ".mp3", ACQ_STREAM_MP3 },
-    { ".mp2", ACQ_STREAM_MP3 },
     { ".ogg", ACQ_STREAM_OGG },
     { ".wav", ACQ_STREAM_WAV },
     { ".mod", ACQ_STREAM_MOD },

@@ -46,9 +46,6 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
     TRY_STREAM_TYPE(ACQ_STREAM_OGG);
     TRY_STREAM_TYPE(ACQ_STREAM_WAV);
     TRY_STREAM_TYPE(ACQ_STREAM_MOD);
-    #ifdef WITH_MP3
-      TRY_STREAM_TYPE(ACQ_STREAM_MP3);
-    #endif
 
     return NULL;
   }
@@ -70,16 +67,6 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
       stream->stream_read  = OGG_Read;
       stream->stream_reset = OGG_Reset;
     } break;
-
-#ifdef WITH_MP3
-    // MP3
-    case ACQ_STREAM_MP3: {
-      stream->stream_open  = MP3_Open;
-      stream->stream_close = MP3_Close;
-      stream->stream_read  = MP3_Read;
-      stream->stream_reset = MP3_Reset;
-    } break;
-#endif
 
     // WAV
     case ACQ_STREAM_WAV: {

@@ -384,7 +384,7 @@ namespace audiere {
 
 
   // CONTEXT FACTORY
-  inline Context* CreateContext(ContextAttr* attr) {
+  inline Context* CreateContext(ContextAttr* attr = 0) {
     ADR_CONTEXT context = AdrCreateContext(attr ? attr->m_attr : 0);
     return (context ? new Context(context) : 0);
   }

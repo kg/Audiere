@@ -1,5 +1,4 @@
 #include <string>
-#include <memory>
 #include <string.h>
 #include <ctype.h>
 #include <acoustique.h>

@@ -143,10 +143,6 @@ SOURCE=.\acq_mod.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\acq_mp3.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\acq_ogg.cpp
 # End Source File
 # Begin Source File

@@ -107,31 +107,11 @@ SOURCE=.\acq_mod.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\acq_mod.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\acq_mp3.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\acq_mp3.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\acq_ogg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\acq_ogg.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\acq_wav.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\acq_wav.hpp
 # End Source File
 # Begin Source File
 

@@ -65,7 +65,6 @@ inline T acq_max(T a, T b) {
   extern bool name##_Reset(ACQ_STREAM stream);
 
 DECLARE_STATE(MOD)  // acq_mod.cpp
-DECLARE_STATE(MP3)  // acq_mp3.cpp
 DECLARE_STATE(OGG)  // acq_ogg.cpp
 DECLARE_STATE(WAV)  // acq_wav.cpp
 

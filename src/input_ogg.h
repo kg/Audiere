@@ -9,7 +9,7 @@
 
 namespace audiere {
 
-  class OGGInputStream : public UnseekableSource {
+  class OGGInputStream : public RefImplementation<SampleSource> {
   public:
     OGGInputStream();
     ~OGGInputStream();
@@ -22,6 +22,11 @@ namespace audiere {
       SampleFormat& sample_format);
     int ADR_CALL read(int sample_count, void* samples);
     void ADR_CALL reset();
+
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
 
   private:
     static size_t FileRead(void* buffer, size_t size, size_t n, void* opaque);

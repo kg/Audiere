@@ -76,11 +76,6 @@ namespace audiere {
   OGGInputStream::read(int sample_count, void* samples) {
     int sample_size = m_channel_count * GetSampleSize(m_sample_format);
 
-    // if we're at the end of the file, we have no more samples
-  //  if (m_eof) {
-  //    return 0;
-  //  }
-  
     u8* out = (u8*)samples;
 
     int samples_left = sample_count;
@@ -91,7 +86,6 @@ namespace audiere {
       // if so, treat it as an EndOfStream
       vorbis_info* vi = ov_info(&m_vorbis_file, -1);
       if (vi && (m_sample_rate != vi->rate || m_channel_count != vi->channels)) {
-  //      m_eof = true;
         break;
       }
 
@@ -115,7 +109,6 @@ namespace audiere {
         // if error, ignore it
         continue;
       } else if (result == 0) {
-  //      m_eof = true;
         break;
       }
 
@@ -133,6 +126,40 @@ namespace audiere {
   void
   OGGInputStream::reset() {
     ov_pcm_seek(&m_vorbis_file, 0);
+  }
+
+
+  bool
+  OGGInputStream::isSeekable() {
+    return (ov_seekable(&m_vorbis_file) != 0);
+  }
+
+
+  int
+  OGGInputStream::getLength() {
+    if (isSeekable()) {
+      return ov_pcm_total(&m_vorbis_file, -1);
+    } else {
+      return 0;
+    }
+  }
+
+
+  void
+  OGGInputStream::setPosition(int position) {
+    if (isSeekable()) {
+      ov_pcm_seek(&m_vorbis_file, position);
+    }
+  }
+
+
+  int
+  OGGInputStream::getPosition() {
+    if (isSeekable()) {
+      return ov_pcm_tell(&m_vorbis_file);
+    } else {
+      return 0;
+    }
   }
 
 

@@ -1,5 +1,9 @@
 2003.07.01
 
+  The configure script tries to link a small wxWindows application
+  rather than trusting the existence of wx-config in order to find out
+  if wxWindows exists.
+
   Made the FLAC decoder use libFLAC instead of libFLAC++.  This makes
   it easier to compile on platforms with differing C++ ABIs, such as
   IRIX (MIPSPro CC vs. GNU g++).

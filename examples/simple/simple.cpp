@@ -33,26 +33,26 @@ int main(int argc, char** argv) {
 
   cerr << "initializing..." << endl;
 
-  auto_ptr<Context> context(CreateContext(0));
-  if (!context.get()) {
-    cerr << "CreateContext() failed" << endl;
+  auto_ptr<AudioDevice> device(OpenDevice());
+  if (!device.get()) {
+    cerr << "OpenDevice() failed" << endl;
     return EXIT_FAILURE;
   }
 
   cerr << "created context" << endl;
 
-  auto_ptr<Stream> stream(context->openStream(argv[1]));
-  if (!stream.get()) {
-    cerr << "openStream() failed" << endl;
+  auto_ptr<Sound> sound(OpenSound(device.get(), argv[1], STREAM));
+  if (!sound.get()) {
+    cerr << "OpenSound() failed" << endl;
     return EXIT_FAILURE;
   }
 
-  cerr << "created stream" << endl;
+  cerr << "opened sound" << endl;
 
-  stream->play();
+  sound->play();
 
   cerr << "started playback" << endl;
-  while (stream->isPlaying()) {
+  while (sound->isPlaying()) {
     sleepSecond();
   }
 }

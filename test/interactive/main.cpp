@@ -34,21 +34,19 @@ void passOut(int milliseconds) {
 void testDriver(const char* driver) {
   string sound_names[] = {"kclick.wav", "knock.wav", "laugh.wav", "shot.wav"};
   const int sound_count = arraysize(sound_names);
-  Stream* sounds[sound_count];
+  Sound* sounds[sound_count];
 
   cout << "testDriver " << driver << "\n--" << endl;
 
-  ContextAttr attr;
-  attr.setOutputDevice(driver);
-  auto_ptr<Context> context(CreateContext(&attr));
-  if (!context.get()) {
-    cout << "Error creating output context" << endl;
+  auto_ptr<AudioDevice> device(OpenDevice(driver));
+  if (!device.get()) {
+    cout << "Error opening output device" << endl;
     return;
   }
 
   for (int i = 0; i < sound_count; ++i) {
     string name = sound_names[i];
-    sounds[i] = context->openStream(name.c_str());
+    sounds[i] = OpenSound(device.get(), name.c_str(), STREAM);
     if (!sounds[i]) {
       for (int j = 0; j < i; ++j) {
         delete sounds[i];

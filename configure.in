@@ -80,5 +80,6 @@ AC_OUTPUT(
         src/mikmod/mikmod/virtch/resfilter/Makefile
         src/mikmod/mmio/Makefile
         test/Makefile
+        test/device/Makefile
         test/interactive/Makefile
 )

@@ -1,1 +1,1 @@
-SUBDIRS = interactive
+SUBDIRS = device interactive

@@ -214,9 +214,9 @@ void StreamFrame::UpdateLengthPosLabel() {
   if (m_stream_is_seekable) {
     wxString label;
     label.Printf(
-      "Length: %d   Pos: %d",
-      m_stream_length,
-      m_stream->getPosition());
+      "Pos/Len: %d / %d",
+      m_stream->getPosition(),
+      m_stream_length);
     m_length_pos_label->SetLabel(label);
   } else {
     m_length_pos_label->SetLabel("Unseekable Stream");

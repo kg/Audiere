@@ -1,20 +1,19 @@
-#include <windows.h>
-#include <mmsystem.h>
 #include "audiere.h"
-#include "debug.h"
 #include "internal.h"
+#include "mci_device.h"
 #include "utility.h"
 
 
 namespace audiere {
 
-  class CDDeviceWin32 : public RefImplementation<CDDevice> {
+  class CDDeviceWin32 : public RefImplementation<CDDevice>, public MCIDevice {
   public:
-    CDDeviceWin32(const char* name) {
+    CDDeviceWin32(const char* name)
+      : MCIDevice(std::string(name) + "\\")
+    {
       m_name = name;
-      m_device = m_name + "\\";
 
-      sendString("open " + m_device + " type cdaudio");
+      sendCommand("open", "type cdaudio");
 
       // Needed for play()
       sendCommand("set", "time format tmsf");
@@ -22,7 +21,6 @@ namespace audiere {
 
     ~CDDeviceWin32() {
       stop();
-      sendCommand("close");
     }
 
     const char* ADR_CALL getName() {
@@ -79,53 +77,38 @@ namespace audiere {
     }
 
   private:
-    std::string sendString(const std::string& string) {
-      ADR_LOG("Sending MCI Command: " + string);
-
-      const int bufferLength = 1000;
-      char buffer[bufferLength + 1] = {0};
-      MCIERROR error = mciSendString(string.c_str(), buffer, 1000, NULL);
-
-      char errorString[bufferLength + 1] = {0};
-      mciGetErrorString(error, errorString, bufferLength);
-
-      ADR_LOG("Error: " + std::string(errorString));
-      ADR_LOG("Result: " + std::string(buffer));
-      return buffer;
-    }
-
-    std::string sendCommand(const std::string& request, const std::string& parameters = "") {
-      return sendString(request + " " + m_device + " " + parameters);
-    }
-
     std::string m_name;
-    std::string m_device;
   };
 
-  ADR_EXPORT(const char*) AdrEnumerateCDDevices() {
-    // Static data bad, but I can't think of a better way.  :(
-    static char devices[26 * 3];  // Space for each drive letter, colons, and zeroes.
-    char* out = devices;
+  
+  namespace hidden {
 
-    for (char device = 'A'; device <= 'Z'; ++device) {
-      char name[] = {device, ':', 0};
-      UINT type = GetDriveType(name);
-      if (type == DRIVE_CDROM) {
-        *out++ = device;
-        *out++ = ':';
-        *out++ = 0;
+    ADR_EXPORT(const char*) AdrEnumerateCDDevices() {
+      // Static data bad, but I can't think of a better way.  :(
+      static char devices[26 * 3];  // Space for each drive letter, colons, and zeroes.
+      char* out = devices;
+
+      for (char device = 'A'; device <= 'Z'; ++device) {
+        char name[] = {device, ':', 0};
+        UINT type = GetDriveType(name);
+        if (type == DRIVE_CDROM) {
+          *out++ = device;
+          *out++ = ':';
+          *out++ = 0;
+        }
+      }
+
+      return devices;
+    }
+
+    ADR_EXPORT(CDDevice*) AdrOpenCDDevice(const char* name) {
+      if (GetDriveType(name) == DRIVE_CDROM) {
+        return new CDDeviceWin32(name);
+      } else {
+        return 0;
       }
     }
 
-    return devices;
-  }
-
-  ADR_EXPORT(CDDevice*) AdrOpenCDDevice(const char* name) {
-    if (GetDriveType(name) == DRIVE_CDROM) {
-      return new CDDeviceWin32(name);
-    } else {
-      return 0;
-    }
   }
 
 }

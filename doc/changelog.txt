@@ -1,3 +1,8 @@
+2004.07.21
+
+  Added MIDI support through the MCI subsystem on Win32 and Cygwin.
+  (Chad Austin)
+
 2004.07.06
 
   Added frame seeking support for MP3 files.  (Andrew Gatt)

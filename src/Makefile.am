@@ -60,6 +60,7 @@ WINMM_DIST    = device_mm.cpp device_mm.h
 endif
 
 # Automake blows.
+# A lot.
 if HAVE_LIBCDAUDIO
 LIBCDAUDIO_SOURCES  = cd_unix.cpp
 WINCDAUDIO_DIST     = cd_win32.cpp
@@ -69,9 +70,13 @@ LIBCDAUDIO_DIST     = cd_unix.cpp
 if HAVE_WINMM
 WINCDAUDIO_SOURCES  = cd_win32.cpp
 NULLCDAUDIO_DIST    = cd_null.cpp
+MIDI_SOURCES        = midi_mci.cpp
+MIDI_DIST           = midi_null.cpp
 else
 NULLCDAUDIO_SOURCES = cd_null.cpp
 WINCDAUDIO_DIST     = cd_win32.cpp
+MIDI_SOURCES        = midi_null.cpp
+MIDI_DIST           = midi_mci.cpp        
 endif
 endif
 
@@ -79,9 +84,10 @@ endif
 EXTRA_DIST = \
 	$(LIBCDAUDIO_DIST) $(WINCDAUDIO_DIST) $(NULLCDAUDIO_DIST) \
 	$(FLAC_DIST) $(DUMB_DIST) $(OGG_DIST) $(SPEEX_DIST) $(AL_DIST) \
-	$(OSS_DIST) $(DSOUND_DIST) $(WINMM_DIST)
+	$(OSS_DIST) $(DSOUND_DIST) $(WINMM_DIST) $(MIDI_DIST)
 
 libaudiere_la_SOURCES = \
+	$(MIDI_SOURCES) \
 	basic_source.cpp \
 	basic_source.h \
 	$(LIBCDAUDIO_SOURCES) \
@@ -116,6 +122,7 @@ libaudiere_la_SOURCES = \
 	input_wav.h \
 	internal.h \
 	loop_point_source.cpp \
+	mci_device.h \
 	memory_file.cpp \
 	memory_file.h \
 	noise.cpp \

@@ -8,11 +8,12 @@
 
 class CDDeviceFrame : public wxFrame {
 public:
-  CDDeviceFrame(audiere::CDDevice* device);
+  CDDeviceFrame(audiere::CDDevicePtr device);
 
 private:
   void OnDeviceNewDevice();
   void OnDeviceNewCDDevice();
+  void OnDeviceNewMIDIDevice();
   void OnHelpAbout();
 
   void OnPlay();

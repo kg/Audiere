@@ -10,6 +10,12 @@ SRC = \
 	DeviceFrame.h \
 	EditLoopPointsDialog.cpp \
 	EditLoopPointsDialog.h \
+	MIDIDeviceDialog.cpp \
+	MIDIDeviceDialog.h \
+	MIDIDeviceFrame.cpp \
+	MIDIDeviceFrame.h \
+	MIDIStreamFrame.cpp \
+	MIDIStreamFrame.h \
 	NewDeviceDialog.cpp \
 	NewDeviceDialog.h \
 	SoundEffectFrame.cpp \

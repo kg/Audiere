@@ -10,9 +10,10 @@
 
 
 BEGIN_EVENT_TABLE(CDDeviceFrame, wxFrame)
-  EVT_MENU(DEVICE_NEW_DEVICE,   CDDeviceFrame::OnDeviceNewDevice)
-  EVT_MENU(DEVICE_NEW_CDDEVICE, CDDeviceFrame::OnDeviceNewCDDevice)
-  EVT_MENU(HELP_ABOUT,          CDDeviceFrame::OnHelpAbout)
+  EVT_MENU(DEVICE_NEW_DEVICE,     CDDeviceFrame::OnDeviceNewDevice)
+  EVT_MENU(DEVICE_NEW_CDDEVICE,   CDDeviceFrame::OnDeviceNewCDDevice)
+  EVT_MENU(DEVICE_NEW_MIDIDEVICE, CDDeviceFrame::OnDeviceNewMIDIDevice)
+  EVT_MENU(HELP_ABOUT,            CDDeviceFrame::OnHelpAbout)
 
   EVT_BUTTON(CD_PLAY,         CDDeviceFrame::OnPlay)
   EVT_BUTTON(CD_STOP,         CDDeviceFrame::OnStop)
@@ -24,14 +25,15 @@ BEGIN_EVENT_TABLE(CDDeviceFrame, wxFrame)
 END_EVENT_TABLE()
 
 
-CDDeviceFrame::CDDeviceFrame(audiere::CDDevice* device)
+CDDeviceFrame::CDDeviceFrame(audiere::CDDevicePtr device)
 : wxFrame(0, -1, "CD Device - " + wxString(device->getName()))
 {
   m_device = device;
 
   wxMenu* deviceMenu = new wxMenu;
-  deviceMenu->Append(DEVICE_NEW_DEVICE,   "&New Device...");
-  deviceMenu->Append(DEVICE_NEW_CDDEVICE, "New C&D Device...");
+  deviceMenu->Append(DEVICE_NEW_DEVICE,           "&New Device...");
+  deviceMenu->Append(DEVICE_NEW_CDDEVICE,         "New C&D Device...");
+  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE,       "New &MIDI Device...");
 
   wxMenu* helpMenu = new wxMenu;
   helpMenu->Append(HELP_ABOUT, "&About...");
@@ -95,6 +97,11 @@ void CDDeviceFrame::OnDeviceNewDevice() {
 
 void CDDeviceFrame::OnDeviceNewCDDevice() {
   wxGetApp().OnNewCDDevice(this);
+}
+
+
+void CDDeviceFrame::OnDeviceNewMIDIDevice() {
+  wxGetApp().OnNewMIDIDevice(this);
 }
 
 

@@ -7,6 +7,8 @@
 #include "CDDeviceDialog.h"
 #include "CDDeviceFrame.h"
 #include "DeviceFrame.h"
+#include "MIDIDeviceDialog.h"
+#include "MIDIDeviceFrame.h"
 #include "NewDeviceDialog.h"
 #include "wxPlayer.h"
 
@@ -50,7 +52,7 @@ void wxPlayer::OnNewDevice(wxWindow* parent) {
 void wxPlayer::OnNewCDDevice(wxWindow* parent) {
   CDDeviceDialog dialog(parent);
   if (dialog.ShowModal() == wxID_OK) {
-    audiere::CDDevice* device = audiere::OpenCDDevice(dialog.getName().c_str());
+    audiere::CDDevicePtr device = audiere::OpenCDDevice(dialog.getName().c_str());
     if (!device) {
       wxMessageBox("Error opening CD device", "New CD Device",
                    wxOK | wxICON_ERROR, parent);
@@ -58,6 +60,21 @@ void wxPlayer::OnNewCDDevice(wxWindow* parent) {
     }
 
     (new CDDeviceFrame(device))->Show(true);
+  }
+}
+
+
+void wxPlayer::OnNewMIDIDevice(wxWindow* parent) {
+  MIDIDeviceDialog dialog(parent);
+  if (dialog.ShowModal() == wxID_OK) {
+    audiere::MIDIDevicePtr device = audiere::OpenMIDIDevice(dialog.getName().c_str());
+    if (!device) {
+      wxMessageBox("Error opening MIDI device", "New MIDI Device",
+                   wxOK | wxICON_ERROR, parent);
+      return;
+    }
+
+    (new MIDIDeviceFrame(device))->Show(true);
   }
 }
 

@@ -38,6 +38,7 @@ std::string Join(
 BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
   EVT_MENU(DEVICE_NEW_DEVICE,           DeviceFrame::OnDeviceNewDevice)
   EVT_MENU(DEVICE_NEW_CDDEVICE,         DeviceFrame::OnDeviceNewCDDevice)
+  EVT_MENU(DEVICE_NEW_MIDIDEVICE,       DeviceFrame::OnDeviceNewMIDIDevice)
   EVT_MENU(DEVICE_OPEN_STREAM,          DeviceFrame::OnDeviceOpenStream)
   EVT_MENU(DEVICE_OPEN_SOUND,           DeviceFrame::OnDeviceOpenSound)
   EVT_MENU(DEVICE_CREATE_TONE,          DeviceFrame::OnDeviceCreateTone)
@@ -53,13 +54,14 @@ END_EVENT_TABLE()
 
 
 DeviceFrame::DeviceFrame(audiere::AudioDevice* device)
-: wxMDIParentFrame(0, -1, "Device Window - " + wxString(device->getName()))
+: wxMDIParentFrame(0, -1, "Audio Device - " + wxString(device->getName()))
 {
   m_device = device;
 
   wxMenu* deviceMenu = new wxMenu();
   deviceMenu->Append(DEVICE_NEW_DEVICE,           "&New Device...");
   deviceMenu->Append(DEVICE_NEW_CDDEVICE,         "New C&D Device...");
+  deviceMenu->Append(DEVICE_NEW_MIDIDEVICE,       "New &MIDI Device...");
   deviceMenu->AppendSeparator();
   deviceMenu->Append(DEVICE_OPEN_STREAM,          "&Open Stream...");
   deviceMenu->Append(DEVICE_OPEN_SOUND,           "Open &Sound...");
@@ -94,6 +96,11 @@ void DeviceFrame::OnDeviceNewDevice() {
 
 void DeviceFrame::OnDeviceNewCDDevice() {
   wxGetApp().OnNewCDDevice(this);
+}
+
+
+void DeviceFrame::OnDeviceNewMIDIDevice() {
+  wxGetApp().OnNewMIDIDevice(this);
 }
 
 

@@ -12,6 +12,7 @@ public:
   
   void OnDeviceNewDevice();
   void OnDeviceNewCDDevice();
+  void OnDeviceNewMIDIDevice();
   wxString GetSoundFile();
   void OnDeviceOpenStream();
   void OnDeviceOpenSound();

@@ -12,9 +12,11 @@ sources = Split("""
     input
     input_ogg
     input_wav
+    noise
     repeatable
     resampler
     sample_buffer
+    square_wave
     sound
     threads_posix
     timer_posix

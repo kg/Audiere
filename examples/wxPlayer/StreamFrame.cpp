@@ -25,16 +25,16 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
   EVT_COMMAND_SCROLL(STREAM_PITCH,  StreamFrame::OnChangePitch)
   EVT_COMMAND_SCROLL(STREAM_POS,    StreamFrame::OnChangePos)
 
-  EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdateStatus)
+//  EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdateStatus)
 END_EVENT_TABLE()
 
 
 StreamFrame::StreamFrame(
   wxMDIParentFrame* parent,
   const wxString& title,
-  audiere::OutputStream* stream,
-  audiere::SampleSource* source,
-  audiere::LoopPointSource* loop_source)
+  audiere::OutputStreamPtr stream,
+  audiere::SampleSourcePtr source,
+  audiere::LoopPointSourcePtr loop_source)
 : wxMDIChildFrame(parent, -1, title)
 {
   m_stream = stream;

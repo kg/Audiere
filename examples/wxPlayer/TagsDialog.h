@@ -10,7 +10,7 @@ class TagsDialog : public wxDialog {
 public:
   TagsDialog(
     wxWindow* parent,
-    audiere::SampleSource* source);
+    audiere::SampleSourcePtr source);
 
 private:
   void OnButton(wxCommandEvent& event);

@@ -15,7 +15,7 @@ END_EVENT_TABLE()
 
 EditLoopPointsDialog::EditLoopPointsDialog(
   wxWindow* parent,
-  audiere::LoopPointSource* loop_source)
+  audiere::LoopPointSourcePtr loop_source)
 : wxDialog(parent, -1, wxString("Edit Loop Points"), wxDefaultPosition,
            wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

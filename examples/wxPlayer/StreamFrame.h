@@ -11,9 +11,9 @@ public:
   StreamFrame(
     wxMDIParentFrame* parent,
     const wxString& title,
-    audiere::OutputStream* stream,
-    audiere::SampleSource* source,
-    audiere::LoopPointSource* loop_source = 0);
+    audiere::OutputStreamPtr stream,
+    audiere::SampleSourcePtr source,
+    audiere::LoopPointSourcePtr loop_source = 0);
   ~StreamFrame();
 
   void OnPlay();

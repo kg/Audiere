@@ -8,7 +8,7 @@
 
 class DeviceFrame : public wxMDIParentFrame {
 public:
-  DeviceFrame(audiere::AudioDevice* device);
+  DeviceFrame(audiere::AudioDevicePtr device);
   
   void OnDeviceNewDevice();
   void OnDeviceNewCDDevice();

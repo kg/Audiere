@@ -17,7 +17,7 @@ BEGIN_EVENT_TABLE(SoundEffectFrame, wxMDIChildFrame)
 END_EVENT_TABLE()
 
 
-SoundEffectFrame::SoundEffectFrame(wxMDIParentFrame* parent, const wxString& title, audiere::SoundEffect* effect)
+SoundEffectFrame::SoundEffectFrame(wxMDIParentFrame* parent, const wxString& title, audiere::SoundEffectPtr effect)
 : wxMDIChildFrame(parent, -1, title)
 {
   m_effect = effect;

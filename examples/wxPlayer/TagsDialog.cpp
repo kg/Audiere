@@ -15,7 +15,7 @@ END_EVENT_TABLE()
 
 TagsDialog::TagsDialog(
   wxWindow* parent,
-  audiere::SampleSource* source)
+  audiere::SampleSourcePtr source)
 : wxDialog(parent, -1, wxString("View Tags"), wxDefaultPosition,
            wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

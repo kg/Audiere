@@ -8,7 +8,7 @@
 
 class SoundEffectFrame : public wxMDIChildFrame {
 public:
-  SoundEffectFrame(wxMDIParentFrame* parent, const wxString& title, audiere::SoundEffect* effect);
+  SoundEffectFrame(wxMDIParentFrame* parent, const wxString& title, audiere::SoundEffectPtr effect);
 
   void OnPlay();
   void OnStop();

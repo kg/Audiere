@@ -10,7 +10,7 @@ class EditLoopPointsDialog : public wxDialog {
 public:
   EditLoopPointsDialog(
     wxWindow* parent,
-    audiere::LoopPointSource* loop_source);
+    audiere::LoopPointSourcePtr loop_source);
 
 private:
   void OnButton(wxCommandEvent& event);

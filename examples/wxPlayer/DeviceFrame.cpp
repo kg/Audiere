@@ -53,7 +53,7 @@ BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
 END_EVENT_TABLE()
 
 
-DeviceFrame::DeviceFrame(audiere::AudioDevice* device)
+DeviceFrame::DeviceFrame(audiere::AudioDevicePtr device)
 : wxMDIParentFrame(0, -1, "Audio Device - " + wxString(device->getName()))
 {
   m_device = device;
@@ -315,7 +315,7 @@ void DeviceFrame::DoOpenEffect(audiere::SoundEffectType type, wxString typestrin
     return;
   }
 
-  audiere::SoundEffect* effect = audiere::OpenSoundEffect(m_device, filename, type);
+  audiere::SoundEffectPtr effect = audiere::OpenSoundEffect(m_device, filename, type);
   if (effect) {
     wxString basename = wxFileNameFromPath(filename);
     wxString title;

@@ -79,13 +79,6 @@ namespace audiere {
   }
 
 
-  int
-  MODInputStream::read(int frame_count, void* buffer) {
-    return duh_render(m_renderer, 16, 0, 1.0f, 65536.0f / 44100,
-                      frame_count, buffer);
-  }
-
-
   void
   MODInputStream::reset() {
     ADR_GUARD("MOD_Reset");
@@ -99,6 +92,13 @@ namespace audiere {
   }
 
   
+  int
+  MODInputStream::doRead(int frame_count, void* buffer) {
+    return duh_render(m_renderer, 16, 0, 1.0f, 65536.0f / 44100,
+                      frame_count, buffer);
+  }
+
+
   DUH*
   MODInputStream::openDUH(FilePtr file) {
     const char* filename = (const char*)file.get();
@@ -162,7 +162,8 @@ namespace audiere {
 
   int
   MODInputStream::loopCallback(void* ptr) {
-    return 0; // keep playing the module
+    MODInputStream* This = (MODInputStream*)ptr;
+    return (This->getRepeat() ? 0 : -1);
   }
 
 }

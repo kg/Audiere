@@ -6,7 +6,6 @@
 #include <mmsystem.h>
 #include <dsound.h>
 #include "audiere.h"
-#include "repeatable.h"
 #include "threads.h"
 #include "utility.h"
 
@@ -64,7 +63,7 @@ namespace audiere {
 
     bool m_is_playing;
 
-    RefPtr<RepeatableStream> m_source;
+    SampleSourcePtr m_source;
     int m_sample_size;  // convenience: bytes per sample * channel count
 
     int m_total_read;    // total number of samples read from the stream

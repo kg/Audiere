@@ -58,6 +58,7 @@ public:
     channel_count = m_channel_count;
     sample_rate   = m_sample_rate;
     sample_format = m_sample_format;
+    m_repeat = false;
   }
 
   int ADR_CALL read(int sample_count, void* samples) {
@@ -90,6 +91,14 @@ public:
     return m_position;
   }
 
+  bool ADR_CALL getRepeat() {
+    return m_repeat;
+  }
+
+  void ADR_CALL setRepeat(bool repeat) {
+    m_repeat = repeat;
+  }
+
 private:
   int m_channel_count;
   int m_sample_rate;
@@ -99,6 +108,8 @@ private:
   u8* m_buffer;
   int m_buffer_length;  // in samples
   int m_position;       // in samples
+
+  bool m_repeat;
 };
 
 

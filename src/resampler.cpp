@@ -167,6 +167,17 @@ namespace audiere {
     return m_source->getPosition() - m_samples_left;
   }
 
+  bool
+  Resampler::getRepeat() {
+    return m_source->getRepeat();
+  }
+
+  void
+  Resampler::setRepeat(bool repeat) {
+    /// @todo if we've already read to the end, do we try to read more?
+    m_source->setRepeat(repeat);
+  }
+
   void
   Resampler::setPitchShift(float shift) {
     m_shift = shift;

@@ -1,10 +1,10 @@
+#include "basic_source.h"
 #include "internal.h"
-#include "utility.h"
 #include "types.h"
 
 namespace audiere {
 
-  class SquareWave : public UnseekableSource {
+  class SquareWave : public BasicSource {
   public:
     SquareWave(double frequency) {
       m_frequency = frequency;
@@ -21,7 +21,7 @@ namespace audiere {
       sample_format = SF_S16;
     }
 
-    int ADR_CALL read(int frame_count, void* buffer) {
+    int doRead(int frame_count, void* buffer) {
       // if frequency is 0 Hz, use silence
       if (m_frequency == 0) {
         memset(buffer, 0, frame_count * 2);

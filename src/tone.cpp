@@ -1,13 +1,13 @@
 #include <math.h>
+#include "basic_source.h"
 #include "internal.h"
-#include "utility.h"
 #include "types.h"
 
 namespace audiere {
 
   static const double PI = 3.14159265358979323846;
 
-  class SineWave : public UnseekableSource {
+  class SineWave : public BasicSource {
   public:
     SineWave(double frequency) {
       m_frequency = frequency;
@@ -24,7 +24,7 @@ namespace audiere {
       sample_format = SF_S16;
     }
 
-    int ADR_CALL read(int frame_count, void* buffer) {
+    int doRead(int frame_count, void* buffer) {
       // if frequency is 0 Hz, use silence
       if (m_frequency == 0) {
         memset(buffer, 0, frame_count * 2);

@@ -317,6 +317,20 @@ namespace audiere {
      * @return  current position in frames
      */
     virtual int ADR_CALL getPosition() = 0;
+
+    /**
+     * @return  true if the sample source is set to repeat
+     */
+    virtual bool ADR_CALL getRepeat() = 0;
+
+    /**
+     * Sets whether the sample source should repeat or not.  Note that not
+     * all sample sources repeat by starting again at the beginning of the
+     * sound.  For example
+     *
+     * @param repeat  true if the source should repeat, false otherwise
+     */
+    virtual void ADR_CALL setRepeat(bool repeat) = 0;
   };
   typedef RefPtr<SampleSource> SampleSourcePtr;
 

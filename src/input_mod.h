@@ -4,13 +4,13 @@
 
 #include <dumb.h>
 #include "audiere.h"
+#include "basic_source.h"
 #include "types.h"
-#include "utility.h"
 
 
 namespace audiere {
 
-  class MODInputStream : public UnseekableSource {
+  class MODInputStream : public BasicSource {
   public:
     MODInputStream();
     ~MODInputStream();
@@ -21,8 +21,9 @@ namespace audiere {
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int ADR_CALL read(int frame_count, void* buffer);
     void ADR_CALL reset();
+
+    int doRead(int frame_count, void* buffer);
 
   private:
     DUH* openDUH(FilePtr file);

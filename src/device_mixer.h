@@ -9,7 +9,6 @@
 
 #include <list>
 #include "audiere.h"
-#include "repeatable.h"
 #include "resampler.h"
 #include "threads.h"
 #include "types.h"
@@ -82,8 +81,7 @@ namespace audiere {
   private:
     RefPtr<MixerDevice> m_device;
 
-    RefPtr<Resampler> m_resampler;
-    RefPtr<RepeatableStream> m_source;
+    RefPtr<Resampler> m_source;
     s16 m_last_l;
     s16 m_last_r;
     bool m_is_playing;

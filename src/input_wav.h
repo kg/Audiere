@@ -3,13 +3,13 @@
 
 
 #include "audiere.h"
+#include "basic_source.h"
 #include "types.h"
-#include "utility.h"
 
 
 namespace audiere {
 
-  class WAVInputStream : public RefImplementation<SampleSource> {
+  class WAVInputStream : public BasicSource {
   public:
     WAVInputStream();
 
@@ -19,7 +19,7 @@ namespace audiere {
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int ADR_CALL read(int frame_count, void* buffer);
+    int doRead(int frame_count, void* buffer);
     void ADR_CALL reset();
 
     bool ADR_CALL isSeekable();

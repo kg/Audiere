@@ -1,7 +1,6 @@
 #include "audiere.h"
 #include "debug.h"
 #include "internal.h"
-#include "repeatable.h"
 #include "utility.h"
 
 

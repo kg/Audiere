@@ -75,7 +75,7 @@ namespace audiere {
 
 
   int
-  WAVInputStream::read(int frame_count, void* buffer) {
+  WAVInputStream::doRead(int frame_count, void* buffer) {
     if (m_frames_left_in_chunk == 0) {
       return 0;
     }

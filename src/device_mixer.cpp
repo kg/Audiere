@@ -107,8 +107,7 @@ namespace audiere {
     int rate)
   {
     m_device     = device;
-    m_resampler  = new Resampler(source, rate);
-    m_source     = new RepeatableStream(m_resampler.get());
+    m_source     = new Resampler(source, rate);
     m_last_l     = 0;
     m_last_r     = 0;
     m_is_playing = false;
@@ -199,14 +198,14 @@ namespace audiere {
   void
   MixerStream::setPitchShift(float shift) {
     SYNCHRONIZED(m_device.get());
-    m_resampler->setPitchShift(shift);
+    m_source->setPitchShift(shift);
   }
 
 
   float
   MixerStream::getPitchShift() {
     SYNCHRONIZED(m_device.get());
-    return m_resampler->getPitchShift();
+    return m_source->getPitchShift();
   }
 
 

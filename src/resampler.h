@@ -27,6 +27,9 @@ namespace audiere {
     void ADR_CALL setPosition(int position);
     int  ADR_CALL getPosition();
 
+    bool ADR_CALL getRepeat();
+    void ADR_CALL setRepeat(bool repeat);
+
     void  setPitchShift(float shift);
     float getPitchShift();
 

@@ -1,4 +1,11 @@
-2003.0613
+2003.06.15
+
+  Added setRepeat() and getRepeat() to the SampleSource interface.
+  This architecture change is required in order to support sample
+  sources with non-standard looping functionality, such as loop points
+  within MOD or AIFF files.
+
+2003.06.13
 
   Fixed some unaligned reads in the MP3 decoder code, which caused
   Audiere on SGI/IRIX to crash.

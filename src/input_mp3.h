@@ -3,12 +3,13 @@
 
 #include <mpegsound.h>
 #include "audiere.h"
+#include "basic_source.h"
 #include "types.h"
 #include "utility.h"
 
 namespace audiere {
 
-  class MP3InputStream : public UnseekableSource, public Soundplayer {
+  class MP3InputStream : public BasicSource, public Soundplayer {
   public:
     MP3InputStream();
     ~MP3InputStream();
@@ -19,7 +20,7 @@ namespace audiere {
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int ADR_CALL read(int frame_count, void* samples);
+    int doRead(int frame_count, void* samples);
     void ADR_CALL reset();
 
     bool setsoundtype(int stereo, int samplesize, int speed);

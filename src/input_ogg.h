@@ -4,12 +4,12 @@
 
 #include <vorbis/vorbisfile.h>
 #include "audiere.h"
-#include "utility.h"
+#include "basic_source.h"
 
 
 namespace audiere {
 
-  class OGGInputStream : public RefImplementation<SampleSource> {
+  class OGGInputStream : public BasicSource {
   public:
     OGGInputStream();
     ~OGGInputStream();
@@ -20,7 +20,7 @@ namespace audiere {
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int ADR_CALL read(int frame_count, void* buffer);
+    int doRead(int frame_count, void* buffer);
     void ADR_CALL reset();
 
     bool ADR_CALL isSeekable();

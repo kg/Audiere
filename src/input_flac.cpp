@@ -154,7 +154,7 @@ namespace audiere {
 
 
   int
-  FLACInputStream::read(int frame_count, void* samples) {
+  FLACInputStream::doRead(int frame_count, void* samples) {
     const int frame_size = m_channel_count * GetSampleSize(m_sample_format);
     u8* out = (u8*)samples;
     

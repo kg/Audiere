@@ -4,12 +4,13 @@
 
 #include <FLAC++/decoder.h>
 #include "audiere.h"
+#include "basic_source.h"
 #include "utility.h"
 
 
 namespace audiere {
 
-  class FLACInputStream : public RefImplementation<audiere::SampleSource> {
+  class FLACInputStream : public BasicSource {
   public:
     FLACInputStream();
     ~FLACInputStream();
@@ -20,7 +21,7 @@ namespace audiere {
       int& channel_count, 
       int& sample_rate, 
       SampleFormat& sampleformat);
-    int ADR_CALL read(int frame_count, void* samples);
+    int doRead(int frame_count, void* samples);
     void ADR_CALL reset();
 
     bool ADR_CALL isSeekable();

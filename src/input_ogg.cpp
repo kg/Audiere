@@ -73,7 +73,7 @@ namespace audiere {
 
 
   int
-  OGGInputStream::read(int frame_count, void* buffer) {
+  OGGInputStream::doRead(int frame_count, void* buffer) {
     int sample_size = m_channel_count * GetSampleSize(m_sample_format);
 
     u8* out = (u8*)buffer;

@@ -5,7 +5,6 @@
 #include <list>
 #include "audiere.h"
 #include "internal.h"
-#include "repeatable.h"
 #include "threads.h"
 #include "types.h"
 #include "utility.h"
@@ -76,7 +75,7 @@ namespace audiere {
 
     RefPtr<NullAudioDevice> m_device;
                           
-    RefPtr<RepeatableStream> m_source;
+    SampleSourcePtr m_source;
     int m_channel_count;           //
     int m_sample_rate;             // cached stream format
     SampleFormat m_sample_format;  //

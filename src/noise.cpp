@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <stdlib.h>
+#include "basic_source.h"
 #include "internal.h"
-#include "utility.h"
 #include "types.h"
 
 namespace audiere {
 
-  class WhiteNoise : public UnseekableSource {
+  class WhiteNoise : public BasicSource {
   public:
     void ADR_CALL getFormat(
       int& channel_count,
@@ -18,7 +18,7 @@ namespace audiere {
       sample_format = SF_S16;
     }
 
-    int ADR_CALL read(int frame_count, void* buffer) {
+    int doRead(int frame_count, void* buffer) {
       s16* out = (s16*)buffer;
       for (int i = 0; i < frame_count; ++i) {
         *out++ = (rand() % 65536 - 32768);
@@ -41,7 +41,7 @@ namespace audiere {
   static const int RANDOM_SHIFT = sizeof(long) * 8 - RANDOM_BITS;
 
 
-  class PinkNoise : public UnseekableSource {
+  class PinkNoise : public BasicSource {
   public:
     PinkNoise() {
       doReset();
@@ -57,7 +57,7 @@ namespace audiere {
       sample_format = SF_S16;
     }
 
-    int ADR_CALL read(int frame_count, void* buffer) {
+    int doRead(int frame_count, void* buffer) {
       s16* out = (s16*)buffer;
       for (int i = 0; i < frame_count; ++i) {
         *out++ = s16(generate() * 32767 - 16384);

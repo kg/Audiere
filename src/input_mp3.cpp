@@ -135,8 +135,8 @@ namespace audiere {
 
   
   int
-  MP3InputStream::read(int frame_count, void* samples) {
-    ADR_GUARD("MP3InputStream::read");
+  MP3InputStream::doRead(int frame_count, void* samples) {
+    ADR_GUARD("MP3InputStream::doRead");
 
     const int frame_size = m_channel_count * GetSampleSize(m_sample_format);
 

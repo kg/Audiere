@@ -100,6 +100,14 @@ SOURCE=..\..\src\audiere.rc
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\basic_source.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\basic_source.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\debug.cpp
 # End Source File
 # Begin Source File
@@ -225,14 +233,6 @@ SOURCE=..\..\src\memory_file.h
 # Begin Source File
 
 SOURCE=..\..\src\noise.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\repeatable.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\repeatable.h
 # End Source File
 # Begin Source File
 

@@ -1,11 +1,13 @@
 #include "audiere.h"
+#include "basic_source.h"
 #include "internal.h"
+#include "types.h"
 #include "utility.h"
 
 
 namespace audiere {
 
-  class BufferStream : public RefImplementation<SampleSource> {
+  class BufferStream : public BasicSource {
   public:
     BufferStream(SampleBuffer* buffer) {
       m_buffer = buffer;
@@ -32,7 +34,7 @@ namespace audiere {
     }
 
 
-    int ADR_CALL read(int frame_count, void* buffer) {
+    int doRead(int frame_count, void* buffer) {
       int to_read = std::min(frame_count, m_frame_count - m_position);
       memcpy(
         buffer,

@@ -670,6 +670,14 @@ namespace audiere {
       AudioDevice* device,
       SampleSource* source,
       SoundEffectType type);
+
+    ADR_FUNCTION(File*) AdrOpenFile(
+      const char* name,
+      bool writeable);
+
+    ADR_FUNCTION(File*) AdrCreateMemoryFile(
+      const void* buffer,
+      int size);
   }
 
 
@@ -996,6 +1004,34 @@ namespace audiere {
   {
     return OpenSoundEffect(device, OpenSampleSource(file), type);
   }
+
+  /**
+   * Opens a default file implementation from the local filesystem.
+   *
+   * @param filename   The name of the file on the local filesystem.
+   * @param writeable  Whether the writing to the file is allowed.
+   */
+  inline File* OpenFile(const char* filename, bool writeable) {
+    return hidden::AdrOpenFile(filename, writeable);
+  }
+
+  /**
+   * Creates a File implementation that reads from a buffer in memory.
+   * It stores a copy of the buffer that is passed in.
+   *
+   * The File object does <i>not</i> take ownership of the memory buffer.
+   * When the file is destroyed, it will not free the memory.
+   *
+   * @param buffer  Pointer to the beginning of the data.
+   * @param size    Size of the buffer in bytes.
+   *
+   * @return  0 if size is non-zero and buffer is null. Otherwise,
+   *          returns a valid File object.
+   */
+  inline File* CreateMemoryFile(const void* buffer, int size) {
+    return hidden::AdrCreateMemoryFile(buffer, size);
+  }
+    
 }
 
 

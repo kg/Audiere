@@ -140,7 +140,7 @@ namespace audiere {
     if (!filename) {
       return 0;
     }
-    File* file = OpenDefaultFile(filename);
+    File* file = OpenFile(filename, false);
     if (!file) {
       return 0;
     }

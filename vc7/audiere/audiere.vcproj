@@ -205,6 +205,12 @@
 				RelativePath="..\..\src\internal.h">
 			</File>
 			<File
+				RelativePath="..\..\src\memory_file.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\memory_file.h">
+			</File>
+			<File
 				RelativePath="..\..\src\noise.cpp">
 			</File>
 			<File

@@ -1,3 +1,7 @@
+2003.02.17
+
+  added support for MemoryFile objects
+
 2003.01.27
 
   removed support for OpenAL because it was causing compile issues on

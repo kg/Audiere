@@ -212,6 +212,14 @@ SOURCE=..\..\src\internal.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\memory_file.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\memory_file.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\noise.cpp
 # End Source File
 # Begin Source File

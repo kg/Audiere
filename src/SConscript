@@ -12,6 +12,7 @@ sources = Split("""
     input
     input_ogg
     input_wav
+    memory_file
     noise
     repeatable
     resampler

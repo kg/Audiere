@@ -3,11 +3,12 @@
 
 
 #include "audiere.h"
+#include "internal.h"
 
 
 namespace audiere {
 
-  File* OpenDefaultFile(const char* filename);
+  ADR_EXPORT(File*) AdrOpenFile(const char* filename, bool writeable);
 
 }
 

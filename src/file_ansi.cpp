@@ -39,8 +39,8 @@ namespace audiere {
   };
 
 
-  File* OpenDefaultFile(const char* filename) {
-    FILE* file = fopen(filename, "rb");
+  ADR_EXPORT(File*) AdrOpenFile(const char* filename, bool writeable) {
+    FILE* file = fopen(filename, writeable ? "wb" : "rb");
     return (file ? new CFile(file) : 0);
   }
 

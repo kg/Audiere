@@ -1,5 +1,7 @@
 SUBDIRS = mikmod @RESAMPLE@
 
+EXTRA_DIST = readme.txt faq.txt license.gpl.txt license.lgpl.txt
+
 INCLUDES = \
 	-I mikmod/mmio \
 	-I mikmod/mikmod \
@@ -27,5 +29,4 @@ libacoustique_la_LDFLAGS = \
 libacoustique_la_LIBADD = \
 	mikmod/mmio/libmmio.la \
 	mikmod/mikmod/libmikmod.la \
-	@RESAMPLELIB@
 	@RESAMPLELIB@

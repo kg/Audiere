@@ -1,6 +1,6 @@
 2004.01.17
 
-  Dramatically reduced the latency of the OSS device.
+  Dramatically reduced the latency of the OSS device.  (Matt Campbell)
 
 2004.01.12
 

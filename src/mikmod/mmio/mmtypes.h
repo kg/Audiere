@@ -41,28 +41,6 @@
 #pragma warning( disable : 4244 )
 #pragma warning( 4 : 4761 )
 
-#ifndef _DEBUG
-// release optimizations
-// /Og (global optimizations), /Os (favor small code), /Oy (no frame pointers)
-#pragma optimize("gy",on)
-#pragma comment(linker,"/RELEASE")
-// set the 512-byte alignment .. cuts back on whitespace in output files (EXE/DLL/LIB)
-#pragma comment(linker,"/opt:nowin98")
-
-/*
-#define _mm_initdebugmem()
-
-#else
-
-#include <crtdbg.h>
-
-#define _mm_initdebugmem() \
-{   uint tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG); \
-    tmpDbgFlag |= _CRTDBG_CHECK_ALWAYS_DF; \
-    _CrtSetDbgFlag(tmpDbgFlag); \
-}
-*/
-#endif
 #endif
 
 // This included for future unicode support, or something.  Anything in

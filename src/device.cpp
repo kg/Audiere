@@ -209,6 +209,18 @@ namespace audiere {
       return m_device->getName();
     }
 
+    void ADR_CALL registerStopCallback(StopCallback* callback) {
+      m_device->registerStopCallback(callback);
+    }
+
+    void ADR_CALL unregisterStopCallback(StopCallback* callback) {
+      m_device->unregisterStopCallback(callback);
+    }
+
+    void ADR_CALL clearStopCallbacks() {
+      m_device->clearStopCallbacks();
+    }
+
   private:
     void run() {
       ADR_GUARD("ThreadedDevice::run");

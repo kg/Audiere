@@ -30,6 +30,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "callback"=.\callback\callback.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name audiere
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "device"=.\device\device.dsp - Package Owner=<4>
 
 Package=<5>

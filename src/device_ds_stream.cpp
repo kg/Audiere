@@ -65,14 +65,7 @@ namespace audiere {
   void
   DSOutputStream::stop() {
     ADR_GUARD("DSOutputStream::stop");
-    m_buffer->Stop();
-    if( m_is_playing ) {
-        m_is_playing = false;
-        // let subscribers know that the sound was stopped
-        events::Manager::publish(new events::StoppedEvent(this));
-    } else {
-        m_is_playing = false;
-    }
+    doStop(false);
   }
 
 
@@ -170,7 +163,7 @@ namespace audiere {
 
     // if we're playing, stop
     if (is_playing) {
-      stop();
+      doStop(true);
     }
 
     m_source->setPosition(position);
@@ -201,13 +194,27 @@ namespace audiere {
 
 
   void
+  DSOutputStream::doStop(bool internal) {
+    m_buffer->Stop();
+    if (m_is_playing) {
+      m_is_playing = false;
+      if (!internal) {
+        m_device->fireStopEvent(this, StopEvent::STOP_CALLED);
+      }
+    } else {
+      m_is_playing = false;
+    }
+  }
+
+
+  void
   DSOutputStream::doReset() {
     // figure out if we're playing or not
     bool is_playing = isPlaying();
 
     // if we're playing, stop
     if (is_playing) {
-      stop();
+      doStop(true);
     }
 
     m_buffer->SetCurrentPosition(0);
@@ -377,7 +384,7 @@ namespace audiere {
     if (m_total_played > m_total_read) {
       ADR_LOG("Stopping stream!");
 
-      stop();
+      doStop(true);
       m_buffer->SetCurrentPosition(0);
       m_last_play = 0;
 
@@ -388,6 +395,7 @@ namespace audiere {
       m_next_read = 0;
       fillStream();
 
+      m_device->fireStopEvent(this, StopEvent::SOURCE_ENDED);
       return;
     }
   }

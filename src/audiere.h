@@ -12,6 +12,12 @@
  * Note: When compiling this header in gcc, you may want to use the
  * -Wno-non-virtual-dtor flag to get rid of those annoying "class has
  * virtual functions but no virtual destructor" warnings.
+ *
+ * This file is structured as follows:
+ * - includes, macro definitions, other general setup
+ * - interface definitions
+ * - DLL-safe entry points (not for general use)
+ * - inline functions that use those entry points
  */
 
 #ifndef AUDIERE_H
@@ -31,7 +37,7 @@
 #endif
 
 
-// DLLs in Windows should use the standard calling convention
+// DLLs in Windows should use the standard (Pascal) calling convention
 #ifndef ADR_CALL
   #if defined(WIN32) || defined(_WIN32)
     #define ADR_CALL __stdcall
@@ -142,6 +148,38 @@ namespace audiere {
   private:
     T* m_ptr;
   };
+
+
+  template<typename T, typename U>
+  bool operator==(const RefPtr<T>& a, const RefPtr<U>& b) {
+      return (a.get() == b.get());
+  }
+
+  template<typename T>
+  bool operator==(const RefPtr<T>& a, const T* b) {
+      return (a.get() == b);
+  }
+
+  template<typename T>
+  bool operator==(const T* a, const RefPtr<T>& b) {
+      return (a == b.get());
+  }
+  
+
+  template<typename T, typename U>
+  bool operator!=(const RefPtr<T>& a, const RefPtr<U>& b) {
+      return (a.get() != b.get());
+  }
+
+  template<typename T>
+  bool operator!=(const RefPtr<T>& a, const T* b) {
+      return (a.get() != b);
+  }
+
+  template<typename T>
+  bool operator!=(const T* a, const RefPtr<T>& b) {
+      return (a != b.get());
+  }
 
 
   /**
@@ -545,6 +583,51 @@ namespace audiere {
 
 
   /**
+   * An event object that gets passed to implementations of StopCallback
+   * when a stream has stopped playing.
+   */
+  class StopEvent : public RefCounted {
+  protected:
+    ~StopEvent() { }
+
+  public:
+    /// A code representing the reason the stream stopped playback.
+    enum Reason {
+      STOP_CALLED,  ///< stop() was called from an external source.
+      SOURCE_ENDED, ///< The sample source ran out of samples.
+    };
+
+    /// @return Pointer to the OutputStream that stopped playback.
+    virtual OutputStream* ADR_CALL getOutputStream() = 0;
+
+    /// @return Reason for the stop event.
+    virtual Reason ADR_CALL getReason() = 0;
+  };
+  typedef RefPtr<StopEvent> StopEventPtr;
+
+  
+  /**
+   * To listen for stream stopped events on a device, implement this interface
+   * and call registerStopCallback() on the device, passing your
+   * implementation.  streamStopped() will be called whenever a stream on that
+   * device stops playback.
+   */
+  class StopCallback : public RefCounted {
+  protected:
+    ~StopCallback() { }
+
+  public:
+    /**
+     * Called when a stream has stopped.
+     *
+     * @param event  Information pertaining to the event.
+     */
+    virtual void ADR_CALL streamStopped(StopEvent* event) = 0;
+  };
+  typedef RefPtr<StopCallback> StopCallbackPtr;
+
+
+  /**
    * AudioDevice represents a device on the system which is capable
    * of opening and mixing multiple output streams.  In Windows,
    * DirectSound is such a device.
@@ -614,6 +697,21 @@ namespace audiere {
      * @return name of audio device
      */
     virtual const char* ADR_CALL getName() = 0;
+
+    /**
+     * Registers 'callback' to receive stop events.  Callbacks can be
+     * registered multiple times.
+     */
+    virtual void ADR_CALL registerStopCallback(StopCallback* callback) = 0;
+    
+    /**
+     * Unregisters 'callback' once.  If it is registered multiple times,
+     * each unregisterStopCallback call unregisters one of the instances.
+     */
+    virtual void ADR_CALL unregisterStopCallback(StopCallback* callback) = 0;
+
+    /// Clears all of the callbacks from the device.
+    virtual void ADR_CALL clearStopCallbacks() = 0;
   };
   typedef RefPtr<AudioDevice> AudioDevicePtr;
 
@@ -755,58 +853,58 @@ namespace audiere {
      * Returns the name of this CD Device, often just the device name
      * it was created with.
      */
-    virtual const char* getName() = 0;
+    virtual const char* ADR_CALL getName() = 0;
 
     /**
      * Returns the number of audio tracks on the disc.
      */
-    virtual int getTrackCount() = 0;
+    virtual int ADR_CALL getTrackCount() = 0;
 
     /**
      * Starts playback of the given track. If another track was
      * already playing, the previous track is stopped.  IMPORTANT: Tracks are
      * indexed from 0 to getTrackCount() - 1.
      */
-    virtual void play(int track) = 0;
+    virtual void ADR_CALL play(int track) = 0;
 
     /**
      * Stops the playback, if the playback was already stopped, this
      * does nothing.
      */
-    virtual void stop() = 0;
+    virtual void ADR_CALL stop() = 0;
     
     /**
      * pauses playback of the track that is currently playing (if any)
      * This does nothing if no track is playing
      */
-    virtual void pause() = 0;
+    virtual void ADR_CALL pause() = 0;
 
     /**
      * Resumes playback of the track that is currently paused (if any).
      * This does nothing if no track is paused.
      */
-    virtual void resume() = 0;
+    virtual void ADR_CALL resume() = 0;
 
     /**
      * Returns true if the CD is currently playing a sound, this could
      * be through us, or through some other program.
      */
-    virtual bool isPlaying() = 0;
+    virtual bool ADR_CALL isPlaying() = 0;
 
     /**
      * Returns true if the drive contains a cd. This might be slow
      * on some systems, use with care.
      */
-    virtual bool containsCD() = 0;
+    virtual bool ADR_CALL containsCD() = 0;
 
     /// Returns true if the door is open.
-    virtual bool isDoorOpen() = 0;
+    virtual bool ADR_CALL isDoorOpen() = 0;
 
     /// Opens this device's door.
-    virtual void openDoor() = 0;
+    virtual void ADR_CALL openDoor() = 0;
 
     /// Closes this device's door.
-    virtual void closeDoor() = 0;
+    virtual void ADR_CALL closeDoor() = 0;
   };
   typedef RefPtr<CDDevice> CDDevicePtr;
 
@@ -1316,108 +1414,6 @@ namespace audiere {
   inline CDDevice* OpenCDDevice(const char* name) {
     return hidden::AdrOpenCDDevice(name);
   }
-
-
-
-
-
-
-
-
-  // Stuff below here needs to be hacked up.
-    
-  namespace events
-  {
-      const std::string SoundStoppedEventType = "SoundStopped";
-
-      /**
-        * superclass of all events that can be triggered
-        */
-      class Event {
-          public:
-              Event(const std::string& newType) {type = newType;}
-              std::string getType() const {return type;}
-
-          private:
-              std::string type;
-      };
-
-      /**
-        * Superclass of all user classes that can subscribe to events. The destructor automatically
-        * cancels all subscriptions */
-      class Subscriber {
-          public:
-              /**
-                * Destructor, cancels all subscriptions 
-                */
-              virtual ~Subscriber();
-              
-              /**
-                * subscribe to the given event type. When an event of this type occurs, the handleEvent
-                * method will be called
-                */
-              void subscribeTo(const std::string& eventType);
-
-              /**
-                * will be called when an event of a subscribed type occured. Note that the subclass should
-                * handle the appropriate down-casting (using dynamic_cast<TheRealEventType>(theEvent)).
-                * WARNING: THIS METHOD MAY BE CALLED FROM A SEPARATE THREAD, MAKE SURE ANY CODE THAT
-                * YOU PUT IN THE IMPLEMENTATION IS THREAD-SAFE AND RETURNS QUICKLY
-                */
-              virtual void handleEvent(const Event& theEvent)=0;
-      };
-
-      /**
-        * The event Manager is responsible for distrubuting events to subscibers. In addition
-        * it handles all (un)subscribe requests
-        */
-      class Manager {
-          public:
-              /**
-                * initialisation method, call this once. If you don't you will
-                * not get any events, call it more than once and who knows :)
-                */
-              static void init();
-              /**
-                * reverse of init(); it stops the manager. You will not get
-                * any further events. If you called init(), make sure you 
-                * call stop() before exiting your application.
-                */
-              static void stop();
-              /**
-                * cancels all subscriptions, this is also called from the
-                * destructor of Subscriber
-                */
-              static void unsubscribeAll(Subscriber* theSubscriber);
-              /**
-                * call this to subscribe to the specified event. When an event
-                * of the given type is published, the subscriber will be called
-                */
-              static void subscribeTo(Subscriber* theSubscriber, const std::string& eventType);
-
-              /**
-                * send the given event to the applicable subscribers. Do not
-                * delete the Event being referenced, this will be done
-                * automatically, therefore you can't assume the object still
-                * exists at any point in time after this call
-                */
-              static void publish(Event* theEvent);
-      };
-
-      /**
-        * this event is triggered when a sound goes from playing to stopped. The reason for this change in
-        * state is unknown. Therefore, if you call stop() on your OutputStream, don't be alarmed if this triggers
-        * this event.
-        */
-      class StoppedEvent : public Event {
-          public:
-              StoppedEvent(OutputStream* newStream) : Event(SoundStoppedEventType), theStream(newStream) { }
-              OutputStream* getStream() const {  return theStream; }
-
-          private:
-              OutputStream* theStream;
-      };
-  } // end namespace events
 
 }
 

@@ -25,15 +25,15 @@ namespace audiere {
       sendCommand("close");
     }
 
-    const char* getName() {
+    const char* ADR_CALL getName() {
       return m_name.c_str();
     }
 
-    int getTrackCount() {
+    int ADR_CALL getTrackCount() {
       return atoi(sendCommand("status", "number of tracks").c_str());
     }
 
-    void play(int track) {
+    void ADR_CALL play(int track) {
       char from[1000];
       char to[1000];
       sprintf(from, "%d:00:00:00", track + 1);
@@ -42,39 +42,39 @@ namespace audiere {
       sendCommand("play", std::string("from ") + from + " to " + to);
     }
 
-    void stop() {
+    void ADR_CALL stop() {
       sendCommand("stop");
       sendCommand("seek", "to start");
     }
 
-    void pause() {
+    void ADR_CALL pause() {
       sendCommand("pause");
     }
 
-    void resume() {
+    void ADR_CALL resume() {
       sendCommand("resume");
     }
 
-    bool isPlaying() {
+    bool ADR_CALL isPlaying() {
       std::string status = sendCommand("status", "mode");
       return strcmp_case(status.c_str(), "playing") == 0;
     }
 
-    bool containsCD() {
+    bool ADR_CALL containsCD() {
       std::string status = sendCommand("status", "media present");
       return strcmp_case(status.c_str(), "true") == 0;
     }
 
-    bool isDoorOpen() {
+    bool ADR_CALL isDoorOpen() {
       std::string status = sendCommand("status", "mode");
       return strcmp_case(status.c_str(), "open") == 0;
     }
 
-    void openDoor() {
+    void ADR_CALL openDoor() {
       sendCommand("set", "door open");
     }
 
-    void closeDoor() {
+    void ADR_CALL closeDoor() {
       sendCommand("set", "door closed");
     }
 

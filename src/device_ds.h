@@ -13,6 +13,7 @@
 #include <dsound.h>
 #include <list>
 #include "audiere.h"
+#include "device.h"
 #include "internal.h"
 #include "threads.h"
 #include "utility.h"
@@ -22,10 +23,7 @@ namespace audiere {
 
   class DSOutputStream;
 
-  class DSAudioDevice
-    : public RefImplementation<AudioDevice>
-    , public Synchronized
-  {
+  class DSAudioDevice : public AbstractDevice, public Synchronized {
   public:
     static DSAudioDevice* create(const ParameterList& parameters);
 

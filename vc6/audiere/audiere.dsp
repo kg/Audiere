@@ -128,6 +128,10 @@ SOURCE=..\..\src\device.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\device.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\device_ds.cpp
 # End Source File
 # Begin Source File
@@ -265,10 +269,6 @@ SOURCE=..\..\src\memory_file.h
 # Begin Source File
 
 SOURCE=..\..\src\noise.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\pubsub.cpp
 # End Source File
 # Begin Source File
 

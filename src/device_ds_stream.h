@@ -46,6 +46,7 @@ namespace audiere {
     int  ADR_CALL getPosition();
 
   private:
+    void doStop(bool internal);   ///< differentiates between internal and external calls
     void doReset();  ///< thread-unsafe version of reset()
     void fillStream();
     void update();

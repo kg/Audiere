@@ -13,13 +13,13 @@ int main(int argc, const char** argv) {
     device_name = argv[1];
   }
 
-  RefPtr<AudioDevice> device(OpenDevice(device_name));
+  AudioDevicePtr device(OpenDevice(device_name));
   if (!device) {
     cerr << "OpenDevice() failed" << endl;
     return EXIT_FAILURE;
   }
 
-  RefPtr<OutputStream> tone = device->openStream(CreateTone(440));
+  OutputStreamPtr tone = device->openStream(CreateTone(440));
   if (!tone) {
     cerr << "openStream() failed" << endl;
     return EXIT_FAILURE;

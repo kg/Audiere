@@ -135,12 +135,11 @@ namespace audiere {
   void
   MixerStream::stop() {
     SYNCHRONIZED(m_device.get());
-    if( m_is_playing ) {
-        m_is_playing = false;
-        // let subscribers know that the sound was stopped
-        events::Manager::publish(new events::StoppedEvent(this));
+    if (m_is_playing) {
+      m_is_playing = false;
+      m_device->fireStopEvent(this, StopEvent::STOP_CALLED);
     } else {
-        m_is_playing = false;
+      m_is_playing = false;
     }
   }
 
@@ -248,14 +247,14 @@ namespace audiere {
 
     // if we are done with the sample source, stop and reset it
     if (read == 0) {
-      if(m_is_playing) {
-          m_is_playing = false;
-          // let subscribers know that the sound was stopped
-          events::Manager::publish(new events::StoppedEvent(this));
-      } else {
-          m_is_playing = false;
-      }
       m_source->reset();
+      if (m_is_playing) {
+        m_is_playing = false;
+        // let subscribers know that the sound was stopped
+        m_device->fireStopEvent(this, StopEvent::SOURCE_ENDED);
+      } else {
+        m_is_playing = false;
+      }
     } else {
       // do panning and volume normalization
       int l_volume, r_volume;

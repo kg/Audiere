@@ -67,8 +67,6 @@ EXTRA_DIST = \
 libaudiere_la_SOURCES = \
 	basic_source.cpp \
 	basic_source.h \
-	CDAudioStream.cpp \
-	CDDrive.cpp \
 	debug.cpp \
 	debug.h \
 	default_file.h \

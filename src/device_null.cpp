@@ -118,13 +118,7 @@ namespace audiere {
 
   void
   NullOutputStream::stop() {
-    if( m_is_playing ) {
-        m_is_playing = false;
-        // let subscribers know that the sound was stopped
-        events::Manager::publish(new events::StoppedEvent(this));
-    } else {
-        m_is_playing = false;
-    }
+    doStop(false);
   }
 
 
@@ -219,6 +213,20 @@ namespace audiere {
 
 
   void
+  NullOutputStream::doStop(bool internal) {
+    if (m_is_playing) {
+      m_is_playing = false;
+      if (!internal) {
+        // let subscribers know that the sound was stopped
+        m_device->fireStopEvent(this, StopEvent::STOP_CALLED);
+      }
+    } else {
+      m_is_playing = false;
+    }
+  }
+
+
+  void
   NullOutputStream::resetTimer() {
     m_last_update = GetNow();
   }
@@ -250,7 +258,8 @@ namespace audiere {
       if (samples_read != samples_to_read) {
         ADR_LOG("Stopping null output stream");
         m_source->reset();
-        stop();
+        doStop(true);
+        m_device->fireStopEvent(this, StopEvent::SOURCE_ENDED);
       }
 
       m_last_update = now;

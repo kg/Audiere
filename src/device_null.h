@@ -4,6 +4,7 @@
 
 #include <list>
 #include "audiere.h"
+#include "device.h"
 #include "internal.h"
 #include "threads.h"
 #include "types.h"
@@ -14,10 +15,7 @@ namespace audiere {
 
   class NullOutputStream;
 
-  class NullAudioDevice
-    : public RefImplementation<AudioDevice>
-    , public Synchronized
-  {
+  class NullAudioDevice : public AbstractDevice, public Synchronized {
   public:
     static NullAudioDevice* create(const ParameterList& parameters);
 
@@ -69,6 +67,7 @@ namespace audiere {
     int  ADR_CALL getPosition();
 
   private:
+    void doStop(bool internal);
     void resetTimer();
     void update();
     int dummyRead(int samples_to_read);

@@ -13,7 +13,6 @@
 #include <dsound.h>
 #include <list>
 #include "audiere.h"
-#include "device_ds_stream.h"
 #include "internal.h"
 #include "threads.h"
 #include "utility.h"
@@ -22,7 +21,6 @@
 namespace audiere {
 
   class DSOutputStream;
-  class DSOutputBuffer;
 
   class DSAudioDevice
     : public RefImplementation<AudioDevice>
@@ -42,7 +40,7 @@ public:
     void ADR_CALL update();
     OutputStream* ADR_CALL openStream(SampleSource* source);
     OutputStream* ADR_CALL openBuffer(
-      void* samples, int sample_count,
+      void* samples, int frame_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
 
     /**
@@ -55,14 +53,11 @@ public:
 
   private:
     typedef std::list<DSOutputStream*> StreamList;
-    typedef std::list<DSOutputBuffer*> BufferList;
 
     void removeStream(DSOutputStream* stream);
-    void removeBuffer(DSOutputBuffer* buffer);
 
     IDirectSound* m_direct_sound;
     StreamList    m_open_streams;
-    BufferList    m_open_buffers;
 
     /// length of streaming buffer in milliseconds
     int m_buffer_length;

@@ -1,6 +1,7 @@
 #include <math.h>
 #include "device_ds.h"
-#include "buffer_stream.h"
+#include "device_ds_stream.h"
+#include "device_ds_buffer.h"
 #include "debug.h"
 #include "utility.h"
 
@@ -150,7 +151,7 @@ namespace audiere {
     SampleFormat sample_format;
     source->getFormat(channel_count, sample_rate, sample_format);
 
-    int sample_size = channel_count * GetSampleSize(sample_format);
+    int frame_size = channel_count * GetSampleSize(sample_format);
 
     // calculate an ideal buffer size
     int buffer_length = sample_rate * m_buffer_length / 1000;
@@ -161,30 +162,24 @@ namespace audiere {
     wfx.wFormatTag      = WAVE_FORMAT_PCM;
     wfx.nChannels       = channel_count;
     wfx.nSamplesPerSec  = sample_rate;
-    wfx.nAvgBytesPerSec = sample_rate * sample_size;
-    wfx.nBlockAlign     = sample_size;
+    wfx.nAvgBytesPerSec = sample_rate * frame_size;
+    wfx.nBlockAlign     = frame_size;
     wfx.wBitsPerSample  = GetSampleSize(sample_format) * 8;
     wfx.cbSize          = sizeof(wfx);
 
-    // define the DirectSound buffer type
-    #if DIRECTSOUND_VERSION >= 0x0700
-      DSBUFFERDESC1 dsbd;
-    #else
-      DSBUFFERDESC dsbd;
-    #endif
+    DSBUFFERDESC dsbd;
     memset(&dsbd, 0, sizeof(dsbd));
     dsbd.dwSize        = sizeof(dsbd);
     dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
-                         DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS;
-    dsbd.dwBufferBytes = sample_size * buffer_length;
+                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPAN |
+                         DSBCAPS_GLOBALFOCUS;
+    dsbd.dwBufferBytes = frame_size * buffer_length;
     dsbd.lpwfxFormat   = &wfx;
 
     // create the DirectSound buffer
     IDirectSoundBuffer* buffer;
     HRESULT result = m_direct_sound->CreateSoundBuffer(
-      (DSBUFFERDESC*)&dsbd,
-      &buffer,
-      NULL);
+      &dsbd, &buffer, NULL);
     if (FAILED(result) || !buffer) {
       return 0;
     }
@@ -202,19 +197,59 @@ namespace audiere {
 
   OutputStream*
   DSAudioDevice::openBuffer(
-    void* samples, int sample_count,
+    void* samples, int frame_count,
     int channel_count, int sample_rate, SampleFormat sample_format)
   {
-    return openStream(new BufferStream(
-      samples, sample_count,
-      channel_count, sample_rate, sample_format));
+    ADR_GUARD("DSAudioDevice::openBuffer");
+    SYNCHRONIZED(this);
+
+    int frame_size = channel_count * GetSampleSize(sample_format);
+    int buffer_size = frame_count * frame_size;
+
+    WAVEFORMATEX wfx;
+    memset(&wfx, 0, sizeof(wfx));
+    wfx.wFormatTag      = WAVE_FORMAT_PCM;
+    wfx.nChannels       = channel_count;
+    wfx.nSamplesPerSec  = sample_rate;
+    wfx.nAvgBytesPerSec = sample_rate * frame_size;
+    wfx.nBlockAlign     = frame_size;
+    wfx.wBitsPerSample  = GetSampleSize(sample_format) * 8;
+    wfx.cbSize          = sizeof(wfx);
+
+    DSBUFFERDESC dsbd;
+    memset(&dsbd, 0, sizeof(dsbd));
+    dsbd.dwSize        = sizeof(dsbd);
+    dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
+                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPAN |
+                         DSBCAPS_GLOBALFOCUS | DSBCAPS_STATIC;
+    dsbd.dwBufferBytes = buffer_size;
+    dsbd.lpwfxFormat   = &wfx;
+
+    IDirectSoundBuffer* buffer;
+    HRESULT result = m_direct_sound->CreateSoundBuffer(
+      &dsbd, &buffer, NULL);
+    if (FAILED(result) || !buffer) {
+      return 0;
+    }
+
+    void* data;
+    DWORD data_size;
+    result = buffer->Lock(0, buffer_size, &data, &data_size, 0, 0, 0);
+    if (FAILED(result)) {
+      buffer->Release();
+      return 0;
+    }
+
+    memcpy(data, samples, data_size);
+    buffer->Unlock(data, data_size, 0, 0);
+
+    return new DSOutputBuffer(this, buffer, frame_count, frame_size);
   }
 
 
   void
   DSAudioDevice::removeStream(DSOutputStream* stream) {
-    Lock l__(this);
-
+    SYNCHRONIZED(this);
     m_open_streams.remove(stream);
   }
 

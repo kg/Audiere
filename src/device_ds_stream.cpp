@@ -42,15 +42,12 @@ namespace audiere {
 
   DSOutputStream::~DSOutputStream() {
     ADR_GUARD("DSOutputStream::~DSOutputStream");
-    SYNCHRONIZED(m_device.get());
 
     m_device->removeStream(this);
 
     // destroy the sound buffer interface
     m_buffer->Release();
     delete[] m_last_sample;
-
-    delete m_source;
   }
 
   
@@ -65,6 +62,14 @@ namespace audiere {
   DSOutputStream::stop() {
     ADR_GUARD("DSOutputStream::stop");
     m_buffer->Stop();
+  }
+
+
+  bool
+  DSOutputStream::isPlaying() {
+    DWORD status;
+    HRESULT rv = m_buffer->GetStatus(&status);
+    return (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING);
   }
 
 
@@ -94,14 +99,6 @@ namespace audiere {
     if (is_playing) {
       m_buffer->Play(0, 0, DSBPLAY_LOOPING);
     }
-  }
-
-
-  bool
-  DSOutputStream::isPlaying() {
-    DWORD status;
-    HRESULT rv = m_buffer->GetStatus(&status);
-    return (SUCCEEDED(rv) && status & DSBSTATUS_PLAYING);
   }
 
 
@@ -170,8 +167,7 @@ namespace audiere {
   int
   DSOutputStream::getPosition() {
     SYNCHRONIZED(m_device.get());
-    /// @todo  use play cursors and stuff... this isn't accurate information
-    return m_source->getPosition();
+    return m_source->getPosition() - (m_total_read - m_total_written);
   }
 
 

@@ -55,7 +55,7 @@ namespace audiere {
     int m_next_read;  // offset (in samples) where we will read next
     int m_last_play;  // offset (in samples) where the play cursor was
 
-    RepeatableStream* m_source;
+    RefPtr<RepeatableStream> m_source;
     int m_sample_size;  // convenience: bytes per sample * channel count
 
     int m_total_read;    // total number of samples read from the stream

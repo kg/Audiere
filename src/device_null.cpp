@@ -34,17 +34,7 @@ namespace audiere {
   void
   NullAudioDevice::update() {
     ADR_GUARD("NullAudioDevice::update");
-
-    Lock l__(this);
-
-    /*
-      UGH.  We can't use VC6 here because you can't use mem_fun with void
-      functions.  :(
-    std::for_each(
-      m_streams.begin(),
-      m_streams.end(),
-      std::mem_fun(&NullOutputStream::Update));
-    */
+    SYNCHRONIZED(this);
 
     StreamList::iterator i = m_streams.begin();
     for (; i != m_streams.end(); ++i) {
@@ -61,7 +51,7 @@ namespace audiere {
       return 0;
     }
 
-    Lock l__(this);
+    SYNCHRONIZED(this);
 
     NullOutputStream* stream = new NullOutputStream(this, source);
     m_streams.insert(stream);
@@ -82,7 +72,7 @@ namespace audiere {
 
   void
   NullAudioDevice::removeStream(NullOutputStream* stream) {
-    Lock l__(this);
+    SYNCHRONIZED(this);
 
     m_streams.erase(stream);
   }
@@ -126,6 +116,7 @@ namespace audiere {
   void
   NullOutputStream::reset() {
     resetTimer();
+    m_source->reset();
   }
 
 

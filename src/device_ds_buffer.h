@@ -1,38 +1,57 @@
-#include <audiere.h>
+#ifndef DEVICE_DS_BUFFER_H
+#define DEVICE_DS_BUFFER_H
+
+
+#include <windows.h>
+#include <mmreg.h>
+#include <dsound.h>
+#include "audiere.h"
 
 
 namespace audiere {
 
-  class DSOutputBuffer : public RefImplementation<SampleSource> {
-  private:
-/*
+  class DSAudioDevice;
+
+  class DSOutputBuffer : public RefImplementation<OutputStream> {
+  public:
     DSOutputBuffer(
       DSAudioDevice* device,
       IDirectSoundBuffer* buffer,
-      void* samples, int sample_count,
-*/
-  public:
-    void play();
-    void stop();
-    bool isPlaying();
-    void reset();
+      int length,
+      int frame_size);
+    ~DSOutputBuffer();
 
-    void setRepeat(bool repeat);
-    bool getRepeat();
+    void ADR_CALL play();
+    void ADR_CALL stop();
+    bool ADR_CALL isPlaying();
+    void ADR_CALL reset();
 
-    void  setVolume(float volume);
-    float getVolume();
+    void ADR_CALL setRepeat(bool repeat);
+    bool ADR_CALL getRepeat();
 
-    void  setPan(float pan);
-    float getPan();
+    void  ADR_CALL setVolume(float volume);
+    float ADR_CALL getVolume();
 
-    bool isSeekable();
-    int  getLength();
-    void setPosition(int position);
-    int  getPosition();
+    void  ADR_CALL setPan(float pan);
+    float ADR_CALL getPan();
+
+    bool ADR_CALL isSeekable();
+    int  ADR_CALL getLength();
+    void ADR_CALL setPosition(int position);
+    int  ADR_CALL getPosition();
 
   private:
-    
+    RefPtr<DSAudioDevice> m_device;
+    IDirectSoundBuffer* m_buffer;
+    int m_length;
+    int m_frame_size;
+
+    bool  m_repeating;
+    float m_volume;
+    float m_pan;
   };
 
 }
+
+
+#endif

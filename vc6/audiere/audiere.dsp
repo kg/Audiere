@@ -134,6 +134,14 @@ SOURCE=..\..\src\device_ds.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\device_ds_buffer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\device_ds_buffer.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\device_ds_stream.cpp
 # End Source File
 # Begin Source File

@@ -7,7 +7,7 @@ die() {
 }
 
 
-BASE=audiere-1.9.3
+BASE=audiere-1.9.4
 
 
 CVSROOT=`cat CVS/Root`

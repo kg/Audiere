@@ -1,3 +1,7 @@
+2004.08.18
+
+  1.9.4 released.
+
 2004.08.16
 
   Fixed a null pointer crash when loading an invalid MP3 file.

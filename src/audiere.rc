@@ -73,14 +73,14 @@ BEGIN
             VALUE "Comments", "http://audiere.sourceforge.net/\0"
             VALUE "CompanyName", "http://aegisknight.org/\0"
             VALUE "FileDescription", "audiere\0"
-            VALUE "FileVersion", "1.9.3\0"
+            VALUE "FileVersion", "1.9.4\0"
             VALUE "InternalName", "audiere\0"
             VALUE "LegalCopyright", "Copyright © 2003\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "audiere.dll\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "audiere\0"
-            VALUE "ProductVersion", "1.9.3\0"
+            VALUE "ProductVersion", "1.9.4\0"
             VALUE "SpecialBuild", "\0"
         END
     END

@@ -9,7 +9,7 @@ ext = Extension('audiere', ext_src,
                 libraries = ['audiere', 'stdc++'])
 
 setup(name = 'audiere',
-      version = '1.9.3',
+      version = '1.9.4',
       description = 'A high-level audio API.',
       url = 'http://audiere.sourceforge.net/',
       ext_modules = [ ext ])

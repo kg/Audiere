@@ -36,7 +36,7 @@ echo
 echo "Build complete"
 echo
 
-NAME=audiere-1.9.3-win32
+NAME=audiere-1.9.4-win32
 DIST=dist
 
 scons -f vc6/dist.py prefix=$DIST/$NAME || die

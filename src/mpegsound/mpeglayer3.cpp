@@ -299,6 +299,7 @@ bool Mpegtoraw::layer3getsideinfo(void)
 	gi->region0_count   =getbits(4);
 	gi->region1_count   =getbits(3);
 	gi->block_type      =0;
+        gi->mixed_block_flag=0;
       }
       gi->preflag           =getbit();
       gi->scalefac_scale    =getbit();
@@ -360,6 +361,7 @@ bool Mpegtoraw::layer3getsideinfo_2(void)
       gi->region0_count   =getbits(4);
       gi->region1_count   =getbits(3);
       gi->block_type      =0;
+      gi->mixed_block_flag=0;
     }
     gi->scalefac_scale    =getbit();
     gi->count1table_select=getbit();

@@ -46,6 +46,7 @@ namespace audiere {
               eventsToPublish.clear();
 
               managerLock.unlock(); // done, free the lock
+              AI_Sleep(50);
           }
           threadRunning = false;
       }

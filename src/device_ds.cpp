@@ -57,7 +57,7 @@ namespace audiere {
     // create the DirectSound object
     IDirectSound* direct_sound;
     rv = CoCreateInstance(
-      CLSID_DirectSound8,
+      CLSID_DirectSound,
       NULL,
       CLSCTX_INPROC_SERVER,
       IID_IDirectSound,

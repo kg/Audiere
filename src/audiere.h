@@ -27,10 +27,12 @@
 
 
 // DLLs in Windows should use the standard calling convention
-#if defined(WIN32) || defined(_WIN32)
-  #define ADR_CALL __stdcall
-#else
-  #define ADR_CALL
+#ifndef ADR_CALL
+  #if defined(WIN32) || defined(_WIN32)
+    #define ADR_CALL __stdcall
+  #else
+    #define ADR_CALL
+  #endif
 #endif
 
 

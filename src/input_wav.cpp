@@ -1,6 +1,5 @@
 #include <string.h>
 #include "input_wav.h"
-#include "endian.h"
 #include "utility.h"
 
 

@@ -37,7 +37,7 @@ private:
   RepeatableStream* m_input_stream;
   IOutputStream*    m_output_stream;
 
-  friend Context;
+  friend class Context;
 };
 
 

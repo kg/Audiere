@@ -58,7 +58,7 @@ private:
   IFileSystem* m_file_system;
   IOutputContext* m_output_context;
 
-  friend Stream;
+  friend class Stream;
 };
 
 

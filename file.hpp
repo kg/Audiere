@@ -47,7 +47,7 @@ private:
   ADR_FILE_SEEK  m_seek;
   ADR_FILE_TELL  m_tell;
 
-  friend ADRFile;
+  friend class ADRFile;
 };
 
 
@@ -65,7 +65,7 @@ private:
   ADRFileSystem* m_file_system;
   ADR_FILE       m_file;
 
-  friend ADRFileSystem;
+  friend class ADRFileSystem;
 };
 
 

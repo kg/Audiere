@@ -1,7 +1,6 @@
 #include <errno.h>
 #include <unistd.h>
 #include "device_al.h"
-#include "buffer_stream.h"
 
 
 namespace audiere {
@@ -55,9 +54,10 @@ namespace audiere {
   }
 
 
-  ALAudioDevice::ALAudioDevice(ALport port, int rate) {
+  ALAudioDevice::ALAudioDevice(ALport port, int rate)
+    : MixerDevice(rate)
+  {
     m_port = port;
-    m_mixer = new Mixer(rate);
   }
 
 
@@ -78,136 +78,12 @@ namespace audiere {
     while (can_write > 0) {
       int transfer_count = std::min(can_write, BUFFER_SIZE);
 
-      m_mixer->read(transfer_count, buffer);
+      read(transfer_count, buffer);
       alWriteFrames(m_port, buffer, transfer_count);
       can_write -= transfer_count;
     }
 
     usleep(50000);  // 50 milliseconds
-  }
-
-  OutputStream*
-  ALAudioDevice::openStream(SampleSource* source) {
-    return (source ? new ALOutputStream(this, source) : 0);
-  }
-
-
-  OutputStream*
-  ALAudioDevice::openBuffer(
-    void* samples, int sample_count,
-    int channel_count, int sample_rate, SampleFormat sample_format)
-  {
-    return openStream(new BufferStream(
-      samples, sample_count,
-      channel_count, sample_rate, sample_format));
-  }
-
-
-  ALOutputStream::ALOutputStream(
-    ALAudioDevice* device,
-    SampleSource* source)
-  {
-    m_device = device;
-    m_source = source;
-
-    getMixer().addSource(m_source);
-  }
-
-  ALOutputStream::~ALOutputStream() {
-    getMixer().removeSource(m_source);
-  }
-
-
-  void
-  ALOutputStream::play() {
-    getMixer().setPlaying(m_source, true);
-  }
-
-
-  void
-  ALOutputStream::stop() {
-    getMixer().setPlaying(m_source, false);
-  }
-
-
-  bool
-  ALOutputStream::isPlaying() {
-    return getMixer().isPlaying(m_source);
-  }
-
-
-  void
-  ALOutputStream::reset() {
-    getMixer().resetSource(m_source);
-  }
-
-
-  void
-  ALOutputStream::setRepeat(bool repeat) {
-    getMixer().setRepeat(m_source, repeat);
-  }
-
-
-  bool
-  ALOutputStream::getRepeat() {
-    return getMixer().getRepeat(m_source);
-  }
-
-
-  void
-  ALOutputStream::setVolume(float volume) {
-    getMixer().setVolume(m_source, volume);
-  }
-
-
-  float
-  ALOutputStream::getVolume() {
-    return getMixer().getVolume(m_source);
-  }
-
-
-  void
-  ALOutputStream::setPan(float pan) {
-    getMixer().setPan(m_source, pan);
-  }
-
-
-  float
-  ALOutputStream::getPan() {
-    return getMixer().getPan(m_source);
-  }
-
-
-  bool
-  ALOutputStream::isSeekable() {
-    /// @todo  implement ALOutputStream::isSeekable
-    return false;
-  }
-
-
-  int
-  ALOutputStream::getLength() {
-    /// @todo  implement ALOutputStream::getLength
-    return 0;
-  }
-
-
-  void
-  ALOutputStream::setPosition(int position) {
-    /// @todo  implement ALOutputStream::setPosition
-  }
-
-
-  int
-  ALOutputStream::getPosition() {
-    /// @todo  implement ALOutputStream::getPosition
-    return 0;
-  }
-
-
-  Mixer&
-  ALOutputStream::getMixer() {
-    return *(m_device->m_mixer);
   }
 
 }

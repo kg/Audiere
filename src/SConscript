@@ -3,18 +3,18 @@ import os
 Import('base_env PREFIX')
 
 sources = Split("""
-    buffer_stream
     debug
     device
-    device_null
     device_al
+    device_mixer
+    device_null
     file_ansi
     input
     input_ogg
     input_wav
-    mixer
     repeatable
     resampler
+    sample_buffer
     sound
     threads_posix
     timer_posix

@@ -227,7 +227,7 @@ namespace audiere {
     // seek to just after the RIFF header
     m_file->seek(12, File::BEGIN);
 
-    // search for a format chunk
+    // search for a data chunk
     while (true) {
       char chunk_id[4];
       u8   chunk_length_buffer[4];

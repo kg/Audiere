@@ -504,10 +504,7 @@ public:
 
     // get the basename of the path for the window title
     wxString basename = wxFileNameFromPath(filename);
-
-    wxString title;
-    title.sprintf("Stream: %s", basename.c_str());
-    new StreamFrame(this, title, stream);
+    new StreamFrame(this, "Stream: " + basename, stream);
   }
 
   void OnDeviceOpenSound() {
@@ -526,10 +523,7 @@ public:
 
     // get the basename of the path for the window title
     wxString basename = wxFileNameFromPath(filename);
-
-    wxString title;
-    title.sprintf("Sound: %s", basename.c_str());
-    new StreamFrame(this, title, stream);
+    new StreamFrame(this, "Sound: " + basename, stream);
   }
 
   void OnDeviceCreateTone() {

@@ -31,3 +31,24 @@ Why not support MIDI?
   decoder I've found is timidity++, and that requires megs upon megs
   of patch files.  I think having a 20 meg sound library isn't really
   feasible.
+
+
+Why doesn't Audiere 1.0.4 support MP3 when Audiere 1.0.3 did?
+--
+
+  Up to version 1.0.3, Audiere used the MAD MP3 decoder to play MP3
+  files.  The problem with MAD is that it is licensed under the GPL,
+  thus requiring Audiere to be licensed under the GPL, thus requiring
+  any program that uses Audiere to be released under the GPL.  This is
+  unacceptable for a lot of people that want to use Audiere,
+  especially for games.  At first, I dual-licensed the source.  If you
+  built it with MP3 support, it was under the GPL.  Otherwise, it was
+  under the LGPL.  However, this was a pain to document and maintain.
+  MAD is also a very low-level API, and adding support for seeking
+  within MP3 streams would be a lot of work.  I decided the best path
+  right now would be to remove MP3 support until either MAD is
+  released under the LGPL or somebody adds support for another MP3
+  decoder under a less restrictive license.
+
+  Besides, Audiere supports Ogg Vorbis, which is equivalent to MP3 for
+  most purposes anyway.

@@ -18,12 +18,14 @@
     #include "output_ds8.hpp"
   #endif
 
-#else
+#endif
+
+#ifdef WITH_OSS
   #include "output_oss.hpp"
 #endif
 
 #ifdef WITH_OPENAL
-#include "output_al.hpp"
+  #include "output_al.hpp"
 #endif
 
 
@@ -90,16 +92,24 @@ IOutputContext* OpenContext(const char* device, const char* parameters)
 
   }
 
-#else
+#else  // Not WIN32
 
   if (strcmp(device, "") == 0 ||
       strcmp(device, "autodetect") == 0) {
+
+#ifdef WITH_OSS
     TRY_CONTEXT(OSSOutputContext);
+#endif
+
 #ifdef WITH_OPENAL
     TRY_CONTEXT(ALOutputContext);
 #endif
+
+#ifdef WITH_OSS
   } else if (strcmp(device, "oss") == 0) {
     TRY_CONTEXT(OSSOutputContext);
+#endif
+
 #ifdef WITH_OPENAL
   } else if (strcmp(device, "openal") == 0) {
     TRY_CONTEXT(ALOutputContext);

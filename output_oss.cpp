@@ -1,3 +1,5 @@
+#ifdef WITH_OSS
+
 #include <algorithm>
 #include <string>
 #include <stdio.h>
@@ -185,3 +187,5 @@ OSSOutputStream::GetVolume()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+#endif

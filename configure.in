@@ -37,8 +37,8 @@ dnl Checks for header files.
 
 AC_HEADER_STDC
 AC_CHECK_HEADER(unistd.h)
-AC_CHECK_HEADER(sys/soundcard.h,,AC_MSG_RESULT(no)
-    AC_MSG_ERROR(could not find OSS header sys/soundcard.h))
+AC_CHECK_HEADER(sys/soundcard.h,
+    AC_DEFINE(WITH_OSS))
 AC_CHECK_HEADER(vorbis/vorbisfile.h,,AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find vorbisfile header))
 

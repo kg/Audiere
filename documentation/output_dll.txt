@@ -29,12 +29,12 @@ They can use resampling to internally convert them to another sample rate.
 
 #define ADR_CALL __stdcall
 
-typedef int (ADR_CALL *ADR_SAMPLE_SOURCE)(
+typedef int (ADR_CALL *AO_SAMPLE_SOURCE)(
   void* opaque,
   int sample_count,
   void* samples);
 
-typedef void (ADR_CALL *ADR_SAMPLE_RESET)(
+typedef void (ADR_CALL *AO_SAMPLE_RESET)(
   void* opaque);
 
 

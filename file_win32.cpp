@@ -2,18 +2,19 @@
 #include "file.hpp"
 
 
-struct WIN32_FILE
+// WIN32_FILE
+struct ADR_FileHandle
 {
   HANDLE handle;
 };
 
 
-static void* DefaultFileOpenA(const char* filename);
+static ADR_FILE DefaultFileOpenA(const char* filename);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void* ADR_CALL DefaultFileOpen(void* /*opaque*/, const char* filename)
+ADR_FILE ADR_CALL DefaultFileOpen(void* /*opaque*/, const char* filename)
 {
   // first, let's try to convert the UTF-8 filename to a wide string
   // calculate length of UTF-8 string
@@ -44,14 +45,14 @@ void* ADR_CALL DefaultFileOpen(void* /*opaque*/, const char* filename)
 
   delete[] wfilename;
 
-  WIN32_FILE* file = new WIN32_FILE;
+  ADR_FileHandle* file = new ADR_FileHandle;
   file->handle = handle;
   return file;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void* DefaultFileOpenA(const char* filename)
+ADR_FILE DefaultFileOpenA(const char* filename)
 {
   HANDLE handle = CreateFileA(
     filename, GENERIC_READ, FILE_SHARE_READ, NULL,
@@ -60,27 +61,25 @@ void* DefaultFileOpenA(const char* filename)
     return NULL;
   }
 
-  WIN32_FILE* f = new WIN32_FILE;
-  f->handle = handle;
-  return f;
+  ADR_FileHandle* file = new ADR_FileHandle;
+  file->handle = handle;
+  return file;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void ADR_CALL DefaultFileClose(void* file)
+void ADR_CALL DefaultFileClose(ADR_FILE file)
 {
-  WIN32_FILE* f = (WIN32_FILE*)file;
-  CloseHandle(f->handle);
-  delete f;
+  CloseHandle(file->handle);
+  delete file;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ADR_CALL DefaultFileRead(void* file, void* buffer, int size)
+int ADR_CALL DefaultFileRead(ADR_FILE file, void* buffer, int size)
 {
-  WIN32_FILE* f = (WIN32_FILE*)file;
   DWORD read;
-  BOOL result = ReadFile(f->handle, buffer, size, &read, NULL);
+  BOOL result = ReadFile(file->handle, buffer, size, &read, NULL);
   if (!result) {
     return 0;
   } else {
@@ -90,19 +89,17 @@ int ADR_CALL DefaultFileRead(void* file, void* buffer, int size)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ADR_CALL DefaultFileSeek(void* file, int destination)
+int ADR_CALL DefaultFileSeek(ADR_FILE file, int destination)
 {
-  WIN32_FILE* f = (WIN32_FILE*)file;
-  int d = SetFilePointer(f->handle, destination, NULL, FILE_BEGIN);
+  int d = SetFilePointer(file->handle, destination, NULL, FILE_BEGIN);
   return (d == destination);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ADR_CALL DefaultFileTell(void* file)
+int ADR_CALL DefaultFileTell(ADR_FILE file)
 {
-  WIN32_FILE* f = (WIN32_FILE*)file;
-  return SetFilePointer(f->handle, 0, NULL, FILE_CURRENT);
+  return SetFilePointer(file->handle, 0, NULL, FILE_CURRENT);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

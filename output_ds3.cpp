@@ -203,14 +203,13 @@ DS3OutputContext::Update()
 ////////////////////////////////////////////////////////////////////////////////
 
 IOutputStream*
-DS3OutputContext::OpenStream(
-  int channel_count,
-  int sample_rate,
-  int bits_per_sample,
-  ADR_SAMPLE_SOURCE source,
-  ADR_SAMPLE_RESET reset,
-  void* opaque)
+DS3OutputContext::OpenStream(ISampleSource* source)
 {
+  int channel_count;
+  int sample_rate;
+  int bits_per_sample;
+  source->GetFormat(channel_count, sample_rate, bits_per_sample);
+
   int sample_size = channel_count * bits_per_sample / 8;
 
   // calculate an ideal buffer size
@@ -248,9 +247,7 @@ DS3OutputContext::OpenStream(
     buffer,
     sample_size,
     buffer_length,
-    source,
-    reset,
-    opaque
+    source
   );
 
   // add ourselves to the list of streams and return
@@ -265,9 +262,7 @@ DS3OutputStream::DS3OutputStream(
   IDirectSoundBuffer* buffer,
   int sample_size,
   int buffer_length,
-  ADR_SAMPLE_SOURCE source,
-  ADR_SAMPLE_RESET reset,
-  void* opaque)
+  ISampleSource* source)
 {
   m_Context = context;
   m_Buffer = buffer;
@@ -275,8 +270,6 @@ DS3OutputStream::DS3OutputStream(
   m_BufferLength = buffer_length;
 
   m_Source = source;
-  m_Reset  = reset;
-  m_Opaque = opaque;
 
   m_SampleSize = sample_size;
   m_LastSample = new BYTE[sample_size];
@@ -425,7 +418,7 @@ DS3OutputStream::Update()
     m_Buffer->Stop();
     m_Buffer->SetCurrentPosition(0);
 
-    m_Reset(m_Opaque);
+    m_Source->Reset();
 
     m_NextRead = 0;
     FillStream();
@@ -441,7 +434,7 @@ int
 DS3OutputStream::StreamRead(int sample_count, void* samples)
 {
   // try to read from the stream
-  int samples_read = m_Source(m_Opaque, sample_count, samples);
+  int samples_read = m_Source->Read(sample_count, samples);
 
   // read the last sample
   if (samples_read > 0) {
@@ -512,7 +505,7 @@ DS3OutputStream::Reset()
 
   m_Buffer->SetCurrentPosition(0);
 
-  m_Reset(m_Opaque);
+  m_Source->Reset();
 
   m_NextRead = 0;
   FillStream();

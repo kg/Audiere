@@ -19,13 +19,7 @@ NullOutputContext::Update()
 ////////////////////////////////////////////////////////////////////////////////
 
 IOutputStream*
-NullOutputContext::OpenStream(
-  int channel_count,
-  int sample_rate,
-  int bits_per_sample,
-  ADR_SAMPLE_SOURCE source,
-  ADR_SAMPLE_RESET reset,
-  void* opaque)
+NullOutputContext::OpenStream(ISampleSource* source)
 {
   return new NullOutputStream();
 }

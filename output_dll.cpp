@@ -131,22 +131,29 @@ DLLOutputContext::Update()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-IOutputStream*
-DLLOutputContext::OpenStream(
-  int channel_count,
-  int sample_rate,
-  int bits_per_sample,
-  ADR_SAMPLE_SOURCE source,
-  ADR_SAMPLE_RESET reset,
-  void* opaque)
+static int ADR_CALL SourceRead(void* opaque, int sample_count, void* samples)
 {
+  return ((ISampleSource*)opaque)->Read(sample_count, samples);
+}
+
+static void ADR_CALL SourceReset(void* opaque)
+{
+  ((ISampleSource*)opaque)->Reset();
+}
+
+IOutputStream*
+DLLOutputContext::OpenStream(ISampleSource* source)
+{
+  int channel_count, sample_rate, bits_per_sample;
+  source->GetFormat(channel_count, sample_rate, bits_per_sample);
+
   AO_STREAM stream = AO_OpenStream(
     channel_count,
     sample_rate,
     bits_per_sample,
-    source,
-    reset,
-    opaque);
+    SourceRead,
+    SourceReset,
+    source);
   if (stream) {
     return new DLLOutputStream(this, stream);
   } else {

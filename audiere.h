@@ -18,11 +18,14 @@
 #endif
 
 /* file callback types */
-typedef void* (ADR_CALL *ADR_FILE_OPEN)(void* opaque, const char* filename);
-typedef void  (ADR_CALL *ADR_FILE_CLOSE)(void* file);
-typedef int   (ADR_CALL *ADR_FILE_READ)(void* file, void* buffer, int size);
-typedef int   (ADR_CALL *ADR_FILE_SEEK)(void* file, int destination);
-typedef int   (ADR_CALL *ADR_FILE_TELL)(void* file);
+struct ADR_FileHandle;
+typedef ADR_FileHandle* ADR_FILE;
+
+typedef ADR_FILE (ADR_CALL *ADR_FILE_OPEN)(void* opaque, const char* filename);
+typedef void (ADR_CALL *ADR_FILE_CLOSE)(ADR_FILE file);
+typedef int  (ADR_CALL *ADR_FILE_READ)(ADR_FILE file, void* buffer, int size);
+typedef int  (ADR_CALL *ADR_FILE_SEEK)(ADR_FILE file, int destination);
+typedef int  (ADR_CALL *ADR_FILE_TELL)(ADR_FILE file);
 
 
 /* constants */

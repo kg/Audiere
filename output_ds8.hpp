@@ -26,17 +26,8 @@ public:
   ~DS8OutputContext();
 
   bool Initialize(const char* parameters);
-
   void Update();
-
-  IOutputStream* OpenStream(
-    int channel_count,
-    int sample_rate,
-    int bits_per_sample,
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
-    void* opaque
-  );
+  IOutputStream* OpenStream(ISampleSource* source);
 
 private:
   typedef std::list<DS8OutputStream*> StreamList;
@@ -69,9 +60,7 @@ private:
     IDirectSoundBuffer* buffer,
     int sample_size,   // in bytes
     int buffer_length, // in samples
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
-    void* opaque);
+    ISampleSource* source);
   ~DS8OutputStream();
 
   void FillStream();
@@ -90,9 +79,7 @@ private:
   int m_BufferLength;  // in samples
 
   // input
-  ADR_SAMPLE_SOURCE m_Source;
-  ADR_SAMPLE_RESET  m_Reset;
-  void*             m_Opaque;
+  ISampleSource* m_Source;
 
   // convenience
   int m_SampleSize;  // bits per sample * channel count / 8

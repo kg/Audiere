@@ -29,10 +29,65 @@ struct ADR_CONTEXTimp
 };
 
 
-struct ADR_STREAMimp
+struct ADR_STREAMimp : public ISampleSource
 {
+  // ISampleSource implementation
+  // yeah, this is kinda hacky
+  void GetFormat(
+    int& channel_count,
+    int& sample_rate,
+    int& bits_per_sample)
+  {
+    AcqGetStreamInformation(
+      input_stream,
+      &channel_count,
+      &bits_per_sample,
+      &sample_rate);
+  }
+
+  int Read(int sample_count, void* samples)
+  {
+    if (repeat) {
+
+      unsigned char* out = (unsigned char*)samples;
+      int samples_left = sample_count;
+      while (samples_left > 0) {
+
+        // read some samples
+        int samples_read = AcqReadStream(input_stream, out, samples_left);
+
+        // if we couldn't read anything, reset the stream and try again
+        if (samples_read == 0) {
+          AcqResetStream(input_stream);
+          samples_read = AcqReadStream(input_stream, samples, samples_left);
+        }
+
+        // if we still can't read anything, we're done
+        if (samples_read == 0) {
+          break;
+        }
+
+        samples_left -= samples_read;
+        out += samples_read * sample_size;
+      }
+
+      return sample_count - samples_left;
+
+    } else {
+
+      return AcqReadStream(input_stream, samples, sample_count);
+
+    }
+  }
+
+  void Reset()
+  {
+    AcqResetStream(input_stream);
+  }
+
+  // the struct fields
   ADR_CONTEXT    context;
-  void*          file_handle;
+  ADR_FILE       file_handle;
   ACQ_STREAM     input_stream;
   IOutputStream* output_stream;
 
@@ -46,9 +101,6 @@ static void ThreadRoutine(void* opaque);
 
 static int  ACQ_CALL FileRead(void* opaque, void* bytes, int byte_count);
 static void ACQ_CALL FileReset(void* opaque);
-
-static int  ADR_CALL SampleSource(void* opaque, int sample_count, void* samples);
-static void ADR_CALL SampleReset(void* opaque);
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -253,17 +305,10 @@ ADR_STREAM ADR_CALL AdrOpenStream(ADR_CONTEXT context, const char* filename)
   AI_EnterCriticalSection(stream->context->cs);
 
   // open output stream
-  stream->output_stream = stream->context->output_context->OpenStream(
-    channel_count,
-    sample_rate,
-    bits_per_sample,
-    SampleSource,
-    SampleReset,
-    stream
-  );
+  stream->output_stream = stream->context->output_context->OpenStream(stream);
   if (!stream->output_stream) {
     AcqCloseStream(stream->input_stream);
-    stream->context->close(stream->context->opaque);
+    stream->context->close(stream->file_handle);
     delete stream;
     return NULL;
   }
@@ -290,65 +335,6 @@ void ACQ_CALL FileReset(void* opaque)
 {
   ADR_STREAM stream = (ADR_STREAM)opaque;
   stream->context->seek(stream->file_handle, 0);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-int ADR_CALL SampleSource(void* opaque, const int sample_count, void* samples)
-{
-  ADR_STREAM stream = (ADR_STREAM)opaque;
-
-  if (stream->repeat) {
-
-    unsigned char* out = (unsigned char*)samples;
-    int samples_left = sample_count;
-    while (samples_left > 0) {
-
-      // read some samples
-      int samples_read = AcqReadStream(
-        stream->input_stream,
-        out,
-        samples_left
-      );
-
-      // if we couldn't read anything, reset the stream and try again
-      if (samples_read == 0) {
-        AcqResetStream(stream->input_stream);
-        samples_read = AcqReadStream(
-          stream->input_stream,
-          samples,
-          samples_left
-        );
-      }
-
-      // if we still can't read anything, we're done
-      if (samples_read == 0) {
-        break;
-      }
-
-      samples_left -= samples_read;
-      out += samples_read * stream->sample_size;
-    }
-
-    return sample_count - samples_left;
-
-  } else {
-
-    return AcqReadStream(
-      stream->input_stream,
-      samples,
-      sample_count
-    );
-
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void ADR_CALL SampleReset(void* opaque)
-{
-  ADR_STREAM stream = (ADR_STREAM)opaque;
-  AcqResetStream(stream->input_stream);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

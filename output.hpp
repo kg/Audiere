@@ -20,6 +20,7 @@ class IOutputStream;
 
 class ISampleSource
 {
+public:
   virtual void GetFormat(
     int& channel_count,
     int& sample_rate,
@@ -34,7 +35,7 @@ public:
   virtual ~IOutputContext() { }
   virtual bool Initialize(const char* parameters) = 0;
   virtual void Update() = 0;
-  virtual IOutputStream* OpenStream(ISampleSource source) = 0;
+  virtual IOutputStream* OpenStream(ISampleSource* source) = 0;
 };
 
 class IOutputStream

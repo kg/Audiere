@@ -25,7 +25,7 @@ public:
 
   bool Initialize(const char* parameters);
   void Update();
-  IOutputStream* OpenStream(ISampleSource source);
+  IOutputStream* OpenStream(ISampleSource* source);
 
 private:
   ALCdevice*  m_Device;
@@ -51,7 +51,7 @@ public:
 private:
   ALOutputStream(
     ALOutputContext* context,
-    ISampleSource source,
+    ISampleSource* source,
     ALuint al_source,
     ALuint* buffers,
     ALenum format,
@@ -71,6 +71,7 @@ private:
   // informational (convenience)
   ALenum m_Format;
   int    m_SampleSize;  // (num channels * bits per sample / 8)
+  int    m_SampleRate;
 
   // the last sample read
   ALubyte* m_LastSample;  

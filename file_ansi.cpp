@@ -4,35 +4,35 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void* ADR_CALL DefaultFileOpen(void* /*opaque*/, const char* filename)
+ADR_FILE ADR_CALL DefaultFileOpen(void* /*opaque*/, const char* filename)
 {
-  return fopen(filename, "rb");
+  return (ADR_FILE)fopen(filename, "rb");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void ADR_CALL DefaultFileClose(void* file)
+void ADR_CALL DefaultFileClose(ADR_FILE file)
 {
   fclose((FILE*)file);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ADR_CALL DefaultFileRead(void* file, void* buffer, int size)
+int ADR_CALL DefaultFileRead(ADR_FILE file, void* buffer, int size)
 {
   return fread(buffer, 1, size, (FILE*)file);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ADR_CALL DefaultFileSeek(void* file, int destination)
+int ADR_CALL DefaultFileSeek(ADR_FILE file, int destination)
 {
   return (0 == fseek((FILE*)file, destination, SEEK_SET));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int ADR_CALL DefaultFileTell(void* file)
+int ADR_CALL DefaultFileTell(ADR_FILE file)
 {
   return ftell((FILE*)file);
 }

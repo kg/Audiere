@@ -107,14 +107,13 @@ ALOutputContext::Update()
 ////////////////////////////////////////////////////////////////////////////////
 
 IOutputStream*
-ALOutputContext::OpenStream(
-  int channel_count,
-  int sample_rate,
-  int bits_per_sample,
-  ADR_SAMPLE_SOURCE source,
-  ADR_SAMPLE_RESET reset,
-  void* opaque)
+ALOutputContext::OpenStream(ISampleSource* source)
 {
+  int channel_count;
+  int sample_rate;
+  int bits_per_sample;
+  source->GetFormat(channel_count, sample_rate, bits_per_sample);
+
   // calculate OpenAL format
   ALenum format;
   if (channel_count == 1 && bits_per_sample == 8) {
@@ -150,8 +149,6 @@ ALOutputContext::OpenStream(
   ALOutputStream* stream = new ALOutputStream(
     this,
     source,
-    reset,
-    opaque,
     al_source,
     buffers,
     format,
@@ -164,9 +161,7 @@ ALOutputContext::OpenStream(
 
 ALOutputStream::ALOutputStream(
   ALOutputContext* context,
-  ADR_SAMPLE_SOURCE source,
-  ADR_SAMPLE_RESET reset,
-  void* opaque,
+  ISampleSource* source,
   ALuint al_source,
   ALuint* buffers,
   ALenum format,
@@ -174,10 +169,7 @@ ALOutputStream::ALOutputStream(
 {
   // fill the members
   m_Context = context;
-  
   m_Source = source;
-  m_Reset  = reset;
-  m_Opaque = opaque;
 
   m_SampleRate = sample_rate;
   m_Format = format;
@@ -276,7 +268,7 @@ int
 ALOutputStream::Read(void* samples, int sample_count)
 {
   // try to read from the stream
-  int samples_read = m_Source(m_Opaque, sample_count, samples);
+  int samples_read = m_Source->Read(sample_count, samples);
 
   // read the last sample
   if (samples_read > 0) {

@@ -9,17 +9,8 @@ class NullOutputContext : public IOutputContext
 {
 public:
   bool Initialize(const char* parameters);
-
   void Update();
-
-  IOutputStream* OpenStream(
-    int channel_count,
-    int sample_rate,
-    int bits_per_sample,
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
-    void* opaque
-  );
+  IOutputStream* OpenStream(ISampleSource* source);
 };
 
 

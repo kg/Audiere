@@ -19,6 +19,15 @@ typedef unsigned char AO_BOOL;
 #define AO_FALSE 0
 
 
+typedef int (ADR_CALL *AO_SAMPLE_SOURCE)(
+  void* opaque,
+  int sample_count,
+  void* samples);
+
+typedef void (ADR_CALL *AO_SAMPLE_RESET)(
+  void* opaque);
+
+
 class DLLOutputContext : public IOutputContext
 {
 public:
@@ -26,17 +35,8 @@ public:
   ~DLLOutputContext();
 
   bool Initialize(const char* parameters);
-
   void Update();
-
-  IOutputStream* OpenStream(
-    int channel_count,
-    int sample_rate,
-    int bits_per_sample,
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
-    void* opaque
-  );
+  IOutputStream* OpenStream(ISampleSource* source);
 
 private:
   typedef void* AO_STREAM;
@@ -51,8 +51,8 @@ private:
     int channel_count,
     int sample_rate,
     int bits_per_sample,
-    ADR_SAMPLE_SOURCE source,
-    ADR_SAMPLE_RESET reset,
+    AO_SAMPLE_SOURCE source,
+    AO_SAMPLE_RESET reset,
     void* opaque);
 
   void (ADR_CALL *AO_CloseStream)(AO_STREAM stream);

@@ -31,7 +31,7 @@ private:
 private:
   int m_volume;
 
-  friend NullOutputContext;
+  friend class NullOutputContext;
 };
 
 

@@ -35,7 +35,7 @@ private:
   typedef std::list<ALOutputStream*> StreamList;
   StreamList m_OpenStreams;
 
-  friend ALOutputStream;
+  friend class ALOutputStream;
 };
 
 
@@ -85,7 +85,7 @@ private:
   bool m_IsPlaying;
   int m_Volume;
 
-  friend ALOutputContext;
+  friend class ALOutputContext;
 };
 
 

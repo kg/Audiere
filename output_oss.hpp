@@ -44,7 +44,7 @@ private:
   ISampleSource* m_source;
   int m_volume;
 
-  friend OSSOutputContext;
+  friend class OSSOutputContext;
 };
 
 

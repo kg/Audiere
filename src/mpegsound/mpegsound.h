@@ -152,7 +152,6 @@ public:
 
   int geterrorcode(void)  {return __errorcode;};
 
-  virtual bool open(char *filename)              =0;
   virtual int  getbytedirect(void)               =0;
   virtual bool _readbuffer(char *buffer,int size)=0;
   virtual bool eof(void)                         =0;
@@ -167,28 +166,6 @@ protected:
 
 private:
   int __errorcode;
-};
-
-// Inputstream from file
-class Soundinputstreamfromfile : public Soundinputstream
-{
-public:
-  Soundinputstreamfromfile()  {fp=NULL;};
-  ~Soundinputstreamfromfile();
-
-  bool open(char *filename);
-  bool _readbuffer(char *buffer,int bytes);
-  int  getbytedirect(void);
-  bool eof(void);
-  int  getblock(char *buffer,int size);
-
-  int  getsize(void);
-  int  getposition(void);
-  void setposition(int pos);
-
-private:
-  FILE *fp;
-  int  size;
 };
 
 /**********************************/
@@ -218,53 +195,6 @@ protected:
 
 private:
   int  __errorcode;
-};
-
-
-class Rawtofile : public Soundplayer
-{
-public:
-  ~Rawtofile();
-
-  bool initialize(char *filename);
-  bool setsoundtype(int stereo,int samplesize,int speed);
-  bool putblock(void *buffer,int size);
-
-private:
-  int filehandle;
-  int rawstereo,rawsamplesize,rawspeed;
-};
-
-// Class for playing raw data
-class Rawplayer : public Soundplayer
-{
-public:
-  ~Rawplayer();
-
-  bool initialize(char *filename);
-  void abort(void);
-  int  getprocessed(void);
-
-  bool setsoundtype(int stereo,int samplesize,int speed);
-  bool resetsoundtype(void);
-
-  bool putblock(void *buffer,int size);
-
-  int  getblocksize(void);
-
-  void setquota(int q){quota=q;};
-  int  getquota(void) {return quota;};
-
-  static char *defaultdevice;
-  static int  setvolume(int volume);
-
-private:
-  short int rawbuffer[RAWDATASIZE];
-  int  rawbuffersize;
-  int  audiohandle,audiobuffersize;
-  int  rawstereo,rawsamplesize,rawspeed;
-  bool forcetomono,forceto8;
-  int  quota;
 };
 
 
@@ -530,52 +460,5 @@ public:
 #endif
 };
 
-
-
-/***********************/
-/* File player classes */
-/***********************/
-// Superclass for playing file
-class Fileplayer
-{
-public:
-  Fileplayer();
-  virtual ~Fileplayer();
-
-  int geterrorcode(void)        {return __errorcode;};
-
-  virtual bool openfile(char *filename,char *device)=0;
-  virtual void setforcetomono(bool flag)            =0;
-  virtual bool playing(int verbose,bool frameinfo, int startframe)                 =0;
-
-protected:
-  bool seterrorcode(int errorno){__errorcode=errorno;return false;};
-  Soundplayer *player;
-
-private:
-  int __errorcode;
-};
-
-
-// Class for playing MPEG file
-class Mpegfileplayer : public Fileplayer
-{
-public:
-  Mpegfileplayer();
-  ~Mpegfileplayer();
-
-  void setforcetomono(bool flag);
-  void setdownfrequency(int value);
-  bool playing(int verbose, bool frameinfo, int startframe);
-#if PTHREADEDMPEG
-  bool playingwiththread(int verbose,bool frameinfo,int framenumbers, int startframe);
-#endif
-
-private:
-  Soundinputstream *loader;
-  Mpegtoraw *server;
-
-  void showverbose(int verbose);
-};
 
 #endif

@@ -29,14 +29,6 @@ namespace audiere {
       m_eof = false;
     }
 
-    bool open(char* /*filename*/) {
-      return true; // already open!
-    }
-
-    void close() {
-      m_file = 0;
-    }
-
     int getbytedirect() {
       u8 b;
       if (m_file->read(&b, 1) == 1) {

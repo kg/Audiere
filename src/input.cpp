@@ -95,7 +95,11 @@ namespace audiere {
     if (!filename) {
       return 0;
     }
-    return OpenSource(OpenDefaultFile(filename), filename);
+    File* file = OpenDefaultFile(filename);
+    if (!file) {
+      return 0;
+    }
+    return OpenSource(file, filename);
   }
 
 

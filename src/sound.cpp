@@ -18,7 +18,7 @@ namespace audiere {
     // If the stream is not seekable, we cannot know how big of a buffer
     // to allocate, so try to stream it.  Also, if the user wants to stream
     // then let him.  ;)
-    if (!source->isSeekable() && streaming) {
+    if (!source->isSeekable() || streaming) {
       return device->openStream(source);
     }
 

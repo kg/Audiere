@@ -1,11 +1,10 @@
 EXTRA_DIST = \
-	architecture.txt \
 	changelog.txt \
 	cvs.txt \
 	dependencies.txt \
 	faq.txt \
+	glossary.txt \
 	license.txt \
 	readme.txt \
-	todo.txt \
-	tutorial_cpp.txt \
+	release-howto.txt \
 	tutorial.txt

@@ -9,15 +9,23 @@ include_HEADERS = audiere.h
 
 if HAVE_OPENAL
 OPENAL_SOURCES = device_oal.cpp device_oal.h
+else
+OPENAL_DIST    = device_oal.cpp device_oal.h
 endif
 
 if HAVE_AL
 AL_SOURCES = device_al.cpp device_al.h
+else
+AL_DIST    = device_al.cpp device_al.h
 endif
 
 if HAVE_OSS
 OSS_SOURCES = device_oss.cpp device_oss.h
+else
+OSS_DIST    = device_oss.cpp device_oss.h
 endif
+
+EXTRA_DIST = $(OPENAL_DIST) $(AL_DIST) $(OSS_DIST)
 
 libaudiere_la_SOURCES = \
 	debug.cpp \

@@ -8,4 +8,8 @@ wxPlayer_LDADD = $(top_builddir)/src/libaudiere.la
 wxPlayer_CXXFLAGS = @WX_CPPFLAGS@
 wxPlayer_LDFLAGS = @WX_LIBS@
 
+else
+
+EXTRA_DIST = wxPlayer.cpp
+
 endif

@@ -164,6 +164,17 @@ Get libvorbis from http://www.vorbis.com/])
     AC_DEFINE(NO_OGG))
 AM_CONDITIONAL(HAVE_OGG, test "x$HAVE_OGG" = "xtrue")
 
+AC_CHECK_HEADER(speex.h,
+    HAVE_SPEEX=true
+    LIBS="-lspeex $LIBS"
+    EXTRA_LIBS="-lspeex $EXTRA_LIBS"
+  ,
+    AC_MSG_WARN([Could not find speex header.  You do not appear to have libspeex installed.
+Get libspeex from http://www.speex.org/])
+    AC_MSG_WARN([Disabling speex support.])
+    AC_DEFINE(NO_SPEEX))
+AM_CONDITIONAL(HAVE_SPEEX, test "x$HAVE_SPEEX" = "xtrue")
+
 AC_CHECK_HEADER(dsound.h,
     HAVE_DSOUND=true
     AC_DEFINE(HAVE_DSOUND)

@@ -16,7 +16,8 @@ base_env = Environment(
     LIBPATH = ['/usr/freeware/lib32'],
     LIBS = ['pthread', 'vorbisfile', 'vorbis', 'ogg', 'FLAC', 'audio', 'm'])
 base_env.AppendENVPath('PATH', '/usr/freeware/bin')
-base_env.Append(CXXFLAGS = ['-DHAVE_AL', '-DNO_DUMB', '-DWORDS_BIGENDIAN'])
+base_env.Append(CXXFLAGS = ['-DHAVE_AL', '-DNO_DUMB', '-DNO_SPEEX',
+                            '-DWORDS_BIGENDIAN'])
 
 # build debug?
 if ARGUMENTS.get('debug', 0):

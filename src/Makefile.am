@@ -23,6 +23,12 @@ else
 OGG_DIST    = input_ogg.cpp input_ogg.h
 endif
 
+if HAVE_SPEEX
+SPEEX_SOURCES = input_speex.cpp input_speex.h speexfile/speexfile.h speexfile/speexfile.cpp
+else
+SPEEX_DIST    = input_speex.cpp input_speex.h speexfile/speexfile.h speexfile/speexfile.cpp
+endif
+
 if HAVE_AL
 AL_SOURCES = device_al.cpp device_al.h
 else
@@ -55,8 +61,8 @@ endif
 
 
 EXTRA_DIST = \
-	$(FLAC_DIST) $(DUMB_DIST) $(OGG_DIST) $(AL_DIST) $(OSS_DIST) \
-	$(DSOUND_DIST) $(WINMM_DIST)
+	$(FLAC_DIST) $(DUMB_DIST) $(OGG_DIST) $(SPEEX_DIST) $(AL_DIST) \
+	$(OSS_DIST) $(DSOUND_DIST) $(WINMM_DIST)
 
 libaudiere_la_SOURCES = \
 	basic_source.cpp \
@@ -82,6 +88,7 @@ libaudiere_la_SOURCES = \
 	input_mp3.cpp \
 	input_mp3.h \
 	$(OGG_SOURCES) \
+	$(SPEEX_SOURCES) \
 	input_wav.cpp \
 	input_wav.h \
 	internal.h \

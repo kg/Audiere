@@ -17,14 +17,15 @@ extern "C" {
 #include <speex_header.h>
 #include <speex_stereo.h>
 #include <speex_callbacks.h>
-#include <misc.h>
+//#include <misc.h>
 #include <ogg/ogg.h>
 }
 
-typedef unsigned __int64        uint64_t;
-typedef signed   __int64        int64_t;
-typedef unsigned __int32        uint32_t;
-typedef signed   __int32        int32_t;
+#include "../types.h"
+typedef audiere::u64            uint64_t;
+typedef audiere::s64            int64_t;
+typedef audiere::u32            uint32_t;
+typedef audiere::s32            int32_t;
 typedef unsigned long           ulong_t;
 typedef long double             ldouble_t;
 typedef int64_t                 offset_t;

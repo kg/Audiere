@@ -11,7 +11,7 @@ namespace audiere {
   class BufferStream : public RefImplementation<SampleSource> {
   public:
     BufferStream(
-      void* samples, int sample_count,
+      void* samples, int frame_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
     ~BufferStream();
 
@@ -20,7 +20,7 @@ namespace audiere {
       int& sample_rate,
       SampleFormat& sample_format);
 
-    int  ADR_CALL read(int sample_count, void* samples);
+    int  ADR_CALL read(int frame_count, void* samples);
     void ADR_CALL reset();
 
     bool ADR_CALL isSeekable();
@@ -30,10 +30,10 @@ namespace audiere {
 
   private:
     u8* m_buffer;
-    int m_buffer_length; // in samples
-    int m_position;      // in samples
+    int m_buffer_length; // in frames
+    int m_position;      // in frames
 
-    int m_block_size; // m_channel_count * GetSampleSize(m_sample_format)
+    int m_frame_size;
     int m_channel_count;
     int m_sample_rate;
     SampleFormat m_sample_format;

@@ -15,10 +15,10 @@ namespace audiere {
     m_sample_rate   = sample_rate;
     m_sample_format = sample_format;
 
-    m_block_size = m_channel_count * GetSampleSize(m_sample_format);
+    m_frame_size = m_channel_count * GetSampleSize(m_sample_format);
 
-    m_buffer = new u8[m_buffer_length * m_block_size];
-    memcpy(m_buffer, samples, m_buffer_length * m_block_size);
+    m_buffer = new u8[m_buffer_length * m_frame_size];
+    memcpy(m_buffer, samples, m_buffer_length * m_frame_size);
   }
 
   BufferStream::~BufferStream() {
@@ -37,12 +37,12 @@ namespace audiere {
   }
 
   int
-  BufferStream::read(int sample_count, void* samples) {
-    int to_read = std::min(sample_count, m_buffer_length - m_position);
+  BufferStream::read(int frame_count, void* samples) {
+    int to_read = std::min(frame_count, m_buffer_length - m_position);
     memcpy(
       samples,
-      m_buffer + m_position * m_block_size,
-      to_read * m_block_size);
+      m_buffer + m_position * m_frame_size,
+      to_read * m_frame_size);
     m_position += to_read;
     return to_read;
   }

@@ -1,11 +1,6 @@
 #include <string.h>
 #include <vorbis/vorbisfile.h>
 #include "acq_internal.hpp"
-#include "resample.h"  // from MAD source
-
-
-static const int RESAMPLED_BUFFER_SIZE = 4096;
-static const int CONVERSION_BUFFER_SIZE = 4096;
 
 
 struct OGG_INTERNAL

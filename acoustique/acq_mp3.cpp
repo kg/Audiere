@@ -1,3 +1,5 @@
+#ifdef WITH_MP3 // only build this file if we want MP3 support
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -324,3 +326,5 @@ void RenderSamples(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+#endif

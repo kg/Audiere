@@ -1,4 +1,4 @@
-SUBDIRS = mikmod resample
+SUBDIRS = mikmod @RESAMPLE@
 
 INCLUDES = \
 	-I mikmod/mmio \
@@ -19,7 +19,7 @@ libacoustique_la_SOURCES = \
 
 libacoustique_la_LDFLAGS = \
 	-release $(VERSION) \
-	-lmad \
+	@MADLIB@ \
 	-lvorbisfile \
 	-lvorbis \
 	-logg

@@ -30,32 +30,24 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
   // check MP3 last, because it'll probably say any file is okay
   if (stream_format == ACQ_STREAM_AUTODETECT) {
 
-    // OGG
-    ACQ_STREAM s = AcqOpenStream(opaque, read, reset, ACQ_STREAM_OGG);
-    if (s) {
-      return s;
-    } else {
-      reset(opaque);
-    }
+    ACQ_STREAM s;
 
-    // WAV
-    s = AcqOpenStream(opaque, read, reset, ACQ_STREAM_WAV);
-    if (s) {
-      return s;
-    } else {
-      reset(opaque);
-    }
+    #define TRY_STREAM_TYPE(type)                   \
+      s = AcqOpenStream(opaque, read, reset, type); \
+      if (s) {                                      \
+        return s;                                   \
+      } else {                                      \
+        reset(opaque);                              \
+      }
 
-    // MOD
-    s = AcqOpenStream(opaque, read, reset, ACQ_STREAM_MOD);
-    if (s) {
-      return s;
-    } else {
-      reset(opaque);
-    }
+    TRY_STREAM_TYPE(ACQ_STREAM_OGG);
+    TRY_STREAM_TYPE(ACQ_STREAM_WAV);
+    TRY_STREAM_TYPE(ACQ_STREAM_MOD);
+    #ifdef WITH_MP3
+      TRY_STREAM_TYPE(ACQ_STREAM_MP3);
+    #endif
 
-    // MP3
-    return AcqOpenStream(opaque, read, reset, ACQ_STREAM_MP3);
+    return NULL;
   }
 
   // create the new stream object
@@ -76,6 +68,7 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
       stream->stream_reset = OGG_Reset;
     } break;
 
+#ifdef WITH_MP3
     // MP3
     case ACQ_STREAM_MP3: {
       stream->stream_open  = MP3_Open;
@@ -83,6 +76,7 @@ ACQ_STREAM ACQ_CALL AcqOpenStream(
       stream->stream_read  = MP3_Read;
       stream->stream_reset = MP3_Reset;
     } break;
+#endif
 
     // WAV
     case ACQ_STREAM_WAV: {

@@ -2,6 +2,8 @@
 #include <string.h>
 #include "speexfile.h"
 
+namespace speexfile {
+
 // -------------------------------------
 
 static bool is_speex(Reader *r)
@@ -920,4 +922,6 @@ void *speexfile::header_to_decoder ( SpeexHeader *header, int enh_enabled, int *
         *channels = header->nb_channels;
 
     return st;
+}
+
 }

@@ -40,7 +40,7 @@ namespace audiere {
     // Defined by speexfile API.
     enum { BUFFER_SIZE = 2000 };
 
-    speexfile* m_speexfile;
+    speexfile::speexfile* m_speexfile;
     int m_position;  // Need to remember this because m_speexfile doesn't.
 
     QueueBuffer m_read_buffer;

@@ -4,7 +4,7 @@
 
 namespace audiere {
 
-  class FileReader : public Reader {
+  class FileReader : public speexfile::Reader {
   private:
     FilePtr m_file;
 
@@ -17,19 +17,19 @@ namespace audiere {
       return m_file->read(ptr, size);
     }
 
-    offset_t seek(offset_t offset) {
+    speexfile::offset_t seek(speexfile::offset_t offset) {
       m_file->seek(offset, File::BEGIN);
       return get_position();
     }
 
-    offset_t get_position() {
+    speexfile::offset_t get_position() {
       return m_file->tell();
     }
 
-    offset_t get_length() {
-      offset_t c = get_position();
+    speexfile::offset_t get_length() {
+      speexfile::offset_t c = get_position();
       m_file->seek(0, File::END);
-      offset_t l = get_position();
+      speexfile::offset_t l = get_position();
       m_file->seek(c, File::BEGIN);
       return l;
     }
@@ -55,7 +55,7 @@ namespace audiere {
   bool
   SpeexInputStream::initialize(FilePtr file) {
     FileReader* reader = new FileReader(file);
-    m_speexfile = new speexfile(reader);
+    m_speexfile = new speexfile::speexfile(reader);
 
     // @todo How should we handle files with multiple streams?
     if (m_speexfile->get_streams() != 1) {
@@ -73,7 +73,7 @@ namespace audiere {
     }
 
     for (int i = 0; i < m_speexfile->stream_get_tagcount(); ++i) {
-      const speextags* tag = m_speexfile->stream_get_tags()[i];
+      const speexfile::speextags* tag = m_speexfile->stream_get_tags()[i];
       addTag(
         tag->item ? tag->item : "",
         tag->value ? tag->value : "",
@@ -121,7 +121,7 @@ namespace audiere {
       ADR_ASSERT(actual_read != 0, "Read queue should have data");
 
       for (int i = 0; i < actual_read; ++i) {
-        out[i] = read_buffer[i] * 32767;
+        out[i] = s16(read_buffer[i] * 32767);
       }
 
       frame_count -= actual_read;

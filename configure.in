@@ -55,7 +55,21 @@ AC_CHECK_LIB(openal, alBufferData,
 AC_SEARCH_LIBS(clock_gettime, rt,
     AC_DEFINE(HAVE_CLOCK_GETTIME))
 
-AM_CONDITIONAL(HAVE_OPENAL, test x$HAVE_OPENAL = xtrue)
+AM_CONDITIONAL(HAVE_OPENAL, test "x$HAVE_OPENAL" = "xtrue")
+
+
+dnl Look for wxWindows
+AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin)
+if [[ "$WX_CONFIG" = "no" ]] ; then
+   AC_MSG_WARN("wxWindows not found, not building wxPlayer")
+else
+   HAVE_WXWINDOWS=true
+   AC_DEFINE(HAVE_WXWINDOWS)
+   LIBS="$LIBS `$WX_CONFIG --libs`"
+   CPPFLAGS="$CPPFLAGS `$WX_CONFIG --cxxflags`"
+fi
+
+AM_CONDITIONAL(HAVE_WXWINDOWS, test "x$HAVE_WXWINDOWS" = "xtrue")
 
 dnl Checks for header files.
 
@@ -67,7 +81,7 @@ AC_CHECK_HEADER(sys/soundcard.h,
 AC_CHECK_HEADER(vorbis/vorbisfile.h,,AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find vorbisfile header))
 
-AM_CONDITIONAL(HAVE_OSS, test x$HAVE_OSS = xtrue)
+AM_CONDITIONAL(HAVE_OSS, test "x$HAVE_OSS" = "xtrue")
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 
@@ -81,6 +95,7 @@ AC_OUTPUT(
 	doc/Makefile
         examples/Makefile
         examples/simple/Makefile
+        examples/wxPlayer/Makefile
         src/Makefile
         src/mikmod/Makefile
         src/mikmod/mikmod/Makefile

@@ -155,17 +155,17 @@ private:
 
 
 BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
-  EVT_BUTTON(STREAM_PLAY,  OnPlay)
-  EVT_BUTTON(STREAM_STOP,  OnStop)
-  EVT_BUTTON(STREAM_RESET, OnReset)
+  EVT_BUTTON(STREAM_PLAY,  StreamFrame::OnPlay)
+  EVT_BUTTON(STREAM_STOP,  StreamFrame::OnStop)
+  EVT_BUTTON(STREAM_RESET, StreamFrame::OnReset)
 
-  EVT_CHECKBOX(STREAM_REPEAT, OnRepeat)
+  EVT_CHECKBOX(STREAM_REPEAT, StreamFrame::OnRepeat)
 
-  EVT_COMMAND_SCROLL(STREAM_VOLUME, OnChangeVolume)
-  EVT_COMMAND_SCROLL(STREAM_PAN,    OnChangePan)
-  EVT_COMMAND_SCROLL(STREAM_POS,    OnChangePos)
+  EVT_COMMAND_SCROLL(STREAM_VOLUME, StreamFrame::OnChangeVolume)
+  EVT_COMMAND_SCROLL(STREAM_PAN,    StreamFrame::OnChangePan)
+  EVT_COMMAND_SCROLL(STREAM_POS,    StreamFrame::OnChangePos)
 
-  EVT_TIMER(STREAM_UPDATE, OnUpdatePosition)
+  EVT_TIMER(STREAM_UPDATE, StreamFrame::OnUpdatePosition)
 END_EVENT_TABLE()
 
 
@@ -287,48 +287,12 @@ private:
 
 
 BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
-  EVT_MENU(DEVICE_NEW_DEVICE,  OnDeviceNewDevice)
-  EVT_MENU(DEVICE_OPEN_STREAM, OnDeviceOpenStream)
-  EVT_MENU(DEVICE_OPEN_SOUND,  OnDeviceOpenSound)
-  EVT_MENU(DEVICE_CREATE_TONE, OnDeviceCreateTone)
-  EVT_MENU(DEVICE_CLOSE,       OnDeviceClose)
+  EVT_MENU(DEVICE_NEW_DEVICE,  DeviceFrame::OnDeviceNewDevice)
+  EVT_MENU(DEVICE_OPEN_STREAM, DeviceFrame::OnDeviceOpenStream)
+  EVT_MENU(DEVICE_OPEN_SOUND,  DeviceFrame::OnDeviceOpenSound)
+  EVT_MENU(DEVICE_CREATE_TONE, DeviceFrame::OnDeviceCreateTone)
+  EVT_MENU(DEVICE_CLOSE,       DeviceFrame::OnDeviceClose)
 END_EVENT_TABLE()
-
-
-/*
-void
-wxPlayerFrame::OnRepeat(wxCommandEvent& event)
-{
-  int sel = m_songs->GetSelection();
-  if (sel >= 0 && sel < m_songs->Number()) {
-
-    m_streams[sel]->setRepeat(!m_streams[sel]->getRepeat());
-
-  }
-}
-
-
-void
-wxPlayerFrame::OnChangeVolume(wxScrollEvent& event)
-{
-  int volume = event.GetPosition();
-  for (int i = 0; i < m_songs->Number(); ++i) {
-    m_streams[i]->setVolume(volume / 1000.0f);
-  }
-}
-
-
-void
-wxPlayerFrame::OnChangePan(wxScrollEvent& event)
-{
-  int pan = event.GetPosition();
-  for (int i = 0; i < m_songs->Number(); ++i) {
-    m_streams[i]->setPan(pan / 1000.0f);
-  }
-}
-*/
-
-////////////////////////////////////////////////////////////////////////////////
 
 
 bool TryDevice(const char* name) {
@@ -342,8 +306,7 @@ bool TryDevice(const char* name) {
 }
 
 
-class wxPlayer : public wxApp
-{
+class wxPlayer : public wxApp {
 public:
   bool OnInit() {
     bool result = (TryDevice("autodetect") || TryDevice("null"));

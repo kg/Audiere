@@ -77,3 +77,4 @@ AC_OUTPUT(
 	mikmod/mmio/Makefile
 	resample/Makefile
 )
+

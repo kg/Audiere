@@ -41,6 +41,7 @@
 #include "mmio.h"
 #include "mmconfig.h"
 #include <string.h>
+#include <ctype.h>
 
 #define WhiteSpace(x)     ((x <= 32 && x) || (x == 255))
 #define NotWhiteSpace(x)  (!(x <= 32) && (x != 255))
@@ -57,6 +58,14 @@
 
 #define MMCONF_ARRAY_DELIMITOR  ','
 #define MMCONF_REQARRAY_MAX      8
+
+
+static void do_strlwr(char* c) {
+  while (*c) {
+    *c = tolower(*c);
+    c++;
+  }
+}
 
 
 // =====================================================================================
@@ -395,7 +404,7 @@
     strncpy(work, var, MMCONF_MAXNAMELEN);
     work[MMCONF_MAXNAMELEN] = 0;
 
-    if(conf->flags & MMCONF_CASE_INSENSITIVE) strlwr(work);
+    if(conf->flags & MMCONF_CASE_INSENSITIVE) do_strlwr(work);
 
     for(i=0; i<conf->numsubsec; i++)
     {   if(!strcmp(work, conf->subsec[i].name))
@@ -461,7 +470,7 @@
                     conf->work[vpos] = 0;
                     _mmconf_rtrim(conf->work);          // strip the right-side whitespace
 
-                    if(conf->flags & MMCONF_CASE_INSENSITIVE) strlwr(conf->work);
+                    if(conf->flags & MMCONF_CASE_INSENSITIVE) do_strlwr(conf->work);
                     if(!strcmp(conf->work,var)) return lpos;
                 break;
             }
@@ -663,7 +672,7 @@ static CHAR *val_enabled  = "enabled",
     sprintf(work,"%s",val ? val_true : val_false);
 
     if(_mmcfg_request_string(conf, var, work))
-    {   if(conf->flags & MMCONF_CASE_INSENSITIVE) strlwr(work);
+    {   if(conf->flags & MMCONF_CASE_INSENSITIVE) do_strlwr(work);
 
         if(strcmp(work,val_enabled)==0 || strcmp(work,val_true)==0 || strcmp(work,val_yes)==0 || strcmp(work,val_on)==0)
             val = 1;
@@ -688,7 +697,7 @@ static CHAR *val_enabled  = "enabled",
     if(_mmcfg_request_string(conf, var, work))
     {   int   i=0;
 
-        if(conf->flags & MMCONF_CASE_INSENSITIVE) strlwr(work);
+        if(conf->flags & MMCONF_CASE_INSENSITIVE) do_strlwr(work);
         while(enu[i])
         {   if(!strcmp(work, enu[i]))
             {   val = i;  break;  }
@@ -740,7 +749,7 @@ static CHAR *val_enabled  = "enabled",
         for(t=0; t<cnt; t++)
         {   int   i=0;
 
-            if(conf->flags & MMCONF_CASE_INSENSITIVE) strlwr(conf->work2[t]);
+            if(conf->flags & MMCONF_CASE_INSENSITIVE) do_strlwr(conf->work2[t]);
 
             if(strcmp(conf->work2[t],val_enabled)==0 || strcmp(conf->work2[t],val_true)==0 || strcmp(conf->work2[t],val_yes)==0 || strcmp(conf->work2[t],val_on)==0)
                 val[t] = 1;
@@ -775,7 +784,7 @@ static CHAR *val_enabled  = "enabled",
         for(t=0; t<cnt; t++)
         {   int   i=0;
 
-            if(conf->flags & MMCONF_CASE_INSENSITIVE) strlwr(conf->work2[t]);
+            if(conf->flags & MMCONF_CASE_INSENSITIVE) do_strlwr(conf->work2[t]);
 
             while(enu[i])
             {   if(!strcmp(conf->work2[t], enu[i]))

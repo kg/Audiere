@@ -1,10 +1,3 @@
-// definitions:
-// Most PCM data is stored with interleaved channels:
-//   12121212
-// A single sample for all channels ([12] in that case above) will be called
-// a 'block', for lack of a better term.
-
-
 #include <limits.h>
 #include "output_al.hpp"
 
@@ -240,7 +233,11 @@ ALOutputStream::Update()
 {
   // are there any buffers that have been processed?
   ALint processed_buffers;
+#ifdef _WIN32 // XXX more OpenAL hacks
   alGetSourcei(m_ALSource, AL_BUFFERS_PROCESSED, &processed_buffers);
+#else
+  alGetSourceiv(m_ALSource, AL_BUFFERS_PROCESSED, &processed_buffers);
+#endif
 
   // don't do any allocations if we don't need to
   if (processed_buffers == 0) {

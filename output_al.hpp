@@ -8,6 +8,12 @@
 #include "output.hpp"
 
 
+// XXX hack around the fact that the Linux headers don't have ALCcontext yet
+#ifndef _WIN32
+typedef void ALCcontext;
+#endif
+
+
 class ALOutputStream;
 
 

@@ -42,6 +42,8 @@ libaudiere_la_SOURCES = \
 	$(OSS_SOURCES) \
 	file_ansi.cpp \
 	input.cpp \
+	input_flac.cpp \
+	input_flac.h \
 	input_mod.cpp \
 	input_mod.h \
 	input_mp3.cpp \

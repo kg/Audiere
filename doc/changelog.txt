@@ -1,3 +1,7 @@
+2004.11.30
+
+  Added bindings to wxWidgets.  (Emanuel Dejanu)
+
 2004.11.27
 
   Added VC7 build system.

@@ -266,6 +266,12 @@ namespace audiere {
   }
 
 
+  const char*
+  DSAudioDevice::getName() {
+    return "directsound";
+  }
+
+
   void
   DSAudioDevice::removeStream(DSOutputStream* stream) {
     SYNCHRONIZED(this);

@@ -486,6 +486,13 @@ namespace audiere {
       int channel_count,
       int sample_rate,
       SampleFormat sample_format) = 0;
+
+    /**
+     * Gets the name of the audio device.  For example "directsound" or "oss".
+     *
+     * @return name of audio device
+     */
+    virtual const char* ADR_CALL getName() = 0;
   };
   typedef RefPtr<AudioDevice> AudioDevicePtr;
 

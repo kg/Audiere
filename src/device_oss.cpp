@@ -69,7 +69,7 @@ namespace audiere {
   }
 
 
-  void
+  void ADR_CALL
   OSSAudioDevice::update() {
     // find out how much data we can write to the device before it blocks
     audio_buf_info info;
@@ -93,6 +93,12 @@ namespace audiere {
     }
 
     usleep(50000);  // 50 milliseconds
+  }
+
+
+  const char* ADR_CALL
+  OSSAudioDevice::getName() {
+    return "oss";
   }
 
 }

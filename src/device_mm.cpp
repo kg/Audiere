@@ -108,4 +108,10 @@ namespace audiere {
     Sleep(10);
   }
 
+
+  const char*
+  MMAudioDevice::getName() {
+    return "winmm";
+  }
+
 }

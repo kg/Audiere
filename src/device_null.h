@@ -32,6 +32,7 @@ namespace audiere {
     OutputStream* ADR_CALL openBuffer(
       void* samples, int frame_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
+    const char* ADR_CALL getName();
 
   private:
     void removeStream(NullOutputStream* stream);

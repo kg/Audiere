@@ -74,6 +74,12 @@ namespace audiere {
   }
 
 
+  const char*
+  NullAudioDevice::getName() {
+    return "null";
+  }
+
+
   void
   NullAudioDevice::removeStream(NullOutputStream* stream) {
     SYNCHRONIZED(this);

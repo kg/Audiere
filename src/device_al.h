@@ -22,7 +22,8 @@ namespace audiere {
     ~ALAudioDevice();
 
   public:
-    void update();
+    void ADR_CALL update();
+    const char* ADR_CALL getName();
 
   private:
     ALport m_port;

@@ -1,3 +1,7 @@
+2003.04.22
+
+  added getName() method to AudioDevice
+
 2003.03.11
 
   you can pass smart pointers straight into API calls, for example:

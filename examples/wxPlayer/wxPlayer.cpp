@@ -24,6 +24,8 @@ enum {
   DEVICE_CLOSE_WINDOW,
   DEVICE_CLOSE,
 
+  HELP_ABOUT,
+
   STREAM_PLAY,
   STREAM_STOP,
   STREAM_RESET,
@@ -135,7 +137,7 @@ public:
 
   void OnChangePos() {
     float pos = float(m_pos->GetValue()) / 1000;
-    m_stream->setPosition(pos * m_stream_length);
+    m_stream->setPosition(int(pos * m_stream_length));
   }
 
   void OnUpdateStatus() {
@@ -406,8 +408,8 @@ END_EVENT_TABLE()
 
 class DeviceFrame : public wxMDIParentFrame {
 public:
-  DeviceFrame(AudioDevice* device, const wxString& device_name)
-  : wxMDIParentFrame(NULL, -1, "Device Window - " + device_name)
+  DeviceFrame(AudioDevice* device)
+  : wxMDIParentFrame(0, -1, "Device Window - " + wxString(device->getName()))
   {
     m_device = device;
 
@@ -428,8 +430,12 @@ public:
     fileMenu->Append(DEVICE_CLOSE_WINDOW,         "Close C&urrent Window");
     fileMenu->Append(DEVICE_CLOSE,                "&Close Device");
 
+    wxMenu* helpMenu = new wxMenu();
+    helpMenu->Append(HELP_ABOUT, "&About...");
+
     wxMenuBar* menuBar = new wxMenuBar();
     menuBar->Append(fileMenu, "&Device");
+    menuBar->Append(helpMenu, "&Help");
     SetMenuBar(menuBar);
 
     SetFocus();
@@ -438,8 +444,12 @@ public:
   void OnDeviceNewDevice() {
     NewDeviceDialog dialog(this);
     if (dialog.ShowModal() == wxID_OK) {
-      TryDevice(dialog.getDevice().c_str(),
-                dialog.getParameters().c_str());
+      bool result = TryDevice(dialog.getDevice().c_str(),
+                              dialog.getParameters().c_str());
+      if (!result) {
+        wxMessageBox("Error opening new device", "New Device",
+                     wxOK | wxICON_ERROR, this);
+      }
     }
   }
 
@@ -615,6 +625,15 @@ public:
     Close();
   }
 
+  void OnHelpAbout() {
+    wxString message =
+      "wxPlayer\n"
+      "Copyright (c) Chad Austin 2002-2003\n\n"
+      "Audiere Version: ";
+    message += GetVersion();
+    wxMessageBox(message, "About wxPlayer", wxOK | wxCENTRE, this);
+  }
+
 private:
   AudioDevicePtr m_device;
 
@@ -634,12 +653,13 @@ BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
   EVT_MENU(DEVICE_OPEN_MULTIPLE_EFFECT, DeviceFrame::OnDeviceOpenMultipleEffect)
   EVT_MENU(DEVICE_CLOSE_WINDOW,         DeviceFrame::OnDeviceCloseCurrentWindow)
   EVT_MENU(DEVICE_CLOSE,                DeviceFrame::OnDeviceClose)
+  EVT_MENU(HELP_ABOUT,                  DeviceFrame::OnHelpAbout)
 END_EVENT_TABLE()
 
 
 bool TryDevice(const wxString& name, const wxString& parameters) {
   if (AudioDevicePtr device = audiere::OpenDevice(name, parameters)) {
-    DeviceFrame* frame = new DeviceFrame(device.get(), name);
+    DeviceFrame* frame = new DeviceFrame(device.get());
     frame->Show(true);
     return true;
   } else {

@@ -111,4 +111,10 @@ namespace audiere {
     usleep(50000);  // 50 milliseconds
   }
 
+
+  const char* ADR_CALL
+  ALAudioDevice::getName() {
+    return "sgial";
+  }
+
 }

@@ -205,6 +205,10 @@ namespace audiere {
         channel_count, sample_rate, sample_format);
     }
 
+    const char* getName() {
+      return m_device->getName();
+    }
+
   private:
     void run() {
       m_thread_exists = true;

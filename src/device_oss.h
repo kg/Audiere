@@ -17,7 +17,8 @@ namespace audiere {
     ~OSSAudioDevice();
 
   public:
-    void update();
+    void ADR_CALL update();
+    const char* ADR_CALL getName();
 
   private:
     int m_output_device;

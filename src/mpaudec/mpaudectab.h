@@ -768,5 +768,5 @@ static const uint8_t mpa_pretab[2][22] = {
 
 /* table for alias reduction (XXX: store it as integer !) */
 static const float ci_table[8] = {
-    -0.6, -0.535, -0.33, -0.185, -0.095, -0.041, -0.0142, -0.0037,
+    -0.6f, -0.535f, -0.33f, -0.185f, -0.095f, -0.041f, -0.0142f, -0.0037f,
 };

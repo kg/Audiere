@@ -58,7 +58,7 @@ namespace audiere {
     }
 
     int ADR_CALL getLoopPointCount() {
-      return m_loop_points.size();
+      return static_cast<int>(m_loop_points.size());
     }
 
     bool ADR_CALL getLoopPoint(
@@ -141,7 +141,7 @@ namespace audiere {
     int getNextLoopPoint(int position) {
       for (size_t i = 0; i < m_loop_points.size(); ++i) {
         if (position < m_loop_points[i].location) {
-          return i;
+          return static_cast<int>(i);
         }
       }
       return -1;

@@ -24,6 +24,10 @@
 #include "internal.h"
 #include "mpegaudio.h"
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4244)
+#endif
+
 /*
  * TODO:
  *  - in low precision mode, use more 16 bit multiplies in synth filter
@@ -223,7 +227,7 @@ static int l3_unscale(int value, int exponent)
 #else
     m = MUL64(m, scale_factor_mult3[exponent & 3]);
     m = (m + ((uint64_t)(1) << (e-1))) >> e;
-    return m;
+    return (int)m;
 #endif
 }
 

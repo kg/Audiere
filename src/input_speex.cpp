@@ -22,7 +22,7 @@ namespace audiere {
     }
 
     speexfile::offset_t seek(speexfile::offset_t offset) {
-      m_file->seek(offset, File::BEGIN);
+      m_file->seek(static_cast<int>(offset), File::BEGIN);
       return get_position();
     }
 
@@ -34,7 +34,7 @@ namespace audiere {
       speexfile::offset_t c = get_position();
       m_file->seek(0, File::END);
       speexfile::offset_t l = get_position();
-      m_file->seek(c, File::BEGIN);
+      m_file->seek(static_cast<int>(c), File::BEGIN);
       return l;
     }
 
@@ -155,7 +155,7 @@ namespace audiere {
 
   int
   SpeexInputStream::getLength() {
-    return m_speexfile->get_samples();
+    return static_cast<int>(m_speexfile->get_samples());
   }
 
 

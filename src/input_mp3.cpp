@@ -193,9 +193,9 @@ namespace audiere {
     m_loader = new MyLoader(m_file.get());
     m_decoder = new Mpegtoraw(m_loader, this);
 
+    // this should call setsoundtype with the format of the stream
     m_decoder->initialize();
 
-    // this should call setsoundtype with the format of the stream
     if (!m_decoder->run(FRAME_COUNT)) {
       return;
     }

@@ -33,7 +33,7 @@ Mpegtoraw::Mpegtoraw(Soundinputstream *loader,Soundplayer *player)
 
 Mpegtoraw::~Mpegtoraw()
 {
-  if(frameoffsets)delete [] frameoffsets;
+  delete [] frameoffsets;
 }
 
 #ifndef WORDS_BIGENDIAN
@@ -133,23 +133,6 @@ inline void Mpegtoraw::flushrawdata()
   rawdataoffset=0;
 };
 
-inline void stripfilename(char *dtr,char *str,int max)
-{
-  char *ss;
-  int p=0,s=0;
-
-  for(;str[p];p++)
-    if(str[p]=='/')
-    {
-      p++;
-      s=p;
-    }
-
-  ss=str+s;
-  for(p=0;p<max && ss[p];p++)dtr[p]=ss[p];
-  dtr[p]=0;
-}
-
 // Convert mpeg to raw
 // Mpeg headder class
 void Mpegtoraw::initialize()
@@ -201,6 +184,8 @@ void Mpegtoraw::initialize()
   }
   else frameoffsets=NULL;
 
+  player->setsoundtype(outputstereo,16,
+                       frequencies[version][frequency]>>downfrequency);
 };
 
 void Mpegtoraw::setframe(int framenumber)

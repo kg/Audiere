@@ -70,14 +70,18 @@ LIBCDAUDIO_DIST     = cd_unix.cpp
 if HAVE_WINMM
 WINCDAUDIO_SOURCES  = cd_win32.cpp
 NULLCDAUDIO_DIST    = cd_null.cpp
-MIDI_SOURCES        = midi_mci.cpp
-MIDI_DIST           = midi_null.cpp
 else
 NULLCDAUDIO_SOURCES = cd_null.cpp
 WINCDAUDIO_DIST     = cd_win32.cpp
+endif
+endif
+
+if HAVE_WINMM
+MIDI_SOURCES        = midi_mci.cpp
+MIDI_DIST           = midi_null.cpp
+else
 MIDI_SOURCES        = midi_null.cpp
 MIDI_DIST           = midi_mci.cpp        
-endif
 endif
 
 

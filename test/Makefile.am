@@ -1,1 +1,2 @@
-SUBDIRS = buffer device interactive
+SUBDIRS = buffer device interactive performance
+

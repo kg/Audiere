@@ -7,8 +7,13 @@ using namespace std;
 using namespace audiere;
 
 
-int main() {
-  RefPtr<AudioDevice> device(OpenDevice());
+int main(int argc, const char** argv) {
+  const char* device_name = "";
+  if (argc >= 2) {
+    device_name = argv[1];
+  }
+
+  RefPtr<AudioDevice> device(OpenDevice(device_name));
   if (!device) {
     cerr << "OpenDevice() failed" << endl;
     return EXIT_FAILURE;

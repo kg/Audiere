@@ -123,4 +123,4 @@ AC_OUTPUT(
         test/buffer/Makefile
         test/device/Makefile
         test/interactive/Makefile
-)
+        test/performance/Makefile)

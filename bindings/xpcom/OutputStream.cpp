@@ -29,6 +29,13 @@ OutputStream::SetPlaying(PRBool aPlaying) {
 
 
 NS_IMETHODIMP
+OutputStream::Reset() {
+  m_stream->reset();
+  return NS_OK;
+}
+
+
+NS_IMETHODIMP
 OutputStream::GetRepeating(PRBool* aRepeating) {
   *aRepeating = (m_stream->getRepeat() ? PR_TRUE : PR_FALSE);
   return NS_OK;

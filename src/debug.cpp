@@ -38,6 +38,9 @@ namespace audiere {
       #else
         std::string home(getenv("HOME"));
         handle = fopen((home + "/audiere_debug.log").c_str(), "w");
+        if (!handle) {
+          handle = stderr;
+        }
       #endif
 
       atexit(Close);

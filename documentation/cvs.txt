@@ -1,9 +1,7 @@
-The source code for Audiere is available via anonymous CVS.
+You can get the latest source code for Audiere via SourceForge's anonymous
+CVS.  Simply press enter at the password prompt.
 
 
-export CVSROOT=:pserver:anonymous@pyrallis.aegisknight.org:D:/cvsroot
+export CVSROOT=:pserver:anonymous@cvs.audiere.sourceforge.net:/cvsroot/audiere
 cvs login
-password: guest
-cvs co acoustique     # we need Acoustique first
-cvs co naikai/nbase   # we need nbase second
-cvs co naikai/audiere # now get Audiere
+cvs -z3 co audiere

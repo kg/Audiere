@@ -2,34 +2,41 @@ import os
 
 Import('base_env PREFIX')
 
+mpegsoundSources = map(
+    lambda n: os.path.join('mpegsound', n),
+    SConscript('mpegsound/SConscript'))
+
 sources = Split("""
-    debug
-    device
-    device_al
-    device_mixer
-    device_null
-    file_ansi
-    input
-    input_ogg
-    input_wav
-    memory_file
-    noise
-    repeatable
-    resampler
-    sample_buffer
-    sound_effect
-    square_wave
-    sound
-    threads_posix
-    timer_posix
-    tone
-    utility
-    version
-""")
+    debug.cpp
+    device.cpp
+    device_al.cpp
+    device_mixer.cpp
+    device_null.cpp
+    file_ansi.cpp
+    input.cpp
+    input_flac.cpp
+    input_mp3.cpp
+    input_ogg.cpp
+    input_wav.cpp
+    memory_file.cpp
+    noise.cpp
+    repeatable.cpp
+    resampler.cpp
+    sample_buffer.cpp
+    sound_effect.cpp
+    square_wave.cpp
+    sound.cpp
+    threads_posix.cpp
+    timer_posix.cpp
+    tone.cpp
+    utility.cpp
+    version.cpp
+""") + mpegsoundSources
 
-sources = map(lambda n: n + '.cpp', sources)
+env = base_env.Copy()
+env.Append(CPPPATH = ['mpegsound'])
 
-target = base_env.Library('audiere', sources)
+target = env.Library('audiere', sources)
 
-base_env.Install(os.path.join(PREFIX, 'include'), 'audiere.h')
-base_env.Install(os.path.join(PREFIX, 'lib32'), target)
+env.Install(os.path.join(PREFIX, 'include'), 'audiere.h')
+env.Install(os.path.join(PREFIX, 'lib32'), target)

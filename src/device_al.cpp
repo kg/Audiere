@@ -179,7 +179,7 @@ namespace audiere {
     m_buffers  = buffers;
 
     m_is_playing = false;
-    m_volume     = MaximumVolume;
+    m_volume     = 1;
 
     // calculate the desired length (in samples) of each buffer
     m_buffer_length = BUFFER_MILLISECONDS * m_sample_rate / 1000;
@@ -332,15 +332,13 @@ namespace audiere {
 
 
   void
-  ALOutputStream::setVolume(int volume) {
+  ALOutputStream::setVolume(float volume) {
     m_volume = volume;
-
-    float v = (float)m_volume / MaximumVolume;
-    alSourcef(m_ALsource, AL_GAIN, v);
+    alSourcef(m_ALsource, AL_GAIN, volume);
   }
 
 
-  int
+  float
   ALOutputStream::getVolume() {
     return m_volume;
   }

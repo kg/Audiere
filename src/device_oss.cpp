@@ -150,13 +150,13 @@ namespace audiere {
 
 
   void
-  OSSOutputStream::setVolume(int volume) {
+  OSSOutputStream::setVolume(float volume) {
     m_volume = volume;
     m_mixer->setVolume(m_source, m_volume);
   }
 
 
-  int
+  float
   OSSOutputStream::getVolume() {
     return m_volume;
   }

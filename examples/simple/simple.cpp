@@ -41,7 +41,10 @@ int main(int argc, char** argv) {
 
   cerr << "created context" << endl;
 
-  auto_ptr<Sound> sound(OpenSound(device.get(), argv[1], STREAM));
+  auto_ptr<Sound> sound(OpenSound(
+                          device.get(),
+                          OpenSampleSource(argv[1]),
+                          STREAM));
   if (!sound.get()) {
     cerr << "OpenSound() failed" << endl;
     return EXIT_FAILURE;

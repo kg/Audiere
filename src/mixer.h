@@ -29,8 +29,8 @@ namespace audiere {
     bool isPlaying(SampleSource* source);
     void setPlaying(SampleSource* source, bool is_playing);
 
-    int getVolume(SampleSource* source);
-    void setVolume(SampleSource* source, int volume);
+    float getVolume(SampleSource* source);
+    void setVolume(SampleSource* source, float volume);
 
   private:
     struct SourceAttributes {
@@ -41,7 +41,7 @@ namespace audiere {
 
       // mutable (set by external calls)
       bool is_playing;
-      int volume;
+      int volume;  // [0, 255]
     };
 
     typedef std::map<SampleSource*, SourceAttributes> SourceMap;

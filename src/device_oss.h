@@ -35,13 +35,13 @@ namespace audiere {
     void stop();
     void reset();
     bool isPlaying();
-    void setVolume(int volume);
-    int  getVolume();
+    void  setVolume(float volume);
+    float getVolume();
 
   private:
     Mixer* m_mixer;
     SampleSource* m_source;
-    int m_volume;
+    float m_volume;
 
     friend class OSSAudioDevice;
   };

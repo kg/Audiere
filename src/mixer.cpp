@@ -94,7 +94,7 @@ namespace audiere {
     sa.last_l = 0;
     sa.last_r = 0;
     sa.is_playing = true;
-    sa.volume = OutputStream::MaximumVolume;
+    sa.volume = 255;
 
     m_sources[source] = sa;
   }
@@ -119,15 +119,15 @@ namespace audiere {
   }
 
 
-  int
+  float
   Mixer::getVolume(SampleSource* source) {
-    return m_sources[source].volume;
+    return m_sources[source].volume / 255.0;
   }
 
 
   void
-  Mixer::setVolume(SampleSource* source, int volume) {
-    m_sources[source].volume = volume;
+  Mixer::setVolume(SampleSource* source, float volume) {
+    m_sources[source].volume = (int)(volume * 255.0f + 0.5f);
   }
 
 

@@ -54,6 +54,7 @@ namespace audiere {
     ParameterList(const char* parameters);
     std::string getValue(const std::string& key, const std::string& defValue) const;
     bool getBoolean(const std::string& key, bool def) const;
+    int getInt(const std::string& key, int def) const;
 
   private:
     std::map<std::string, std::string> m_values;

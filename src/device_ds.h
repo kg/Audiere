@@ -32,7 +32,8 @@ namespace audiere {
   private:
     DSAudioDevice(
       bool global_focus,
-      int buffer_length,
+      int stream_buffer_length,
+      int min_buffer_length,
       HWND anonymous_window,
       IDirectSound* direct_sound);
     ~DSAudioDevice();
@@ -62,9 +63,8 @@ public:
     StreamList    m_open_streams;
 
     bool m_global_focus;
-
-    /// length of streaming buffer in milliseconds
-    int m_buffer_length;
+    int m_buffer_length;     ///< length of streaming buffer in milliseconds
+    int m_min_buffer_length; ///< minimum buffer size in frames
 
     HWND m_anonymous_window;
 

@@ -17,10 +17,13 @@ namespace audiere {
   DSAudioDevice::create(const ParameterList& parameters) {
     ADR_GUARD("DSAudioDevice::create");
 
-    int buffer_length = atoi(parameters.getValue("buffer", "").c_str());
-    if (buffer_length <= 0) {
-      buffer_length = DEFAULT_BUFFER_LENGTH;
+    // parse parameters
+    int stream_buffer_length = parameters.getInt("buffer", 0);
+    if (stream_buffer_length <= 0) {
+      stream_buffer_length = DEFAULT_BUFFER_LENGTH;
     }
+    int min_buffer_length = parameters.getInt("min_buffer_size", 0);
+    min_buffer_length = std::max(1, min_buffer_length);
     bool global_focus = parameters.getBoolean("global", true);
 
     // initialize COM
@@ -103,20 +106,23 @@ namespace audiere {
     ADR_LOG("Set cooperative level");
 
     return new DSAudioDevice(
-      global_focus, buffer_length, anonymous_window, direct_sound);
+      global_focus, stream_buffer_length, min_buffer_length,
+      anonymous_window, direct_sound);
   }
 
 
   DSAudioDevice::DSAudioDevice(
     bool global_focus,
-    int buffer_length,
+    int stream_buffer_length,
+    int min_buffer_length,
     HWND anonymous_window,
     IDirectSound* direct_sound)
   {
-    m_global_focus     = global_focus;
-    m_buffer_length    = buffer_length;
-    m_anonymous_window = anonymous_window;
-    m_direct_sound     = direct_sound;
+    m_global_focus      = global_focus;
+    m_buffer_length     = stream_buffer_length;
+    m_min_buffer_length = min_buffer_length;
+    m_anonymous_window  = anonymous_window;
+    m_direct_sound      = direct_sound;
   }
 
 
@@ -245,7 +251,8 @@ namespace audiere {
       dsbd.dwFlags |= DSBCAPS_GLOBALFOCUS;
     }
 
-    const int buffer_size = frame_count * frame_size;
+    const int buffer_frame_count = std::max(m_min_buffer_length, frame_count);
+    const int buffer_size = buffer_frame_count * frame_size;
     dsbd.dwBufferBytes = buffer_size;
     dsbd.lpwfxFormat   = &wfx;
 
@@ -288,10 +295,13 @@ namespace audiere {
       ADR_LOG(ss.str().c_str());
     }
 
-    memcpy(data, samples, data_size);
+    const int actual_size = frame_count * frame_size;
+    memcpy(data, samples, actual_size);
+    memset((u8*)data + actual_size, 0, buffer_size - actual_size);
+
     buffer->Unlock(data, data_size, 0, 0);
 
-    return new DSOutputBuffer(this, buffer, frame_count, frame_size);
+    return new DSOutputBuffer(this, buffer, buffer_frame_count, frame_size);
   }
 
 

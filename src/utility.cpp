@@ -61,6 +61,13 @@ namespace audiere {
     return (value == "true" || atoi(value.c_str()) != 0);
   }
 
+  int
+  ParameterList::getInt(const std::string& key, int def) const {
+    char str[20];
+    sprintf(str, "%d", def);
+    return atoi(getValue(key, str).c_str());
+  }
+
 
   int strcmp_case(const char* a, const char* b) {
     while (*a && *b) {

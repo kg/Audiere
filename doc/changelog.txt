@@ -2,6 +2,8 @@
 
   fixed some edge cases involving small sounds, DirectSound streams,
     and the repeating flag
+  added min_buffer_length device parameter to DirectSound device to
+    prevent static in very small sounds
 
 2003.06.01
 

@@ -3,6 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl Boilerplate code.
 
 AC_INIT(src/audiere.h)
+AC_CONFIG_AUX_DIR(config)
 
 MAJOR_VERSION=1
 MINOR_VERSION=0

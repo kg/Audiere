@@ -3,6 +3,7 @@
 #endif
 
 
+#include <sstream>
 #include "Commands.h"
 #include "EditLoopPointsDialog.h"
 #include "StreamFrame.h"
@@ -13,6 +14,7 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
   EVT_BUTTON(STREAM_PLAY,  StreamFrame::OnPlay)
   EVT_BUTTON(STREAM_STOP,  StreamFrame::OnStop)
   EVT_BUTTON(STREAM_RESET, StreamFrame::OnReset)
+  EVT_BUTTON(STREAM_VIEW_INFO, StreamFrame::OnViewInfo)
   EVT_BUTTON(STREAM_EDIT_LOOP_POINTS, StreamFrame::OnEditLoopPoints)
   EVT_BUTTON(STREAM_VIEW_TAGS, StreamFrame::OnViewTags)
 
@@ -69,6 +71,10 @@ StreamFrame::StreamFrame(
   sizer->Add(m_length_pos_label, 1, wxEXPAND | wxALL, 4);
   sizer->Add(m_pos,              1, wxEXPAND | wxALL, 4);
 
+  wxButton* infoButton = new wxButton(
+    this, STREAM_VIEW_INFO, "View Info");
+  sizer->Add(infoButton, 1, wxEXPAND | wxALL, 4);
+  
   wxButton* editButton = new wxButton(
     this, STREAM_EDIT_LOOP_POINTS, "Edit Loop Points...");
   sizer->Add(editButton, 1, wxEXPAND | wxALL, 4);
@@ -117,6 +123,28 @@ void StreamFrame::OnStop() {
 
 void StreamFrame::OnReset() {
   m_stream->reset();
+}
+
+
+void StreamFrame::OnViewInfo() {
+  int channel_count, sample_rate;
+  audiere::SampleFormat format;
+  m_source->getFormat(channel_count, sample_rate, format);
+
+  const char* format_name;
+  if (format == audiere::SF_U8) {
+    format_name = "SF_U8";
+  } else if (format == audiere::SF_S16) {
+    format_name = "SF_S16";
+  } else {
+    format_name = "Unknown";
+  }
+
+  std::stringstream ss;
+  ss << "Channel Count: " << channel_count << std::endl;
+  ss << "Sample Rate: " << sample_rate << std::endl;
+  ss << "Format: " << format_name << std::endl;
+  wxMessageBox(ss.str().c_str(), "Stream Info", wxOK, this);
 }
 
 

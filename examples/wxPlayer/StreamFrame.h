@@ -19,6 +19,7 @@ public:
   void OnPlay();
   void OnStop();
   void OnReset();
+  void OnViewInfo();
   void OnEditLoopPoints();
   void OnViewTags();
 

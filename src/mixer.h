@@ -1,9 +1,15 @@
-#ifndef MIXER_HPP
-#define MIXER_HPP
+#ifndef MIXER_H
+#define MIXER_H
+
+
+#ifdef _MSC_VER
+#pragma warning(disable : 4786)
+#endif
 
 
 #include <map>
 #include "audiere.h"
+#include "repeatable.h"
 #include "types.h"
 #include "utility.h"
 
@@ -25,22 +31,31 @@ namespace audiere {
     void addSource(SampleSource* source);
     void removeSource(SampleSource* source);
 
-    bool isPlaying(SampleSource* source);
-    void setPlaying(SampleSource* source, bool is_playing);
+    void resetSource(SampleSource* source);
 
-    float getVolume(SampleSource* source);
+    void setPlaying(SampleSource* source, bool is_playing);
+    bool isPlaying(SampleSource* source);
+
     void setVolume(SampleSource* source, float volume);
+    float getVolume(SampleSource* source);
+
+    void setPan(SampleSource* source, float pan);
+    float getPan(SampleSource* source);
+
+    void setRepeat(SampleSource* source, bool repeat);
+    bool getRepeat(SampleSource* source);
 
   private:
     struct SourceAttributes {
-      // immutable
-      RefPtr<SampleSource> resampler;
+      // internal
+      RefPtr<RepeatableStream> source;
       s16 last_l;  // left
       s16 last_r;  // right
 
-      // mutable (set by external calls)
+      // set by external calls
       bool is_playing;
       int volume;  // [0, 255]
+      int pan;     // [-255, 255]
     };
 
     typedef std::map<SampleSource*, SourceAttributes> SourceMap;

@@ -64,10 +64,7 @@ namespace audiere {
 
   OSSAudioDevice::~OSSAudioDevice() {
     ADR_GUARD("OSSAudioDevice::~OSSAudioDevice");
-
-    if (m_output_device != -1) {
-      close(m_output_device);
-    }
+    close(m_output_device);
   }
 
 
@@ -94,7 +91,7 @@ namespace audiere {
       sample_count -= transfer_count;
     }
 
-    usleep(50000);  // 5 milliseconds
+    usleep(50000);  // 50 milliseconds
   }
 
 
@@ -122,74 +119,72 @@ namespace audiere {
     m_device = device;
     m_source = source;
 
-    getMixer().addSource(m_source.get());
+    getMixer().addSource(m_source);
   }
 
 
   OSSOutputStream::~OSSOutputStream() {
-    getMixer().removeSource(m_source.get());
+    getMixer().removeSource(m_source);
   }
 
 
   void
   OSSOutputStream::play() {
-    getMixer().setPlaying(m_source.get(), true);
+    getMixer().setPlaying(m_source, true);
   }
 
 
   void
   OSSOutputStream::stop() {
-    getMixer().setPlaying(m_source.get(), false);
+    getMixer().setPlaying(m_source, false);
   }
 
 
   bool
   OSSOutputStream::isPlaying() {
-    return getMixer().isPlaying(m_source.get());
+    return getMixer().isPlaying(m_source);
   }
 
 
   void
   OSSOutputStream::reset() {
-    m_source->reset();
+    getMixer().resetSource(m_source);
   }
 
 
   void
   OSSOutputStream::setRepeat(bool repeat) {
-    /// @todo  implement OSSOutputStream::setRepeat
+    getMixer().setRepeat(m_source, repeat);
   }
 
 
   bool
   OSSOutputStream::getRepeat() {
-    /// @todo  implement OSSOutputStream::getRepeat
+    return getMixer().getRepeat(m_source);
   }
 
 
   void
   OSSOutputStream::setVolume(float volume) {
-    m_volume = volume;
-    getMixer().setVolume(m_source.get(), m_volume);
+    getMixer().setVolume(m_source, volume);
   }
 
 
   float
   OSSOutputStream::getVolume() {
-    return m_volume;
+    return getMixer().getVolume(m_source);
   }
 
 
   void
   OSSOutputStream::setPan(float pan) {
-    /// @todo  implement OSSOutputStream::setPan
+    getMixer().setPan(m_source, pan);
   }
 
 
   float
   OSSOutputStream::getPan() {
-    /// @todo  implement OSSOutputStream::getPan
-    return 0.0f;
+    return getMixer().getPan(m_source);
   }
 
 
@@ -203,6 +198,7 @@ namespace audiere {
   int
   OSSOutputStream::getLength() {
     /// @todo  implement OSSOutputStream::getLength
+    return 0;
   }
 
 

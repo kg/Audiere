@@ -26,7 +26,6 @@ namespace audiere {
 
   private:
     int m_output_device;
-
     Mixer m_mixer;
 
     friend class OSSOutputStream;
@@ -60,8 +59,7 @@ namespace audiere {
     Mixer& getMixer();
 
     RefPtr<OSSAudioDevice> m_device;
-    RefPtr<SampleSource> m_source;
-    float m_volume;
+    SampleSource* m_source;
 
     friend class OSSAudioDevice;
   };

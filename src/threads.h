@@ -36,7 +36,7 @@ namespace audiere {
   public:
     Synchronized() {
       m_cs = AI_CreateCriticalSection();
-      // if it fails...  shit
+      // if it fails...  uh oh
     }
 
     ~Synchronized() {

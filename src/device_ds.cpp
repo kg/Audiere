@@ -251,7 +251,7 @@ namespace audiere {
     m_next_read     = 0;
     m_last_play     = 0;
 
-    m_source = new RepeatableStream(source, false);
+    m_source = new RepeatableStream(source);
 
     int channel_count, sample_rate;
     SampleFormat sample_format;

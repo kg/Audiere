@@ -1,5 +1,5 @@
-#ifndef RESAMPLER_HPP
-#define RESAMPLER_HPP
+#ifndef RESAMPLER_H
+#define RESAMPLER_H
 
 
 #include "audiere.h"
@@ -32,7 +32,7 @@ namespace audiere {
     int m_native_sample_rate;
     SampleFormat m_native_sample_format;
 
-    static const int NATIVE_BUFFER_SIZE = 4096;
+    enum { NATIVE_BUFFER_SIZE = 4096 };
     s16 m_native_buffer[NATIVE_BUFFER_SIZE * 2];
     s16* m_position;
     unsigned m_samples_left;  // number of samples left to consume

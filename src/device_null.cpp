@@ -88,7 +88,7 @@ namespace audiere {
     NullAudioDevice* device,
     SampleSource* source)
   : m_device(device)
-  , m_source(new RepeatableStream(source, false))
+  , m_source(new RepeatableStream(source))
   , m_is_playing(false)
   , m_volume(1)
   , m_pan(0)

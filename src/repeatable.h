@@ -9,7 +9,7 @@ namespace audiere {
 
   class RepeatableStream : public RefImplementation<SampleSource> {
   public:
-    RepeatableStream(SampleSource* source, bool initial_repeat);
+    RepeatableStream(SampleSource* source);
 
     void setRepeat(bool repeat);
     bool getRepeat();

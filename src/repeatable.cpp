@@ -4,11 +4,8 @@
 
 namespace audiere {
 
-  RepeatableStream::RepeatableStream(
-    SampleSource* source,
-    bool initial_repeat)
-  {
-    m_repeat = initial_repeat;
+  RepeatableStream::RepeatableStream(SampleSource* source) {
+    m_repeat = false;
     m_source = source;
 
     // grab the sample size in bytes

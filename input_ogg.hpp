@@ -31,7 +31,7 @@ private:
   IFile* m_file;
 
   OggVorbis_File m_vorbis_file;
-  bool           m_eof;
+//  bool           m_eof;
 
   int m_channel_count;
   int m_sample_rate;

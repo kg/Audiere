@@ -130,6 +130,10 @@ SOURCE=.\default_file.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\endian.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\file.cpp
 # End Source File
 # Begin Source File

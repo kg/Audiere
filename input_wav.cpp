@@ -118,6 +118,8 @@ WAVInputStream::Read(int sample_count, void* samples)
     return read / sample_size;
   }
 
+  m_samples_left_in_chunk -= read / sample_size;
+
   return sample_count;
 }
 

@@ -20,7 +20,7 @@ typedef ogg_int64_t int64_t;
 OGGInputStream::OGGInputStream()
 {
   m_file = 0;
-  m_eof  = false;
+//  m_eof  = false;
 
   m_channel_count   = 0;
   m_sample_rate     = 0;
@@ -97,21 +97,21 @@ OGGInputStream::Read(int sample_count, void* samples)
   int sample_size = m_bits_per_sample * m_channel_count / 8;
 
   // if we're at the end of the file, we have no more samples
-  if (m_eof) {
-    return 0;
-  }
+//  if (m_eof) {
+//    return 0;
+//  }
   
   adr_u8* out = (adr_u8*)samples;
 
   int samples_left = sample_count;
   int total_read = 0;
-  while (samples_left > 0 && !m_eof) {
+  while (samples_left > 0 /*&& !m_eof*/) {
 
     // check to see if the stream format has changed
     // if so, treat it as an EndOfStream
     vorbis_info* vi = ov_info(&m_vorbis_file, -1);
     if (vi && (m_sample_rate != vi->rate || m_channel_count != vi->channels)) {
-      m_eof = true;
+//      m_eof = true;
       break;
     }
 
@@ -129,7 +129,8 @@ OGGInputStream::Read(int sample_count, void* samples)
       // if error, ignore it
       continue;
     } else if (result == 0) {
-      m_eof = true;
+//      m_eof = true;
+      break;
     }
 
     adr_u32 samples_read = (adr_u32)(result / sample_size);

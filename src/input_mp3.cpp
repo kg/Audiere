@@ -18,19 +18,96 @@
 
 namespace audiere {
 
+
+  class MyLoader : public Soundinputstream {
+  public:
+    MyLoader(File* file) {
+      m_file = file;
+      m_eof = false;
+    }
+
+    bool open(char* /*filename*/) {
+      return true; // already open!
+    }
+
+    void close() {
+      m_file = 0;
+    }
+
+    int getbytedirect() {
+      u8 b;
+      if (m_file->read(&b, 1) == 1) {
+        return b;
+      } else {
+        seterrorcode(SOUND_ERROR_FILEREADFAIL);
+        m_eof = true;
+        return -1;
+      }
+    }
+
+    bool _readbuffer(char* buffer, int size) {
+      if (m_file->read(buffer, size) == size) {
+        return true;
+      } else {
+        seterrorcode(SOUND_ERROR_FILEREADFAIL);
+        m_eof = true;
+        return false;
+      }
+    }
+
+    bool eof() {
+      return m_eof;
+    }
+
+    int getblock(char* buffer, int size) {
+      int read = m_file->read(buffer, size);
+      if (read != size) {
+        m_eof = true;
+      }
+      return size;
+    }
+
+    int getsize() {
+      int pos = m_file->tell();
+      m_file->seek(0, File::END);
+      int size = m_file->tell();
+      m_file->seek(pos, File::BEGIN);
+      return size;
+    }
+
+    void setposition(int pos) {
+      m_file->seek(pos, File::BEGIN);
+      m_eof = false;
+    }
+
+    int getposition() {
+      return m_file->tell();
+    }
+
+  private:
+    RefPtr<File> m_file;
+    bool m_eof;
+  };
+
+
   MP3InputStream::MP3InputStream() {
     m_file = 0;
 
     m_channel_count = 2;
     m_sample_rate = 44100;
     m_sample_format = SF_S16;
+
+    m_decoder = 0;
+    m_loader = 0;
   }
 
   
   MP3InputStream::~MP3InputStream() {
-    if (m_file) {
-      ExitMP3(&m_mp3);
-      free(computed_buffer);
+    if (m_decoder) {
+      delete m_decoder;
+    }
+    if (m_loader) {
+      delete m_loader;
     }
   }
 
@@ -38,67 +115,19 @@ namespace audiere {
   bool
   MP3InputStream::initialize(File* file) {
     m_file = file;
+    m_loader = new MyLoader(file);
+    m_decoder = new Mpegtoraw(m_loader, this);
 
-    u8 header[4];
-    if (file->read(header, 4) != 4) {
-      m_file = 0;
+    // empty filename because we don't use it
+    if (!m_decoder->initialize("")) {
       return false;
     }
 
-    // see if it's an id3 tag first!
-    if (memcmp(header, "ID3", 3) == 0) {
-      u8 buffer[6];
-      if (m_file->read(&buffer, 6) != 6) {
-        return false;
-      }
-
-      unsigned int skip = buffer[2] & 127;
-      skip <<= 7;
-      skip += buffer[3] & 127;
-      skip <<= 7;
-      skip += buffer[4] & 127;
-      skip <<= 7;
-      skip += buffer[5] & 127;
-
-      // skip the stupid id3 tag to get our stuff.
-      char* temp = new char[skip];
-      int read = m_file->read(temp, skip);
-      delete[] temp;
-      if (read != skip) {
-        m_file = 0;
-        return false;
-      }
-
-      // re-read the header again.
-      if (file->read(header, 4) != 4) {
-        m_file = 0;
-        return false;
-      }
-    }
-
-    frame fr;
-    if (read_header(&fr, read32_be(header)) == FALSE) {
-      m_file = 0;
+    // this should call setsoundtype with the format of the stream
+    if (!m_decoder->run(1)) {
       return false;
     }
 
-    ADR_LOG("decoder_header succeeded. This is a valid mp3.");
-
-    // reset the file since we are going to reread it anyway! (mindless hack #2)
-    m_file->seek(0, File::BEGIN);
-
-    // get the info we need from this evil frame header!
-    m_sample_rate = fr.sampling_frequency;
-    m_channel_count = fr.stereo;
-
-    // temporary stuff
-    computed_buffer = 0;
-    computed_buffer_pos = 0;
-    computed_buffer_length = 0;
-
-    InitMP3(&m_mp3);
-
-    // we're now set!
     return true;
   }
 
@@ -116,193 +145,99 @@ namespace audiere {
 
   
   int
-  MP3InputStream::read(int sample_count, void* samples) {
-    char buffer_in[MP3_IN_BUFFER_SIZE];
-    char buffer_out[MP3_OUT_BUFFER_SIZE];
+  MP3InputStream::read(int frame_count, void* samples) {
+    const int frame_size = m_channel_count * GetSampleSize(m_sample_format);
 
-    int read_left = sample_count * 4;
-    int sample_read = 0;
+    int frames_read = 0;
+    u8* out = (u8*)samples;
 
-    // mindless hack #3, getting it to read!
-    while (read_left > 0) {
+    while (frames_read < frame_count) {
 
-      // fill the decoded buffer up!
-      if (computed_buffer_pos >= computed_buffer_length) {
-        int in_length = m_file->read(buffer_in, MP3_IN_BUFFER_SIZE);
-        int out_length = computed_buffer_pos = computed_buffer_length = 0;
-        int status = decodeMP3(&m_mp3, buffer_in, in_length, buffer_out, MP3_OUT_BUFFER_SIZE, &out_length);
-        if (status == MP3_ERR) {
-          return sample_read / 4;
+      // no more samples?  ask the MP3 for more
+      if (m_buffer.getSize() < frame_size) {
+        if (!m_decoder->run(1)) {
+          // done decoding?
+          return frames_read;
         }
 
-        while (status == MP3_OK) {
-          if ((computed_buffer_pos + out_length) > computed_buffer_length || computed_buffer == 0) {
-            computed_buffer_length = computed_buffer_pos + out_length;
-            computed_buffer = (char*)realloc(computed_buffer, computed_buffer_length);
-          }
-
-          memcpy(computed_buffer+computed_buffer_pos, buffer_out, out_length);
-          computed_buffer_pos += out_length;
-          status = decodeMP3(&m_mp3, NULL, 0, buffer_out, MP3_OUT_BUFFER_SIZE, &out_length);
+        // if the buffer is still empty, we are done
+        if (m_buffer.getSize() < frame_size) {
+          return frames_read;
         }
-
-        computed_buffer_pos = 0; 
       }
 
+      const int frames_left = frame_count - frames_read;
+      const int frames_to_read = std::min(
+        frames_left,
+        m_buffer.getSize() / frame_size);
 
-      int read_count = 0;
-
-      if (read_left > 0) {
-        if (computed_buffer_pos + read_left < computed_buffer_length) {
-          memcpy(samples, computed_buffer+computed_buffer_pos, read_left);
-          sample_read = read_left;
-          read_count = read_left;
-          read_left = 0;
-        } else {
-          if (computed_buffer_length > 0) {
-            // copy as much as we can!
-            memcpy(samples, computed_buffer+computed_buffer_pos, computed_buffer_length-computed_buffer_pos);
-            read_left -= computed_buffer_length-computed_buffer_pos;
-            read_count = computed_buffer_length-computed_buffer_pos;
-            sample_read += read_count;
-          } else {
-            // bomb out!
-            read_left = 0;
-            read_count = 0;
-          }
-        }
-
-        computed_buffer_pos += read_count;
-      }
+      m_buffer.read(out, frames_to_read * frame_size);
+      out += frames_to_read * frame_size;
+      frames_read += frames_to_read;
     }
 
-    return (int)(sample_read/4);
+    return frames_read;
   }
 
 
   void
   MP3InputStream::reset() {
-    ExitMP3(&m_mp3);
-    InitMP3(&m_mp3);
     m_file->seek(0, File::BEGIN);
+
+    if (m_decoder) {
+      delete m_decoder;
+    }
+    if (m_loader) {
+      delete m_loader;
+    }
+
+    m_loader = new MyLoader(m_file.get());
+    m_decoder = new Mpegtoraw(m_loader, this);
+
+    // empty filename because we don't use it
+    if (!m_decoder->initialize("")) {
+      return;
+    }
+
+    // this should call setsoundtype with the format of the stream
+    if (!m_decoder->run(1)) {
+      return;
+    }
   }
 
 
+  bool
+  MP3InputStream::setsoundtype(int stereo, int samplesize, int speed) {
+    m_channel_count = (stereo ? 2 : 1);
+    m_sample_rate = speed;
 
-  // in case you're wondering, yes the code is ripped from the mpglib common.c
-  int tabsel_123[2][3][16] = {
-    { {0,32,64,96,128,160,192,224,256,288,320,352,384,416,448,},
-      {0,32,48,56, 64, 80, 96,112,128,160,192,224,256,320,384,},
-      {0,32,40,48, 56, 64, 80, 96,112,128,160,192,224,256,320,} },
-
-    { {0,32,48,56,64,80,96,112,128,144,160,176,192,224,256,},
-      {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,},
-      {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,} }
-  };
-
-  long freqs[9] = { 44100, 48000, 32000,
-                    22050, 24000, 16000,
-                    11025, 12000, 8000 };
-
-  /*
-   * the code a header and write the information
-   * into the frame structure
-   */
-  int MP3InputStream::read_header(struct frame *fr,unsigned long newhead)
-  {
-    if( newhead & (1<<20) ) {
-      fr->lsf = (newhead & (1<<19)) ? 0x0 : 0x1;
-      fr->mpeg25 = 0;
-    }
-    else {
-      fr->lsf = 1;
-      fr->mpeg25 = 1;
-    }
-  
-    fr->lay = 4-((newhead>>17)&3);
-    if( ((newhead>>10)&0x3) == 0x3) {
-      fprintf(stderr,"Stream error\n");
-      exit(1);
-    }
-    if(fr->mpeg25) {
-      fr->sampling_frequency = 6 + ((newhead>>10)&0x3);
-    }
-    else
-      fr->sampling_frequency = ((newhead>>10)&0x3) + (fr->lsf*3);
-    fr->error_protection = ((newhead>>16)&0x1)^0x1;
-
-    if(fr->mpeg25) /* allow Bitrate change for 2.5 ... */
-      fr->bitrate_index = ((newhead>>12)&0xf);
-
-    fr->bitrate_index = ((newhead>>12)&0xf);
-    fr->padding   = ((newhead>>9)&0x1);
-    fr->extension = ((newhead>>8)&0x1);
-    fr->mode      = ((newhead>>6)&0x3);
-    fr->mode_ext  = ((newhead>>4)&0x3);
-    fr->copyright = ((newhead>>3)&0x1);
-    fr->original  = ((newhead>>2)&0x1);
-    fr->emphasis  = newhead & 0x3;
-
-    fr->stereo    = (fr->mode == MPG_MD_MONO) ? 1 : 2;
-
-    if(!fr->bitrate_index)
-    {
-      fprintf(stderr,"Free format not supported.\n");
-      return (0);
+    if (samplesize == 8) {
+      m_sample_format = SF_U8;
+    } else if (samplesize == 16) {
+      m_sample_format = SF_S16;
+    } else {
+      return false;
     }
 
-    switch(fr->lay)
-    {
-      case 1:
-      #ifdef LAYER1
-        #if 0
-        fr->jsbound = (fr->mode == MPG_MD_JOINT_STEREO) ? (fr->mode_ext<<2)+4 : 32;
-        #endif
-        fr->framesize  = (long) tabsel_123[fr->lsf][0][fr->bitrate_index] * 12000;
-        fr->framesize /= freqs[fr->sampling_frequency];
-        fr->framesize  = ((fr->framesize+fr->padding)<<2)-4;
-      #else
-        fprintf(stderr,"Not supported!\n");
-      #endif
-        break;
-
-      case 2:
-      #ifdef LAYER2
-        #if 0
-        fr->jsbound = (fr->mode == MPG_MD_JOINT_STEREO) ? (fr->mode_ext<<2)+4 : fr->II_sblimit;
-        #endif
-        fr->framesize = (long) tabsel_123[fr->lsf][1][fr->bitrate_index] * 144000;
-        fr->framesize /= freqs[fr->sampling_frequency];
-        fr->framesize += fr->padding - 4;
-      #else
-        fprintf(stderr,"Not supported!\n");
-      #endif
-        break;
-
-      case 3:
-      #if 0
-        fr->do_layer = do_layer3;
-        if(fr->lsf)
-          ssize = (fr->stereo == 1) ? 9 : 17;
-        else
-          ssize = (fr->stereo == 1) ? 17 : 32;
-      #endif
-
-      #if 0
-        if(fr->error_protection)
-          ssize += 2;
-      #endif
-          fr->framesize  = (long) tabsel_123[fr->lsf][2][fr->bitrate_index] * 144000;
-          fr->framesize /= freqs[fr->sampling_frequency]<<(fr->lsf);
-          fr->framesize = fr->framesize + fr->padding - 4;
-        break;
-      
-      default:
-        fprintf(stderr,"Sorry, unknown layer type.\n"); 
-        return (0);
-    }
-
-    fr->sampling_frequency = freqs[fr->sampling_frequency];
-    return 1;
+    return true;
   }
+
+
+  void
+  MP3InputStream::set8bitmode() {
+    m_sample_format = SF_U8;
+    // what?
+  }
+
+  bool
+  MP3InputStream::putblock(void* buffer, int size) {
+    return putblock_nt(buffer, size) == size;
+  }
+
+  int
+  MP3InputStream::putblock_nt(void* buffer, int size) {
+    m_buffer.write(buffer, size);
+    return size;
+  }
+
 }

@@ -1,15 +1,14 @@
 #ifndef INPUT_MP3_H
 #define INPUT_MP3_H
 
-#include <mpg123.h>
-#include <mpglib.h>
+#include <mpegsound.h>
 #include "audiere.h"
 #include "types.h"
 #include "utility.h"
 
 namespace audiere {
 
-  class MP3InputStream : public UnseekableSource {
+  class MP3InputStream : public UnseekableSource, public Soundplayer {
   public:
     MP3InputStream();
     ~MP3InputStream();
@@ -20,11 +19,13 @@ namespace audiere {
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int ADR_CALL read(int sample_count, void* samples);
+    int ADR_CALL read(int frame_count, void* samples);
     void ADR_CALL reset();
 
-  private:
-    int read_header(struct frame* fr, unsigned long newhead);
+    bool setsoundtype(int stereo, int samplesize, int speed);
+    void set8bitmode();
+    bool putblock(void *buffer,int size);
+    int  putblock_nt(void *buffer, int size);
 
   private:
     RefPtr<File> m_file;
@@ -34,11 +35,10 @@ namespace audiere {
     int m_sample_rate;
     SampleFormat m_sample_format;
 
-    mpstr m_mp3;
-    char* computed_buffer;
-
-    int computed_buffer_pos;
-    int computed_buffer_length;
+    Mpegtoraw* m_decoder;
+    Soundinputstream* m_loader;
+    
+    QueueBuffer m_buffer;
   };
 
 }

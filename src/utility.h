@@ -96,6 +96,53 @@ namespace audiere {
       channel_count, sample_rate, sample_format)->openStream();
   }
 
+
+  class QueueBuffer {
+  public:
+    QueueBuffer() {
+      m_buffer_capacity = 256;
+      m_buffer_size = 0;
+
+      m_buffer = (u8*)malloc(m_buffer_capacity);
+    }
+
+    ~QueueBuffer() {
+      m_buffer = (u8*)realloc(m_buffer, 0);
+    }
+
+    int getSize() {
+      return m_buffer_size;
+    }
+
+    void write(void* buffer, int size) {
+      bool need_realloc = false;
+      while (size + m_buffer_size > m_buffer_capacity) {
+        m_buffer_capacity *= 2;
+        need_realloc = true;
+      }
+
+      if (need_realloc) {
+        m_buffer = (u8*)realloc(m_buffer, m_buffer_capacity);
+      }
+
+      memcpy(m_buffer + m_buffer_size, buffer, size);
+      m_buffer_size += size;
+    }
+
+    int read(void* buffer, int size) {
+      int to_read = std::min(size, m_buffer_size);
+      memcpy(buffer, m_buffer, to_read);
+      memmove(m_buffer, m_buffer + to_read, m_buffer_size - to_read);
+      m_buffer_size -= to_read;
+      return to_read;
+    }
+
+  private:
+    u8* m_buffer;
+    int m_buffer_capacity;
+    int m_buffer_size;
+  };
+
 }
 
 

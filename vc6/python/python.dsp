@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"../bin/Debug/audiere.pyd" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"../bin/Debug/audiere_d.pyd" /pdbtype:sept
 
 !ENDIF 
 
@@ -94,27 +94,27 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\bindings\python\context.cpp
+SOURCE=..\..\bindings\python\AudioDevice.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\bindings\python\context.hpp
+SOURCE=..\..\bindings\python\AudioDevice.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\bindings\python\pyAudio.cpp
+SOURCE=..\..\bindings\python\OutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\bindings\python\pyAudio.def
+SOURCE=..\..\bindings\python\OutputStream.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\bindings\python\stream.cpp
+SOURCE=..\..\bindings\python\pyAudiere.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\bindings\python\stream.hpp
+SOURCE=..\..\bindings\python\pyAudiere.def
 # End Source File
 # End Group
 # End Target

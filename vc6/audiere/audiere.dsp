@@ -260,11 +260,19 @@ SOURCE=..\..\src\loop_point_source.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\mci_device.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\memory_file.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\memory_file.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\src\midi_mci.cpp
 # End Source File
 # Begin Source File
 

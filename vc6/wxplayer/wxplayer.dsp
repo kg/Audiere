@@ -131,6 +131,30 @@ SOURCE=..\..\examples\wxPlayer\EditLoopPointsDialog.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\examples\wxPlayer\MIDIDeviceDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\MIDIDeviceDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\MIDIDeviceFrame.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\MIDIDeviceFrame.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\MIDIStreamFrame.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\MIDIStreamFrame.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\examples\wxPlayer\NewDeviceDialog.cpp
 # End Source File
 # Begin Source File

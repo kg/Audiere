@@ -50,9 +50,7 @@ namespace audiere {
 }
 
 
-/*
-#define ADR_FORCE_DEBUG
-*/
+//#define ADR_FORCE_DEBUG
 
 
 #if defined(ADR_FORCE_DEBUG) || defined(_DEBUG) || defined(DEBUG)

@@ -32,16 +32,21 @@ namespace audiere {
   Log::EnsureOpen()
   {
     if (!handle) {
-
-      #ifdef WIN32
-        handle = fopen("C:/audiere_debug.log", "w");
-      #else
-        std::string home(getenv("HOME"));
-        handle = fopen((home + "/audiere_debug.log").c_str(), "w");
-        if (!handle) {
-          handle = stderr;
-        }
-      #endif
+      char* log = getenv("ADR_LOG_FILE");
+      if (log && log[0]) {
+        handle = fopen(log, "w");
+      } else {
+        #ifdef WIN32
+          handle = fopen("C:/audiere_debug.log", "w");
+        #else
+          std::string home(getenv("HOME"));
+          handle = fopen((home + "/audiere_debug.log").c_str(), "w");
+        #endif
+      }
+        
+      if (!handle) {
+        handle = stderr;
+      }
 
       atexit(Close);
     }

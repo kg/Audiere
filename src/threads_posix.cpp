@@ -50,8 +50,15 @@ namespace audiere {
 
 
   AI_CriticalSection AI_CreateCriticalSection() {
+    // use a recursive mutex so the same thread can lock a mutex
+    // multiple times
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+
     AI_CriticalSectionStruct* cs = new AI_CriticalSectionStruct;
-    int result = pthread_mutex_init(&cs->mutex, NULL);
+    int result = pthread_mutex_init(&cs->mutex, &attr);
+    pthread_mutexattr_destroy(&attr);
     if (result != 0) {
       delete cs;
       return NULL;

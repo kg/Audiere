@@ -35,7 +35,11 @@ namespace audiere {
 
   int
   MixerDevice::read(const int sample_count, void* samples) {
+    ADR_GUARD("MixerDevice::read");
+
     SYNCHRONIZED(this);
+
+    ADR_LOG("done locking mixer device");
 
     // are any sources playing?
     bool any_playing = false;
@@ -51,6 +55,8 @@ namespace audiere {
       memset(samples, 0, 4 * sample_count);
       return sample_count;
     }
+
+    ADR_LOG("at least one stream is playing");
 
     // buffer in which to mix the audio
     static const int BUFFER_SIZE = 4096;

@@ -1,12 +1,14 @@
 #include <errno.h>
 #include <unistd.h>
 #include "device_al.h"
+#include "debug.h"
 
 
 namespace audiere {
 
   ALAudioDevice*
   ALAudioDevice::create(const ParameterList& parameters) {
+    ADR_GUARD("ALAudioDevice::create");
 
     // if anything goes wrong, assume 44100 Hz
     int rate = 44100;
@@ -57,17 +59,23 @@ namespace audiere {
   ALAudioDevice::ALAudioDevice(ALport port, int rate)
     : MixerDevice(rate)
   {
+    ADR_GUARD("ALAudioDevice::ALAudioDevice");
+
     m_port = port;
   }
 
 
   ALAudioDevice::~ALAudioDevice() {
+    ADR_GUARD("ALAudioDevice::~ALAudioDevice");
+
     alClosePort(m_port);
   }
 
 
   void
   ALAudioDevice::update() {
+    ADR_GUARD("ALAudioDevice::update");
+
     // how much data can we write?
     const int filled = alGetFilled(m_port);
     int can_write = 50000 - filled;  // empty portion of the buffer
@@ -78,7 +86,12 @@ namespace audiere {
     while (can_write > 0) {
       int transfer_count = std::min(can_write, BUFFER_SIZE);
 
+      ADR_LOG("reading");
+
       read(transfer_count, buffer);
+
+      ADR_LOG("writing");
+
       alWriteFrames(m_port, buffer, transfer_count);
       can_write -= transfer_count;
     }

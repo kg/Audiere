@@ -7,13 +7,12 @@
 #include <queue>
 #include "internal.h"
 #include "device_mixer.h"
-#include "threads.h"
 #include "utility.h"
 
 
 namespace audiere {
 
-  class MMAudioDevice : public MixerDevice, public Synchronized
+  class MMAudioDevice : public MixerDevice
   {
   public:
     static MMAudioDevice* create(const ParameterList& parameters);

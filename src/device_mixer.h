@@ -10,6 +10,7 @@
 #include <list>
 #include "audiere.h"
 #include "repeatable.h"
+#include "threads.h"
 #include "types.h"
 #include "utility.h"
 
@@ -20,7 +21,10 @@ namespace audiere {
 
 
   /// Always produce 16-bit, stereo audio at the specified rate.
-  class MixerDevice : public RefImplementation<AudioDevice> {
+  class MixerDevice
+    : public RefImplementation<AudioDevice>
+    , public Synchronized
+  {
   public:
     MixerDevice(int rate);
 

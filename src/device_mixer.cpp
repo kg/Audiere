@@ -35,13 +35,15 @@ namespace audiere {
 
   int
   MixerDevice::read(const int sample_count, void* samples) {
-/*
+    SYNCHRONIZED(this);
+
     // are any sources playing?
     bool any_playing = false;
-    SourceMap::iterator i = m_sources.begin();
-    while (i != m_sources.end()) {
-      any_playing |= i->second.is_playing;
-      ++i;
+    for (std::list<MixerStream*>::iterator i = m_streams.begin();
+         i != m_streams.end();
+         ++i)
+    {
+      any_playing |= (*i)->isPlaying();
     }
   
     // if not, return zeroed samples
@@ -49,7 +51,6 @@ namespace audiere {
       memset(samples, 0, 4 * sample_count);
       return sample_count;
     }
-*/
 
     // buffer in which to mix the audio
     static const int BUFFER_SIZE = 4096;
@@ -110,71 +111,83 @@ namespace audiere {
     m_volume     = 255;
     m_pan        = 0;
 
+    SYNCHRONIZED(m_device.get());
     m_device->m_streams.push_back(this);
   }
 
 
   MixerStream::~MixerStream() {
+    SYNCHRONIZED(m_device.get());
     m_device->m_streams.remove(this);
   }
 
 
   void
   MixerStream::play() {
+    SYNCHRONIZED(m_device.get());
     m_is_playing = true;
   }
 
 
   void
   MixerStream::stop() {
+    SYNCHRONIZED(m_device.get());
     m_is_playing = false;
   }
 
 
   bool
   MixerStream::isPlaying() {
+    SYNCHRONIZED(m_device.get());
     return m_is_playing;
   }
 
 
   void
   MixerStream::reset() {
+    SYNCHRONIZED(m_device.get());
     m_source->reset();
   }
 
 
   void
   MixerStream::setRepeat(bool repeat) {
+    SYNCHRONIZED(m_device.get());
     m_source->setRepeat(repeat);
   }
 
 
   bool
   MixerStream::getRepeat() {
+    SYNCHRONIZED(m_device.get());
     return m_source->getRepeat();
   }
 
 
   void
   MixerStream::setVolume(float volume) {
+    SYNCHRONIZED(m_device.get());
     m_volume = int(volume * 255.0f + 0.5f);
   }
 
 
   float
   MixerStream::getVolume() {
+    SYNCHRONIZED(m_device.get());
     return (m_volume / 255.0f);
   }
 
 
   void
   MixerStream::setPan(float pan) {
+    SYNCHRONIZED(m_device.get());
     m_pan = int(pan * 255.0f);
   }
 
 
   float
   MixerStream::getPan() {
+    SYNCHRONIZED(m_device.get());
     return m_pan = 255.0f;
   }
 
@@ -193,12 +206,14 @@ namespace audiere {
 
   void
   MixerStream::setPosition(int position) {
+    SYNCHRONIZED(m_device.get());
     m_source->setPosition(position);
   }
 
 
   int
   MixerStream::getPosition() {
+    SYNCHRONIZED(m_device.get());
     return m_source->getPosition();
   }
 

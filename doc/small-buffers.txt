@@ -25,3 +25,9 @@ buffer smaller than that size will be enlarged (with silence) before
 being passed to DirectSound.  It seems to me that this would solve the
 problem...  Any thoughts?  What should the default size of the buffer
 be?
+
+
+Some URLs I found:
+
+http://sound.media.mit.edu/mpeg4/saol-users/0250.html
+http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/htm/usingbuffersefficiently.asp

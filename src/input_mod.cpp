@@ -88,6 +88,9 @@ namespace audiere {
         duh_end_sigrenderer(m_renderer);
       }
       m_renderer = renderer;
+
+      DUMB_IT_SIGRENDERER* renderer = duh_get_it_sigrenderer(m_renderer);
+      dumb_it_set_loop_callback(renderer, &MODInputStream::loopCallback, this);
     }
   }
 

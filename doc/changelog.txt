@@ -1,5 +1,8 @@
 2003.06.15
 
+  If a stream is set to repeat, then MOD loop points are honored.
+  Otherwise, a MOD loop point causes the stream to stop.
+
   Added setRepeat() and getRepeat() to the SampleSource interface.
   This architecture change is required in order to support sample
   sources with non-standard looping functionality, such as loop points

@@ -1,3 +1,9 @@
+2002.08.01
+
+  completely new API, with AudioDevice, OutputStream, SampleSource, File,
+    Sound...
+  switched volume to normalized floats instead of [0, 255]
+
 2002.06.04
 
   mikmod fix so it compiles on Debian

@@ -1,3 +1,8 @@
+2002.10.04
+
+  use the mpegsound library instead of mpglib because it sounds and
+    works a lot better
+
 2002.10.02
 
   added MP3 support again via mpglib (mpg123), thanks to Jacky Chong.

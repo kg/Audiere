@@ -38,7 +38,7 @@ int main(int argc, const char** argv) {
     device_name = argv[2];
   }
 
-  RefPtr<AudioDevice> device(OpenDevice(device_name));
+  AudioDevicePtr device = OpenDevice(device_name);
   if (!device) {
     cerr << "OpenDevice() failed" << endl;
     return EXIT_FAILURE;
@@ -46,7 +46,7 @@ int main(int argc, const char** argv) {
 
   cerr << "opened device" << endl;
 
-  RefPtr<OutputStream> sound(OpenSound(device.get(), argv[1]));
+  OutputStreamPtr sound = OpenSound(device.get(), argv[1]);
   if (!sound) {
     cerr << "OpenSound() failed" << endl;
     return EXIT_FAILURE;

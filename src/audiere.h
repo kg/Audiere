@@ -208,6 +208,7 @@ namespace audiere {
      */
     virtual int ADR_CALL tell() = 0;
   };
+  typedef RefPtr<File> FilePtr;
 
 
   /// Storage formats for sample data.
@@ -285,6 +286,7 @@ namespace audiere {
      */
     virtual int ADR_CALL getPosition() = 0;
   };
+  typedef RefPtr<SampleSource> SampleSourcePtr;
 
 
   /**
@@ -402,6 +404,7 @@ namespace audiere {
      */
     virtual int ADR_CALL getPosition() = 0;
   };
+  typedef RefPtr<OutputStream> OutputStreamPtr;
 
 
   /**
@@ -468,6 +471,7 @@ namespace audiere {
       int sample_rate,
       SampleFormat sample_format) = 0;
   };
+  typedef RefPtr<AudioDevice> AudioDevicePtr;
 
 
   /**
@@ -512,6 +516,7 @@ namespace audiere {
      */
     virtual SampleSource* ADR_CALL openStream() = 0;
   };
+  typedef RefPtr<SampleBuffer> SampleBufferPtr;
 
 
   /**
@@ -550,6 +555,7 @@ namespace audiere {
      */
     virtual void ADR_CALL stop() = 0;
   };
+  typedef RefPtr<SoundEffect> SoundEffectPtr;
 
 
   /// PRIVATE API - for internal use only

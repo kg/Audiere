@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <sstream>
 #include <math.h>
 #include "device_ds.h"
 #include "device_ds_stream.h"
@@ -138,7 +140,6 @@ namespace audiere {
 
   void
   DSAudioDevice::update() {
-    ADR_GUARD("DSAudioDevice::update");
     SYNCHRONIZED(this);
 
     // enumerate all open streams
@@ -219,8 +220,7 @@ namespace audiere {
     ADR_GUARD("DSAudioDevice::openBuffer");
     SYNCHRONIZED(this);
 
-    int frame_size = channel_count * GetSampleSize(sample_format);
-    int buffer_size = frame_count * frame_size;
+    const int frame_size = channel_count * GetSampleSize(sample_format);
 
     WAVEFORMATEX wfx;
     memset(&wfx, 0, sizeof(wfx));
@@ -234,21 +234,39 @@ namespace audiere {
 
     DSBUFFERDESC dsbd;
     memset(&dsbd, 0, sizeof(dsbd));
-    dsbd.dwSize        = sizeof(dsbd);
-    dsbd.dwFlags       = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
-                         DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |
-                         DSBCAPS_STATIC;
+    dsbd.dwSize  = sizeof(dsbd);
+    dsbd.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPAN |
+                   DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |
+                   DSBCAPS_STATIC;
     if (m_global_focus) {
       dsbd.dwFlags |= DSBCAPS_GLOBALFOCUS;
     }
+
+    const int buffer_size = frame_count * frame_size;
     dsbd.dwBufferBytes = buffer_size;
     dsbd.lpwfxFormat   = &wfx;
 
+    // create the DS buffer
     IDirectSoundBuffer* buffer;
     HRESULT result = m_direct_sound->CreateSoundBuffer(
       &dsbd, &buffer, NULL);
     if (FAILED(result) || !buffer) {
       return 0;
+    }
+
+    ADR_IF_DEBUG {
+      DSBCAPS caps;
+      caps.dwSize = sizeof(caps);
+      result = buffer->GetCaps(&caps);
+      if (FAILED(result)) {
+        buffer->Release();
+        return 0;
+      } else {
+        std::ostringstream ss;
+        ss << "actual buffer size: " << caps.dwBufferBytes << std::endl
+           << "buffer_size: " << buffer_size;
+        ADR_LOG(ss.str().c_str());
+      }
     }
 
     void* data;
@@ -257,6 +275,14 @@ namespace audiere {
     if (FAILED(result)) {
       buffer->Release();
       return 0;
+    }
+
+    ADR_IF_DEBUG {
+      std::ostringstream ss;
+      ss << "buffer size: " << buffer_size << std::endl
+         << "data size:   " << data_size << std::endl
+         << "frame count: " << frame_count;
+      ADR_LOG(ss.str().c_str());
     }
 
     memcpy(data, samples, data_size);

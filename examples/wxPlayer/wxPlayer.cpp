@@ -630,7 +630,7 @@ public:
       "wxPlayer\n"
       "Copyright (c) Chad Austin 2002-2003\n\n"
       "Audiere Version: ";
-    message += GetVersion();
+    message += audiere::GetVersion();
     wxMessageBox(message, "About wxPlayer", wxOK | wxCENTRE, this);
   }
 

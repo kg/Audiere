@@ -33,6 +33,7 @@ public:
   void OnRepeat(wxCommandEvent& event);
 
   void OnChangeVolume(wxScrollEvent& event);
+  void OnChangePan(wxScrollEvent& event);
 
 private:
   wxListBox* m_songs;
@@ -43,6 +44,7 @@ private:
   wxButton* m_reset;
   wxButton* m_repeat;
   wxSlider* m_volume;
+  wxSlider* m_pan;
 
   vector<OutputStream*> m_streams;
 
@@ -61,6 +63,7 @@ enum {
   event_Repeat,
 
   event_Volume,
+  event_Pan,
 };
 
 
@@ -77,6 +80,7 @@ BEGIN_EVENT_TABLE(wxPlayerFrame, wxFrame)
   EVT_BUTTON(event_Repeat, wxPlayerFrame::OnRepeat)
 
   EVT_COMMAND_SCROLL(event_Volume, wxPlayerFrame::OnChangeVolume)
+  EVT_COMMAND_SCROLL(event_Pan,    wxPlayerFrame::OnChangePan)
   
 END_EVENT_TABLE()
 
@@ -92,6 +96,7 @@ wxPlayerFrame::wxPlayerFrame()
   m_reset  = new wxButton(this, event_Reset,  "reset",  wxDefaultPosition);
   m_repeat = new wxButton(this, event_Repeat, "repeat", wxDefaultPosition);
   m_volume = new wxSlider(this, event_Volume, 1000, 0, 1000);
+  m_pan    = new wxSlider(this, event_Pan, 0, -1000, 1000);
 }
 
 
@@ -121,7 +126,7 @@ wxPlayerFrame::OnSize(wxSizeEvent& event)
 
   // move the controls
   wxControl* controls[] = {
-    m_load, m_dump, m_play, m_pause, m_reset, m_repeat, m_volume
+    m_load, m_dump, m_play, m_pause, m_reset, m_repeat, m_volume, m_pan
   };
   for (int i = 0; i < sizeof(controls) / sizeof(controls[0]); i++) {
     controls[i]->SetSize(button_x, button_height * i, button_width, button_height);
@@ -139,8 +144,7 @@ wxPlayerFrame::OnLoad(wxCommandEvent& event)
     "",
     "Sound Files (*.wav,*.ogg,*.mod,*.it,*.xm,*.s3m)|*.wav;*.ogg;*.mod;*.it;*.xm;*.s3m",
     wxOPEN,
-    this
-  );
+    this);
   if (!result.Length()) {
     return;
   }
@@ -221,8 +225,18 @@ void
 wxPlayerFrame::OnChangeVolume(wxScrollEvent& event)
 {
   int volume = event.GetPosition();
-  for (int i = 0; i < m_songs->Number(); i++) {
+  for (int i = 0; i < m_songs->Number(); ++i) {
     m_streams[i]->setVolume(volume / 1000.0f);
+  }
+}
+
+
+void
+wxPlayerFrame::OnChangePan(wxScrollEvent& event)
+{
+  int pan = event.GetPosition();
+  for (int i = 0; i < m_songs->Number(); ++i) {
+    m_streams[i]->setPan(pan / 1000.0f);
   }
 }
 

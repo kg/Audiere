@@ -46,10 +46,7 @@ void testDriver(const char* driver) {
 
   for (int i = 0; i < sound_count; ++i) {
     string name = sound_names[i];
-    sounds[i] = OpenSound(
-      device.get(),
-      OpenSampleSource(name.c_str()),
-      STREAM);
+    sounds[i] = OpenSound(device.get(), name.c_str());
     if (!sounds[i]) {
       for (int j = 0; j < i; ++j) {
         delete sounds[i];

@@ -27,23 +27,21 @@ public:
 
 private:
   struct SourceAttributes {
+    // immutable
+    ISampleSource* resampler;
+    adr_s16 last_l;  // left
+    adr_s16 last_r;  // right
+
     // mutable (set by external calls)
     bool is_playing;
     int volume;
-
-    // mutable, internal (updated by mixing process)
-
-    // immutable, set when source is added to the list
-    int channel_count;
-    int sample_rate;
-    int bits_per_sample;
   };
 
   typedef std::map<ISampleSource*, SourceAttributes> SourceMap;
 
 private:
   void Read(ISampleSource* source,
-	    const SourceAttributes& attr,
+	    SourceAttributes& attr,
 	    int to_mix,
 	    adr_s16* buffer);
 

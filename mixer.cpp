@@ -2,6 +2,7 @@
 #include "audiere.h"
 #include "mixer.hpp"
 #include "output.hpp"
+#include "resampler.hpp"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,12 +89,11 @@ Mixer::AddSource(ISampleSource* source)
 {
   // initial source attributes
   SourceAttributes sa;
+  sa.resampler = new Resampler(source);
+  sa.last_l = 0;
+  sa.last_r = 0;
   sa.is_playing = true;
   sa.volume = ADR_VOLUME_MAX;
-  source->GetFormat(
-    sa.channel_count,
-    sa.sample_rate,
-    sa.bits_per_sample);
 
   m_sources[source] = sa;
 }
@@ -103,6 +103,7 @@ Mixer::AddSource(ISampleSource* source)
 void
 Mixer::RemoveSource(ISampleSource* source)
 {
+  delete m_sources[source].resampler;
   m_sources.erase(source);
 }
 
@@ -126,23 +127,36 @@ Mixer::SetVolume(ISampleSource* source, int volume)
 
 void
 Mixer::Read(ISampleSource* source,
-	    const SourceAttributes& attr,
+	    SourceAttributes& attr,
 	    int to_mix,
-	    adr_s16* buffer)
+	    adr_s16* buffer)  // size = to_mix * 4
 {
-  //  memset(buffer, 0, to_mix * 2);
+  unsigned read = attr.resampler->Read(to_mix, buffer);
 
-  if (attr.bits_per_sample == 16 &&
-      attr.sample_rate == 44100 &&
-      attr.channel_count == 2) {
-    source->Read(to_mix, buffer);
+  // grab them early so we don't lose optimizations due to aliasing
+  adr_s16 l = attr.last_l;
+  adr_s16 r = attr.last_r;
+
+  adr_s16* out = buffer;
+  for (int i = 0; i < read; ++i) {
+    *out = *out * attr.volume / 255;
+    ++out;
+    *out = *out * attr.volume / 255;
+    ++out;
   }
 
-  /*
-  for (int i = 0; i < to_mix; ++i) {
-    buffer[i] = buffer[i] * attr.volume / 255;
+  if (read >= 0) {
+    l = out[-2];
+    r = out[-1];
   }
-  */
+
+  for (int i = read; i < to_mix; ++i) {
+    *out++ = l;
+    *out++ = r;
+  }
+
+  attr.last_l = l;
+  attr.last_r = r;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -18,6 +18,8 @@ libaudiere_la_SOURCES = \
 	output_oss.hpp \
 	output_null.cpp \
 	output_null.hpp \
+	resampler.cpp \
+	resampler.hpp \
 	threads_posix.cpp \
 	threads.hpp
 

@@ -12,7 +12,6 @@ libmikmod_la_SOURCES =				\
 	mdsfx.h                                 \
 	mikmod.h				\
 	mloader.c				\
-	mlreg.c					\
 	mpforbid.h				\
 	mplayer.c				\
 	mplayer.h				\

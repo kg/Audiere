@@ -89,7 +89,7 @@ AC_CHECK_LIB(dumb, duh_start_renderer,
     AC_DEFINE(NO_DUMB))
 AM_CONDITIONAL(HAVE_DUMB, test "x$HAVE_DUMB" = "xtrue")
 
-dns Look for libcdaudio
+dnl Look for libcdaudio
 AC_CHECK_LIB(cdaudio, cd_init_device,
     LIBS="-lcdaudio $LIBS"
     EXTRA_LIBS="-lcdaudio $EXTRA_LIBS"

@@ -20,6 +20,7 @@ private:
   std::string m_name;
 
   wxChoice* m_device;
+  wxTextCtrl* m_explicit_device;
   wxButton* m_ok;
   wxButton* m_cancel;
 

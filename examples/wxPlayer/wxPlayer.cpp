@@ -48,13 +48,6 @@ void wxPlayer::OnNewDevice(wxWindow* parent) {
 
 
 void wxPlayer::OnNewCDDevice(wxWindow* parent) {
-  std::vector<std::string> devices;
-  audiere::EnumerateCDDevices(devices);
-  if (devices.empty()) {
-    wxMessageBox("No CD devices found", "New CD Device", wxOK | wxICON_ERROR, parent);
-    return;
-  }
-
   CDDeviceDialog dialog(parent);
   if (dialog.ShowModal() == wxID_OK) {
     audiere::CDDevice* device = audiere::OpenCDDevice(dialog.getName().c_str());

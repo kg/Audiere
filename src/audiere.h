@@ -1448,7 +1448,7 @@ namespace audiere {
    */
   inline void EnumerateCDDevices(std::vector<std::string>& devices) {
     const char* d = hidden::AdrEnumerateCDDevices();
-    while (*d) {
+    while (d && *d) {
       devices.push_back(d);
       d += strlen(d) + 1;
     }

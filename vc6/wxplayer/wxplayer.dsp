@@ -139,6 +139,14 @@ SOURCE=..\..\examples\wxPlayer\StreamFrame.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\examples\wxPlayer\TagsDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\examples\wxPlayer\TagsDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\examples\wxPlayer\wx.h
 # End Source File
 # Begin Source File

@@ -6,6 +6,7 @@
 #include "Commands.h"
 #include "EditLoopPointsDialog.h"
 #include "StreamFrame.h"
+#include "TagsDialog.h"
 
 
 BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
@@ -13,6 +14,7 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
   EVT_BUTTON(STREAM_STOP,  StreamFrame::OnStop)
   EVT_BUTTON(STREAM_RESET, StreamFrame::OnReset)
   EVT_BUTTON(STREAM_EDIT_LOOP_POINTS, StreamFrame::OnEditLoopPoints)
+  EVT_BUTTON(STREAM_VIEW_TAGS, StreamFrame::OnViewTags)
 
   EVT_CHECKBOX(STREAM_REPEAT, StreamFrame::OnRepeat)
 
@@ -29,10 +31,12 @@ StreamFrame::StreamFrame(
   wxMDIParentFrame* parent,
   const wxString& title,
   audiere::OutputStream* stream,
+  audiere::SampleSource* source,
   audiere::LoopPointSource* loop_source)
 : wxMDIChildFrame(parent, -1, title)
 {
   m_stream = stream;
+  m_source = source;
   m_loop_source = loop_source;
   m_stream_is_seekable = stream->isSeekable();
   m_stream_length = stream->getLength();
@@ -71,6 +75,10 @@ StreamFrame::StreamFrame(
   if (!loop_source) {
     editButton->Enable(false);
   }
+
+  wxButton* tagsButton = new wxButton(
+    this, STREAM_VIEW_TAGS, "View Tags...");
+  sizer->Add(tagsButton, 1, wxEXPAND | wxALL, 4);
 
   if (!m_stream_is_seekable) {
     m_pos->Enable(false);
@@ -114,6 +122,11 @@ void StreamFrame::OnReset() {
 
 void StreamFrame::OnEditLoopPoints() {
   EditLoopPointsDialog(this, m_loop_source.get()).ShowModal();
+}
+
+
+void StreamFrame::OnViewTags() {
+  TagsDialog(this, m_source.get()).ShowModal();
 }
 
 

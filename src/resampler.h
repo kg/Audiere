@@ -30,6 +30,11 @@ namespace audiere {
     bool ADR_CALL getRepeat();
     void ADR_CALL setRepeat(bool repeat);
 
+    int ADR_CALL getTagCount();
+    const char* ADR_CALL getTagKey(int i);
+    const char* ADR_CALL getTagValue(int i);
+    const char* ADR_CALL getTagType(int i);
+
     void  setPitchShift(float shift);
     float getPitchShift();
 

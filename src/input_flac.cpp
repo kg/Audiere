@@ -238,7 +238,7 @@ namespace audiere {
     FLAC__uint64 absolute_byte_offset,
     void* client_data)
   {
-    if (getFile(client_data)->seek(absolute_byte_offset, File::BEGIN)) {
+    if (getFile(client_data)->seek(static_cast<int>(absolute_byte_offset), File::BEGIN)) {
       return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_OK;
     } else {
       return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_ERROR;
@@ -292,7 +292,7 @@ namespace audiere {
   {
     if (metadata->type == FLAC__METADATA_TYPE_STREAMINFO) {
       FLAC__uint64 length = metadata->data.stream_info.total_samples;
-      getStream(client_data)->m_length = length;
+      getStream(client_data)->m_length = static_cast<int>(length);
     }
   }
 

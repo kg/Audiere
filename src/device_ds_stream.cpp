@@ -304,7 +304,7 @@ namespace audiere {
     }
 
     // how many samples have we playen since the last update?
-    if (play < m_last_play) {
+    if (int(play) < m_last_play) {
       m_total_played += play + m_buffer_length - m_last_play;
     } else {
       m_total_played += play - m_last_play;

@@ -12,6 +12,7 @@ public:
     wxMDIParentFrame* parent,
     const wxString& title,
     audiere::OutputStream* stream,
+    audiere::SampleSource* source,
     audiere::LoopPointSource* loop_source = 0);
   ~StreamFrame();
 
@@ -19,6 +20,8 @@ public:
   void OnStop();
   void OnReset();
   void OnEditLoopPoints();
+  void OnViewTags();
+
   void OnRepeat();
   void OnChangeVolume();
   void OnChangePan();
@@ -30,6 +33,7 @@ public:
 
 private:
   audiere::OutputStreamPtr m_stream;
+  audiere::SampleSourcePtr m_source;
 
   /// Only a valid pointer when the output stream is fed from it.
   audiere::LoopPointSourcePtr m_loop_source;

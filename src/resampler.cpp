@@ -35,7 +35,7 @@ namespace audiere {
     int left = frame_count;
 
     // if we didn't finish resampling last time...
-    while (m_time > m_native_sample_rate && left > 0) {
+    while (m_time > unsigned(m_native_sample_rate) && left > 0) {
       m_time -= m_native_sample_rate;
       *out++ = m_sl;
       *out++ = m_sr;
@@ -58,8 +58,8 @@ namespace audiere {
       m_sr = *m_position++;
       --m_samples_left;
 
-      m_time += m_rate / m_shift;
-      while (m_time > m_native_sample_rate && left > 0) {
+      m_time += unsigned(m_rate / m_shift);
+      while (m_time > unsigned(m_native_sample_rate) && left > 0) {
         m_time -= m_native_sample_rate;
         *out++ = m_sl;
         *out++ = m_sr;
@@ -181,6 +181,11 @@ namespace audiere {
     /// @todo if we've already read to the end, do we try to read more?
     m_source->setRepeat(repeat);
   }
+
+  int Resampler::getTagCount()              { return m_source->getTagCount();  }
+  const char* Resampler::getTagKey(int i)   { return m_source->getTagKey(i);   }
+  const char* Resampler::getTagValue(int i) { return m_source->getTagValue(i); }
+  const char* Resampler::getTagType(int i)  { return m_source->getTagType(i);  }
 
   void
   Resampler::setPitchShift(float shift) {

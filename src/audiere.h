@@ -332,6 +332,27 @@ namespace audiere {
      * @param repeat  true if the source should repeat, false otherwise
      */
     virtual void ADR_CALL setRepeat(bool repeat) = 0;
+
+    /// Returns number of metadata tags present in this sample source.
+    virtual int ADR_CALL getTagCount() = 0;
+
+    /**
+     * Returns the key of the i'th tag in the source.  If the tag is
+     * "author=me", the key is "author".
+     */
+    virtual const char* ADR_CALL getTagKey(int i) = 0;
+
+    /**
+     * Returns the value of the i'th tag in the source.  If the tag is
+     * "author=me", the value is "me".
+     */
+    virtual const char* ADR_CALL getTagValue(int i) = 0;
+
+    /**
+     * Returns the type of the i'th tag in the source.  The type is where
+     * the tag comes from, i.e. "ID3v1", "ID3v2", or "vorbis".
+     */
+    virtual const char* ADR_CALL getTagType(int i) = 0;
   };
   typedef RefPtr<SampleSource> SampleSourcePtr;
 

@@ -168,7 +168,6 @@ namespace audiere {
     }
 
     ADR_GUARD("DSAudioDevice::openStream");
-    SYNCHRONIZED(this);
 
     int channel_count, sample_rate;
     SampleFormat sample_format;
@@ -203,8 +202,7 @@ namespace audiere {
 
     // create the DirectSound buffer
     IDirectSoundBuffer* buffer;
-    HRESULT result = m_direct_sound->CreateSoundBuffer(
-      &dsbd, &buffer, NULL);
+    HRESULT result = m_direct_sound->CreateSoundBuffer(&dsbd, &buffer, NULL);
     if (FAILED(result) || !buffer) {
       return 0;
     }
@@ -216,6 +214,7 @@ namespace audiere {
       this, buffer, buffer_length, source);
 
     // add it the list of streams and return
+    SYNCHRONIZED(this);
     m_open_streams.push_back(stream);
     return stream;
   }

@@ -52,6 +52,25 @@ namespace audiere {
       return false;
     }
 
+    // read metadata
+    vorbis_comment* comments = ov_comment(&m_vorbis_file, -1);
+    if (comments) {
+      addTag("vendor", comments->vendor, "vorbis");
+      for (int i = 0; i < comments->comments; ++i) {
+        std::string kv = comments->user_comments[i];
+        std::string key;
+        std::string value;
+        std::string::iterator eq = std::find(kv.begin(), kv.end(), '=');
+        if (eq != kv.end()) {
+          key.assign(kv.begin(), eq);
+          value.assign(eq + 1, kv.end());
+        } else {
+          key = kv;
+        }
+        addTag(key, value, "vorbis");
+      }
+    }
+
     m_channel_count = vi->channels;
     m_sample_rate   = vi->rate;
     m_sample_format = SF_S16; // see constructor
@@ -138,7 +157,7 @@ namespace audiere {
   int
   OGGInputStream::getLength() {
     if (isSeekable()) {
-      return ov_pcm_total(&m_vorbis_file, -1);
+      return static_cast<int>(ov_pcm_total(&m_vorbis_file, -1));
     } else {
       return 0;
     }
@@ -156,7 +175,7 @@ namespace audiere {
   int
   OGGInputStream::getPosition() {
     if (isSeekable()) {
-      return ov_pcm_tell(&m_vorbis_file);
+      return static_cast<int>(ov_pcm_tell(&m_vorbis_file));
     } else {
       return 0;
     }

@@ -182,6 +182,12 @@ namespace audiere {
       m_source->setRepeat(repeat);
     }
 
+    int ADR_CALL getTagCount()              { return m_source->getTagCount();  }
+    const char* ADR_CALL getTagKey(int i)   { return m_source->getTagKey(i);   }
+    const char* ADR_CALL getTagValue(int i) { return m_source->getTagValue(i); }
+    const char* ADR_CALL getTagType(int i)  { return m_source->getTagType(i);  }
+
+
   private:
     SampleSourcePtr m_source;
     int m_length;

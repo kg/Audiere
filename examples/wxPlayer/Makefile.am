@@ -12,6 +12,7 @@ SRC = \
 	SoundEffectFrame.h \
 	StreamFrame.cpp \
 	StreamFrame.h \
+	TagsDialog.cpp \
 	resource.h \
 	wx.h \
 	wxPlayer.cpp \

@@ -99,6 +99,11 @@ public:
     m_repeat = repeat;
   }
 
+  int ADR_CALL getTagCount()            { return 0; }
+  const char* ADR_CALL getTagKey(int)   { return 0; }
+  const char* ADR_CALL getTagValue(int) { return 0; }
+  const char* ADR_CALL getTagType(int)  { return 0; }
+
 private:
   int m_channel_count;
   int m_sample_rate;

@@ -18,6 +18,7 @@ if wxconfig:
         'NewDeviceDialog.cpp',
         'SoundEffectFrame.cpp',
         'StreamFrame.cpp',
+        'TagsDialog.cpp',
         'wxPlayer.cpp'])
 
     env.Install(os.path.join(PREFIX, 'bin'), wxPlayer)

@@ -91,7 +91,7 @@ namespace audiere {
         } else if (mixed > 32767) {
           mixed = 32767;
         }
-        *out++ = mixed;
+        *out++ = (s16)mixed;
       }
 
       left -= to_mix;

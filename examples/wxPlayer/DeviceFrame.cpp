@@ -165,7 +165,7 @@ void DeviceFrame::OnDeviceOpenStream() {
 
   // get the basename of the path for the window title
   wxString basename = wxFileNameFromPath(filename);
-  new StreamFrame(this, "Stream: " + basename, stream.get(), loop_source.get());
+  new StreamFrame(this, "Stream: " + basename, stream.get(), source.get(), loop_source.get());
 }
 
 
@@ -175,17 +175,25 @@ void DeviceFrame::OnDeviceOpenSound() {
     return;
   }
 
-  audiere::OutputStream* stream = audiere::OpenSound(m_device, filename);
+  audiere::SampleSourcePtr source = audiere::OpenSampleSource(filename);
+  if (!source) {
+    wxMessageBox(
+      "Could not open source: " + filename,
+      "Open Sound", wxOK | wxCENTRE, this);
+    return;
+  }
+
+  audiere::OutputStreamPtr stream = audiere::OpenSound(m_device, source);
   if (!stream) {
     wxMessageBox(
       "Could not open sound: " + filename,
-      "Open Stream", wxOK | wxCENTRE, this);
+      "Open Sound", wxOK | wxCENTRE, this);
     return;
   }
 
   // get the basename of the path for the window title
   wxString basename = wxFileNameFromPath(filename);
-  new StreamFrame(this, "Sound: " + basename, stream);
+  new StreamFrame(this, "Sound: " + basename, stream.get(), source.get());
 }
 
 
@@ -194,16 +202,25 @@ void DeviceFrame::OnDeviceCreateTone() {
     "Value must be between 1 and 30000.", "Enter frequency in Hz",
     "Create Tone", 256, 1, 30000, this);
   if (frequency != -1) {
-    audiere::OutputStream* stream = m_device->openStream(audiere::CreateTone(frequency));
+    audiere::SampleSourcePtr source = audiere::CreateTone(frequency);
+    if (!source) {
+      wxMessageBox(
+        "Could not create tone",
+        "Create Tone", wxOK | wxCENTRE, this);
+      return;
+    }
+
+    audiere::OutputStreamPtr stream = m_device->openStream(source.get());
     if (!stream) {
       wxMessageBox(
         "Could not open output stream",
         "Create Tone", wxOK | wxCENTRE, this);
-    } else {
-      wxString title;
-      title.sprintf("Tone: %d Hz", frequency);
-      new StreamFrame(this, title, stream);
+      return;
     }
+
+    wxString title;
+    title.sprintf("Tone: %d Hz", frequency);
+    new StreamFrame(this, title, stream.get(), source.get());
   }
 }
 
@@ -213,41 +230,68 @@ void DeviceFrame::OnDeviceCreateSquareWave() {
     "Value must be between 1 and 30000.", "Enter frequency in Hz",
     "Create Square Wave", 256, 1, 30000, this);
   if (frequency != -1) {
-    audiere::OutputStream* stream = m_device->openStream(audiere::CreateSquareWave(frequency));
+    audiere::SampleSourcePtr source = audiere::CreateSquareWave(frequency);
+    if (!source) {
+      wxMessageBox(
+        "Could not create square wave",
+        "Create Square Wave", wxOK | wxCENTRE, this);
+      return;
+    }
+
+    audiere::OutputStreamPtr stream = m_device->openStream(source.get());
     if (!stream) {
       wxMessageBox(
         "Could not open output stream",
         "Create Square Wave", wxOK | wxCENTRE, this);
-    } else {
-      wxString title;
-      title.sprintf("Square Wave: %d Hz", frequency);
-      new StreamFrame(this, title, stream);
+      return;
     }
+
+    wxString title;
+    title.sprintf("Square Wave: %d Hz", frequency);
+    new StreamFrame(this, title, stream.get(), source.get());
   }
 }
 
 
 void DeviceFrame::OnDeviceCreateWhiteNoise() {
-  audiere::OutputStream* stream = m_device->openStream(audiere::CreateWhiteNoise());
+  audiere::SampleSourcePtr source = audiere::CreateWhiteNoise();
+  if (!source) {
+    wxMessageBox(
+      "Could not create white noise",
+      "Create White Noise", wxOK | wxCENTRE, this);
+    return;
+  }
+
+  audiere::OutputStreamPtr stream = m_device->openStream(source.get());
   if (!stream) {
     wxMessageBox(
       "Could not open output stream",
       "Create White Noise", wxOK | wxCENTRE, this);
-  } else {
-    new StreamFrame(this, "White Noise", stream);
+    return;
   }
+
+  new StreamFrame(this, "White Noise", stream.get(), source.get());
 }
 
 
 void DeviceFrame::OnDeviceCreatePinkNoise() {
-  audiere::OutputStream* stream = m_device->openStream(audiere::CreatePinkNoise());
+  audiere::SampleSourcePtr source = audiere::CreatePinkNoise();
+  if (!source) {
+    wxMessageBox(
+      "Could not create white noise",
+      "Create Pink Noise", wxOK | wxCENTRE, this);
+    return;
+  }
+
+  audiere::OutputStreamPtr stream = m_device->openStream(source.get());
   if (!stream) {
     wxMessageBox(
       "Could not open output stream",
       "Create Pink Noise", wxOK | wxCENTRE, this);
-  } else {
-    new StreamFrame(this, "Pink Noise", stream);
+    return;
   }
+
+  new StreamFrame(this, "Pink Noise", stream.get(), source.get());
 }
 
 

@@ -46,7 +46,7 @@ EditLoopPointsDialog::EditLoopPointsDialog(
   fieldSizer->Add(m_loop_count, 0, CA, 1);
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(m_points,     1, CA, 5);
+  sizer->Add(m_points,     1, CA | wxGROW | wxADJUST_MINSIZE, 5);
   sizer->Add(fieldSizer,   0, CA, 5);
   sizer->Add(buttonSizer,  0, CA, 2);
   sizer->Add(m_close,      0, CA, 1);

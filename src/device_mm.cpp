@@ -5,7 +5,7 @@
 namespace audiere {
 
   MMAudioDevice*
-  MMAudioDevice::create(ParameterList& parameters) {
+  MMAudioDevice::create(const ParameterList& parameters) {
     return 0;
   }
 

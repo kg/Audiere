@@ -29,7 +29,7 @@ namespace audiere {
     , public Synchronized
   {
   public:
-    static DSAudioDevice* create(ParameterList& parameters);
+    static DSAudioDevice* create(const ParameterList& parameters);
 
   private:
     DSAudioDevice(

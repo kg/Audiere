@@ -30,7 +30,7 @@ namespace audiere {
 
 
   DSAudioDevice*
-  DSAudioDevice::create(ParameterList& parameters) {
+  DSAudioDevice::create(const ParameterList& parameters) {
     ADR_GUARD("DSAudioDevice::create");
 
     int buffer_length = atoi(parameters.getValue("buffer", "").c_str());

@@ -217,7 +217,7 @@ AC_OUTPUT(
         examples/simple/Makefile
         examples/wxPlayer/Makefile
         src/Makefile
-        src/mpegsound/Makefile
+        src/mpaudec/Makefile
         test/Makefile
         test/buffer/Makefile
 	test/callback/Makefile

@@ -1,6 +1,4 @@
-SUBDIRS = mpegsound
-
-INCLUDES = -I $(top_srcdir)/src/mpegsound
+SUBDIRS = mpaudec
 
 lib_LTLIBRARIES = libaudiere.la
 include_HEADERS = audiere.h
@@ -147,4 +145,4 @@ libaudiere_la_SOURCES = \
 	version.cpp
 
 libaudiere_la_LDFLAGS =	-release $(VERSION)
-libaudiere_la_LIBADD = mpegsound/libmpegsound.la
+libaudiere_la_LIBADD = mpaudec/libmpaudec.la

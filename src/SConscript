@@ -2,9 +2,9 @@ import os
 
 Import('base_env PREFIX')
 
-mpegsoundSources = map(
-    lambda n: os.path.join('mpegsound', n),
-    SConscript('mpegsound/SConscript'))
+mpaudecSources = map(
+    lambda n: os.path.join('mpaudec', n),
+    SConscript('mpaudec/SConscript'))
 
 sources = Split("""
     basic_source.cpp
@@ -34,10 +34,9 @@ sources = Split("""
     tone.cpp
     utility.cpp
     version.cpp
-""") + mpegsoundSources
+""") + mpaudecSources
 
 env = base_env.Copy()
-env.Append(CPPPATH = ['mpegsound'])
 
 target = env.Library('audiere', sources)
 

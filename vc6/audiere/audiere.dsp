@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "..\..\third-party-vc6\include" /I "..\..\src\flac-1.0.4\include" /I "..\..\src\flac-1.0.4\src\libFLAC\include" /I "..\..\src\flac-1.0.4\src\libFLAC++\include" /I "..\..\src\mpegsound" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "NOMINMAX" /D "FLAC__NO_DLL" /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "..\..\third-party-vc6\include" /I "..\..\src\flac-1.0.4\include" /I "..\..\src\flac-1.0.4\src\libFLAC\include" /I "..\..\src\flac-1.0.4\src\libFLAC++\include" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "NOMINMAX" /D "FLAC__NO_DLL" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "..\..\third-party-vc6\include" /I "..\..\src\flac-1.0.4\include" /I "..\..\src\flac-1.0.4\src\libFLAC\include" /I "..\..\src\flac-1.0.4\src\libFLAC++\include" /I "..\..\src\mpegsound" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "NOMINMAX" /D "FLAC__NO_DLL" /FD /D /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "..\..\third-party-vc6\include" /I "..\..\src\flac-1.0.4\include" /I "..\..\src\flac-1.0.4\src\libFLAC\include" /I "..\..\src\flac-1.0.4\src\libFLAC++\include" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32_LEAN_AND_MEAN" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "AUDIERE_EXPORTS" /D "NOMINMAX" /D "FLAC__NO_DLL" /FD /D /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -343,133 +343,32 @@ SOURCE=..\..\src\utility.h
 SOURCE=..\..\src\version.cpp
 # End Source File
 # End Group
-# Begin Group "mpegsound"
+# Begin Group "mpaudec"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\src\mpegsound\bitwindow.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
+SOURCE=..\..\src\mpaudec\internal.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mpegsound\filter.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
+SOURCE=..\..\src\mpaudec\mpaudec.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mpegsound\filter_2.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
+SOURCE=..\..\src\mpaudec\mpaudectab.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mpegsound\huffmantable.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
+SOURCE=..\..\src\mpaudec\mpegaudio.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mpegsound\mpeglayer1.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
+SOURCE=..\..\src\mpaudec\mpaudec.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mpegsound\mpeglayer2.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mpegsound\mpeglayer3.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mpegsound\mpegsound.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mpegsound\mpegsound_locals.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mpegsound\mpegtable.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\mpegsound\mpegtoraw.cpp
-
-!IF  "$(CFG)" == "audiere - Win32 Release"
-
-# ADD CPP /Os /Oy /Ob1
-
-!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
-
-!ENDIF 
-
+SOURCE=..\..\src\mpaudec\bits.c
 # End Source File
 # End Group
 # Begin Group "speexfile"

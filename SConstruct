@@ -29,7 +29,7 @@ def isdef(name):
 	global DEFINITIONS
 	return DEFINITIONS.has_key(name)
 
-env.Append(CPPPATH=["#/src/mpegsound","#/src"])
+env.Append(CPPPATH=["#/src"])
 env.Append(CXXFLAGS=['-Wall','-Wno-non-virtual-dtor']
 
 # Sanity is good
@@ -124,15 +124,8 @@ source = """
 	src/sound.cpp
 	src/input_mp3.cpp
 	src/sound_effect.cpp
-	src/mpegsound/bitwindow.cpp
-	src/mpegsound/mpeglayer2.cpp
-	src/mpegsound/filter.cpp
-	src/mpegsound/mpeglayer3.cpp
-	src/mpegsound/filter_2.cpp
-	src/mpegsound/mpegtable.cpp
-	src/mpegsound/huffmantable.cpp
-	src/mpegsound/mpegtoraw.cpp
-	src/mpegsound/mpeglayer1.cpp
+	src/mpaudec/bits.c
+	src/mpaudec/mpaudec.c
 """
 
 if isdef("HAVE_FLAC"):

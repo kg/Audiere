@@ -266,7 +266,7 @@ namespace audiere {
   }
 
 
-  const char*
+  const char* ADR_CALL
   DSAudioDevice::getName() {
     return "directsound";
   }

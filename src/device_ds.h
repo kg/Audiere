@@ -43,6 +43,7 @@ public:
     OutputStream* ADR_CALL openBuffer(
       void* samples, int frame_count,
       int channel_count, int sample_rate, SampleFormat sample_format);
+    const char* ADR_CALL getName();
 
     /**
      * DirectSound treats volumes and pan levels as decibels (exponential

@@ -23,6 +23,7 @@ namespace audiere {
 
   public:
     void ADR_CALL update();
+    const char* ADR_CALL getName();
 
   private:
     // 16 buffers of 1000 frames is 4000 frames at 44100 Hz is about

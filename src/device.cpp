@@ -205,7 +205,7 @@ namespace audiere {
         channel_count, sample_rate, sample_format);
     }
 
-    const char* getName() {
+    const char* ADR_CALL getName() {
       return m_device->getName();
     }
 

@@ -6,13 +6,13 @@ public class Context
         System.loadLibrary("javaAudio");
     }
 
-    public Context(String output_device, String parameters)
+    public Context()
         throws CreateContextException {
 
-        initialize(output_device, parameters);
+        initialize();
     }
 
-    private native void initialize(String output_device, String parameters)
+    private native void initialize()
         throws CreateContextException;
 
     protected native void finalize();

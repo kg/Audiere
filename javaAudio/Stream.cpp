@@ -1,5 +1,5 @@
 #include <audiere.h>
-#include "org/aegisknight/audiere/org_aegisknight_audiere_Stream.h"
+#include "org_aegisknight_audiere_Stream.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

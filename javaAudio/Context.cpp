@@ -1,5 +1,5 @@
 #include <audiere.h>
-#include "org/aegisknight/audiere/org_aegisknight_audiere_Context.h"
+#include "org_aegisknight_audiere_Context.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,23 +36,10 @@ inline char* JavaStringToAscii(JNIEnv* env, jstring in)
 
 JNIEXPORT void JNICALL Java_org_aegisknight_audiere_Context_initialize(
   JNIEnv* env,
-  jobject obj,
-  jstring output_device,
-  jstring parameters)
+  jobject obj)
 {
-  char* ascii_output_device = JavaStringToAscii(env, output_device);
-  char* ascii_parameters    = JavaStringToAscii(env, parameters);
-
   // create the Audiere context
-  ADR_CONTEXT context = AdrCreateContext(
-    ascii_output_device,
-    ascii_parameters,
-    NULL, NULL, NULL, NULL, NULL, NULL
-  );
-
-  // we no longer need the ASCII versions of the strings
-  delete[] ascii_output_device;
-  delete[] ascii_parameters;
+  ADR_CONTEXT context = AdrCreateContext(NULL);
 
   // if context creation failed, throw an exception
   if (!context) {

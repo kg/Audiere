@@ -5,7 +5,7 @@ public class Test
 {
     public static void main(String[] args) {
 	try {
-	    Context context = new Context("autodetect", "");
+	    Context context = new Context();
 	    String name = "M:/mpeg/The Cure/Wish/01 - Open.ogg";
 	    Stream stream = context.openStream(name);
 	    stream.play();

@@ -6,22 +6,6 @@
 
 namespace audiere {
 
-  static inline u16 Read16(u8* m) {
-    return (u16)(
-      (m[0] << 0) +
-      (m[1] << 8)
-    );
-  }
-
-  static inline u32 Read32(u8* m) {
-    return (u32)(
-      (m[0] << 0) +
-      (m[1] << 8) +
-      (m[2] << 16)  +
-      (m[3] << 24)
-    );
-  }
-
   static inline bool IsValidSampleSize(u32 size) {
     return (size == 8 || size == 16);
   }
@@ -53,15 +37,15 @@ namespace audiere {
 
     // read the RIFF header
     char riff_id[4];
-    u32  riff_length;
+    u8   riff_length_buffer[4];
     char riff_datatype[4];
 
     u32 size = 0;
     size += file->read(riff_id, 4);
-    size += file->read(&riff_length, 4);
+    size += file->read(riff_length_buffer, 4);
     size += file->read(riff_datatype, 4);
 
-    riff_length = LittleToHost32(riff_length);
+    int riff_length = read32_le(riff_length_buffer);
 
     if (size != 12 ||
         memcmp(riff_id, "RIFF", 4) != 0 ||
@@ -135,11 +119,11 @@ namespace audiere {
     // search for a format chunk
     for (;;) {
       char chunk_id[4];
-      u32  chunk_length;
+      u8   chunk_length_buffer[4];
 
       int size = m_file->read(chunk_id, 4);
-      size    += m_file->read(&chunk_length, 4);
-      chunk_length = LittleToHost32(chunk_length);
+      size    += m_file->read(chunk_length_buffer, 4);
+      u32 chunk_length = read32_le(chunk_length_buffer);
 
       // if we couldn't read enough, we're done
       if (size != 8) {
@@ -161,12 +145,12 @@ namespace audiere {
         chunk_length -= size;
 
         // parse the memory into useful information
-        u16 format_tag         = Read16(chunk + 0);
-        u16 channel_count      = Read16(chunk + 2);
-        u32 samples_per_second = Read32(chunk + 4);
-        u32 bytes_per_second   = Read32(chunk + 8);
-        u16 block_align        = Read16(chunk + 12);
-        u16 bits_per_sample    = Read16(chunk + 14);
+        u16 format_tag         = read16_le(chunk + 0);
+        u16 channel_count      = read16_le(chunk + 2);
+        u32 samples_per_second = read32_le(chunk + 4);
+        u32 bytes_per_second   = read32_le(chunk + 8);
+        u16 block_align        = read16_le(chunk + 12);
+        u16 bits_per_sample    = read16_le(chunk + 14);
 
         // format_tag must be 1 (WAVE_FORMAT_PCM)
         // we only support mono and stereo
@@ -216,12 +200,12 @@ namespace audiere {
 
     // search for a format chunk
     while (true) {
-      char    chunk_id[4];
-      u32 chunk_length;
+      char chunk_id[4];
+      u8   chunk_length_buffer[4];
 
       int size = m_file->read(chunk_id, 4);
-      size    += m_file->read(&chunk_length, 4);
-      chunk_length = LittleToHost32(chunk_length);
+      size    += m_file->read(chunk_length_buffer, 4);
+      u32 chunk_length = read32_le(chunk_length_buffer);
 
       // if we couldn't read enough, we're done
       if (size != 8) {

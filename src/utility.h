@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 #include "audiere.h"
+#include "types.h"
 
 
 namespace audiere {
@@ -28,6 +29,23 @@ namespace audiere {
   ParameterList ParseParameters(const char* parameters_string);
 
   int strcmp_case(const char* a, const char* b);
+
+
+  inline u16 read16_le(const u8* b) {
+    return b[0] + (b[1] << 8);
+  }
+
+  inline u16 read16_be(const u8* b) {
+    return (b[0] << 8) + b[1];
+  }
+
+  inline u32 read32_le(const u8* b) {
+    return read16_le(b) + (read16_le(b + 2) << 16);
+  }
+
+  inline u32 read32_be(const u8* b) {
+    return (read16_be(b) << 16) + read16_be(b + 2);
+  }
 
 
   class UnseekableSource : public DLLImplementation<SampleSource> {

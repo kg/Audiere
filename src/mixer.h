@@ -5,12 +5,13 @@
 #include <map>
 #include "audiere.h"
 #include "types.h"
+#include "utility.h"
 
 
 namespace audiere {
 
   /// Always produce 44.1 KHz, 16-bit, stereo audio.
-  class Mixer : public DLLImplementation<SampleSource> {
+  class Mixer : public UnseekableSource {
   public:
     Mixer();
     ~Mixer();

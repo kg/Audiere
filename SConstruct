@@ -10,16 +10,18 @@ PREFIX = ARGUMENTS.get('prefix', '/usr/local')
 
 base_env = Environment(
     CXX = 'CC',
-    SHCXXFLAGS = '-LANG:std',
+    CXXFLAGS = ['-LANG:std'],
+    LINK = 'CC',
+    LINKFLAGS = ['-LANG:std'],
+    SHCXXFLAGS = ['-LANG:std'],
     SHLINK = 'CC',
-    SHLINKFLAGS = '-shared',
-    LINKFLAGS = '-LANG:std',
-    CPPPATH = '/usr/freeware/include',
-    LIBPATH = '/usr/freeware/lib32',
+    SHLINKFLAGS = ['-shared'],
+    CPPPATH = ['/usr/freeware/include'],
+    LIBPATH = ['/usr/freeware/lib32'],
     LIBS = ['vorbisfile', 'vorbis', 'ogg'])
 
 Export('PREFIX base_env')
 
-SConscript(dirs = ['src'])
+SConscript(dirs = ['src', 'test'])
 
 base_env.Alias('install', PREFIX)

@@ -647,7 +647,7 @@ namespace audiere {
     _SplitString(descriptions, hidden::AdrGetSupportedFileFormats(), ';');
 
     formats.resize(descriptions.size());
-    for (int i = 0; i < formats.size(); ++i) {
+    for (unsigned i = 0; i < formats.size(); ++i) {
       const char* d = descriptions[i].c_str();
       const char* colon = strchr(d, ':');
       formats[i].description.assign(d, colon);

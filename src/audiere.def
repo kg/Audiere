@@ -2,7 +2,6 @@ EXPORTS
   AdrGetVersion
   AdrGetSampleSize
   AdrOpenDevice
-  AdrOpenDevice3D
   AdrOpenSampleSource
   AdrOpenSampleSourceFromFile
   AdrCreateTone

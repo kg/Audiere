@@ -362,6 +362,8 @@ namespace audiere {
      *
      * @param sample_rate  Number of samples per second.
      *
+     * @param sample_format  Format of samples in buffer.
+     *
      * @return  new output stream if successful, 0 if failure
      */
     virtual OutputStream* openBuffer(
@@ -370,20 +372,6 @@ namespace audiere {
       int channel_count,
       int sample_rate,
       SampleFormat sample_format) = 0;
-  };
-
-
-  /// Unimplemented, so undocumented.
-  class OutputStream3D : public OutputStream {
-  public:
-    virtual void setPosition(double x, double y, double z) = 0;
-    // ... ?
-  };
-
-
-  /// Unimplemented, so undocumented.
-  class AudioDevice3D : public AudioDevice {
-    virtual OutputStream3D* openStream3D(SampleSource* source) = 0;
   };
 
 
@@ -396,9 +384,6 @@ namespace audiere {
     ADR_FUNCTION(int, AdrGetSampleSize)(SampleFormat format);
 
     ADR_FUNCTION(AudioDevice*, AdrOpenDevice)(
-      const char* name,
-      const char* parameters);
-    ADR_FUNCTION(AudioDevice3D*, AdrOpenDevice3D)(
       const char* name,
       const char* parameters);
 
@@ -453,14 +438,6 @@ namespace audiere {
     const char* parameters = 0)
   {
     return hidden::AdrOpenDevice(name, parameters);
-  }
-
-  /// Unimplemented, so undocumented.  
-  inline AudioDevice3D* OpenDevice3D(
-    const char* name = 0,
-    const char* parameters = 0)
-  {
-    return hidden::AdrOpenDevice3D(name, parameters);
   }
 
   /**

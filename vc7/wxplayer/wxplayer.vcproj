@@ -109,6 +109,9 @@
 			<File
 				RelativePath="..\..\examples\wxPlayer\wxPlayer.cpp">
 			</File>
+			<File
+				RelativePath="..\..\examples\wxPlayer\wxPlayer.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

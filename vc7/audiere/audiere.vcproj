@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio"
+				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio;../../src/libogg-1.0/include;../../src/libvorbis-1.0/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -69,8 +69,8 @@
 				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS"
+				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio;../../src/libogg-1.0/include;../../src/libvorbis-1.0/include"
+				PreprocessorDefinitions="HAVE_MIKMOD;WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
@@ -113,37 +113,55 @@
 			Name="files"
 			Filter="">
 			<File
-				RelativePath="..\..\src\audiere.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\audiere.h">
-			</File>
-			<File
-				RelativePath="..\..\src\config.h">
-			</File>
-			<File
-				RelativePath="..\..\src\context.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\context.hpp">
 			</File>
 			<File
 				RelativePath="..\..\src\debug.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\debug.hpp">
+				RelativePath="..\..\src\debug.h">
 			</File>
 			<File
-				RelativePath="..\..\src\default_file.hpp">
+				RelativePath="..\..\src\default_file.h">
 			</File>
 			<File
-				RelativePath="..\..\src\endian.hpp">
+				RelativePath="..\..\src\device.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\file.cpp">
+				RelativePath="..\..\src\device_ds.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\file.hpp">
+				RelativePath="..\..\src\device_ds.h">
+			</File>
+			<File
+				RelativePath="..\..\src\device_ds_buffer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\device_ds_buffer.h">
+			</File>
+			<File
+				RelativePath="..\..\src\device_ds_stream.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\device_ds_stream.h">
+			</File>
+			<File
+				RelativePath="..\..\src\device_mixer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\device_mixer.h">
+			</File>
+			<File
+				RelativePath="..\..\src\device_mm.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\device_mm.h">
+			</File>
+			<File
+				RelativePath="..\..\src\device_null.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\device_null.h">
 			</File>
 			<File
 				RelativePath="..\..\src\file_ansi.cpp">
@@ -152,82 +170,70 @@
 				RelativePath="..\..\src\input.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input.hpp">
-			</File>
-			<File
 				RelativePath="..\..\src\input_mod.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_mod.hpp">
+				RelativePath="..\..\src\input_mod.h">
 			</File>
 			<File
 				RelativePath="..\..\src\input_ogg.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_ogg.hpp">
+				RelativePath="..\..\src\input_ogg.h">
 			</File>
 			<File
 				RelativePath="..\..\src\input_wav.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_wav.hpp">
+				RelativePath="..\..\src\input_wav.h">
 			</File>
 			<File
-				RelativePath="..\..\src\output.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output.hpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output_ds.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output_ds.hpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output_ds3.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output_ds3.hpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output_ds8.hpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output_null.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\output_null.hpp">
+				RelativePath="..\..\src\internal.h">
 			</File>
 			<File
 				RelativePath="..\..\src\repeatable.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\repeatable.hpp">
+				RelativePath="..\..\src\repeatable.h">
 			</File>
 			<File
-				RelativePath="..\..\src\stream.cpp">
+				RelativePath="..\..\src\resampler.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\stream.hpp">
+				RelativePath="..\..\src\resampler.h">
 			</File>
 			<File
-				RelativePath="..\..\src\threads.hpp">
+				RelativePath="..\..\src\sample_buffer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\sound.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\threads.h">
 			</File>
 			<File
 				RelativePath="..\..\src\threads_win32.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\timer.hpp">
+				RelativePath="..\..\src\timer.h">
 			</File>
 			<File
 				RelativePath="..\..\src\timer_win32.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\tone.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\types.h">
+			</File>
+			<File
 				RelativePath="..\..\src\utility.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\utility.hpp">
+				RelativePath="..\..\src\utility.h">
+			</File>
+			<File
+				RelativePath="..\..\src\version.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -449,140 +455,134 @@
 			Name="ogg"
 			Filter="">
 			<File
-				RelativePath="..\..\src\libogg-1.0rc3\src\bitwise.c">
+				RelativePath="..\..\src\libogg-1.0\src\bitwise.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libogg-1.0rc3\src\framing.c">
+				RelativePath="..\..\src\libogg-1.0\src\framing.c">
 			</File>
 		</Filter>
 		<Filter
 			Name="vorbis"
 			Filter="">
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\analysis.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\analysis.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\backends.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\backends.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\bitrate.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\bitrate.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\bitrate.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\bitrate.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\block.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\block.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\codebook.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\codebook.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\codebook.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\codebook.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\codec_internal.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\codec_internal.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\envelope.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\envelope.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\envelope.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\envelope.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\floor0.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\floor0.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\floor1.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\floor1.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\iir.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\highlevel.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\info.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\info.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\lookup.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\lookup.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\lookup.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\lookup.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\lookup_data.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\lookup_data.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\lpc.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\lpc.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\lpc.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\lpc.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\lsp.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\lsp.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\lsp.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\lsp.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\mapping0.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\mapping0.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\masking.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\masking.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\mdct.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\mdct.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\mdct.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\mdct.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\misc.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\misc.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\os.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\os.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\psy.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\psy.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\psy.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\psy.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\registry-api.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\registry.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\registry.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\registry.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\registry.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\res0.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\res0.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\scales.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\scales.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\sharedbook.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\sharedbook.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\smallft.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\smallft.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\smallft.h">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\smallft.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\synthesis.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\synthesis.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\vorbisfile.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\time0.c">
+				RelativePath="..\..\src\libvorbis-1.0\lib\window.c">
 			</File>
 			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\vorbisfile.c">
-			</File>
-			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\window.c">
-			</File>
-			<File
-				RelativePath="..\..\src\libvorbis-1.0rc3\lib\window.h">
+				RelativePath="..\..\src\libvorbis-1.0\lib\window.h">
 			</File>
 		</Filter>
 	</Files>

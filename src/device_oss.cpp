@@ -59,6 +59,7 @@ namespace audiere {
 
   OSSAudioDevice::OSSAudioDevice(int output_device) {
     m_output_device = output_device;
+    m_mixer = new Mixer(44100);
   }
 
 
@@ -85,7 +86,7 @@ namespace audiere {
     while (sample_count > 0) {
       int transfer_count = std::min(sample_count, BUFFER_SIZE);
 
-      m_mixer.read(transfer_count, buffer);
+      m_mixer->read(transfer_count, buffer);
       write(m_output_device, buffer, transfer_count * 4);
 
       sample_count -= transfer_count;
@@ -217,7 +218,7 @@ namespace audiere {
 
   Mixer&
   OSSOutputStream::getMixer() {
-    return m_device->m_mixer;
+    return *(m_device->m_mixer);
   }
 
 }

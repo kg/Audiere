@@ -25,7 +25,7 @@ namespace audiere {
 
   private:
     int m_output_device;
-    Mixer m_mixer;
+    RefPtr<Mixer> m_mixer;
 
     friend class OSSOutputStream;
   };

@@ -1,4 +1,4 @@
-#include "device_al.h"
+#include "device_oal.h"
 #include "threads.h"
 
 
@@ -55,17 +55,17 @@ namespace audiere {
       return 0;
     }
 
-    return new ALAudioDevice(device, context);
+    return new OALAudioDevice(device, context);
   }
 
 
-  OALAudioDevice::ALAudioDevice(ALCdevice* device, ALCcontext* context) {
+  OALAudioDevice::OALAudioDevice(ALCdevice* device, ALCcontext* context) {
     m_device  = device;
     m_context = context;
   }
 
 
-  OALAudioDevice::~ALAudioDevice() {
+  OALAudioDevice::~OALAudioDevice() {
     if (m_context) {
       alcMakeContextCurrent(0);
       alcDestroyContext(m_context);
@@ -84,7 +84,7 @@ namespace audiere {
     // enumerate all open streams
     StreamList::iterator i = m_open_streams.begin();
     while (i != m_open_streams.end()) {
-      ALOutputStream* s = *i++;
+      OALOutputStream* s = *i++;
       s->update();
     }
   }
@@ -100,11 +100,11 @@ namespace audiere {
     ALenum format;
     if (channel_count == 1 && sample_format == SF_U8) {
       format = AL_FORMAT_MONO8;
-    } else if (channel_count == 1 && sample_format == SF_S16_LE) {
+    } else if (channel_count == 1 && sample_format == SF_S16) {
       format = AL_FORMAT_MONO16;
     } else if (channel_count == 2 && sample_format == SF_U8) {
       format = AL_FORMAT_STEREO8;
-    } else if (channel_count == 2 && sample_format == SF_S16_LE) {
+    } else if (channel_count == 2 && sample_format == SF_S16) {
       format = AL_FORMAT_STEREO16;
     } else {
       return 0;
@@ -151,13 +151,13 @@ namespace audiere {
 
 
   void
-  OALAudioDevice::removeStream(ALOutputStream* stream) {
+  OALAudioDevice::removeStream(OALOutputStream* stream) {
     m_open_streams.remove(stream);
   }
 
 
-  OALOutputStream::ALOutputStream(
-    ALAudioDevice* device,
+  OALOutputStream::OALOutputStream(
+    OALAudioDevice* device,
     SampleSource* source,
     ALuint al_source,
     ALuint* buffers,
@@ -196,7 +196,7 @@ namespace audiere {
   }
 
 
-  OALOutputStream::~ALOutputStream() {
+  OALOutputStream::~OALOutputStream() {
     m_device->removeStream(this);
 
     alDeleteSources(1, &m_ALsource);

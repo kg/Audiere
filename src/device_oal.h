@@ -31,15 +31,15 @@ namespace audiere {
       int channel_count, int sample_rate, SampleFormat sample_format);
 
   private:
-    void removeStream(ALOutputStream* stream);
+    void removeStream(OALOutputStream* stream);
 
     ALCdevice*  m_device;
     ALCcontext* m_context;
 
-    typedef std::list<ALOutputStream*> StreamList;
+    typedef std::list<OALOutputStream*> StreamList;
     StreamList m_open_streams;
 
-    friend class ALOutputStream;
+    friend class OALOutputStream;
   };
 
 
@@ -63,7 +63,7 @@ namespace audiere {
 
   private:
     OALOutputStream(
-      ALAudioDevice* device,
+      OALAudioDevice* device,
       SampleSource* source,
       ALuint al_source,
       ALuint* buffers,
@@ -76,7 +76,7 @@ namespace audiere {
     void fillBuffers();
 
   private:
-    RefPtr<ALAudioDevice> m_device;
+    RefPtr<OALAudioDevice> m_device;
     RefPtr<SampleSource> m_source;
 
     // informational (convenience)
@@ -95,7 +95,7 @@ namespace audiere {
     bool m_is_playing;
     float m_volume;
 
-    friend class ALAudioDevice;
+    friend class OALAudioDevice;
   };
 
 }

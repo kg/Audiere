@@ -52,6 +52,8 @@ ISampleSource* OpenInputStream(IFileSystem* fs, const char* filename)
     source = TryInputStream<source_type>(file);  \
     if (source) {                                \
       return source;                             \
+    } else {                                     \
+      file->Seek(0, ADR_BEGIN);                  \
     }
 
   // grab the end of the filename so we can do end-of-string compares faster

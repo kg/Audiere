@@ -353,8 +353,8 @@ public:
       this);
     if (!name.empty()) {
       wxString parameters = wxGetTextFromUser(
-        "New Device Parameters: " + name,
         "Enter Device Parameters",
+        "New Device Parameters: " + name,
         "",
         this);
 

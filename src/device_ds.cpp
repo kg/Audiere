@@ -70,8 +70,18 @@ namespace audiere {
 
     ADR_LOG("Created DS object");
 
+    LPCGUID guid = NULL;
+    GUID stack_guid;  // so we can point 'guid' to an object that won't be destroyed
+
+    std::string guid_string = parameters.getValue("device_guid", "");
+    if (!guid_string.empty()) {
+      if (UuidFromString((unsigned char*)guid_string.c_str(), &stack_guid) == RPC_S_OK) {
+        guid = &stack_guid;
+      }
+    }
+
     // initialize the DirectSound device
-    rv = direct_sound->Initialize(NULL);
+    rv = direct_sound->Initialize(guid);
     if (FAILED(rv)) {
       DestroyWindow(anonymous_window);
       direct_sound->Release();

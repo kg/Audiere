@@ -13,6 +13,13 @@ This document describes parameters available for each device.
 The DirectSound device ("directsound", default on Windows) supports
 the following parameters:
 
+device_guid (string) : The GUID representing the device DirectSound
+                       should use.  The user of Audiere is responsible
+                       for implementing device enumeration and
+                       selection.  The string should be in the format
+                       returned by UuidToString.  If not specified,
+                       DirectSound uses the default device.
+
 buffer (int) : The length of the audio buffer in milliseconds.  A
                shorter buffer means lower latency, but could skip more
                often and suffer reduced performance.  The default is

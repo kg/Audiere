@@ -772,10 +772,6 @@ SOURCE=..\..\src\mpegsound\fileinput.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\mpegsound\fileplayer.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\mpegsound\filter.cpp
 # End Source File
 # Begin Source File

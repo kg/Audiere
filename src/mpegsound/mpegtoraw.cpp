@@ -5,6 +5,10 @@
 // Mpegtoraw.cc
 // Server which get mpeg format and put raw format.
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4244)
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -551,7 +555,6 @@ int  Mpegtoraw::getframesaved(void)
 #endif
 
 
-#include <iostream.h>
 // Convert mpeg to raw
 bool Mpegtoraw::run(int frames)
 {

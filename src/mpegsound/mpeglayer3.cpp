@@ -11,6 +11,11 @@
 // MPEG-2 is implemented
 // Speed up in fixstereo (maybe buggy) 
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4305)
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

@@ -17,6 +17,10 @@
  * Boston, MA  02111-1307, USA.
  */
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4800)
+#endif
+
 #include "FLAC++/encoder.h"
 #include "FLAC/assert.h"
 

@@ -5,6 +5,10 @@
 // Mpeglayer1.cc
 // It's for MPEG Layer 1
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4305)
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

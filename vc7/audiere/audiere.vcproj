@@ -19,11 +19,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio;../../src/libogg-1.0/include;../../src/libvorbis-1.0/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS"
+				AdditionalIncludeDirectories="&quot;../../src/flac-1.0.4/include&quot;;../../src/mikmod/mikmod;../../src/mikmod/mmio;&quot;../../src/libogg-1.0/include&quot;;&quot;../../src/libvorbis-1.0/include&quot;;../../src/mpegsound;&quot;../../src/flac-1.0.4/src/libFLAC/include&quot;;&quot;../../src/flac-1.0.4/src/libFLAC++/include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS;NOMINMAX"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -69,11 +70,12 @@
 				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../../src/mikmod/mikmod;../../src/mikmod/mmio;../../src/libogg-1.0/include;../../src/libvorbis-1.0/include"
-				PreprocessorDefinitions="HAVE_MIKMOD;WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS"
+				AdditionalIncludeDirectories="&quot;../../src/flac-1.0.4/include&quot;;../../src/mikmod/mikmod;../../src/mikmod/mmio;&quot;../../src/libogg-1.0/include&quot;;&quot;../../src/libvorbis-1.0/include&quot;;../../src/mpegsound;&quot;../../src/flac-1.0.4/src/libFLAC/include&quot;;&quot;../../src/flac-1.0.4/src/libFLAC++/include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS;NOMINMAX"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -170,10 +172,22 @@
 				RelativePath="..\..\src\input.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\input_flac.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\input_flac.h">
+			</File>
+			<File
 				RelativePath="..\..\src\input_mod.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\input_mod.h">
+			</File>
+			<File
+				RelativePath="..\..\src\input_mp3.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\input_mp3.h">
 			</File>
 			<File
 				RelativePath="..\..\src\input_ogg.cpp">
@@ -189,6 +203,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\internal.h">
+			</File>
+			<File
+				RelativePath="..\..\src\noise.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\repeatable.cpp">
@@ -207,6 +224,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\sound.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\sound_effect.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\square_wave.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\threads.h">
@@ -584,6 +607,139 @@
 			<File
 				RelativePath="..\..\src\libvorbis-1.0\lib\window.h">
 			</File>
+		</Filter>
+		<Filter
+			Name="mpegsound"
+			Filter="">
+			<File
+				RelativePath="..\..\src\mpegsound\bitwindow.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\fileinput.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\filter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\filter_2.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\huffmantable.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\mpeglayer1.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\mpeglayer2.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\mpeglayer3.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\mpegsound.h">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\mpegsound_locals.h">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\mpegtable.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\mpegtoraw.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\soundinputstream.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\mpegsound\soundplayer.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="FLAC"
+			Filter="">
+			<Filter
+				Name="libFLAC"
+				Filter="">
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\bitbuffer.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\bitmath.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\cpu.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\crc.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\file_decoder.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\file_encoder.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\fixed.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\format.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\lpc_flac.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\md5.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\memory.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\metadata_iterators.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\metadata_object.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\seekable_stream_decoder.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\seekable_stream_encoder.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\stream_decoder.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\stream_encoder.c">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC\stream_encoder_framing.c">
+				</File>
+			</Filter>
+			<Filter
+				Name="libFLAC++"
+				Filter="">
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_file_decoder.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_file_encoder.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_metadata.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_seekable_stream_decoder.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_seekable_stream_encoder.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_stream_decoder.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\flac-1.0.4\src\libFLAC++\flacplusplus_stream_encoder.cpp">
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

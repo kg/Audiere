@@ -150,7 +150,7 @@ namespace audiere {
 
   void
   DSOutputStream::setPitchShift(float shift) {
-    m_buffer->SetFrequency(m_base_frequency * shift);
+    m_buffer->SetFrequency(DWORD(m_base_frequency * shift));
   }
 
 

@@ -187,7 +187,6 @@ void Mpegtoraw::initialize()
   }
   else totalframe=0;
 
-
   if(frameoffsets)delete [] frameoffsets;
 
   if(totalframe>0)
@@ -197,7 +196,23 @@ void Mpegtoraw::initialize()
       frameoffsets[i]=0;
   }
   else frameoffsets=NULL;
+  // First frameoffset will be 0 and doesn't matter even if frame does not start there because sync() is called in load_header to scan forward to first sync bit
 
+  #ifdef getLength_accurate
+  int  size = loader->getsize();
+
+  while (frameoffsets[i]<size) {
+	if(!loadheader()) {
+		break;
+		}
+	i++;
+	frameoffsets[i]=loader->getposition();
+	}
+
+  totalframe = i;
+  if (geterrorcode()==SOUND_ERROR_FINISH) seterrorcode(SOUND_ERROR_OK);	// seeking to end of file and trying to load header will trigger SOUND_ERROR_FINISH, reset to continue playback; Any other error will prevent playback
+  loader->setposition(0);
+  #endif
   player->setsoundtype(outputstereo,16,
                        frequencies[version][frequency]>>downfrequency);
 };
@@ -239,53 +254,9 @@ void Mpegtoraw::setframe(int framenumber)
 
 int Mpegtoraw::gettotalframes(void)
 {
-  #ifdef getLength_accurate
-  int size=0, i=0, pos=0;;
-
-  pos = loader->getposition();
-
-  if(frameoffsets==NULL)return -1;
-  loader->setposition(0);
-  // First frameoffset will be 0 and doesn't matter even if frame does not start there because sync() is called in load_header to scan forward to first sync bit
-
-  // Will have frameoffsets for first frames loaded into buffer (FRAMECOUNT in input_mp3)
-
-  //printf("Framesize %i\n", framesize);
-  //printf("File length %i\n", loader->getsize());
-  //printf("First header at %i\n", frameoffsets[0]);
-
-  size = loader->getsize();
-
-  while (frameoffsets[i]<size) {
-	if(!loadheader()) {
-		i--;			// decrement i count as no next frame on loadheader error
-		break;
-		}
-	//printf("i %i; frameoffsets %i; framesize %i\n", i, frameoffsets[i], framesize);
-	i++;
-	frameoffsets[i]=loader->getposition();
-	}
-
-  //printf("i %i; frameoffsets %i\n", i, frameoffsets[i-1]);
-  loader->setposition(pos);
-  return i;
-  #else
-
   return totalframe;
-
-  #endif
  }
 
-
-void Mpegtoraw::setPosition(int position, int samples_per_frame) 
-{
-  int framenumber=0, remainder=0;
-
-  framenumber = (int)(position / samples_per_frame);
-  remainder = position % samples_per_frame;
-
-	// wants to set frame as well as extra samples inside last frame
-}
 
 void Mpegtoraw::clearbuffer()
 {
@@ -383,7 +354,7 @@ bool Mpegtoraw::loadheader()
 
 // Check for VBR header - proof of concept code needs tidying
   #ifndef getLength_accurate
-  int pos;
+  int pos, i;
 
   pos = loader->getposition();
   char vbr_header[50];

@@ -1,3 +1,7 @@
+2004.07.27
+
+  MP3 seeking and framecounting fixes.  (Andrew Gatt)
+
 2004.07.21
 
   Added MIDI support through the MCI subsystem on Win32 and Cygwin.

@@ -118,15 +118,16 @@ namespace audiere {
     m_loader = new MyLoader(file);
     m_decoder = new Mpegtoraw(m_loader, this);
 
+    // this should call setsoundtype with the format of the stream
     m_decoder->initialize();
 
-    // this should call setsoundtype with the format of the stream
+    m_total_frames = m_decoder->gettotalframes();					// gettotalframes() relies on initialise having run first
+    m_samples_per_frame = m_decoder->getpcmperframe();
+
     if (!m_decoder->run(FRAME_COUNT)) {
       return false;
     }
 
-    m_samples_per_frame = m_decoder->getpcmperframe();
-    m_total_frames = m_decoder->gettotalframes();
     return true;
   }
 
@@ -144,7 +145,6 @@ namespace audiere {
   MP3InputStream::setPosition(int position) {
     m_decoder->setframe((int)(position/m_samples_per_frame));	//in present state can only seek to frame not absolute position, need to modify setframe to seek to sample inside frame?
 
-    //m_decoder->setPosition(position, m_samples_per_frame);
     return;
   }
 

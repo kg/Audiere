@@ -9,7 +9,7 @@
 using namespace audiere;
 
 
-bool TryDevice(const char* name);
+bool TryDevice(const wxString& name, const wxString& parameters = "");
 
 
 enum {
@@ -174,7 +174,7 @@ public:
   }
 
 private:
-  RefPtr<OutputStream> m_stream;
+  OutputStreamPtr m_stream;
   bool m_stream_is_seekable;
   int m_stream_length;
 
@@ -276,7 +276,7 @@ public:
   }
 
 private:
-  RefPtr<SoundEffect> m_effect;
+  SoundEffectPtr m_effect;
 
   wxStaticText* m_vpp_label;
   wxSlider*     m_volume;
@@ -352,7 +352,13 @@ public:
       "autodetect",
       this);
     if (!name.empty()) {
-      if (!TryDevice(name)) {
+      wxString parameters = wxGetTextFromUser(
+        "New Device Parameters: " + name,
+        "Enter Device Parameters",
+        "",
+        this);
+
+      if (!TryDevice(name, parameters)) {
         wxMessageBox(
           "Could not open audio device: " + name,
           "New Device", wxOK | wxCENTRE, this);
@@ -533,7 +539,7 @@ public:
   }
 
 private:
-  RefPtr<AudioDevice> m_device;
+  AudioDevicePtr m_device;
 
   DECLARE_EVENT_TABLE()
 };
@@ -554,8 +560,8 @@ BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
 END_EVENT_TABLE()
 
 
-bool TryDevice(const char* name) {
-  if (RefPtr<AudioDevice> device = audiere::OpenDevice(name)) {
+bool TryDevice(const wxString& name, const wxString& parameters) {
+  if (AudioDevicePtr device = audiere::OpenDevice(name, parameters)) {
     DeviceFrame* frame = new DeviceFrame(device.get(), name);
     frame->Show(true);
     return true;

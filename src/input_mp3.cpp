@@ -323,6 +323,7 @@ namespace audiere {
   
   void
   MP3InputStream::readID3v2Tags() {
+    // ID3v2 is super complicated.
   }
 
 }

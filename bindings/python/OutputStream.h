@@ -11,7 +11,7 @@ extern PyTypeObject audiere_OutputStreamType;
 
 struct audiere_OutputStreamObject {
   PyObject_HEAD
-  audiere::RefPtr<audiere::OutputStream> stream;
+  audiere::OutputStream* stream;
 };
 
 

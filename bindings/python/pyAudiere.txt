@@ -1,47 +1,76 @@
 Audiere Bindings for Python
 Chad Austin
-2001.09.25
-
-
-Introduction
---
-In my quest to get Audiere used everywhere, I made Python bindings for it
-(admittedly mostly for the v27 community).
+2002.09.05
 
 
 How do I install it?
 --
 
-Into ActiveState's Python 2.1:
-  Copy the audiere.pyd into Python21/Lib.
-
-Into v27:
-  Just copy audiere.pyd into your VERGE folder.
+Into the Windows distribution of Python 2.2:
+  Copy audiere.dll and audiere.pyd into Python22/DLLs.
 
 
 How do I use it?
 --
 
-import audiere                           # brings in the Audiere module
-context = audiere.open_context()         # creates an Audiere context object
-song = context.open_stream("song.mp3")   # opens a song
-song.play()                              # begins playback
+import audiere                            # brings in the Audiere module
+print audiere.get_version()               # print the version information
+device = audiere.open_device()            # open the default AudioDevice
+song = context.open_sound("song.ogg", 1)  # opens a song in streaming mode
+song.playing = 1                          # begins playback
 
 
 Cool!  What else can I do?
 --
 
-All you can do with contexts are open streams...
+The audiere module only has two functions:
 
-The interesting stuff is in the stream objects:
+  get_version()
+    - Returns the Audiere version string.
 
-song.play()  # begins playback
-song.reset() # resets a song from the beginning
-song.pause() # stops playback, but does not reset from the beginning
+  open_device([name [, parameters]])
+    - Opens an AudioDevice object specified by 'name'.  If name is not
+      specified, it opens the default device.  See the Audiere
+      documentation for which devices are available.
 
-song.volume = integer # volume can be 0 (quiet) up to 255 (loudest)
-                      # defaults to 255
 
-song.repeating = true|false # sets whether the song should repeat or not
+AudioDevice methods:
 
-song.playing # (read-only) true if song is playing, false otherwise
+  create_tone(frequency)
+    - Creates a tone with the specified frequency and returns an
+      OutputStream object that represents it.
+
+  open_sound(filename [, streaming])
+    - Opens a sound from the filename, and returns an OutputStream
+      object for it.  The streaming parameter is a boolean.  It
+      defaults to false.
+
+
+OutputStream methods and fields:
+
+  field: playing :: boolean
+    - If true, this stream is playing.  If false, this stream is not
+      playing.
+
+  method: reset()
+    - Resets the stream to the beginning.
+
+  field: repeating :: boolean
+    - If true, when the end of the stream is hit, the stream starts
+      playback from the beginning.
+
+  field: volume :: floating point number
+    - The current volume of the stream.  1 is maximum, 0 is silence.
+
+  field: pan :: floating point number
+    - The current panning level of the stream.  0 is centered, -1 is
+      all of the way to the left, and 1 is to the right.
+
+  readonly field: seekable :: boolean
+    - If this is true, the following fields are applicable.
+
+  readonly field: length :: integer
+    - The number of samples within this stream.
+
+  field: position :: integer
+    - The current position of the play cursor within the stream.

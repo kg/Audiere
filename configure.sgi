@@ -1,0 +1,7 @@
+#!/bin/sh
+export CC=cc
+export CXX=CC
+export CXXFLAGS=-LANG:std
+export CPPFLAGS=-I/usr/freeware/include
+export LDFLAGS=-L/usr/freeware/lib32
+./configure $*

@@ -76,7 +76,8 @@ libaudiere_la_LDFLAGS = \
 	-release $(VERSION) \
 	-lvorbisfile \
 	-lvorbis \
-	-logg
+	-logg \
+	@FLAC_LIBS@
 
 libaudiere_la_LIBADD = \
 	mikmod/mmio/libmmio.la \

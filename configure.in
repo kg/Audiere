@@ -68,9 +68,12 @@ AM_CONDITIONAL(HAVE_OPENAL, test "x$HAVE_OPENAL" = "xtrue")
 
 dnl Look for FLAC
 AC_CHECK_LIB(FLAC, FLAC__seekable_stream_decoder_process_single,
-    LIBS="$LIBS -lFLAC++ -lFLAC"
+    FLAC_LIBS="-lFLAC++ -lFLAC -lm"
+    AC_SUBST(FLAC_LIBS)
   ,
-    AC_MSG_ERROR([libFLAC not found.  Install FLAC from http://flac.sourceforge.net/]))
+    AC_MSG_ERROR([libFLAC not found.  Install FLAC from http://flac.sourceforge.net/]),
+  ,
+    -lm)
 
 dnl Look for the POSIX realtime clock
 AC_SEARCH_LIBS(clock_gettime, rt,

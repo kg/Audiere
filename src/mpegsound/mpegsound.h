@@ -6,6 +6,13 @@
 //   This is typeset for functions in MPEG Sound library.
 //   Now, it's for only linux-pc-?86
 
+/*
+ * Chad Austin, 2003.06.01
+ *
+ * Build the MP3 decoder source files with custom optimizations.  Some files
+ * have static when all of the optimizations are enabled.
+ */
+
 /************************************/
 /* Inlcude default library packages */
 /************************************/
@@ -115,63 +122,50 @@ typedef struct
   const unsigned int (*val)[2];
 }HUFFMANCODETABLE;
 
+
+class Errorbase
+{
+public:
+  Errorbase()          { __errorcode = SOUND_ERROR_OK; }
+  virtual ~Errorbase() { }
+  int geterrorcode()   { return __errorcode; }
+
+protected:
+  void seterrorcode(int code) { __errorcode = code; }
+
+private:
+  int __errorcode;
+};
+
+
 /*********************************/
 /* Sound input interface classes */
 /*********************************/
 // Superclass for Inputbitstream // Yet, Temporary
-class Soundinputstream
+class Soundinputstream : public Errorbase
 {
 public:
-  Soundinputstream() {
-    __errorcode = SOUND_ERROR_OK;
-  }
-
-  virtual ~Soundinputstream() { }
-
-  int geterrorcode()  {return __errorcode;};
-
-  virtual int  getbytedirect()               =0;
+  virtual int  getbytedirect()                   =0;
   virtual bool _readbuffer(char *buffer,int size)=0;
-  virtual bool eof()                         =0;
+  virtual bool eof()                             =0;
   virtual int  getblock(char *buffer,int size)   =0;
 
-  virtual int  getsize()                     =0;
-  virtual int  getposition()                 =0;
+  virtual int  getsize()                         =0;
+  virtual int  getposition()                     =0;
   virtual void setposition(int pos)              =0;
-
-protected:
-  void seterrorcode(int errorcode) {__errorcode=errorcode;};
-
-private:
-  int __errorcode;
 };
 
 /**********************************/
 /* Sound player interface classes */
 /**********************************/
 // Superclass for player
-class Soundplayer
+class Soundplayer : public Errorbase
 {
 public:
-  Soundplayer() {__errorcode=SOUND_ERROR_OK;};
-  virtual ~Soundplayer() { }
-
-  virtual void abort() { }
-  virtual int  getprocessed() { return 0; }
-
   virtual bool setsoundtype(int stereo,int samplesize,int speed)=0;
-  virtual bool resetsoundtype() { return true; }
+//%%  virtual bool resetsoundtype() { return true; }
 
   virtual bool putblock(void *buffer,int size)                  =0;
-  virtual int  getblocksize() { return 1024; }  // default value
-
-  int geterrorcode() {return __errorcode;};
-
-protected:
-  bool seterrorcode(int errorno) {__errorcode=errorno; return false;};
-
-private:
-  int  __errorcode;
 };
 
 
@@ -203,7 +197,7 @@ private:
 
 
 // Class for converting mpeg format to raw format
-class Mpegtoraw
+class Mpegtoraw : public Errorbase
 {
   /*****************************/
   /* Constant tables for layer */
@@ -291,12 +285,7 @@ public:
   ~Mpegtoraw();
   void initialize();
   bool run(int frames);
-  int  geterrorcode() {return __errorcode;};
   void clearbuffer();
-
-private:
-  int __errorcode;
-  bool seterrorcode(int errorno){__errorcode=errorno;return false;};
 
   /*****************************/
   /* Loading MPEG-Audio stream */

@@ -749,30 +749,93 @@ SOURCE="..\..\src\libvorbis-1.0\lib\window.h"
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\bitwindow.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\filter.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\filter_2.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\huffmantable.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\mpeglayer1.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\mpeglayer2.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\mpeglayer3.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -785,10 +848,28 @@ SOURCE=..\..\src\mpegsound\mpegsound_locals.h
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\mpegtable.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\src\mpegsound\mpegtoraw.cpp
+
+!IF  "$(CFG)" == "audiere - Win32 Release"
+
+# ADD CPP /Os /Oy /Ob1
+
+!ELSEIF  "$(CFG)" == "audiere - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # End Group
 # Begin Group "FLAC"

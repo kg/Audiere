@@ -61,7 +61,7 @@ namespace audiere {
       if (read != size) {
         m_eof = true;
       }
-      return size;
+      return read;
     }
 
     int getsize() {
@@ -136,6 +136,8 @@ namespace audiere {
   
   int
   MP3InputStream::read(int frame_count, void* samples) {
+    ADR_GUARD("MP3InputStream::read");
+
     const int frame_size = m_channel_count * GetSampleSize(m_sample_format);
 
     int frames_read = 0;
@@ -172,6 +174,8 @@ namespace audiere {
 
   void
   MP3InputStream::reset() {
+    ADR_GUARD("MP3InputStream::reset");
+
     m_file->seek(0, File::BEGIN);
 
     m_buffer.clear();

@@ -604,27 +604,73 @@
 			Filter="">
 			<File
 				RelativePath="..\..\src\mpegsound\bitwindow.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\mpegsound\fileinput.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\filter.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\filter_2.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\huffmantable.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\mpeglayer1.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\mpeglayer2.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\mpeglayer3.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\mpegsound.h">
@@ -634,15 +680,23 @@
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\mpegtable.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\mpegsound\mpegtoraw.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\mpegsound\soundinputstream.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\mpegsound\soundplayer.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="4"
+						GlobalOptimizations="FALSE"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

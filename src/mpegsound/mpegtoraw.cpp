@@ -23,7 +23,6 @@
 
 Mpegtoraw::Mpegtoraw(Soundinputstream *loader,Soundplayer *player)
 {
-  __errorcode=SOUND_ERROR_OK;
   frameoffsets=NULL;
 
   forcetomonoflag=false;
@@ -243,8 +242,8 @@ void Mpegtoraw::setframe(int framenumber)
 
 void Mpegtoraw::clearbuffer()
 {
-  player->abort();
-  player->resetsoundtype();
+//%%  player->abort();
+//%%  player->resetsoundtype();
 }
 
 bool Mpegtoraw::loadheader()
@@ -307,7 +306,10 @@ bool Mpegtoraw::loadheader()
     //}
   }while(!flag);
 
-  if(c<0)return seterrorcode(SOUND_ERROR_FINISH);
+  if(c<0) {
+    seterrorcode(SOUND_ERROR_FINISH);
+    return false;
+  }
 
 
 
@@ -321,7 +323,10 @@ bool Mpegtoraw::loadheader()
   padding=(c&1);             c>>=1;
   frequency=(_frequency)(c&2); c>>=2;
   bitrateindex=(int)c;
-  if(bitrateindex==15)return seterrorcode(SOUND_ERROR_BAD);
+  if(bitrateindex==15) {
+    seterrorcode(SOUND_ERROR_BAD);
+    return false;
+  }
 
   c=((unsigned int)(loader->getbytedirect()))>>4;
   extendedmode=c&3;
@@ -397,7 +402,10 @@ bool Mpegtoraw::loadheader()
   }
 
 
-  if(loader->eof())return seterrorcode(SOUND_ERROR_FINISH);
+  if(loader->eof()) {
+    seterrorcode(SOUND_ERROR_FINISH);
+    return false;
+  }
 
   return true;
 }

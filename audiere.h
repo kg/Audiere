@@ -2,11 +2,9 @@
 #define AUDIERE_H
 
 
-/* extern */
+/* extern C */
 #ifdef __cplusplus
-  #define ADR_EXTERN_C extern "C"
-#else
-  #define ADR_EXTERN_C extern
+extern "C" {
 #endif
 
 
@@ -34,8 +32,9 @@ typedef int  (ADR_CALL *ADR_FILE_TELL)(ADR_FILE file);
 
 
 /* audiere opaque types */
-typedef struct ADR_CONTEXTimp* ADR_CONTEXT;
-typedef struct ADR_STREAMimp*  ADR_STREAM;
+typedef struct ADR_CONTEXT_ATTRimp* ADR_CONTEXT_ATTR;
+typedef struct ADR_CONTEXTimp*      ADR_CONTEXT;
+typedef struct ADR_STREAMimp*       ADR_STREAM;
 
 
 /* boolean */
@@ -48,40 +47,93 @@ typedef int ADR_BOOL;
 /*
  * AdrGetVersion()
  *
- * Returns Audiere version string
+ * Returns Audiere version string.
  *
  */
-ADR_EXTERN_C const char* ADR_CALL AdrGetVersion(void);
+const char* ADR_CALL AdrGetVersion(void);
 
 
 /*
- * AdrCreateContext(output_device, parameters,
- *                  opaque, open, close, read, seek, tell)
+ * AdrCreateContextAttr()
  *
- * Returns a new Audiere context or NULL if failure.
+ * Returns context attributes object with values set to defaults.
  *
- * output_device - string that represents the output device you want to use
- *                 "autodetect" will just give you a device
- *                 "null" is no sound
- * parameters    - comma-delimited list of output device-specific parameters
- *                 for example, "buffer=100,rate=44100"
- * opaque        - opaque handle passed into file I/O functions
- * open          - open file callback
- * close         - close file callback
- * read          - read from file callback
- * seek          - seek in file callback
- * tell          - get position in file callback
+ * output_device = ""
+ * parameters    = ""
+ * opaque        = 0
+ * open          = default open
+ * close         = default close
+ * read          = default read
+ * seek          = default seek
+ * tell          = default tell
  *
  */
-ADR_EXTERN_C ADR_CONTEXT ADR_CALL AdrCreateContext(
-  const char* output_device,
-  const char* parameters,
-  void* opaque,
+ADR_CONTEXT_ATTR ADR_CALL AdrCreateContextAttr(void);
+
+
+/*
+ * AdrDestroyContextAttr(attr)
+ *
+ * Destroys a context attributes object.
+ *
+ */
+void ADR_CALL AdrDestroyContextAttr(
+  ADR_CONTEXT_ATTR attr);
+
+
+/*
+ * output_device -- 
+ *   string that represents the output device you want to use
+ *   "" or "autodetect" will search for a good default device
+ *   "null" is no sound
+ *
+ */
+void ADR_CALL AdrContextAttrSetOutputDevice(
+  ADR_CONTEXT_ATTR attr,
+  const char* output_device);
+
+/*
+ * parameters --
+ *   comma-delimited list of output device-specific parameters
+ *   for example, "buffer=100,rate=44100"
+ *
+ */
+void ADR_CALL AdrContextAttrSetParameters(
+  ADR_CONTEXT_ATTR attr,
+  const char* parameters);
+
+/*
+ * opaque --
+ *   opaque handle passed into file I/O functions
+ *
+ */
+void ADR_CALL AdrContextAttrSetOpaque(
+  ADR_CONTEXT_ATTR attr,
+  void* opaque);
+
+/*
+ * file callbacks
+ *
+ */
+void ADR_CALL AdrContextAttrSetFileCallbacks(
+  ADR_CONTEXT_ATTR attr,
   ADR_FILE_OPEN  open,
   ADR_FILE_CLOSE close,
   ADR_FILE_READ  read,
   ADR_FILE_SEEK  seek,
   ADR_FILE_TELL  tell);
+
+
+/*
+ * AdrCreateContext(attributes)
+ *
+ * Returns a new Audiere context or NULL if failure.
+ *
+ * attributes - set of context attributes, or NULL for defaults
+ *
+ */
+ADR_CONTEXT ADR_CALL AdrCreateContext(
+  ADR_CONTEXT_ATTR attr);
 
 
 /*
@@ -93,7 +145,7 @@ ADR_EXTERN_C ADR_CONTEXT ADR_CALL AdrCreateContext(
  * context - the context to destroy, of course  ;)
  *
  */
-ADR_EXTERN_C void ADR_CALL AdrDestroyContext(
+void ADR_CALL AdrDestroyContext(
   ADR_CONTEXT context);
 
 
@@ -106,7 +158,7 @@ ADR_EXTERN_C void ADR_CALL AdrDestroyContext(
  * filename - UTF-8 filename passed into file open callback
  *
  */
-ADR_EXTERN_C ADR_STREAM ADR_CALL AdrOpenStream(
+ADR_STREAM ADR_CALL AdrOpenStream(
   ADR_CONTEXT context,
   const char* filename);
 
@@ -117,7 +169,7 @@ ADR_EXTERN_C ADR_STREAM ADR_CALL AdrOpenStream(
  * Closes a stream, halting audio output.
  *
  */
-ADR_EXTERN_C void ADR_CALL AdrCloseStream(
+void ADR_CALL AdrCloseStream(
   ADR_STREAM stream);
 
 
@@ -127,7 +179,7 @@ ADR_EXTERN_C void ADR_CALL AdrCloseStream(
  * Begins playback of an audio stream.
  *
  */
-ADR_EXTERN_C void ADR_CALL AdrPlayStream(
+void ADR_CALL AdrPlayStream(
   ADR_STREAM stream);
 
 
@@ -138,7 +190,7 @@ ADR_EXTERN_C void ADR_CALL AdrPlayStream(
  * beginning.
  *
  */
-ADR_EXTERN_C void ADR_CALL AdrPauseStream(
+void ADR_CALL AdrPauseStream(
   ADR_STREAM stream);
 
 
@@ -149,7 +201,7 @@ ADR_EXTERN_C void ADR_CALL AdrPauseStream(
  * This may be called at any time.
  *
  */
-ADR_EXTERN_C void ADR_CALL AdrResetStream(
+void ADR_CALL AdrResetStream(
   ADR_STREAM stream);
 
 
@@ -159,7 +211,7 @@ ADR_EXTERN_C void ADR_CALL AdrResetStream(
  * Returns ADR_TRUE if the stream is currently playing audio.
  *
  */
-ADR_EXTERN_C ADR_BOOL ADR_CALL AdrIsStreamPlaying(
+ADR_BOOL ADR_CALL AdrIsStreamPlaying(
   ADR_STREAM stream);
 
 
@@ -169,7 +221,7 @@ ADR_EXTERN_C ADR_BOOL ADR_CALL AdrIsStreamPlaying(
  * If repeat is on and playback reaches the end of the stream, it will
  * automatically reset the stream and continue playback.
  */
-ADR_EXTERN_C void ADR_CALL AdrSetStreamRepeat(
+void ADR_CALL AdrSetStreamRepeat(
   ADR_STREAM stream,
   ADR_BOOL repeat);
 
@@ -180,7 +232,7 @@ ADR_EXTERN_C void ADR_CALL AdrSetStreamRepeat(
  * Returns the repeat flag for the given stream.  Repeat defaults to false.
  *
  */
-ADR_EXTERN_C ADR_BOOL ADR_CALL AdrGetStreamRepeat(
+ADR_BOOL ADR_CALL AdrGetStreamRepeat(
   ADR_STREAM);
 
 
@@ -192,7 +244,7 @@ ADR_EXTERN_C ADR_BOOL ADR_CALL AdrGetStreamRepeat(
  * ADR_VOLUME_MAX is full volume.
  *
  */
-ADR_EXTERN_C void ADR_CALL AdrSetStreamVolume(
+void ADR_CALL AdrSetStreamVolume(
   ADR_STREAM stream,
   int volume);
 
@@ -203,8 +255,13 @@ ADR_EXTERN_C void ADR_CALL AdrSetStreamVolume(
  * Returns the current stream volume.
  *
  */
-ADR_EXTERN_C int ADR_CALL AdrGetStreamVolume(
+int ADR_CALL AdrGetStreamVolume(
   ADR_STREAM stream);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

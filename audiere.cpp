@@ -1,3 +1,4 @@
+#include <string>
 #include <string.h>
 #include <ctype.h>
 #include <acoustique.h>
@@ -5,6 +6,19 @@
 #include "file.hpp"
 #include "output.hpp"
 #include "threads.hpp"
+
+
+struct ADR_CONTEXT_ATTRimp
+{
+  std::string    output_device;
+  std::string    parameters;
+  void*          opaque;
+  ADR_FILE_OPEN  open;
+  ADR_FILE_CLOSE close;
+  ADR_FILE_READ  read;
+  ADR_FILE_SEEK  seek;
+  ADR_FILE_TELL  tell;
+};
 
 
 struct ADR_CONTEXTimp
@@ -112,38 +126,108 @@ const char* ADR_CALL AdrGetVersion()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ADR_CONTEXT ADR_CALL AdrCreateContext(
-  const char* output_device,
-  const char* parameters,
-  void* opaque,
-  ADR_FILE_OPEN open,
-  ADR_FILE_CLOSE close,
-  ADR_FILE_READ read,
-  ADR_FILE_SEEK seek,
-  ADR_FILE_TELL tell)
+ADR_CONTEXT_ATTR ADR_CALL AdrCreateContextAttr()
 {
-  // if any of the file callbacks are NULL, use the default ones
+  ADR_CONTEXT_ATTR attr = new ADR_CONTEXT_ATTRimp;
+  attr->output_device = "";
+  attr->parameters    = "";
+  attr->opaque        = 0;
+  attr->open          = DefaultFileOpen;
+  attr->close         = DefaultFileClose;
+  attr->read          = DefaultFileRead;
+  attr->seek          = DefaultFileSeek;
+  attr->tell          = DefaultFileTell;
+  return attr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void ADR_CALL AdrDestroyContextAttr(
+  ADR_CONTEXT_ATTR attr)
+{
+  delete attr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void ADR_CALL AdrContextAttrSetOutputDevice(
+  ADR_CONTEXT_ATTR attr,
+  const char* output_device)
+{
+  attr->output_device = output_device;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void ADR_CALL AdrContextAttrSetParameters(
+  ADR_CONTEXT_ATTR attr,
+  const char* parameters)
+{
+  attr->parameters = parameters;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void ADR_CALL AdrContextAttrSetOpaque(
+  ADR_CONTEXT_ATTR attr,
+  void* opaque)
+{
+  attr->opaque = opaque;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void ADR_CALL AdrContextAttrSetFileCallbacks(
+  ADR_CONTEXT_ATTR attr,
+  ADR_FILE_OPEN  open,
+  ADR_FILE_CLOSE close,
+  ADR_FILE_READ  read,
+  ADR_FILE_SEEK  seek,
+  ADR_FILE_TELL  tell)
+{
   if (!open || !close || !read || !seek || !tell) {
-    open  = DefaultFileOpen;
-    close = DefaultFileClose;
-    read  = DefaultFileRead;
-    seek  = DefaultFileSeek;
-    tell  = DefaultFileTell;
+    attr->open  = DefaultFileOpen;
+    attr->close = DefaultFileClose;
+    attr->read  = DefaultFileRead;
+    attr->seek  = DefaultFileSeek;
+    attr->tell  = DefaultFileTell;
+  } else {
+    attr->open  = open;
+    attr->close = close;
+    attr->read  = read;
+    attr->seek  = seek;
+    attr->tell  = tell;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+ADR_CONTEXT ADR_CALL AdrCreateContext(
+  ADR_CONTEXT_ATTR attr)
+{
+  // take advantage of the fact that AdrDestroyConetextAttr is just a
+  // |delete attr|
+  std::auto_ptr<ADR_CONTEXT_ATTRimp> default_attr;
+  if (!attr) {
+    default_attr = std::auto_ptr<ADR_CONTEXT_ATTRimp>(AdrCreateContextAttr());
+    attr = default_attr.get();
   }
 
   // initialize the context
   ADR_CONTEXT context = new ADR_CONTEXTimp;
-  context->opaque = opaque;
-  context->open   = open;
-  context->close  = close;
-  context->read   = read;
-  context->seek   = seek;
-  context->tell   = tell;
-  
+  context->opaque = attr->opaque;
+  context->open   = attr->open;
+  context->close  = attr->close;
+  context->read   = attr->read;
+  context->seek   = attr->seek;
+  context->tell   = attr->tell;
+
   context->refcount = 1;
 
   // create an output context
-  context->output_context = OpenContext(output_device, parameters);
+  context->output_context = OpenContext(
+    attr->output_device.c_str(),
+    attr->parameters.c_str());
   if (!context->output_context) {
     delete context;
     return NULL;

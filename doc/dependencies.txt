@@ -1,0 +1,7 @@
+Audiere depends on libogg, libvorbis, and libvorbisfile in UNIX.  In
+Windows, those sources are included within the source tree.  Those
+libraries are available at http://www.vorbis.com/
+
+wxPlayer depends on wxWindows 2.2.9.  The VC7 build crashes, however.
+See wxPlayer.cpp for more details.  Get wxWindows at
+http://www.wxwindows.org/

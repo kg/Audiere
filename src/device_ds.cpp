@@ -13,7 +13,8 @@ namespace audiere {
   // DirectSound treats volumes as decibels (exponential growth like the Richter
   // scale).  We want a linear ramp.  Do the conversion!
   inline int Volume_AudiereToDirectSound(float volume) {
-    // I can't figure out the proper math, and this comes close enough...
+    // The proper math doesn't sound right at all, so here is something that
+    // sounds about right.
     double attenuate = pow(1 - volume, 3);
     return int(-10000 * attenuate);
   }

@@ -19,7 +19,7 @@ namespace audiere {
       int& channel_count,
       int& sample_rate,
       SampleFormat& sample_format);
-    int read(int sample_count, void* samples);
+    int read(int frame_count, void* samples);
     void reset();
 
   private:
@@ -37,9 +37,9 @@ namespace audiere {
 
     // from data chunk
     int m_data_chunk_location; // bytes
-    int m_data_chunk_length;   // in samples
+    int m_data_chunk_length;   // in frames
 
-    int m_samples_left_in_chunk;
+    int m_frames_left_in_chunk;
   };
 
 }

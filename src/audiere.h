@@ -230,15 +230,15 @@ namespace audiere {
       SampleFormat& sample_format) = 0;
 
     /**
-     * Read sample_count samples into buffer.  buffer must be at least
-     * |GetSampleSize(format) * sample_count| bytes long.
+     * Read frame_count samples into buffer.  buffer must be at least
+     * |frame_count * GetSampleSize(format) * channel_count| bytes long.
      *
-     * @param sample_count  number of samples to read
-     * @param samples       buffer to store samples in
+     * @param frame_count  number of frames to read
+     * @param buffer       buffer to store samples in
      *
-     * @return  number of samples actually read
+     * @return  number of frames actually read
      */
-    virtual int read(int sample_count, void* samples) = 0;
+    virtual int read(int frame_count, void* buffer) = 0;
 
     /**
      * Reset the sample source.  This has the same effect as setPosition(0)
@@ -253,7 +253,7 @@ namespace audiere {
     virtual bool isSeekable() = 0;
 
     /**
-     * @return  number of samples in the stream, or 0 if the stream is not
+     * @return  number of frames in the stream, or 0 if the stream is not
      *          seekable
      */
     virtual int getLength() = 0;
@@ -261,13 +261,15 @@ namespace audiere {
     /**
      * Sets the current position within the sample source.  If the stream
      * is not seekable, this method does nothing.
+     *
+     * @param position  current position in frames
      */
     virtual void setPosition(int position) = 0;
 
     /**
      * Returns the current position within the sample source.
      *
-     * @return  current position
+     * @return  current position in frames
      */
     virtual int getPosition() = 0;
   };
@@ -356,7 +358,7 @@ namespace audiere {
     virtual bool isSeekable() = 0;
 
     /**
-     * @return  number of samples in the stream, or 0 if the stream is not
+     * @return  number of frames in the stream, or 0 if the stream is not
      *          seekable
      */
     virtual int getLength() = 0;
@@ -364,13 +366,15 @@ namespace audiere {
     /**
      * Sets the current position within the sample source.  If the stream
      * is not seekable, this method does nothing.
+     *
+     * @param position  current position in frames
      */
     virtual void setPosition(int position) = 0;
 
     /**
      * Returns the current position within the sample source.
      *
-     * @return  current position
+     * @return  current position in frames
      */
     virtual int getPosition() = 0;
   };
@@ -412,18 +416,18 @@ namespace audiere {
     virtual OutputStream* openStream(SampleSource* source) = 0;
 
     /**
-     * Open a single buffer with the specified PCM data.  This is more
-     * efficient than streaming and works on a larger variety of audio
-     * devices.  In some implementations, this may download the audio
-     * data to the sound card's memory itself.
+     * Open a single buffer with the specified PCM data.  This is sometimes
+     * more efficient than streaming and works on a larger variety of audio
+     * devices.  In some implementations, this may download the audio data
+     * to the sound card's memory itself.
      *
      * @param samples  Buffer containing sample data.  openBuffer() does
      *                 not take ownership of the memory.  The application
      *                 is responsible for freeing it.  There must be at
-     *                 least |sample_count * channel_count *
+     *                 least |frame_count * channel_count *
      *                 GetSampleSize(sample_format)| bytes in the buffer.
      *
-     * @param sample_count  Number of samples in the buffer.
+     * @param frame_count  Number of frames in the buffer.
      *
      * @param channel_count  Number of audio channels.  1 = mono, 2 = stereo.
      *
@@ -435,7 +439,7 @@ namespace audiere {
      */
     virtual OutputStream* openBuffer(
       void* samples,
-      int sample_count,
+      int frame_count,
       int channel_count,
       int sample_rate,
       SampleFormat sample_format) = 0;
@@ -478,7 +482,7 @@ namespace audiere {
 
   /**
    * Get the size of a sample in a specific sample format.
-   * This is commonly used to know how many bytes a chunk of
+   * This is commonly used to determine how many bytes a chunk of
    * PCM data will take.
    *
    * @return  Number of bytes a single sample in the specified format

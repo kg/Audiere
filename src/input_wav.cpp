@@ -20,7 +20,7 @@ namespace audiere {
     m_data_chunk_location = 0;
     m_data_chunk_length   = 0;
 
-    m_samples_left_in_chunk = 0;
+    m_frames_left_in_chunk = 0;
   }
 
 
@@ -72,29 +72,28 @@ namespace audiere {
 
 
   int
-  WAVInputStream::read(int sample_count, void* samples) {
-    if (m_samples_left_in_chunk == 0) {
+  WAVInputStream::read(int frame_count, void* buffer) {
+    if (m_frames_left_in_chunk == 0) {
       return 0;
     }
 
-    const int samples_to_read = std::min(sample_count, m_samples_left_in_chunk);
-    const int frame_size =
-      m_channel_count * GetSampleSize(m_sample_format);
-    const int bytes_to_read = samples_to_read * frame_size;
+    const int frames_to_read = std::min(frame_count, m_frames_left_in_chunk);
+    const int frame_size = m_channel_count * GetSampleSize(m_sample_format);
+    const int bytes_to_read = frames_to_read * frame_size;
   
-    const int read = m_file->read(samples, bytes_to_read);
-    const int samples_read = read / frame_size;
+    const int read = m_file->read(buffer, bytes_to_read);
+    const int frames_read = read / frame_size;
 
     // assume that if we didn't get a full read, we're done
     if (read != bytes_to_read) {
-      m_samples_left_in_chunk = 0;
-      return samples_read;
+      m_frames_left_in_chunk = 0;
+      return frames_read;
     }
 
 #if WORDS_BIGENDIAN
     if (m_sample_format == SF_S16) {
       // make little endian into host endian
-      u8* out = (u8*)samples;
+      u8* out = (u8*)buffer;
       for (int i = 0; i < samples_read * m_channel_count; ++i) {
         std::swap(out[0], out[1]);
         out += 2;
@@ -102,15 +101,15 @@ namespace audiere {
     }
 #endif
 
-    m_samples_left_in_chunk -= samples_read;
-    return samples_read;
+    m_frames_left_in_chunk -= frames_read;
+    return frames_read;
   }
 
 
   void
   WAVInputStream::reset() {
     // seek to the beginning of the data chunk
-    m_samples_left_in_chunk = m_data_chunk_length;
+    m_frames_left_in_chunk = m_data_chunk_length;
     m_file->seek(m_data_chunk_location, File::BEGIN);
   }
 
@@ -219,12 +218,12 @@ namespace audiere {
       // if we found a data chunk, excellent!
       if (memcmp(chunk_id, "data", 4) == 0) {
 
-        // calculate the sample size so we can truncate the data chunk
-        int sample_size = m_channel_count * GetSampleSize(m_sample_format);
+        // calculate the frame size so we can truncate the data chunk
+        int frame_size = m_channel_count * GetSampleSize(m_sample_format);
 
-        m_data_chunk_location   = m_file->tell();
-        m_data_chunk_length     = chunk_length / sample_size;
-        m_samples_left_in_chunk = m_data_chunk_length;
+        m_data_chunk_location  = m_file->tell();
+        m_data_chunk_length    = chunk_length / frame_size;
+        m_frames_left_in_chunk = m_data_chunk_length;
         return true;
 
       } else {
@@ -242,12 +241,7 @@ namespace audiere {
 
   bool
   WAVInputStream::SkipBytes(int size) {
-    if (m_file->seek(size, File::CURRENT)) {
-      m_samples_left_in_chunk = m_data_chunk_length;
-      return true;
-    } else {
-      return false;
-    }
+    return m_file->seek(size, File::CURRENT);
   }
 
 

@@ -490,6 +490,44 @@ namespace audiere {
   };
 
 
+  /**
+   * Defines the type of SoundEffect objects.  @see SoundEffect
+   */
+  enum SoundEffectType {
+    SINGLE,
+    MULTIPLE,
+  };
+
+
+  /**
+   * SoundEffect is a conveneence class which provides a simple
+   * mechanism for basic sound playback.  There are two types of sound
+   * effects: SINGLE and MULTIPLE.  SINGLE sound effects only allow
+   * the sound to be played once at a time.  MULTIPLE sound effects
+   * always open a new stream to the audio device for each time it is
+   * played (cleaning up or reusing old streams if possible).
+   */
+  class SoundEffect : public RefCounted {
+  protected:
+    ~SoundEffect() { }
+
+  public:
+    /**
+     * Trigger playback of the sound.  If the SoundEffect is of type
+     * SINGLE, this plays the sound if it isn't playing yet, and
+     * starts it again if it is.  If the SoundEffect is of type
+     * MULTIPLE, play() simply starts playing the sound again.
+     */
+    virtual void ADR_CALL play() = 0;
+
+    /**
+     * If the sound is of type SINGLE, stop the sound.  If it is of
+     * type MULTIPLE, stop all playing instances of the sound.
+     */
+    virtual void ADR_CALL stop() = 0;
+  };
+
+
   /// PRIVATE API - for internal use only
   namespace hidden {
 
@@ -520,6 +558,13 @@ namespace audiere {
       int channel_count,
       int sample_rate,
       SampleFormat sample_format);
+    ADR_FUNCTION(SampleBuffer*, AdrCreateSampleBufferFromSource)(
+      SampleSource* source);
+
+    ADR_FUNCTION(SoundEffect*, AdrOpenSoundEffect)(
+      AudioDevice* device,
+      SampleSource* source,
+      SoundEffectType type);
   }
 
 
@@ -712,6 +757,65 @@ namespace audiere {
     return hidden::AdrCreateSampleBuffer(
       samples, frame_count,
       channel_count, sample_rate, sample_format);
+  }
+
+  /**
+   * Create a SampleBuffer object from a SampleSource.
+   *
+   * @param source  Seekable sample source used to create the buffer.
+   *                If the source is not seekable, then the function
+   *                fails.
+   *
+   * @return  new sample buffer if success, 0 otherwise
+   */
+  inline SampleBuffer* CreateSampleBuffer(SampleSource* source) {
+    return hidden::AdrCreateSampleBufferFromSource(source);
+  }
+
+  /**
+   * Open a SoundEffect object from the given sample source and sound
+   * effect type.  @see SoundEffect
+   *
+   * @param device  AudioDevice on which the sound is played.
+   *
+   * @param source  The sample source used to feed the sound effect
+   *                with data.
+   *
+   * @param type  The type of the sound effect.  If type is MULTIPLE,
+   *              the source must be seekable.
+   *
+   * @return  new SoundEffect object if successful, 0 otherwise
+   */
+  inline SoundEffect* OpenSoundEffect(
+    AudioDevice* device,
+    SampleSource* source,
+    SoundEffectType type)
+  {
+    return hidden::AdrOpenSoundEffect(device, source, type);
+  }
+
+  /**
+   * Calls OpenSoundEffect(AudioDevice*, SampleSource*,
+   * SoundEffectType) with a sample source created from the filename.
+   */
+  inline SoundEffect* OpenSoundEffect(
+    AudioDevice* device,
+    const char* filename,
+    SoundEffectType type)
+  {
+    return OpenSoundEffect(device, OpenSampleSource(filename), type);
+  }
+
+  /**
+   * Calls OpenSoundEffect(AudioDevice*, SampleSource*,
+   * SoundEffectType) with a sample source created from the file.
+   */
+  inline SoundEffect* OpenSoundEffect(
+    AudioDevice* device,
+    File* file,
+    SoundEffectType type)
+  {
+    return OpenSoundEffect(device, OpenSampleSource(file), type);
   }
 }
 

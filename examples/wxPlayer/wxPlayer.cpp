@@ -20,6 +20,9 @@ enum {
   DEVICE_CREATE_SQUARE_WAVE,
   DEVICE_CREATE_WHITE_NOISE,
   DEVICE_CREATE_PINK_NOISE,
+  DEVICE_OPEN_SINGLE_EFFECT,
+  DEVICE_OPEN_MULTIPLE_EFFECT,
+  DEVICE_CLOSE_WINDOW,
   DEVICE_CLOSE,
 
   STREAM_PLAY,
@@ -30,6 +33,9 @@ enum {
   STREAM_PAN,
   STREAM_POS,
   STREAM_UPDATE,
+
+  EFFECT_PLAY,
+  EFFECT_STOP,
 };
 
 
@@ -184,6 +190,48 @@ BEGIN_EVENT_TABLE(StreamFrame, wxMDIChildFrame)
 END_EVENT_TABLE()
 
 
+class SoundEffectFrame : public wxMDIChildFrame {
+public:
+  SoundEffectFrame(wxMDIParentFrame* parent, const wxString& title, SoundEffect* effect)
+  : wxMDIChildFrame(parent, -1, title)
+  {
+    m_effect = effect;
+
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(
+      new wxButton(this, EFFECT_PLAY, "Play"),
+      1, wxEXPAND | wxALL, 4);
+    sizer->Add(
+      new wxButton(this, EFFECT_STOP, "Stop"),
+      1, wxEXPAND | wxALL, 4);
+
+    SetAutoLayout(true);
+    SetSizer(sizer);
+
+    sizer->Fit(this);
+    sizer->SetSizeHints(this);
+  }
+
+  void OnPlay() {
+    m_effect->play();
+  }
+
+  void OnStop() {
+    m_effect->stop();
+  }
+
+private:
+  RefPtr<SoundEffect> m_effect;
+
+  DECLARE_EVENT_TABLE();
+};
+
+BEGIN_EVENT_TABLE(SoundEffectFrame, wxMDIChildFrame)
+  EVT_BUTTON(EFFECT_PLAY,  SoundEffectFrame::OnPlay)
+  EVT_BUTTON(EFFECT_STOP,  SoundEffectFrame::OnStop)
+END_EVENT_TABLE()
+
+
 class DeviceFrame : public wxMDIParentFrame {
 public:
   DeviceFrame(AudioDevice* device, const wxString& device_name)
@@ -192,16 +240,21 @@ public:
     m_device = device;
 
     wxMenu* fileMenu = new wxMenu();
-    fileMenu->Append(DEVICE_NEW_DEVICE,         "&New Device...");
+    fileMenu->Append(DEVICE_NEW_DEVICE,           "&New Device...");
     fileMenu->AppendSeparator();
-    fileMenu->Append(DEVICE_OPEN_STREAM,        "&Open Stream...");
-    fileMenu->Append(DEVICE_OPEN_SOUND,         "Open &Sound...");
-    fileMenu->Append(DEVICE_CREATE_TONE,        "Create &Tone...");
-    fileMenu->Append(DEVICE_CREATE_SQUARE_WAVE, "Create S&quare Wave...");
-    fileMenu->Append(DEVICE_CREATE_WHITE_NOISE, "Create &White Noise");
-    fileMenu->Append(DEVICE_CREATE_PINK_NOISE,  "Create &Pink Noise");
+    fileMenu->Append(DEVICE_OPEN_STREAM,          "&Open Stream...");
+    fileMenu->Append(DEVICE_OPEN_SOUND,           "Open &Sound...");
     fileMenu->AppendSeparator();
-    fileMenu->Append(DEVICE_CLOSE,              "&Close Device");
+    fileMenu->Append(DEVICE_CREATE_TONE,          "Create &Tone...");
+    fileMenu->Append(DEVICE_CREATE_SQUARE_WAVE,   "Create S&quare Wave...");
+    fileMenu->Append(DEVICE_CREATE_WHITE_NOISE,   "Create &White Noise");
+    fileMenu->Append(DEVICE_CREATE_PINK_NOISE,    "Create &Pink Noise");
+    fileMenu->AppendSeparator();
+    fileMenu->Append(DEVICE_OPEN_SINGLE_EFFECT,   "Open &Effect (Single)...");
+    fileMenu->Append(DEVICE_OPEN_MULTIPLE_EFFECT, "Open Effect (&Multiple)...");
+    fileMenu->AppendSeparator();
+    fileMenu->Append(DEVICE_CLOSE_WINDOW,         "Close C&urrent Window");
+    fileMenu->Append(DEVICE_CLOSE,                "&Close Device");
 
     wxMenuBar* menuBar = new wxMenuBar();
     menuBar->Append(fileMenu, "&Device");
@@ -246,7 +299,7 @@ public:
     }
 
     // get the basename of the path for the window title
-    wxString basename = wxFileNameFromPath(filename);;
+    wxString basename = wxFileNameFromPath(filename);
 
     wxString title;
     title.sprintf("Stream: %s", basename.c_str());
@@ -333,6 +386,41 @@ public:
     }
   }
 
+  void OnDeviceOpenSingleEffect() {
+    DoOpenEffect(SINGLE, "Single");
+  }
+
+  void OnDeviceOpenMultipleEffect() {
+    DoOpenEffect(MULTIPLE, "Multiple");
+  }
+
+  void DoOpenEffect(SoundEffectType type, wxString typestring) {
+    wxString filename(GetSoundFile());
+    if (filename.empty()) {
+      return;
+    }
+
+    SoundEffect* effect = OpenSoundEffect(m_device.get(), filename, type);
+    if (effect) {
+      wxString basename = wxFileNameFromPath(filename);
+      wxString title;
+      title.sprintf("Sound Effect (%s): %s",
+                    typestring.c_str(), basename.c_str());
+      new SoundEffectFrame(this, title, effect);
+    } else {
+      wxMessageBox(
+        "Could not open sound effect: " + filename,
+        "Open Sound Effect", wxOK | wxCENTRE, this);
+    }
+  }
+
+  void OnDeviceCloseCurrentWindow() {
+    wxMDIChildFrame* frame = GetActiveChild();
+    if (frame) {
+      frame->Close();
+    }
+  }
+
   void OnDeviceClose() {
     Close();
   }
@@ -345,14 +433,17 @@ private:
 
 
 BEGIN_EVENT_TABLE(DeviceFrame, wxMDIParentFrame)
-  EVT_MENU(DEVICE_NEW_DEVICE,         DeviceFrame::OnDeviceNewDevice)
-  EVT_MENU(DEVICE_OPEN_STREAM,        DeviceFrame::OnDeviceOpenStream)
-  EVT_MENU(DEVICE_OPEN_SOUND,         DeviceFrame::OnDeviceOpenSound)
-  EVT_MENU(DEVICE_CREATE_TONE,        DeviceFrame::OnDeviceCreateTone)
-  EVT_MENU(DEVICE_CREATE_SQUARE_WAVE, DeviceFrame::OnDeviceCreateSquareWave)
-  EVT_MENU(DEVICE_CREATE_WHITE_NOISE, DeviceFrame::OnDeviceCreateWhiteNoise)
-  EVT_MENU(DEVICE_CREATE_PINK_NOISE,  DeviceFrame::OnDeviceCreatePinkNoise)
-  EVT_MENU(DEVICE_CLOSE,              DeviceFrame::OnDeviceClose)
+  EVT_MENU(DEVICE_NEW_DEVICE,           DeviceFrame::OnDeviceNewDevice)
+  EVT_MENU(DEVICE_OPEN_STREAM,          DeviceFrame::OnDeviceOpenStream)
+  EVT_MENU(DEVICE_OPEN_SOUND,           DeviceFrame::OnDeviceOpenSound)
+  EVT_MENU(DEVICE_CREATE_TONE,          DeviceFrame::OnDeviceCreateTone)
+  EVT_MENU(DEVICE_CREATE_SQUARE_WAVE,   DeviceFrame::OnDeviceCreateSquareWave)
+  EVT_MENU(DEVICE_CREATE_WHITE_NOISE,   DeviceFrame::OnDeviceCreateWhiteNoise)
+  EVT_MENU(DEVICE_CREATE_PINK_NOISE,    DeviceFrame::OnDeviceCreatePinkNoise)
+  EVT_MENU(DEVICE_OPEN_SINGLE_EFFECT,   DeviceFrame::OnDeviceOpenSingleEffect)
+  EVT_MENU(DEVICE_OPEN_MULTIPLE_EFFECT, DeviceFrame::OnDeviceOpenMultipleEffect)
+  EVT_MENU(DEVICE_CLOSE_WINDOW,         DeviceFrame::OnDeviceCloseCurrentWindow)
+  EVT_MENU(DEVICE_CLOSE,                DeviceFrame::OnDeviceClose)
 END_EVENT_TABLE()
 
 

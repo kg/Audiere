@@ -16,6 +16,7 @@ sources = Split("""
     repeatable
     resampler
     sample_buffer
+    sound_effect
     square_wave
     sound
     threads_posix

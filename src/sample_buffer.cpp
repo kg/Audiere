@@ -131,4 +131,32 @@ namespace audiere {
       channel_count, sample_rate, sample_format);
   }
 
+  ADR_EXPORT(SampleBuffer*, AdrCreateSampleBufferFromSource)(
+    SampleSource* source)
+  {
+    // if there is no source or it isn't seekable, we can't make a
+    // buffer from it
+    if (!source || !source->isSeekable()) {
+      return 0;
+    }
+
+    int length = source->getLength();
+    int channel_count, sample_rate;
+    SampleFormat sample_format;
+    source->getFormat(channel_count, sample_rate, sample_format);
+
+    int stream_length_bytes = length *
+      channel_count * GetSampleSize(sample_format);
+    u8* buffer = new u8[stream_length_bytes];
+
+    source->setPosition(0);
+    source->read(length, buffer);
+
+    SampleBuffer* sb = CreateSampleBuffer(
+      buffer, length, channel_count, sample_rate, sample_format);
+
+    delete[] buffer;
+    return sb;
+  }
+
 }

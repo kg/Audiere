@@ -1,3 +1,9 @@
+2002.09.20
+
+  added the SoundEffect convenience class for simple sound playback
+  updated wxPlayer with SoundEffect stuff
+  added menu item to close wxPlayer so you can close child windows in wxGTK
+
 2002.09.19
 
   added square wave generation

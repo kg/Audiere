@@ -55,6 +55,7 @@ libaudiere_la_SOURCES = \
 	resampler.h \
 	sample_buffer.cpp \
 	sound.cpp \
+	sound_effect.cpp \
 	square_wave.cpp \
 	threads_posix.cpp \
 	threads.h \

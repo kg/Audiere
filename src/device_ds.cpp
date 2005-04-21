@@ -152,20 +152,24 @@ namespace audiere {
   DSAudioDevice::update() {
     ADR_GUARD("DSAudioDevice::update");
 
-    SYNCHRONIZED(this);
+    {
+      /* Put the critical section in its own scope so we don't hold the lock
+         while sleeping. --MattC */
+      SYNCHRONIZED(this);
 
-    // enumerate all open streams
-    StreamList::iterator i = m_open_streams.begin();
-    while (i != m_open_streams.end()) {
-      DSOutputStream* s = *i++;
-      s->update();
-    }
+      // enumerate all open streams
+      StreamList::iterator i = m_open_streams.begin();
+      while (i != m_open_streams.end()) {
+        DSOutputStream* s = *i++;
+        s->update();
+      }
 
-    // enumerate all open buffers
-    BufferList::iterator j = m_open_buffers.begin();
-    while (j != m_open_buffers.end()) {
-      DSOutputBuffer* b = *j++;
-      b->update();
+      // enumerate all open buffers
+      BufferList::iterator j = m_open_buffers.begin();
+      while (j != m_open_buffers.end()) {
+        DSOutputBuffer* b = *j++;
+        b->update();
+      }
     }
 
     Sleep(50);

@@ -13,7 +13,7 @@ def install(target, source, files):
 # normal C++ interface
 install('bin', 'vc6/bin/Release', ['audiere.dll', 'wxPlayer.exe'])
 install('doc', 'doc',
-        ['changelog.txt', 'cvs.txt', 'dependencies.txt',
+        ['authors.txt', 'changelog.txt', 'cvs.txt', 'dependencies.txt',
          'device_parameters.txt', 'faq.txt', 'glossary.txt', 'license.txt',
          'overview.txt', 'readme.txt', 'release-howto.txt',
          'small-buffers.txt', 'tutorial.txt'])

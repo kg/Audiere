@@ -43,15 +43,6 @@ StreamFrame::StreamFrame(
   m_stream_is_seekable = stream->isSeekable();
   m_stream_length = stream->getLength();
 
-  m_playing_label = new wxStaticText(this, -1, wxT("Stopped"));
-  m_repeating = new wxCheckBox(this, STREAM_REPEAT, wxT("Repeating"));
-  m_vpp_label = new wxStaticText(this, -1, wxT("Volume - Pan - Pitch"));
-  m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
-  m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
-  m_pitch  = new wxSlider(this, STREAM_PITCH,  100, 50, 200);
-  m_length_pos_label = new wxStaticText(this, -1, wxT("Length - Pos"));
-  m_pos    = new wxSlider(this, STREAM_POS,    0, 0, 1000);
-
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(
     new wxButton(this, STREAM_PLAY, wxT("Play")),
@@ -62,13 +53,21 @@ StreamFrame::StreamFrame(
   sizer->Add(
     new wxButton(this, STREAM_RESET, wxT("Reset")),
     1, wxEXPAND | wxALL, 4);
+  m_playing_label = new wxStaticText(this, -1, wxT("Stopped"));
   sizer->Add(m_playing_label,    1, wxEXPAND | wxALL, 4);
+  m_repeating = new wxCheckBox(this, STREAM_REPEAT, wxT("Repeating"));
   sizer->Add(m_repeating,        1, wxEXPAND | wxALL, 4);
+  m_vpp_label = new wxStaticText(this, -1, wxT("Volume - Pan - Pitch"));
   sizer->Add(m_vpp_label,        1, wxEXPAND | wxALL, 4);
+  m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
   sizer->Add(m_volume,           1, wxEXPAND | wxALL, 4);
+  m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
   sizer->Add(m_pan,              1, wxEXPAND | wxALL, 4);
+  m_pitch  = new wxSlider(this, STREAM_PITCH,  100, 50, 200);
   sizer->Add(m_pitch,            1, wxEXPAND | wxALL, 4);
+  m_length_pos_label = new wxStaticText(this, -1, wxT("Length - Pos"));
   sizer->Add(m_length_pos_label, 1, wxEXPAND | wxALL, 4);
+  m_pos    = new wxSlider(this, STREAM_POS,    0, 0, 1000);
   sizer->Add(m_pos,              1, wxEXPAND | wxALL, 4);
 
   wxButton* infoButton = new wxButton(

@@ -22,11 +22,6 @@ SoundEffectFrame::SoundEffectFrame(wxMDIParentFrame* parent, const wxString& tit
 {
   m_effect = effect;
 
-  m_vpp_label = new wxStaticText(this, -1, wxT("Volume - Pan - Pitch"));
-  m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
-  m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
-  m_pitch  = new wxSlider(this, STREAM_PITCH,  100, 50, 200);
-
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(
     new wxButton(this, EFFECT_PLAY, wxT("Play")),
@@ -34,9 +29,13 @@ SoundEffectFrame::SoundEffectFrame(wxMDIParentFrame* parent, const wxString& tit
   sizer->Add(
     new wxButton(this, EFFECT_STOP, wxT("Stop")),
     1, wxEXPAND | wxALL, 4);
+  m_vpp_label = new wxStaticText(this, -1, wxT("Volume - Pan - Pitch"));
   sizer->Add(m_vpp_label, 1, wxEXPAND | wxALL, 4);
+  m_volume = new wxSlider(this, STREAM_VOLUME, 100, 0,  100);
   sizer->Add(m_volume,    1, wxEXPAND | wxALL, 4);
+  m_pan    = new wxSlider(this, STREAM_PAN,    0, -100, 100);
   sizer->Add(m_pan,       1, wxEXPAND | wxALL, 4);
+  m_pitch  = new wxSlider(this, STREAM_PITCH,  100, 50, 200);
   sizer->Add(m_pitch,     1, wxEXPAND | wxALL, 4);
 
   UpdateVPPLabel();

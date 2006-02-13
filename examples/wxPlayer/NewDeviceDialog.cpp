@@ -18,6 +18,8 @@ NewDeviceDialog::NewDeviceDialog(wxWindow* parent)
   static const wxSize size(300, 22);
 
   audiere::GetSupportedAudioDevices(m_devices);
+  // create vertical sizer
+  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
   m_device = new wxChoice(this, -1, wxDefaultPosition, size);
   m_device->Append(wxT("autodetect: Choose default device"));
@@ -25,22 +27,18 @@ NewDeviceDialog::NewDeviceDialog(wxWindow* parent)
     m_device->Append((CStr2wxString(m_devices[i].name.c_str()) + wxT(": ") + CStr2wxString(m_devices[i].description.c_str())));
   }
   m_device->SetSelection(0);
+  sizer->Add(m_device,     0, wxALIGN_CENTER | wxALL, 5);
 
   // create parameters box
   m_parameters = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, size);
-
-  // create vertical sizer
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(m_device,     0, wxALIGN_CENTER | wxALL, 5);
   sizer->Add(m_parameters, 0, wxALIGN_CENTER | wxALL, 5);
 
   // button bar
-  m_ok     = new wxButton(this, -1, wxT("OK"));
-  m_cancel = new wxButton(this, -1, wxT("Cancel"));
   wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+  m_ok     = new wxButton(this, wxID_OK, wxT("OK"));
   buttonSizer->Add(m_ok,     0, wxALIGN_CENTER | wxALL, 5);
+  m_cancel = new wxButton(this, wxID_CANCEL, wxT("Cancel"));
   buttonSizer->Add(m_cancel, 0, wxALIGN_CENTER | wxALL, 5);
-
   sizer->Add(buttonSizer, 0, wxALIGN_CENTER | wxALL, 4);
 
   SetAutoLayout(true);

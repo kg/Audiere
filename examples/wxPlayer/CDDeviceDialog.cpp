@@ -18,6 +18,8 @@ CDDeviceDialog::CDDeviceDialog(wxWindow* parent)
 
   m_device = 0;
   m_explicit_device = 0;
+  // create vertical sizer
+  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
   if (m_devices.size()) {
     m_device = new wxChoice(this, -1, wxDefaultPosition, wxSize(300, 22));
@@ -25,32 +27,26 @@ CDDeviceDialog::CDDeviceDialog(wxWindow* parent)
       m_device->Append(CStr2wxString(m_devices[i].c_str()));
     }
     m_device->SetSelection(0);
-  } else {
-    m_explicit_device = new wxTextCtrl(this, -1);
-  }
-
-  // button bar
-  m_ok     = new wxButton(this, -1, wxT("OK"));
-  m_cancel = new wxButton(this, -1, wxT("Cancel"));
-  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  buttonSizer->Add(m_ok,     0, wxALIGN_CENTER | wxALL, 5);
-  buttonSizer->Add(m_cancel, 0, wxALIGN_CENTER | wxALL, 5);
-
-  // create vertical sizer
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  if (m_device) {
     sizer->Add(
       m_device,
       0, wxALIGN_CENTER | wxALL, 5);
-  }
-  if (m_explicit_device) {
+  } else {
     sizer->Add(
       new wxStaticText(this, -1, wxT("No devices found.  Please enter one.")),
       0, wxALIGN_CENTER | wxALL, 5);
+    m_explicit_device = new wxTextCtrl(this, -1);
     sizer->Add(
       m_explicit_device,
       0, wxALIGN_CENTER | wxALL, 5);
   }
+
+  // button bar
+  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+  m_ok     = new wxButton(this, wxID_OK, wxT("OK"));
+  m_ok->SetDefault();
+  buttonSizer->Add(m_ok,     0, wxALIGN_CENTER | wxALL, 5);
+  m_cancel = new wxButton(this, wxID_CANCEL, wxT("Cancel"));
+  buttonSizer->Add(m_cancel, 0, wxALIGN_CENTER | wxALL, 5);
   sizer->Add(buttonSizer, 0, wxALIGN_CENTER | wxALL, 4);
 
   SetAutoLayout(true);
@@ -62,7 +58,6 @@ CDDeviceDialog::CDDeviceDialog(wxWindow* parent)
   if (m_explicit_device) {
     m_explicit_device->SetFocus();
   }
-  m_ok->SetDefault();
 
   sizer->Fit(this);
   sizer->SetSizeHints(this);

@@ -57,7 +57,8 @@ END_EVENT_TABLE()
 
 
 DeviceFrame::DeviceFrame(audiere::AudioDevicePtr device)
-: wxMDIParentFrame(0, -1, wxT("Audio Device - " + wxString(device->getName())))
+: wxMDIParentFrame(0, -1, wxT("Audio Device - " + wxString(device->getName())),
+                   wxDefaultPosition, wxSize(400, 500))
 {
   m_device = device;
 
@@ -113,9 +114,11 @@ wxString DeviceFrame::GetSoundFile() {
 
   // combine all of the supported extensions into one collection
   std::set<std::string> all_extensions;
-  for (unsigned i = 0; i < formats.size(); ++i) {
-    for (unsigned j = 0; j < formats[i].extensions.size(); ++j) {
-      all_extensions.insert("*." + formats[i].extensions[j]);
+  {
+    for (unsigned i = 0; i < formats.size(); ++i) {
+      for (unsigned j = 0; j < formats[i].extensions.size(); ++j) {
+        all_extensions.insert("*." + formats[i].extensions[j]);
+      }
     }
   }
 
@@ -124,11 +127,13 @@ wxString DeviceFrame::GetSoundFile() {
   wildcards = "Sound Files (" + Join(all_extensions, ",") + ")|";
   wildcards += Join(all_extensions, ";") + "|";
 
-  for (unsigned i = 0; i < formats.size(); ++i) {
-    audiere::FileFormatDesc& ffd = formats[i];
-    wildcards += ffd.description + " ";
-    wildcards += "(" + Join(ffd.extensions, ",", "*.") + ")|";
-    wildcards += Join(ffd.extensions, ";", "*.") + "|";
+  {
+    for (unsigned i = 0; i < formats.size(); ++i) {
+      audiere::FileFormatDesc& ffd = formats[i];
+      wildcards += ffd.description + " ";
+      wildcards += "(" + Join(ffd.extensions, ",", "*.") + ")|";
+      wildcards += Join(ffd.extensions, ";", "*.") + "|";
+    }
   }
 
   wildcards += "All Files (*.*)|*.*";

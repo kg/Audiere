@@ -25,18 +25,17 @@ MIDIStreamFrame::MIDIStreamFrame(
 
   int f = wxEXPAND | wxALL;
 
-  m_is_playing_label = new wxStaticText(this, -1, wxT(""));
-  m_repeating        = new wxCheckBox(this, MIDI_REPEAT, wxT("Repeating"));
-  m_length_pos_label = new wxStaticText(this, -1, wxT(""));
-  m_pos              = new wxSlider(this, MIDI_POS, 0, 0, 1000);
-
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(new wxButton(this, MIDI_PLAY, wxT("Play")),   1, f, 4);
   sizer->Add(new wxButton(this, MIDI_PAUSE, wxT("Pause")), 1, f, 4);
   sizer->Add(new wxButton(this, MIDI_STOP, wxT("Stop")),   1, f, 4);
+  m_is_playing_label = new wxStaticText(this, -1, wxT(""));
   sizer->Add(m_is_playing_label,                      1, f, 4);
+  m_repeating        = new wxCheckBox(this, MIDI_REPEAT, wxT("Repeating"));
   sizer->Add(m_repeating,                             1, f, 4);
+  m_length_pos_label = new wxStaticText(this, -1, wxT(""));
   sizer->Add(m_length_pos_label,                      1, f, 4);
+  m_pos              = new wxSlider(this, MIDI_POS, 0, 0, 1000);
   sizer->Add(m_pos,                                   1, f, 4);
 
   SetAutoLayout(true);

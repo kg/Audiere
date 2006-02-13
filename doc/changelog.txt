@@ -1,3 +1,36 @@
+2006.02.12
+
+  Fixed make-release-win32.sh to run scons instead of make under
+  bindings/java.  (Matt Campbell)
+
+  Changed hard-coded path to XPCOM root in bindings/xpcom/SConstruct.
+  Now I suppose Chad won't be able to do the next release without changing
+  it again.  (Matt Campbell)
+
+  Replaced wxPlayer.rc with a much simpler version based on the MDI
+  example in wxWidgets 2.6.  Dropped resource.h.  (Matt Campbell)
+
+  wxPlayer is now linked with wxWidgets 2.6 in the VC6 build system.
+  Fixed MDI parent frames to specify a size, since they otherwise end
+  up with zero size on Win32.  (Matt Campbell)
+
+  wxPlayer accessibility improvements:  Controls are always created
+  in an order that's logical to the user, since (at least on Win32)
+  the order of control creation determines the tabbing order.  Also,
+  for controls with labels, the label is now created before the control.
+  TODO:  Make tab traversal work in MDI child windows.  (Matt Campbell)
+
+  Updated the file version number in src/audiere.rc.  (Matt Campbell)
+
+  Modified bindings/python/setup.py so it only links with libstdc++
+  on POSIX.  *Matt Campbell)
+
+2005.04.21
+
+  Modified DSAudioDevice::update so it doesn't hold the device's lock
+  while sleeping.  As a result, streams and buffers open much faster when
+  using DirectSound.  (Matt Campbell)
+
 2004.11.30
 
   Added bindings to wxWidgets.  (Emanuel Dejanu)

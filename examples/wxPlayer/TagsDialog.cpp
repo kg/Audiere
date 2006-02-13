@@ -19,28 +19,31 @@ TagsDialog::TagsDialog(
 : wxDialog(parent, -1, wxString(wxT("View Tags")), wxDefaultPosition,
            wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   m_tags  = new wxListBox(this, -1);
   m_tags->SetFocus();
 
   std::vector<std::string> tags;
-  for (int i = 0; i < source->getTagCount(); ++i) {
-    std::string tag = source->getTagType(i);
-    tag += ": ";
-    tag += source->getTagKey(i);
-    tag += "=";
-    tag += source->getTagValue(i);
-    tags.push_back(tag.c_str());
+  {
+    for (int i = 0; i < source->getTagCount(); ++i) {
+      std::string tag = source->getTagType(i);
+      tag += ": ";
+      tag += source->getTagKey(i);
+      tag += "=";
+      tag += source->getTagValue(i);
+      tags.push_back(tag.c_str());
+    }
   }
   std::sort(tags.begin(), tags.end());
-  for (size_t i = 0; i < tags.size(); ++i) {
-    m_tags->Append(CStr2wxString(tags[i].c_str()));
+  {
+    for (size_t i = 0; i < tags.size(); ++i) {
+      m_tags->Append(CStr2wxString(tags[i].c_str()));
+    }
   }
-
-  m_close = new wxButton(this, -1, wxT("Close"));
-  m_close->SetDefault();
-
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(m_tags,  1, wxADJUST_MINSIZE | wxGROW | wxALIGN_CENTER | wxALL, 1);
+
+  m_close = new wxButton(this, wxID_CANCEL, wxT("Close"));
+  m_close->SetDefault();
   sizer->Add(m_close, 0, wxALIGN_CENTER | wxALL, 1);
 
   SetAutoLayout(true);

@@ -16,7 +16,7 @@ echo "Building Java bindings..."
 echo
 
 cd bindings/java || die
-make || die
+scons || die
 cd ../.. || die
 
 echo

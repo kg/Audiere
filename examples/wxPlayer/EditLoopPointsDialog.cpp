@@ -20,35 +20,33 @@ EditLoopPointsDialog::EditLoopPointsDialog(
            wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
   m_loop_source = loop_source;
+  const int CA = wxALIGN_CENTER | wxALL;
+  const int LEFT_STYLE = CA | wxALIGN_CENTER_VERTICAL;
+  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
   m_points     = new wxListBox(this, -1);
-  m_location   = new wxTextCtrl(this, -1);
-  m_target     = new wxTextCtrl(this, -1);
-  m_loop_count = new wxTextCtrl(this, -1);
-  m_add        = new wxButton(this, -1, wxT("Add"));
-  m_remove     = new wxButton(this, -1, wxT("Remove"));
-  m_close      = new wxButton(this, -1, wxT("Close"));
-
-  const int CA = wxALIGN_CENTER | wxALL;
-
-  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  buttonSizer->Add(m_add,    0, CA, 5);
-  buttonSizer->Add(m_remove, 0, CA, 5);
-
-  const int LEFT_STYLE = CA | wxALIGN_CENTER_VERTICAL;
+  sizer->Add(m_points,     1, CA | wxGROW | wxADJUST_MINSIZE, 5);
 
   wxFlexGridSizer* fieldSizer = new wxFlexGridSizer(2);
   fieldSizer->Add(new wxStaticText(this, -1, wxT("Location")),   0, LEFT_STYLE, 0);
+  m_location   = new wxTextCtrl(this, -1);
   fieldSizer->Add(m_location,   0, CA, 1);
   fieldSizer->Add(new wxStaticText(this, -1, wxT("Target")),     0, LEFT_STYLE, 0);
+  m_target     = new wxTextCtrl(this, -1);
   fieldSizer->Add(m_target,     0, CA, 1);
   fieldSizer->Add(new wxStaticText(this, -1, wxT("Loop Count")), 0, LEFT_STYLE, 0);
+  m_loop_count = new wxTextCtrl(this, -1);
   fieldSizer->Add(m_loop_count, 0, CA, 1);
-
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(m_points,     1, CA | wxGROW | wxADJUST_MINSIZE, 5);
   sizer->Add(fieldSizer,   0, CA, 5);
+
+  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+  m_add        = new wxButton(this, -1, wxT("Add"));
+  buttonSizer->Add(m_add,    0, CA, 5);
+  m_remove     = new wxButton(this, -1, wxT("Remove"));
+  buttonSizer->Add(m_remove, 0, CA, 5);
   sizer->Add(buttonSizer,  0, CA, 2);
+
+  m_close      = new wxButton(this, -1, wxT("Close"));
   sizer->Add(m_close,      0, CA, 1);
 
   m_location->SetFocus();

@@ -26,7 +26,9 @@ END_EVENT_TABLE()
 
 
 CDDeviceFrame::CDDeviceFrame(audiere::CDDevicePtr device)
-: wxFrame(0, -1, wxT("CD Device - ") + CStr2wxString(device->getName()))
+: wxFrame(0, -1, wxT("CD Device - ") + CStr2wxString(device->getName()),
+          wxDefaultPosition, wxDefaultSize,
+          wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL)
 {
   m_device = device;
 
@@ -43,27 +45,19 @@ CDDeviceFrame::CDDeviceFrame(audiere::CDDevicePtr device)
   menuBar->Append(helpMenu, wxT("&Help"));
   SetMenuBar(menuBar);
 
+  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+  const int border = 4;
+
   wxBoxSizer* playSizer = new wxBoxSizer(wxHORIZONTAL);
   playSizer->Add(
     new wxButton(this, CD_PLAY, wxT("Play")),
     1, wxEXPAND | wxALL, 0);
   m_track = new wxTextCtrl(this, -1, wxT("1"));
   playSizer->Add(m_track, 1, wxADJUST_MINSIZE | wxALL, 0);
-
-  wxBoxSizer* doorSizer = new wxBoxSizer(wxHORIZONTAL);
-  doorSizer->Add(
-    new wxButton(this, CD_OPEN_DOOR, wxT("Open Door")),
-    1, wxEXPAND | wxALL, 0);
-  doorSizer->Add(
-    new wxButton(this, CD_CLOSE_DOOR, wxT("Close Door")),
-    1, wxEXPAND | wxALL, 0);
-
-  const int border = 4;
-
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(
     playSizer,
     1, wxEXPAND | wxALL, border);
+
   sizer->Add(
     new wxButton(this, CD_STOP, wxT("Stop")),
     1, wxEXPAND | wxALL, border);
@@ -73,9 +67,18 @@ CDDeviceFrame::CDDeviceFrame(audiere::CDDevicePtr device)
   sizer->Add(
     new wxButton(this, CD_RESUME, wxT("Resume")),
     1, wxEXPAND | wxALL, border);
+
+  wxBoxSizer* doorSizer = new wxBoxSizer(wxHORIZONTAL);
+  doorSizer->Add(
+    new wxButton(this, CD_OPEN_DOOR, wxT("Open Door")),
+    1, wxEXPAND | wxALL, 0);
+  doorSizer->Add(
+    new wxButton(this, CD_CLOSE_DOOR, wxT("Close Door")),
+    1, wxEXPAND | wxALL, 0);
   sizer->Add(
     doorSizer,
     1, wxEXPAND | wxALL, border);
+
   sizer->Add(
     new wxButton(this, CD_CHECK_STATUS, wxT("Check Status")),
     1, wxEXPAND | wxALL, border);

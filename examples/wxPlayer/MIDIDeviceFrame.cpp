@@ -21,7 +21,8 @@ END_EVENT_TABLE()
 
 
 MIDIDeviceFrame::MIDIDeviceFrame(audiere::MIDIDevicePtr device)
-: wxMDIParentFrame(0, -1, wxT("MIDI Device - ") + CStr2wxString(device->getName()))
+: wxMDIParentFrame(0, -1, wxT("MIDI Device - ") + CStr2wxString(device->getName()),
+                   wxDefaultPosition, wxSize(400, 500))
 {
   m_device = device;
 

@@ -1,5 +1,7 @@
 2006.02.12
 
+  full-release.sh now exports CVSROOT.  (Matt Campbell)
+
   Added authors.txt to list of docs in vc6/dist.py.  (Matt Campbell)
 
   Fixed make-release-win32.sh to run scons instead of make under

@@ -10,7 +10,7 @@ die() {
 BASE=audiere-1.9.4
 
 
-CVSROOT=`cat CVS/Root`
+export CVSROOT=`cat CVS/Root`
 echo
 echo "Using CVSROOT: $CVSROOT"
 echo

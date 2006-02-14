@@ -63,9 +63,12 @@ echo "Building Doxygen release..."
 echo
 
 (cd audiere-doxygen/doc/doxygen && ./doxygen-dist.sh) || die
-cp audiere-doxygen/doc/doxygen/$BASE-doxygen.chm     "$FILES" || die
-cp audiere-doxygen/doc/doxygen/$BASE-doxygen.zip     "$FILES" || die
-cp audiere-doxygen/doc/doxygen/$BASE-doxygen.tar.bz2 "$FILES" || die
+cp audiere-doxygen/doc/doxygen/$BASE-users-doxygen.chm     "$FILES" || die
+cp audiere-doxygen/doc/doxygen/$BASE-users-doxygen.zip     "$FILES" || die
+cp audiere-doxygen/doc/doxygen/$BASE-users-doxygen.tar.bz2 "$FILES" || die
+cp audiere-doxygen/doc/doxygen/$BASE-devel-doxygen.chm     "$FILES" || die
+cp audiere-doxygen/doc/doxygen/$BASE-devel-doxygen.zip     "$FILES" || die
+cp audiere-doxygen/doc/doxygen/$BASE-devel-doxygen.tar.bz2 "$FILES" || die
 
 echo
 echo "Building source release..."

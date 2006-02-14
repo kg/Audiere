@@ -16,8 +16,8 @@ archive() {
     doxygen audiere-$AUDIENCE.doxy || die
     (cd "$AUDIENCE" && \
      cp -r html $BASE && \
-     zip -r -q $BASE.zip $BASE && \
-     tar cfj $BASE.tar.bz2 $BASE) || die
+     zip -r -q ../$BASE.zip $BASE && \
+     tar cfj ../$BASE.tar.bz2 $BASE) || die
 
     (cd $AUDIENCE/html && "$HHC" index.hhp)
     mv $AUDIENCE/html/index.chm $BASE.chm || die

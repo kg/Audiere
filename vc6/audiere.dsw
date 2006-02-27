@@ -90,6 +90,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "lua"=.\lua\lua.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name audiere
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "performance"=.\performance\performance.dsp - Package Owner=<4>
 
 Package=<5>

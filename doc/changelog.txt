@@ -1,3 +1,7 @@
+2006.02.26
+
+  Added Lua bindings.  (Matt Campbell)
+
 2006.02.13
 
   1.9.4 released.

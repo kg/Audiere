@@ -1,0 +1,62 @@
+Audiere Bindings for Lua
+Chad Austin
+2006.02.26
+
+
+How do I install it?
+--
+
+This module requires Lua 5.1.  So far, it has only been integrated into
+the VC6 build system on Windows.  Once luaAudiere.dll is built, put it
+somewhere in your PATH or in the same directory as the Lua executable.
+Then put the audiere.lua stub in the standard location for Lua modules
+in your configuration.  Due to Lua's configurability, details will vary.
+
+
+How do I use it?
+--
+
+-- bring in the Audiere module
+require "audiere"
+-- print the version information
+print(audiere.GetVersion())
+-- open the default AudioDevice
+device = audiere.OpenDevice()
+-- open a song in streaming mode
+song = audiere.OpenSound(device, "song.ogg", true)
+-- begin playback
+song:play()
+
+For a more complex example, take a look at demo.lua.
+
+
+Cool!  What else can I do?
+--
+
+The audiere module exposes the following functions from the C++ API:
+
+  - GetVersion
+  - GetSupportedFileFormats
+  - GetSupportedAudioDevices
+  - GetSampleSize
+  - OpenDevice (including both optional arguments)
+  - OpenSampleSource (all available signatures)
+  - CreateTone
+  - CreateSquareWave
+  - CreateWhiteNoise
+  - CreatePinkNoise
+  - CreateLoopPointSource (all available signatures)
+  - OpenSound (all available signatures)
+  - CreateMemoryFile (pass in arbitrary data as a string)
+
+The OutputStream and LoopPointSource interfaces are completely exposed.
+The SampleSource interface is exposed except for the read method.
+The update, openStream, and getName methods of the AudioDevice interface
+are exposed.  File objects can be passed between C++ and Lua, but none
+of the File methods are avilable from Lua.
+
+It's possible for other C++ code, such as other C++ extension modules
+or the host application, to pass objects implementing any of the
+above interfaces to Lua, so Lua code can pass them on to Audiere.
+To see how these objects are passed between Lua and C++, refer to the
+luaAudiereTypes.h header file.

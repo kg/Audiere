@@ -22,7 +22,7 @@ namespace audiere {
 
       // Register window class for MCI notifications.  Don't worry about
       // failure.  If this fails, the window creation will fail.
-      WNDCLASS wc;
+      WNDCLASSA wc;
       wc.style          = 0;
       wc.lpfnWndProc    = notifyWindowProc;
       wc.cbClsExtra     = 0;
@@ -33,9 +33,9 @@ namespace audiere {
       wc.hbrBackground  = NULL;
       wc.lpszMenuName   = NULL;
       wc.lpszClassName  = windowClassName;
-      RegisterClass(&wc);
+      RegisterClassA(&wc);
 
-      m_window = CreateWindow(
+      m_window = CreateWindowA(
         windowClassName, "",
         WS_POPUP,
         0, 0, 0, 0,
@@ -72,13 +72,13 @@ namespace audiere {
 
       const int bufferLength = 1000;
       char buffer[bufferLength + 1] = {0};
-      MCIERROR e = mciSendString(string.c_str(), buffer, 1000, window);
+      MCIERROR e = mciSendStringA(string.c_str(), buffer, 1000, window);
       if (error) {
         *error = (e != 0);
       }
 
       char errorString[bufferLength + 1] = {0};
-      mciGetErrorString(e, errorString, bufferLength);
+      mciGetErrorStringA(e, errorString, bufferLength);
 
       if (e) {
         ADR_LOG("Error: " + std::string(errorString));

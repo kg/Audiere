@@ -17,7 +17,7 @@ namespace audiere {
     std::string s(std::string(indent_count * 2, ' ') + str + "\n");
 
     #ifdef WIN32
-      OutputDebugString(s.c_str());
+      OutputDebugStringA(s.c_str());
     #endif
 
     EnsureOpen();

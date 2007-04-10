@@ -90,7 +90,7 @@ namespace audiere {
 
       for (char device = 'A'; device <= 'Z'; ++device) {
         char name[] = {device, ':', 0};
-        UINT type = GetDriveType(name);
+        UINT type = GetDriveTypeA(name);
         if (type == DRIVE_CDROM) {
           *out++ = device;
           *out++ = ':';
@@ -102,7 +102,7 @@ namespace audiere {
     }
 
     ADR_EXPORT(CDDevice*) AdrOpenCDDevice(const char* name) {
-      if (GetDriveType(name) == DRIVE_CDROM) {
+      if (GetDriveTypeA(name) == DRIVE_CDROM) {
         return new CDDeviceWin32(name);
       } else {
         return 0;

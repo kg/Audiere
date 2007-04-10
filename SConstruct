@@ -30,7 +30,7 @@ def isdef(name):
 	return DEFINITIONS.has_key(name)
 
 env.Append(CPPPATH=["#/src"])
-env.Append(CXXFLAGS=['-Wall','-Wno-non-virtual-dtor']
+env.Append(CXXFLAGS=['-Wall','-Wno-non-virtual-dtor'])
 
 # Sanity is good
 if sys.platform == "win32":

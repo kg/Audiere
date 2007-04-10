@@ -36,7 +36,7 @@ namespace audiere {
 
     // register anonymous window class
     // don't worry about failure, if it fails, the window creation will fail
-    WNDCLASS wc;
+    WNDCLASSA wc;
     wc.style          = 0;
     wc.lpfnWndProc    = DefWindowProc;
     wc.cbClsExtra     = 0;
@@ -47,10 +47,10 @@ namespace audiere {
     wc.hbrBackground  = NULL;
     wc.lpszMenuName   = NULL;
     wc.lpszClassName  = "AudiereHiddenWindow";
-    RegisterClass(&wc);
+    RegisterClassA(&wc);
 
     // create anonymous window
-    HWND anonymous_window = CreateWindow(
+    HWND anonymous_window = CreateWindowA(
       "AudiereHiddenWindow", "", WS_POPUP,
       0, 0, 0, 0,
       NULL, NULL, GetModuleHandle(NULL), NULL);
@@ -80,7 +80,7 @@ namespace audiere {
 
     std::string guid_string = parameters.getValue("device_guid", "");
     if (!guid_string.empty()) {
-      if (UuidFromString((unsigned char*)guid_string.c_str(), &stack_guid) == RPC_S_OK) {
+      if (UuidFromStringA((unsigned char*)guid_string.c_str(), &stack_guid) == RPC_S_OK) {
         guid = &stack_guid;
       }
     }

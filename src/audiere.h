@@ -214,7 +214,7 @@ namespace audiere {
     }
 
   private:
-    int m_ref_count;
+    volatile int m_ref_count;
   };
 
 

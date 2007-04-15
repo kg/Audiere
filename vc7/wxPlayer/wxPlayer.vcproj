@@ -1,114 +1,178 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="wxPlayer"
 	ProjectGUID="{665D32B5-2444-4A17-AC86-CBEF0076A550}"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="../bin/Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;STRICT;NOMINMAX;__WXMSW__"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="TRUE"
+				ForceConformanceInForLoopScope="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="4"/>
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmswd.lib rpcrt4.lib comctl32.lib ws2_32.lib"
 				OutputFile="$(OutDir)/wxPlayer.exe"
 				LinkIncremental="2"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/wxPlayer.pdb"
 				SubSystem="2"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="../bin/Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;STRICT;NOMINMAX;__WXMSW__"
 				RuntimeLibrary="2"
-				ForceConformanceInForLoopScope="TRUE"
+				ForceConformanceInForLoopScope="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw.lib rpcrt4.lib comctl32.lib ws2_32.lib"
 				OutputFile="$(OutDir)/wxPlayer.exe"
 				LinkIncremental="1"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -117,90 +181,119 @@
 		<Filter
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
 			<File
-				RelativePath="..\..\examples\wxPlayer\CDDeviceDialog.cpp">
+				RelativePath="..\..\examples\wxPlayer\CDDeviceDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\CDDeviceDialog.h">
+				RelativePath="..\..\examples\wxPlayer\CDDeviceDialog.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\CDDeviceFrame.cpp">
+				RelativePath="..\..\examples\wxPlayer\CDDeviceFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\CDDeviceFrame.h">
+				RelativePath="..\..\examples\wxPlayer\CDDeviceFrame.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\Commands.h">
+				RelativePath="..\..\examples\wxPlayer\Commands.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\DeviceFrame.cpp">
+				RelativePath="..\..\examples\wxPlayer\DeviceFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\DeviceFrame.h">
+				RelativePath="..\..\examples\wxPlayer\DeviceFrame.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\EditLoopPointsDialog.cpp">
+				RelativePath="..\..\examples\wxPlayer\EditLoopPointsDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\EditLoopPointsDialog.h">
+				RelativePath="..\..\examples\wxPlayer\EditLoopPointsDialog.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\MIDIDeviceDialog.cpp">
+				RelativePath="..\..\examples\wxPlayer\MIDIDeviceDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\MIDIDeviceDialog.h">
+				RelativePath="..\..\examples\wxPlayer\MIDIDeviceDialog.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\MIDIDeviceFrame.cpp">
+				RelativePath="..\..\examples\wxPlayer\MIDIDeviceFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\MIDIDeviceFrame.h">
+				RelativePath="..\..\examples\wxPlayer\MIDIDeviceFrame.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\MIDIStreamFrame.cpp">
+				RelativePath="..\..\examples\wxPlayer\MIDIStreamFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\MIDIStreamFrame.h">
+				RelativePath="..\..\examples\wxPlayer\MIDIStreamFrame.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\NewDeviceDialog.cpp">
+				RelativePath="..\..\examples\wxPlayer\NewDeviceDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\NewDeviceDialog.h">
+				RelativePath="..\..\examples\wxPlayer\NewDeviceDialog.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\resource.h">
+				RelativePath="..\..\examples\wxPlayer\resource.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\SoundEffectFrame.cpp">
+				RelativePath="..\..\examples\wxPlayer\SoundEffectFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\SoundEffectFrame.h">
+				RelativePath="..\..\examples\wxPlayer\SoundEffectFrame.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\StreamFrame.cpp">
+				RelativePath="..\..\examples\wxPlayer\StreamFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\StreamFrame.h">
+				RelativePath="..\..\examples\wxPlayer\StreamFrame.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\TagsDialog.cpp">
+				RelativePath="..\..\examples\wxPlayer\TagsDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\TagsDialog.h">
+				RelativePath="..\..\examples\wxPlayer\TagsDialog.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\wx.h">
+				RelativePath="..\..\examples\wxPlayer\wx.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\wxPlayer.cpp">
+				RelativePath="..\..\examples\wxPlayer\wxPlayer.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\wxPlayer.h">
+				RelativePath="..\..\examples\wxPlayer\wxPlayer.h"
+				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxPlayer\wxPlayer.rc">
+				RelativePath="..\..\examples\wxPlayer\wxPlayer.rc"
+				>
 			</File>
 		</Filter>
 	</Files>

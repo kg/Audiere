@@ -24,7 +24,8 @@ def isdef(name):
 env.Append(CPPPATH=["#/src"])
 
 if env['CC'] == 'cl':
-    env.Append(CCFLAGS=['/EHsc'],
+    env.Append(CCFLAGS=['/EHsc', '/Z7'],
+               LINKFLAGS=['/DEBUG'],
                CPPDEFINES=['AUDIERE_EXPORTS', 'NOMINMAX', 'FLAC__NO_DLL'],
                CPPPATH=['#/third-party/vc6/include'],
                LIBPATH=['#/third-party/vc6/lib'],
@@ -176,8 +177,9 @@ if isdef("HAVE_WINMM"): # NOTHING CHECKS FOR THIS YET
 
 env = conf.Finish()
 
-env.Alias('audiere', env.SharedLibrary(target='audiere', source=Split(source)))
-env.Default('audiere')
+env.SharedLibrary(target='audiere', source=Split(source))
+
+env.Program('race', 'test/race/race.cpp', LIBS=['audiere'])
 
 #env.Install(dir = PREFIX + "/lib", source = ['libaudiere.so'])
 #env.Alias('install', [PREFIX + "/lib"])

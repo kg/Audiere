@@ -12,7 +12,7 @@ namespace audiere {
   /// Basic StopEvent implementation.
   class StopEventImpl : public RefImplementation<StopEvent> {
   public:
-    StopEventImpl(OutputStream* os, Reason reason) {
+    StopEventImpl(OutputStreamPtr os, Reason reason) {
       m_stream = os;
       m_reason = reason;
     }
@@ -43,7 +43,7 @@ namespace audiere {
     void ADR_CALL clearCallbacks();
 
   protected:
-    void fireStopEvent(OutputStream* stream, StopEvent::Reason reason);
+    void fireStopEvent(OutputStreamPtr stream, StopEvent::Reason reason);
     void fireStopEvent(const StopEventPtr& event);
 
   private:

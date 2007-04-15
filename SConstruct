@@ -24,7 +24,7 @@ def isdef(name):
 env.Append(CPPPATH=["#/src"])
 
 if env['CC'] == 'cl':
-    env.Append(CCFLAGS=['/EHsc', '/Z7'],
+    env.Append(CCFLAGS=['/EHsc', '/Z7', '/O2'],
                LINKFLAGS=['/DEBUG'],
                CPPDEFINES=['AUDIERE_EXPORTS', 'NOMINMAX', 'FLAC__NO_DLL'],
                CPPPATH=['#/third-party/vc6/include'],

@@ -86,6 +86,29 @@ namespace audiere {
   }
 
 
+#ifdef WIN32
+
+  ADR_EXPORT(long) AdrAtomicIncrement(volatile long& var) {
+    return InterlockedIncrement(var);
+
+  }
+
+  ADR_EXPORT(long) AdrAtomicDecrement(volatile long& var) {
+    return InterlockedDecrement(*var);
+  }
+
+#else
+
+  ADR_EXPORT(long) AdrAtomicIncrement(volatile long& var) {
+    return ++var;
+  }
+
+  ADR_EXPORT(long) AdrAtomicDecrement(volatile long& var) {
+    return --var;
+  }
+
+#endif
+
   ADR_EXPORT(int) AdrGetSampleSize(SampleFormat format) {
     switch (format) {
       case SF_U8:  return 1;

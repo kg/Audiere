@@ -204,17 +204,17 @@ namespace audiere {
 
   public:
     void ADR_CALL ref() {
-      ++m_ref_count;
+      AtomicIncrement(m_ref_count);
     }
 
     void ADR_CALL unref() {
-      if (--m_ref_count == 0) {
+      if (AtomicDecrement(m_ref_count) == 0) {
         delete this;
       }
     }
 
   private:
-    volatile int m_ref_count;
+    volatile long m_ref_count;
   };
 
 
@@ -1046,6 +1046,9 @@ namespace audiere {
 
     ADR_FUNCTION(const char*) AdrGetVersion();
 
+    ADR_FUNCTION(long) AdrAtomicIncrement(volatile long& var);
+    ADR_FUNCTION(long) AdrAtomicDecrement(volatile long& var);
+
     /**
      * Returns a formatted string that lists the file formats that Audiere
      * supports.  This function is DLL-safe.
@@ -1137,6 +1140,20 @@ namespace audiere {
     return hidden::AdrGetVersion();
   }
 
+
+  /**
+   * Atomically increments a counter.  Returns incremented value.
+   */
+  inline long AtomicIncrement(volatile long& var) {
+    return hidden::AdrAtomicIncrement(var);
+  }
+
+  /**
+   * Atomically decrements a counter.  Returns decremented value.
+   */
+  inline long AtomicDecrement(volatile long& var) {
+    return hidden::AdrAtomicDecrement(var);
+  }
 
   inline void SplitString(
     std::vector<std::string>& out,

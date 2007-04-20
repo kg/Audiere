@@ -26,7 +26,7 @@ env.Append(CPPPATH=["#/src"])
 if env['CC'] == 'cl':
     env.Append(CCFLAGS=['/EHsc', '/Z7', '/O2', '/W3'],
                LINKFLAGS=['/DEBUG'],
-               CPPDEFINES=['AUDIERE_EXPORTS', 'NOMINMAX', 'FLAC__NO_DLL', '_CRT_SECURE_NO_WARNINGS'],
+               CPPDEFINES=['AUDIERE_EXPORTS', 'NOMINMAX', 'FLAC__NO_DLL', '_CRT_SECURE_NO_WARNINGS', 'WIN32'],
                CPPPATH=['#/third-party/vc6/include'],
                LIBPATH=['#/third-party/vc6/lib'],
                LIBS=['user32', 'ole32', 'rpcrt4', 'winmm'])

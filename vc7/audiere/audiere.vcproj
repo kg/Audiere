@@ -1,124 +1,73 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="audiere"
 	ProjectGUID="{E5195361-63CD-4C1B-8DD7-3E579779B1F6}"
-	Keyword="Win32Proj"
-	>
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="../bin/Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party/vc6/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS;NOMINMAX;WIN32_LEAN_AND_MEAN;STRICT;FLAC__NO_DLL"
-				MinimalRebuild="true"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
-			/>
+				Detect64BitPortabilityProblems="FALSE"
+				DebugInformationFormat="4"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib rpcrt4.lib dumbd_static.lib libFLAC_static_d.lib libFLAC++_static_d.lib libspeexd.lib ogg_static_d.lib vorbis_static_d.lib vorbisfile_static_d.lib"
 				OutputFile="$(OutDir)/audiere.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../third-party/vc6/lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/audiere.pdb"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/audiere.lib"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="../bin/Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../third-party/vc6/include"
@@ -126,55 +75,42 @@
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
-			/>
+				Detect64BitPortabilityProblems="FALSE"
+				DebugInformationFormat="3"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib rpcrt4.lib dumb_static.lib libFLAC_static.lib libFLAC++_static.lib libspeex.lib ogg_static.lib vorbis_static.lib vorbisfile_static.lib"
 				OutputFile="$(OutDir)/audiere.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party/vc6/lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="$(OutDir)/audiere.lib"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -183,303 +119,230 @@
 		<Filter
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
-			>
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\..\src\audiere.h"
-				>
+				RelativePath="..\..\src\audiere.h">
 			</File>
 			<File
-				RelativePath="..\..\src\audiere.rc"
-				>
+				RelativePath="..\..\src\audiere.rc">
 			</File>
 			<File
-				RelativePath="..\..\src\basic_source.cpp"
-				>
+				RelativePath="..\..\src\basic_source.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\basic_source.h"
-				>
+				RelativePath="..\..\src\basic_source.h">
 			</File>
 			<File
-				RelativePath="..\..\src\cd_win32.cpp"
-				>
+				RelativePath="..\..\src\cd_win32.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\debug.cpp"
-				>
+				RelativePath="..\..\src\debug.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\debug.h"
-				>
+				RelativePath="..\..\src\debug.h">
 			</File>
 			<File
-				RelativePath="..\..\src\default_file.h"
-				>
+				RelativePath="..\..\src\default_file.h">
 			</File>
 			<File
-				RelativePath="..\..\src\device.cpp"
-				>
+				RelativePath="..\..\src\device.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\device.h"
-				>
+				RelativePath="..\..\src\device.h">
 			</File>
 			<File
-				RelativePath="..\..\src\device_ds.cpp"
-				>
+				RelativePath="..\..\src\device_ds.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\device_ds.h"
-				>
+				RelativePath="..\..\src\device_ds.h">
 			</File>
 			<File
-				RelativePath="..\..\src\device_ds_buffer.cpp"
-				>
+				RelativePath="..\..\src\device_ds_buffer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\device_ds_buffer.h"
-				>
+				RelativePath="..\..\src\device_ds_buffer.h">
 			</File>
 			<File
-				RelativePath="..\..\src\device_ds_stream.cpp"
-				>
+				RelativePath="..\..\src\device_ds_stream.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\device_ds_stream.h"
-				>
+				RelativePath="..\..\src\device_ds_stream.h">
 			</File>
 			<File
-				RelativePath="..\..\src\device_mixer.cpp"
-				>
+				RelativePath="..\..\src\device_mixer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\device_mixer.h"
-				>
+				RelativePath="..\..\src\device_mixer.h">
 			</File>
 			<File
-				RelativePath="..\..\src\device_mm.cpp"
-				>
+				RelativePath="..\..\src\device_mm.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\device_mm.h"
-				>
+				RelativePath="..\..\src\device_mm.h">
 			</File>
 			<File
-				RelativePath="..\..\src\device_null.cpp"
-				>
+				RelativePath="..\..\src\device_null.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\device_null.h"
-				>
+				RelativePath="..\..\src\device_null.h">
 			</File>
 			<File
-				RelativePath="..\..\src\dumb_resample.cpp"
-				>
+				RelativePath="..\..\src\dumb_resample.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\dumb_resample.h"
-				>
+				RelativePath="..\..\src\dumb_resample.h">
 			</File>
 			<File
-				RelativePath="..\..\src\dxguid.cpp"
-				>
+				RelativePath="..\..\src\dxguid.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\file_ansi.cpp"
-				>
+				RelativePath="..\..\src\file_ansi.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input.cpp"
-				>
+				RelativePath="..\..\src\input.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_aiff.cpp"
-				>
+				RelativePath="..\..\src\input_aiff.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_aiff.h"
-				>
+				RelativePath="..\..\src\input_aiff.h">
 			</File>
 			<File
-				RelativePath="..\..\src\input_flac.cpp"
-				>
+				RelativePath="..\..\src\input_flac.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_flac.h"
-				>
+				RelativePath="..\..\src\input_flac.h">
 			</File>
 			<File
-				RelativePath="..\..\src\input_mod.cpp"
-				>
+				RelativePath="..\..\src\input_mod.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_mod.h"
-				>
+				RelativePath="..\..\src\input_mod.h">
 			</File>
 			<File
-				RelativePath="..\..\src\input_mp3.cpp"
-				>
+				RelativePath="..\..\src\input_mp3.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_mp3.h"
-				>
+				RelativePath="..\..\src\input_mp3.h">
 			</File>
 			<File
-				RelativePath="..\..\src\input_ogg.cpp"
-				>
+				RelativePath="..\..\src\input_ogg.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_ogg.h"
-				>
+				RelativePath="..\..\src\input_ogg.h">
 			</File>
 			<File
-				RelativePath="..\..\src\input_speex.cpp"
-				>
+				RelativePath="..\..\src\input_speex.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_speex.h"
-				>
+				RelativePath="..\..\src\input_speex.h">
 			</File>
 			<File
-				RelativePath="..\..\src\input_wav.cpp"
-				>
+				RelativePath="..\..\src\input_wav.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\input_wav.h"
-				>
+				RelativePath="..\..\src\input_wav.h">
 			</File>
 			<File
-				RelativePath="..\..\src\internal.h"
-				>
+				RelativePath="..\..\src\internal.h">
 			</File>
 			<File
-				RelativePath="..\..\src\loop_point_source.cpp"
-				>
+				RelativePath="..\..\src\loop_point_source.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\mci_device.h"
-				>
+				RelativePath="..\..\src\mci_device.h">
 			</File>
 			<File
-				RelativePath="..\..\src\memory_file.cpp"
-				>
+				RelativePath="..\..\src\memory_file.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\memory_file.h"
-				>
+				RelativePath="..\..\src\memory_file.h">
 			</File>
 			<File
-				RelativePath="..\..\src\midi_mci.cpp"
-				>
+				RelativePath="..\..\src\midi_mci.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\noise.cpp"
-				>
+				RelativePath="..\..\src\noise.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\resampler.cpp"
-				>
+				RelativePath="..\..\src\resampler.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\resampler.h"
-				>
+				RelativePath="..\..\src\resampler.h">
 			</File>
 			<File
-				RelativePath="..\..\src\resource.h"
-				>
+				RelativePath="..\..\src\resource.h">
 			</File>
 			<File
-				RelativePath="..\..\src\sample_buffer.cpp"
-				>
+				RelativePath="..\..\src\sample_buffer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\sound.cpp"
-				>
+				RelativePath="..\..\src\sound.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\sound_effect.cpp"
-				>
+				RelativePath="..\..\src\sound_effect.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\square_wave.cpp"
-				>
+				RelativePath="..\..\src\square_wave.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\threads.h"
-				>
+				RelativePath="..\..\src\threads.h">
 			</File>
 			<File
-				RelativePath="..\..\src\threads_win32.cpp"
-				>
+				RelativePath="..\..\src\threads_win32.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\timer.h"
-				>
+				RelativePath="..\..\src\timer.h">
 			</File>
 			<File
-				RelativePath="..\..\src\timer_win32.cpp"
-				>
+				RelativePath="..\..\src\timer_win32.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\tone.cpp"
-				>
+				RelativePath="..\..\src\tone.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\types.h"
-				>
+				RelativePath="..\..\src\types.h">
 			</File>
 			<File
-				RelativePath="..\..\src\utility.cpp"
-				>
+				RelativePath="..\..\src\utility.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\utility.h"
-				>
+				RelativePath="..\..\src\utility.h">
 			</File>
 			<File
-				RelativePath="..\..\src\version.cpp"
-				>
+				RelativePath="..\..\src\version.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="speexfile"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\src\speexfile\speexfile.cpp"
-				>
+				RelativePath="..\..\src\speexfile\speexfile.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\speexfile\speexfile.h"
-				>
+				RelativePath="..\..\src\speexfile\speexfile.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="mpaudec"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\src\mpaudec\bits.c"
-				>
+				RelativePath="..\..\src\mpaudec\bits.c">
 			</File>
 			<File
-				RelativePath="..\..\src\mpaudec\internal.h"
-				>
+				RelativePath="..\..\src\mpaudec\internal.h">
 			</File>
 			<File
-				RelativePath="..\..\src\mpaudec\mpaudec.c"
-				>
+				RelativePath="..\..\src\mpaudec\mpaudec.c">
 			</File>
 			<File
-				RelativePath="..\..\src\mpaudec\mpaudec.h"
-				>
+				RelativePath="..\..\src\mpaudec\mpaudec.h">
 			</File>
 			<File
-				RelativePath="..\..\src\mpaudec\mpaudectab.h"
-				>
+				RelativePath="..\..\src\mpaudec\mpaudectab.h">
 			</File>
 			<File
-				RelativePath="..\..\src\mpaudec\mpegaudio.h"
-				>
+				RelativePath="..\..\src\mpaudec\mpegaudio.h">
 			</File>
 		</Filter>
 	</Files>

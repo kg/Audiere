@@ -28,10 +28,9 @@ namespace audiere {
     m_stop_event = 0;
 
     // Set up the stop notification if we can.
-    IDirectSoundNotify* notify;
     HRESULT rv = m_buffer->QueryInterface(
-        IID_IDirectSoundNotify, (void**)&notify);
-    if (SUCCEEDED(rv) && notify) {
+        IID_IDirectSoundNotify, (void**)&m_notify);
+    if (SUCCEEDED(rv) && m_notify) {
       m_stop_event = CreateEvent(0, FALSE, FALSE, 0);
       if (!m_stop_event) {
         ADR_LOG("DSOutputBuffer stop event creation failed.  Not firing stop events.");
@@ -39,7 +38,7 @@ namespace audiere {
         DSBPOSITIONNOTIFY n;
         n.dwOffset = DSBPN_OFFSETSTOP;
         n.hEventNotify = m_stop_event;
-        notify->SetNotificationPositions(1, &n);
+        m_notify->SetNotificationPositions(1, &n);
       }
     }
   }
@@ -49,10 +48,11 @@ namespace audiere {
     ADR_GUARD("DSOutputBuffer::~DSOutputBuffer");
 
     m_device->removeBuffer(this);
-    m_buffer->Release();
     if (m_stop_event) {
       CloseHandle(m_stop_event);
     }
+    m_notify->Release();
+    m_buffer->Release();
   }
 
 

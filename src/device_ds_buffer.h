@@ -48,6 +48,7 @@ namespace audiere {
 
     RefPtr<DSAudioDevice> m_device;
     IDirectSoundBuffer* m_buffer;
+    IDirectSoundNotify* m_notify;
     int m_length;
     int m_frame_size;
 

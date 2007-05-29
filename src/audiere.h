@@ -186,39 +186,6 @@ namespace audiere {
 
 
   /**
-   * A basic implementation of the RefCounted interface.  Derive
-   * your implementations from RefImplementation<YourInterface>.
-   */
-  template<class Interface>
-  class RefImplementation : public Interface {
-  protected:
-    RefImplementation() {
-      m_ref_count = 0;
-    }
-
-    /**
-     * So the implementation can put its destruction logic in the destructor,
-     * as natural C++ code does.
-     */
-    virtual ~RefImplementation() { }
-
-  public:
-    void ADR_CALL ref() {
-      AtomicIncrement(m_ref_count);
-    }
-
-    void ADR_CALL unref() {
-      if (AtomicDecrement(m_ref_count) == 0) {
-        delete this;
-      }
-    }
-
-  private:
-    volatile long m_ref_count;
-  };
-
-
-  /**
    * Represents a random-access file, usually stored on a disk.  Files
    * are always binary: that is, they do no end-of-line
    * transformations.  File objects are roughly analogous to ANSI C
@@ -1575,6 +1542,39 @@ namespace audiere {
   inline MIDIDevice* OpenMIDIDevice(const char* device) {
     return hidden::AdrOpenMIDIDevice(device);
   }
+
+
+  /**
+   * A basic implementation of the RefCounted interface.  Derive
+   * your implementations from RefImplementation<YourInterface>.
+   */
+  template<class Interface>
+  class RefImplementation : public Interface {
+  protected:
+    RefImplementation() {
+      m_ref_count = 0;
+    }
+
+    /**
+     * So the implementation can put its destruction logic in the destructor,
+     * as natural C++ code does.
+     */
+    virtual ~RefImplementation() { }
+
+  public:
+    void ADR_CALL ref() {
+      AtomicIncrement(m_ref_count);
+    }
+
+    void ADR_CALL unref() {
+      if (AtomicDecrement(m_ref_count) == 0) {
+        delete this;
+      }
+    }
+
+  private:
+    volatile long m_ref_count;
+  };
 
 }
 

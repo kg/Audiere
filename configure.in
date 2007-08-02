@@ -192,6 +192,14 @@ AC_CHECK_HEADER(dsound.h,
     EXTRA_LIBS="-ldsound -lole32 -lrpcrt4 $EXTRA_LIBS")
 AM_CONDITIONAL(HAVE_DSOUND, test "x$HAVE_DSOUND" = "xtrue")
 
+dnl Look for portaudio1.9
+AC_CHECK_LIB(portaudio, Pa_WriteStream,
+    HAVE_PA=true
+    AC_DEFINE(HAVE_PA)
+    LIBS="-lportaudio $LIBS"
+    EXTRA_LIBS="-lportaudio $EXTRA_LIBS")
+AM_CONDITIONAL(HAVE_PA, test "x$HAVE_PA" = "xtrue")
+
 AC_CHECK_HEADER(mmsystem.h,
     HAVE_WINMM=true
     AC_DEFINE(HAVE_WINMM)

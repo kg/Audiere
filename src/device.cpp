@@ -36,6 +36,10 @@
   #include "device_mm.h"
 #endif
 
+#ifdef HAVE_PA
+  #include "device_pa.h"
+#endif
+
 
 namespace audiere {
 
@@ -161,6 +165,10 @@ namespace audiere {
 #ifdef HAVE_AL
       "al:SGI AL"  ";"
 #endif
+#ifdef HAVE_PA
+      "pa:portaudo compatible"  ";"
+#endif
+
 #endif
       "null:Null output (no sound)"  ;
   }
@@ -220,6 +228,7 @@ namespace audiere {
         TRY_GROUP("directsound");
         TRY_GROUP("winmm");
         TRY_GROUP("oss");
+	TRY_GROUP("portaudio");	
         return 0;
       }
 
@@ -250,7 +259,12 @@ namespace audiere {
           return 0;
         }
       #endif
-
+      #ifdef HAVE_PA
+	if (name == "portaudio") {
+          TRY_DEVICE(PAAudioDevice);
+          return 0;
+	}
+      #endif
       if (name == "null") {
         TRY_DEVICE(NullAudioDevice);
         return 0;

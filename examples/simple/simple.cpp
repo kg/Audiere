@@ -53,12 +53,15 @@ int main(int argc, const char** argv) {
   }
 
   cerr << "opened sound" << endl;
-
   sound->play();
 
+
+  float pitch = 1;
   cerr << "started playback" << endl;
   while (sound->isPlaying()) {
     sleepSecond();
+    sound->setPitchShift(pitch);
+    pitch += 0.02;
     if (sound->isSeekable()) {
       cerr << "position: " << sound->getPosition() << endl;
     }

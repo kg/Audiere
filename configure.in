@@ -163,6 +163,15 @@ AC_CHECK_HEADER(sys/soundcard.h,
     AC_DEFINE(HAVE_OSS))
 AM_CONDITIONAL(HAVE_OSS, test "x$HAVE_OSS" = "xtrue")
 
+AC_HEADER_STDC
+AC_CHECK_HEADER(unistd.h)
+AC_CHECK_HEADER(alsa/asoundlib.h,
+    HAVE_ALSA=true
+    LIBS="-lasound $LIBS"
+    EXTRA_LIBS="-lasound $EXTRA_LIBS"
+    AC_DEFINE(HAVE_ALSA))
+AM_CONDITIONAL(HAVE_ALSA, test "x$HAVE_ALSA" = "xtrue")
+
 AC_CHECK_HEADER(vorbis/vorbisfile.h,
     HAVE_OGG=true
     LIBS="-lvorbisfile -lvorbis -logg $LIBS"

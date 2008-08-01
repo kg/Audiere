@@ -20,6 +20,10 @@
 
 #endif
 
+#ifdef HAVE_ALSA
+  #include "device_alsa.h"
+#endif
+
 #ifdef HAVE_OSS
   #include "device_oss.h"
 #endif
@@ -153,6 +157,9 @@ namespace audiere {
       "directsound:DirectSound (high-performance)"  ";"
       "winmm:Windows Multimedia (compatible)"  ";"
 #else
+#ifdef HAVE_ALSA
+      "alsa:Advanced Linux Sound Architecture"  ";"
+#endif
 #ifdef HAVE_OSS
       "oss:Open Sound System"  ";"
 #endif
@@ -224,6 +231,7 @@ namespace audiere {
 
       if (name == "" || name == "autodetect") {
         // in decreasing order of sound API quality
+        TRY_GROUP("alsa");
         TRY_GROUP("al");
         TRY_GROUP("directsound");
         TRY_GROUP("winmm");
@@ -231,6 +239,13 @@ namespace audiere {
 	TRY_GROUP("portaudio");	
         return 0;
       }
+
+      #ifdef HAVE_ALSA
+        if (name == "alsa") {
+          TRY_DEVICE(ALSAAudioDevice);
+          return 0;
+        }
+      #endif
 
       #ifdef HAVE_OSS
         if (name == "oss") {

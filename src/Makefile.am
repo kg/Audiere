@@ -39,6 +39,12 @@ else
 OSS_DIST    = device_oss.cpp device_oss.h
 endif
 
+if HAVE_ALSA
+ALSA_SOURCES = device_alsa.cpp device_alsa.h
+else
+ALSA_DIST    = device_alsa.cpp device_alsa.h
+endif
+
 DSOUND_SRC = \
 	device_ds.cpp device_ds.h \
 	device_ds_buffer.cpp device_ds_buffer.h \
@@ -107,6 +113,7 @@ libaudiere_la_SOURCES = \
 	device_null.h \
 	$(AL_SOURCES) \
 	$(OSS_SOURCES) \
+	$(ALSA_SOURCES) \
 	$(WINMM_SOURCES) \
 	dumb_resample.cpp \
 	dumb_resample.h \

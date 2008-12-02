@@ -14,7 +14,9 @@ namespace audiere {
     static ALSAAudioDevice* create(const ParameterList& parameters);
 
   private:
-    ALSAAudioDevice(snd_pcm_t *playback_handle);
+    ALSAAudioDevice(snd_pcm_t* pcm_handle,
+                    int rate,
+                    int buffer_size);
     ~ALSAAudioDevice();
 
   public:
@@ -22,7 +24,9 @@ namespace audiere {
     const char* ADR_CALL getName();
 
   private:
-    snd_pcm_t *m_playback_handle;
+    snd_pcm_t* m_pcm_handle;
+    int m_buffer_size;
+    char* m_buffer;
   };
 
 }

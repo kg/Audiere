@@ -4,6 +4,7 @@
 
 #include "debug.h"
 
+#include <cstdlib>
 
 namespace audiere {
 

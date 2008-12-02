@@ -32,6 +32,8 @@ namespace audiere {
   private:
     void readID3v1Tags();
     void readID3v2Tags();
+    void ID3v2Parse(u8* buf, int len, u8 version, u8 flags);
+    bool ID3v2Match(u8* buf);
     bool decodeFrame();
 
     FilePtr m_file;
@@ -43,7 +45,7 @@ namespace audiere {
     SampleFormat m_sample_format;
 
     MPAuDecContext* m_context;
-    
+
     QueueBuffer m_buffer;
 
     enum { INPUT_BUFFER_SIZE = 4096 };

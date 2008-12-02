@@ -11,6 +11,7 @@
 
 
 namespace audiere {
+  static const int ID3v2_HEADER_SIZE = 10;
 
 
   MP3InputStream::MP3InputStream() {
@@ -32,7 +33,7 @@ namespace audiere {
     m_position = 0;
   }
 
-  
+
   MP3InputStream::~MP3InputStream() {
     delete[] m_decode_buffer;
     if (m_context) {
@@ -153,7 +154,7 @@ namespace audiere {
     sample_format = m_sample_format;
   }
 
-  
+
   int
   MP3InputStream::doRead(int frame_count, void* samples) {
     ADR_GUARD("MP3InputStream::doRead");
@@ -208,6 +209,7 @@ namespace audiere {
     m_input_position = 0;
     m_input_length = 0;
     m_position = 0;
+    m_first_frame = true;
   }
 
 
@@ -223,22 +225,59 @@ namespace audiere {
           return true;
         }
       }
+
+      /* skip all ID3v2 tags */
+      while (m_input_length - m_input_position > ID3v2_HEADER_SIZE &&
+	     ID3v2Match(m_input_buffer + m_input_position)) {
+          u8* buffer = m_input_buffer + m_input_position;
+          int len =
+	      ((buffer[6] & 0x7f) << 21) |
+	      ((buffer[7] & 0x7f) << 14) |
+	      ((buffer[8] & 0x7f) << 7) |
+	      (buffer[9] & 0x7f);
+          len += ID3v2_HEADER_SIZE;
+          while (m_input_position + len > m_input_length) {
+	      len -= m_input_length - m_input_position;
+	      m_input_position = 0;
+	      m_input_length = m_file->read(m_input_buffer,
+					    INPUT_BUFFER_SIZE);
+	      if (m_input_length == 0) {
+		  m_eof = true;
+		  return true;
+	      }
+          }
+          m_input_position += len;
+      }
+
       int rv = mpaudec_decode_frame(
           m_context, (s16*)m_decode_buffer,
           &output_size,
           (unsigned char*)m_input_buffer + m_input_position,
           m_input_length - m_input_position);
-      if (rv < 0)
-        return false;
-      m_input_position += rv;
+      if (rv < 0) {
+        int left = m_input_length - m_input_position;
+        if (m_context->frame_size > left) {
+          memcpy (m_input_buffer, m_input_buffer + m_input_position,
+                  left);
+          m_input_length = left + m_file->read(m_input_buffer + left,
+                                               INPUT_BUFFER_SIZE - left);
+          m_input_position = 0;
+        } else {
+          m_eof = true;
+          return true;
+        }
+      } else {
+        m_input_position += rv;
+      }
     }
     if (m_first_frame) {
       m_channel_count = m_context->channels;
       m_sample_rate = m_context->sample_rate;
       m_sample_format = SF_S16;
       m_first_frame = false;
-    } else if (m_context->channels != m_channel_count ||
-               m_context->sample_rate != m_sample_rate) {
+    }
+    if (m_context->channels != m_channel_count ||
+        m_context->sample_rate != m_sample_rate) {
       // Can't handle format changes mid-stream.
       return false;
     }
@@ -349,10 +388,56 @@ namespace audiere {
     }
   }
 
-  
+  bool MP3InputStream::ID3v2Match(u8* buf)
+  {
+    return  buf[0] == 'I' &&
+      buf[1] == 'D' &&
+      buf[2] == '3' &&
+      buf[3] != 0xff &&
+      buf[4] != 0xff &&
+      (buf[6] & 0x80) == 0 &&
+      (buf[7] & 0x80) == 0 &&
+      (buf[8] & 0x80) == 0 &&
+      (buf[9] & 0x80) == 0;
+  }
+
+  void
+  MP3InputStream::ID3v2Parse(u8* buf, int len, u8 version, u8 flags)
+  {
+    // skips the ID3v2 frame.
+    // the maximium of frame length is 16M.
+    u8 buffer[4096];
+    while (len > 0) {
+      m_file->read(buffer, std::min(len, 4096));
+      len -= std::min(len, 4096);
+    }
+  }
+
   void
   MP3InputStream::readID3v2Tags() {
     // ID3v2 is super complicated.
+    if (m_seekable) {
+      m_file->seek(0, File::BEGIN);
+      m_eof = false;
+    }
+
+    u8 buffer[ID3v2_HEADER_SIZE];
+    if (m_file->read(buffer, ID3v2_HEADER_SIZE) != ID3v2_HEADER_SIZE) {
+      return;
+    }
+
+    while (ID3v2Match(buffer)) {
+      /* parse ID3v2 header */
+      int len =
+        ((buffer[6] & 0x7f) << 21) |
+        ((buffer[7] & 0x7f) << 14) |
+        ((buffer[8] & 0x7f) << 7) |
+        (buffer[9] & 0x7f);
+      ID3v2Parse(buffer, len, buffer[3], buffer[5]);
+      if (m_file->read(buffer, ID3v2_HEADER_SIZE) != ID3v2_HEADER_SIZE) {
+	  return;
+      }
+    }
   }
 
 }

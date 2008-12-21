@@ -63,6 +63,12 @@ else
 WINMM_DIST    = device_mm.cpp device_mm.h
 endif
 
+if HAVE_CORE_AUDIO
+COREAUDIO_SOURCES = device_coreaudio.cpp device_coreaudio.h
+else
+COREAUDIO_DIST    = device_coreaudio.cpp device_coreaudio.h
+endif
+
 # Automake blows.
 # A lot.
 if HAVE_LIBCDAUDIO
@@ -126,6 +132,7 @@ libaudiere_la_SOURCES = \
 	$(OSS_SOURCES) \
 	$(ALSA_SOURCES) \
 	$(WINMM_SOURCES) \
+	$(COREAUDIO_SOURCES) \
 	dumb_resample.cpp \
 	dumb_resample.h \
 	file_ansi.cpp \

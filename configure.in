@@ -43,16 +43,24 @@ AC_LANG(C++)
 
 dnl Checks for libraries.
 
-dnl If building on Cygwin or mingw, don't let windows.h define min() or max()
 win32=no
+core_audio=no
 case $host in
   *cygwin*|*mingw*)
+    dnl If building on Cygwin or mingw, don't let windows.h define min() or max()
     CXXFLAGS="-DWIN32_LEAN_AND_MEAN -DNOMINMAX -DADR_DECL= -DADR_CALL= $CXXFLAGS"
     win32=yes
+    ;;
+  *darwin*)
+    AC_DEFINE(HAVE_CORE_AUDIO)
+    LIBS="-framework Cocoa -framework AudioUnit -framework AudioToolbox $LIBS"
+    EXTRA_LIBS="-framework Cocoa -framework AudioUnit -framework AudioToolbox $EXTRA_LIBS"
+    core_audio=yes;
     ;;
 esac
 
 AM_CONDITIONAL(WIN32, test "x$win32" = "xyes")
+AM_CONDITIONAL(HAVE_CORE_AUDIO, test "x$core_audio" = "xyes")
 
 dnl If building with gcc, build with all warnings except "class has virtual
 dnl functions but non-virtual destructor".

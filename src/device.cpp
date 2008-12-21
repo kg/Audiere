@@ -44,6 +44,9 @@
   #include "device_pa.h"
 #endif
 
+#ifdef HAVE_CORE_AUDIO
+  #include "device_coreaudio.h"
+#endif
 
 namespace audiere {
 
@@ -175,6 +178,9 @@ namespace audiere {
 #ifdef HAVE_PA
       "pa:portaudo compatible"  ";"
 #endif
+#ifdef HAVE_CORE_AUDIO
+      "coreaudio:Core Audio (Mac OS X)"  ";"
+#endif
 
 #endif
       "null:Null output (no sound)"  ;
@@ -236,7 +242,8 @@ namespace audiere {
         TRY_GROUP("directsound");
         TRY_GROUP("winmm");
         TRY_GROUP("oss");
-	TRY_GROUP("portaudio");	
+        TRY_GROUP("portaudio");
+        TRY_GROUP("coreaudio");
         return 0;
       }
 
@@ -274,12 +281,21 @@ namespace audiere {
           return 0;
         }
       #endif
+
       #ifdef HAVE_PA
 	if (name == "portaudio") {
           TRY_DEVICE(PAAudioDevice);
           return 0;
 	}
       #endif
+
+      #ifdef HAVE_CORE_AUDIO
+	if (name == "coreaudio") {
+          TRY_DEVICE(CAAudioDevice);
+          return 0;
+	}
+      #endif
+
       if (name == "null") {
         TRY_DEVICE(NullAudioDevice);
         return 0;

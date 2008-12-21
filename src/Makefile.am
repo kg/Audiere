@@ -85,9 +85,20 @@ MIDI_SOURCES        = midi_mci.cpp
 MIDI_DIST           = midi_null.cpp
 else
 MIDI_SOURCES        = midi_null.cpp
-MIDI_DIST           = midi_mci.cpp        
+MIDI_DIST           = midi_mci.cpp
 endif
 
+if WIN32
+THREADS_SOURCES        = threads_win32.cpp
+THREADS_DIST           = threads_posix.cpp
+TIMER_SOURCES          = timer_win32.cpp
+TIMER_DIST             = timer_posix.cpp
+else
+THREADS_SOURCES        = threads_posix.cpp
+THREADS_DIST           = threads_win32.cpp
+TIMER_SOURCES          = timer_posix.cpp
+TIMER_DIST             = timer_win32.cpp
+endif
 
 EXTRA_DIST = \
 	$(LIBCDAUDIO_DIST) $(WINCDAUDIO_DIST) $(NULLCDAUDIO_DIST) \
@@ -141,9 +152,9 @@ libaudiere_la_SOURCES = \
 	sound.cpp \
 	sound_effect.cpp \
 	square_wave.cpp \
-	threads_posix.cpp \
+	$(THREADS_SOURCES) \
 	threads.h \
-	timer_posix.cpp \
+	$(TIMER_SOURCES) \
 	timer.h \
 	tone.cpp \
 	types.h \

@@ -1,4 +1,5 @@
 #include <string>
+#include <cstdlib>
 #include "audiere.h"
 #include "internal.h"
 #include "mci_device.h"

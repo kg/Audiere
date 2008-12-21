@@ -15,7 +15,7 @@ public:
   }
 
 private:
-  void MIDIDeviceDialog::OnButton(wxCommandEvent& event);
+  void OnButton(wxCommandEvent& event);
 
   wxTextCtrl* m_name;
 

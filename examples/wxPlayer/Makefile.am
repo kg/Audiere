@@ -23,6 +23,7 @@ SRC = \
 	StreamFrame.cpp \
 	StreamFrame.h \
 	TagsDialog.cpp \
+	TagsDialog.h \
 	wx.h \
 	wxPlayer.cpp \
 	wxPlayer.h

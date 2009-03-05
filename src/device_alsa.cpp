@@ -62,12 +62,7 @@ namespace audiere {
       return 0;
     }
 
-    int chunk_size = period_size;
-    int bits_per_sample = snd_pcm_format_physical_width(SND_PCM_FORMAT_S16_LE);
-    int bits_per_frame = bits_per_sample * 2;
-    int chunk_bytes = chunk_size * bits_per_frame / 8;
-
-    return new ALSAAudioDevice(pcm_handle, rate, chunk_bytes);
+    return new ALSAAudioDevice(pcm_handle, rate, 4096);
   }
 
 
@@ -101,9 +96,9 @@ namespace audiere {
     sample_len = m_buffer_size / 4;
 
     sample_left = read(sample_len, sample_buf);
-    while (sample_len > 0) {
-      ret = snd_pcm_writei(m_pcm_handle, sample_buf, sample_len);
-      if (ret == -EAGAIN || (ret > 0 && ret < sample_len)) {
+    while (sample_left > 0) {
+      ret = snd_pcm_writei(m_pcm_handle, sample_buf, sample_left);
+      if (ret == -EAGAIN || (ret > 0 && ret < sample_left)) {
         snd_pcm_wait(m_pcm_handle, 10);
       } else if (ret == -ESTRPIPE) {
         do {
@@ -113,15 +108,10 @@ namespace audiere {
         snd_pcm_prepare(m_pcm_handle);
       } else if (ret == -EPIPE) {
         snd_pcm_prepare(m_pcm_handle);
-      } else if (ret == -EINTR) {
-        // nothing to do.
-      } else if (ret < 0) {
-        fprintf(stderr, "alsa error: %s\n", snd_strerror(ret));
-        return;
       }
       if (ret > 0) {
         sample_buf += ret * 4;
-        sample_len -= ret;
+        sample_left -= ret;
       }
     }
   }

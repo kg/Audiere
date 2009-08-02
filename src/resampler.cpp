@@ -136,7 +136,7 @@ namespace audiere {
           *out_l++ = *in++;
           *out_r++ = *in++;
         }
-      
+
       }
     }
 
@@ -195,6 +195,7 @@ namespace audiere {
   const char* Resampler::getTagKey(int i)   { return m_source->getTagKey(i);   }
   const char* Resampler::getTagValue(int i) { return m_source->getTagValue(i); }
   const char* Resampler::getTagType(int i)  { return m_source->getTagType(i);  }
+  const char* Resampler::getDecoder()       { return m_source->getDecoder(); }
 
   void
   Resampler::setPitchShift(float shift) {

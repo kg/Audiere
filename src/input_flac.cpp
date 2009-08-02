@@ -1,3 +1,7 @@
+/*
+    Modified 2009/08/01 to support the new 1.2.1 FLAC library - Jason A. Petrasko
+*/
+
 #include "input_flac.h"
 #include "types.h"
 #include "utility.h"
@@ -14,13 +18,15 @@ namespace audiere {
 
     m_length = 0;
     m_position = 0;
+
+    m_decoder_text = "flac:standard";
   }
 
 
   FLACInputStream::~FLACInputStream() {
     if (m_decoder) {
-      FLAC__seekable_stream_decoder_finish(m_decoder);
-      FLAC__seekable_stream_decoder_delete(m_decoder);
+      FLAC__stream_decoder_finish(m_decoder);
+      FLAC__stream_decoder_delete(m_decoder);
       m_decoder = 0;
     }
   }
@@ -31,60 +37,45 @@ namespace audiere {
     m_file = file;
 
     // initialize the decoder
-    m_decoder = FLAC__seekable_stream_decoder_new();
+    m_decoder = FLAC__stream_decoder_new();
     if (!m_decoder) {
       m_file = 0;
       return false;
     }
 
-#define SET_CALLBACK(name)                                   \
-  FLAC__seekable_stream_decoder_set_##name##_callback(       \
-    m_decoder,                                               \
-    name##_callback)
-
-    // set callbacks
-    FLAC__seekable_stream_decoder_set_client_data      (m_decoder, this);
-    SET_CALLBACK(read);
-    SET_CALLBACK(seek);
-    SET_CALLBACK(tell);
-    SET_CALLBACK(length);
-    SET_CALLBACK(eof);
-    SET_CALLBACK(write);
-    SET_CALLBACK(metadata);
-    SET_CALLBACK(error);
-
-    FLAC__SeekableStreamDecoderState state =
-      FLAC__seekable_stream_decoder_init(m_decoder);
-    if (state != FLAC__SEEKABLE_STREAM_DECODER_OK) {
-      FLAC__seekable_stream_decoder_finish(m_decoder);
-      FLAC__seekable_stream_decoder_delete(m_decoder);
+    // initialize the stream decoder!
+    FLAC__StreamDecoderInitStatus state =
+      FLAC__stream_decoder_init_stream(m_decoder,read_callback,seek_callback,tell_callback,length_callback,eof_callback,write_callback,metadata_callback,error_callback,this);
+    if (state != FLAC__STREAM_DECODER_INIT_STATUS_OK) {
+      FLAC__stream_decoder_finish(m_decoder);
+      FLAC__stream_decoder_delete(m_decoder);
       m_decoder = 0;
       m_file = 0;
       return false;
     }
 
     // make sure we have metadata before we return!
-    if (!FLAC__seekable_stream_decoder_process_until_end_of_metadata(m_decoder)) {
-      FLAC__seekable_stream_decoder_finish(m_decoder);
-      FLAC__seekable_stream_decoder_delete(m_decoder);
+    if (!FLAC__stream_decoder_process_until_end_of_metadata(m_decoder)) {
+      FLAC__stream_decoder_finish(m_decoder);
+      FLAC__stream_decoder_delete(m_decoder);
       m_decoder = 0;
       m_file = 0;
       return false;
     }
 
     // process one frame so we can do something!
-    if (!FLAC__seekable_stream_decoder_process_single(m_decoder)) {
-      FLAC__seekable_stream_decoder_finish(m_decoder);
-      FLAC__seekable_stream_decoder_delete(m_decoder);
+    if (!FLAC__stream_decoder_process_single(m_decoder)) {
+      FLAC__stream_decoder_finish(m_decoder);
+      FLAC__stream_decoder_delete(m_decoder);
       m_decoder = 0;
       m_file = 0;
       return false;
     }
 
     // get info about the flac file
-    m_channel_count = FLAC__seekable_stream_decoder_get_channels(m_decoder);
-    m_sample_rate   = FLAC__seekable_stream_decoder_get_sample_rate(m_decoder);
-    int bps         = FLAC__seekable_stream_decoder_get_bits_per_sample(m_decoder);
+    m_channel_count = FLAC__stream_decoder_get_channels(m_decoder);
+    m_sample_rate   = FLAC__stream_decoder_get_sample_rate(m_decoder);
+    int bps         = FLAC__stream_decoder_get_bits_per_sample(m_decoder);
     if (bps == 16) {
       m_sample_format = SF_S16;
     } else if (bps == 8) {
@@ -113,14 +104,14 @@ namespace audiere {
   FLACInputStream::doRead(int frame_count, void* samples) {
     const int frame_size = m_channel_count * GetSampleSize(m_sample_format);
     u8* out = (u8*)samples;
-    
+
     // we keep reading till we finish topping up!
     int frames_read = 0;
     while (frames_read < frame_count) {
-      
+
       // if the buffer is empty, ask FLAC to fill it p
       if (m_buffer.getSize() < frame_size) {
-        if (!FLAC__seekable_stream_decoder_process_single(m_decoder)) {
+        if (!FLAC__stream_decoder_process_single(m_decoder)) {
           return frames_read;
         }
 
@@ -147,7 +138,7 @@ namespace audiere {
   void
   FLACInputStream::reset() {
     m_file->seek(0, File::BEGIN);
-    FLAC__seekable_stream_decoder_seek_absolute(m_decoder, 0);
+    FLAC__stream_decoder_seek_absolute(m_decoder, 0);
     m_position = 0;
     m_buffer.clear();
   }
@@ -167,7 +158,7 @@ namespace audiere {
 
   void
   FLACInputStream::setPosition(int position) {
-    if (FLAC__seekable_stream_decoder_seek_absolute(m_decoder, position)) {
+    if (FLAC__stream_decoder_seek_absolute(m_decoder, position)) {
       m_position = position;
     }
   }
@@ -218,56 +209,56 @@ namespace audiere {
   }
 
 
-  FLAC__SeekableStreamDecoderReadStatus FLACInputStream::read_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+  FLAC__StreamDecoderReadStatus FLACInputStream::read_callback(
+    const FLAC__StreamDecoder* decoder,
     FLAC__byte buffer[],
     unsigned *bytes,
     void* client_data)
   {
     *bytes = getFile(client_data)->read(buffer, *bytes);
     if (*bytes == 0) {
-      return FLAC__SEEKABLE_STREAM_DECODER_READ_STATUS_ERROR;
+      return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
     } else {
-      return FLAC__SEEKABLE_STREAM_DECODER_READ_STATUS_OK;
+      return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
     }
   }
 
 
-  FLAC__SeekableStreamDecoderSeekStatus FLACInputStream::seek_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+  FLAC__StreamDecoderSeekStatus FLACInputStream::seek_callback(
+    const FLAC__StreamDecoder* decoder,
     FLAC__uint64 absolute_byte_offset,
     void* client_data)
   {
     if (getFile(client_data)->seek(static_cast<int>(absolute_byte_offset), File::BEGIN)) {
-      return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_OK;
+      return FLAC__STREAM_DECODER_SEEK_STATUS_OK;
     } else {
-      return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_ERROR;
+      return FLAC__STREAM_DECODER_SEEK_STATUS_ERROR;
     }
   }
 
 
-  FLAC__SeekableStreamDecoderTellStatus FLACInputStream::tell_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+  FLAC__StreamDecoderTellStatus FLACInputStream::tell_callback(
+    const FLAC__StreamDecoder* decoder,
     FLAC__uint64* absolute_byte_offset,
     void* client_data)
   {
     *absolute_byte_offset = getFile(client_data)->tell();
-    return FLAC__SEEKABLE_STREAM_DECODER_TELL_STATUS_OK;
+    return FLAC__STREAM_DECODER_TELL_STATUS_OK;
   }
 
 
-  FLAC__SeekableStreamDecoderLengthStatus FLACInputStream::length_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+  FLAC__StreamDecoderLengthStatus FLACInputStream::length_callback(
+    const FLAC__StreamDecoder* decoder,
     FLAC__uint64* stream_length,
     void* client_data)
   {
     *stream_length = GetFileLength(getFile(client_data));
-    return FLAC__SEEKABLE_STREAM_DECODER_LENGTH_STATUS_OK;
+    return FLAC__STREAM_DECODER_LENGTH_STATUS_OK;
   }
 
 
   FLAC__bool FLACInputStream::eof_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+    const FLAC__StreamDecoder* decoder,
     void* client_data)
   {
     File* file = getFile(client_data);
@@ -276,7 +267,7 @@ namespace audiere {
 
 
   FLAC__StreamDecoderWriteStatus FLACInputStream::write_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+    const FLAC__StreamDecoder* decoder,
     const FLAC__Frame* frame,
     const FLAC__int32* const buffer[],
     void* client_data)
@@ -286,7 +277,7 @@ namespace audiere {
 
 
   void FLACInputStream::metadata_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+    const FLAC__StreamDecoder* decoder,
     const FLAC__StreamMetadata *metadata,
     void* client_data)
   {
@@ -298,7 +289,7 @@ namespace audiere {
 
 
   void FLACInputStream::error_callback(
-    const FLAC__SeekableStreamDecoder* decoder,
+    const FLAC__StreamDecoder* decoder,
     FLAC__StreamDecoderErrorStatus status,
     void* client_data)
   {

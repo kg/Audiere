@@ -74,7 +74,7 @@ namespace audiere {
       return true;
     }
 
-    
+
     // SampleSource implementation
 
     void ADR_CALL getFormat(
@@ -186,6 +186,7 @@ namespace audiere {
     const char* ADR_CALL getTagKey(int i)   { return m_source->getTagKey(i);   }
     const char* ADR_CALL getTagValue(int i) { return m_source->getTagValue(i); }
     const char* ADR_CALL getTagType(int i)  { return m_source->getTagType(i);  }
+    const char* ADR_CALL getDecoder()  { return m_source->getDecoder();  }
 
 
   private:
@@ -206,5 +207,5 @@ namespace audiere {
 
     return new LoopPointSourceImpl(source);
   }
-  
+
 }

@@ -22,6 +22,7 @@ namespace audiere {
     m_data_chunk_length   = 0;
 
     m_frames_left_in_chunk = 0;
+    m_decoder_text = "wav:standard";
   }
 
 
@@ -84,7 +85,7 @@ namespace audiere {
     const int frames_to_read = std::min(frame_count, m_frames_left_in_chunk);
     const int frame_size = m_channel_count * GetSampleSize(m_sample_format);
     const int bytes_to_read = frames_to_read * frame_size;
-  
+
     const int read = m_file->read(buffer, bytes_to_read);
     const int frames_read = read / frame_size;
 

@@ -20,6 +20,8 @@
  * mpaudec library.  Based on common.c from libavcodec.
  */
 
+#ifndef NO_MPAUDEC
+
 #include "internal.h"
 
 /**
@@ -206,7 +208,7 @@ static int build_table(VLC *vlc, int table_nb_bits,
    'nb_bits' set thee decoding table size (2^nb_bits) entries. The
    bigger it is, the faster is the decoding. But it should not be too
    big to save memory and L1 cache. '9' is a good compromise.
-   
+
    'nb_codes' : number of vlcs codes
 
    'bits' : table which gives the size (in bits) of each vlc code.
@@ -220,7 +222,7 @@ static int build_table(VLC *vlc, int table_nb_bits,
    or 'codes' tables.
 
    'wrap' and 'size' allows to use any memory configuration and types
-   (byte/word/long) to store the 'bits' and 'codes' tables.  
+   (byte/word/long) to store the 'bits' and 'codes' tables.
 */
 int init_vlc(VLC *vlc, int nb_bits, int nb_codes,
              const void *bits, int bits_wrap, int bits_size,
@@ -255,7 +257,7 @@ int get_vlc(GetBitContext *s, const VLC *vlc)
     int code = 0;
     int depth = 0, max_depth = 3;
     int n, index, bits = vlc->bits;
-    
+
     do {
         index = show_bits(s, bits) + code;
         code = vlc->table[index][0];
@@ -271,3 +273,6 @@ int get_vlc(GetBitContext *s, const VLC *vlc)
     skip_bits(s, n);
     return code;
 }
+
+#endif
+

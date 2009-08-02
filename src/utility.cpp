@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include "utility.h"
 #include "internal.h"
+#include <stdio.h>
 
 
 namespace audiere {
@@ -82,7 +83,7 @@ namespace audiere {
         return c - d;
       }
     }
-  
+
     char c = tolower(*a);
     char d = tolower(*b);
     return (c - d);

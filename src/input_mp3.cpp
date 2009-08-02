@@ -4,6 +4,8 @@
   turn out better than mpegsound did.
 */
 
+#ifndef NO_MPAUDEC
+
 #include <string.h>
 #include "input_mp3.h"
 #include "utility.h"
@@ -31,6 +33,8 @@ namespace audiere {
     m_seekable = false;
     m_length = 0;
     m_position = 0;
+
+    m_decoder = "mp3:mpaudec";
   }
 
 
@@ -322,7 +326,7 @@ namespace audiere {
       "Slow Jam", "Club", "Tango", "Samba", "Folklore", "Ballad",
       "Power Ballad", "Rhythmic Soul", "Freestyle", "Duet", "Punk Rock",
       "Drum Solo", "Acapella", "Euro-House", "Dance Hall",
-      
+
       // http://lame.sourceforge.net/doc/html/id3.html
 
       "Goa", "Drum & Bass", "Club-House", "Hardcore", "Terror", "Indie",
@@ -441,3 +445,6 @@ namespace audiere {
   }
 
 }
+
+#endif
+

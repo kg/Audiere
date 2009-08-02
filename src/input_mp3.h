@@ -1,7 +1,11 @@
 #ifndef INPUT_MP3_H
 #define INPUT_MP3_H
 
-#include "mpaudec/mpaudec.h"
+#ifndef NO_MPAUDEC
+    #include "mpaudec/mpaudec.h"
+#else
+    #include "mpg123.h"
+#endif
 #include "audiere.h"
 #include "basic_source.h"
 #include "types.h"
@@ -30,11 +34,21 @@ namespace audiere {
 
 
   private:
+    bool decodeFrame();
+
+#ifndef NO_MPAUDEC
     void readID3v1Tags();
     void readID3v2Tags();
     void ID3v2Parse(u8* buf, int len, u8 version, u8 flags);
     bool ID3v2Match(u8* buf);
-    bool decodeFrame();
+    MPAuDecContext* m_context;
+#else
+    int decodeFrames(int frames, void* samples);
+    void GetMpg123String(mpg123_string *s, std::string &dest);
+    void GetID3();
+    mpg123_handle* mh;
+    static bool mpg123_initialized;                             // workaround to make sure we initialize mpg123 when needed
+#endif
 
     FilePtr m_file;
     bool m_eof;
@@ -43,8 +57,6 @@ namespace audiere {
     int m_channel_count;
     int m_sample_rate;
     SampleFormat m_sample_format;
-
-    MPAuDecContext* m_context;
 
     QueueBuffer m_buffer;
 

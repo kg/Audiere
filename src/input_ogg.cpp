@@ -16,6 +16,8 @@ namespace audiere {
     m_channel_count = 0;
     m_sample_rate   = 0;
     m_sample_format = SF_S16;
+
+    m_decoder_text = "ogg:standard";
   }
 
 

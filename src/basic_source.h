@@ -48,6 +48,7 @@ namespace audiere {
     const char* ADR_CALL getTagKey(int i)   { return m_tags[i].key.c_str(); }
     const char* ADR_CALL getTagValue(int i) { return m_tags[i].value.c_str(); }
     const char* ADR_CALL getTagType(int i)  { return m_tags[i].type.c_str(); }
+    const char* ADR_CALL getDecoder()       { return m_decoder_text.c_str(); }
 
     /// Implement this method in subclasses.
     virtual int doRead(int frame_count, void* buffer) = 0;
@@ -60,6 +61,8 @@ namespace audiere {
     void addTag(const std::string& k, const std::string& v, const std::string& t) {
       addTag(Tag(k, v, t));
     }
+
+    std::string m_decoder_text;
 
   private:
     bool m_repeat;

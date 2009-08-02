@@ -47,6 +47,7 @@ namespace audiere {
   SpeexInputStream::SpeexInputStream() {
     m_speexfile = 0;
     m_position = 0;
+    m_decoder_text = "speex:standard";
   }
 
 

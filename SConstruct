@@ -53,33 +53,36 @@ conf = Configure(env)
 
 # Parse command-line options.
 if ARGUMENTS.get('use_oggvorbis', 'yes') == 'yes':
-    if not conf.CheckHeader("vorbis/vorbisfile.h"):
-        print "Error: Ogg Vorbis support was not found. Either install libvorbis, or rebuild with use_oggvorbis=no."
-        sys.exit(1)
     if sys.platform == 'win32':
         conf.env.Append(LIBS=['vorbisfile_static', 'vorbis_static', 'ogg_static'])
     else:
-        conf.env.Append(LIBS=['vorbis', 'ogg', 'vorbisfile'])
+        if not conf.CheckHeader("vorbis/vorbisfile.h"):
+            print "Error: Ogg Vorbis support was not found. Either install libvorbis, or rebuild with use_oggvorbis=no."
+            sys.exit(1)
+            conf.env.Append(LIBS=['vorbis', 'ogg', 'vorbisfile'])
     define("HAVE_OGG")
 else:
     define("NO_OGG")
 
 if ARGUMENTS.get('use_flac', 'yes') == 'yes':
-    if not conf.CheckHeader('FLAC/all.h'):
-        print "Error: FLAC support was not found. Either install libFLAC, or rebuild with use_flac=no."
-        sys.exit(1)
     if sys.platform == 'win32':
         conf.env.Append(LIBS=['libFLAC++_static', 'libFLAC_static'])
     else:
+        if not conf.CheckHeader('FLAC/all.h'):
+            print "Error: FLAC support was not found. Either install libFLAC, or rebuild with use_flac=no."
+            sys.exit(1)
         conf.env.Append(LIBS=['m'])
     define("HAVE_FLAC")
 else:
     define("NO_FLAC")
 
 if ARGUMENTS.get('use_dumb', 'yes') == 'yes':
-    if not conf.CheckHeader('dumb.h'):
-        print "Error: libdumb was not found. Either install it, or rebuild with use_dumb=no."
-        sys.exit(1)
+    if sys.platform == 'win32':
+        pass
+    else:
+        if not conf.CheckHeader('dumb.h'):
+            print "Error: libdumb was not found. Either install it, or rebuild with use_dumb=no."
+            sys.exit(1)
     conf.env.Append(LIBS=['dumb_static'])
     define("HAVE_DUMB")
 else:
@@ -97,9 +100,12 @@ else:
 
 if ARGUMENTS.get('use_dsound', 'yes') == 'yes':
     #conf.env.Append(LIBS=['dsound', 'ole32', 'rpcrt4'])
-    if not conf.CheckHeader("dsound.h"):
-        print "Error: DirectSound support was not found. Install DirectX or rebuild with use_dsound=no."
-        sys.exit(1)
+    if sys.platform == 'win32':
+        pass
+    else:
+        if not conf.CheckHeader("dsound.h"):
+            print "Error: DirectSound support was not found. Install DirectX or rebuild with use_dsound=no."
+            sys.exit(1)
     define("HAVE_DSOUND")
 else:
     define("NO_DSOUND")

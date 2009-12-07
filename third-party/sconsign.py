@@ -2,7 +2,7 @@
 #
 # SCons - a Software Constructor
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -24,17 +24,17 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "/home/scons/scons/branch.0/branch.96/baseline/src/script/sconsign.py 0.96.96.D001 2007/04/12 14:12:18 knight"
+__revision__ = "src/script/sconsign.py 3842 2008/12/20 22:59:52 scons"
 
-__version__ = "0.96.96"
+__version__ = "1.2.0"
 
-__build__ = "D001"
+__build__ = "r3842"
 
-__buildsys__ = "roxbury"
+__buildsys__ = "scons-dev"
 
-__date__ = "2007/04/12 14:12:18"
+__date__ = "2008/12/20 22:59:52"
 
-__developer__ = "knight"
+__developer__ = "scons"
 
 import os
 import os.path
@@ -67,9 +67,12 @@ libs = []
 if os.environ.has_key("SCONS_LIB_DIR"):
     libs.append(os.environ["SCONS_LIB_DIR"])
 
-local = 'scons-local-' + __version__
+local_version = 'scons-local-' + __version__
+local = 'scons-local'
 if script_dir:
+    local_version = os.path.join(script_dir, local_version)
     local = os.path.join(script_dir, local)
+libs.append(os.path.abspath(local_version))
 libs.append(os.path.abspath(local))
 
 scons_version = 'scons-%s' % __version__
@@ -138,14 +141,12 @@ else:
     except AttributeError:
         pass
     else:
-        while libpath:
-            libpath, tail = os.path.split(libpath)
-            if tail[:6] == "python":
-                break
-        if libpath:
-            # Python library is in /usr/libfoo/python*;
-            # check /usr/libfoo/scons*.
-            prefs.append(libpath)
+        # Split /usr/libfoo/python*/os.py to /usr/libfoo/python*.
+        libpath, tail = os.path.split(libpath)
+        # Split /usr/libfoo/python* to /usr/libfoo
+        libpath, tail = os.path.split(libpath)
+        # Check /usr/libfoo/scons*.
+        prefs.append(libpath)
 
 # Look first for 'scons-__version__' in all of our preference libs,
 # then for 'scons'.
@@ -203,7 +204,6 @@ Print_Entries = []
 Print_Flags = Flagger()
 Verbose = 0
 Readable = 0
-Raw = 0
 
 def default_mapper(entry, name):
     try:
@@ -211,6 +211,14 @@ def default_mapper(entry, name):
     except:
         val = None
     return str(val)
+
+def map_action(entry, name):
+    try:
+        bact = entry.bact
+        bactsig = entry.bactsig
+    except AttributeError:
+        return None
+    return '%s [%s]' % (bactsig, bact)
 
 def map_timestamp(entry, name):
     try:
@@ -230,12 +238,13 @@ def map_bkids(entry, name):
         return None
     result = []
     for i in xrange(len(bkids)):
-        result.append("%s: %s" % (bkids[i], bkidsigs[i]))
+        result.append(nodeinfo_string(bkids[i], bkidsigs[i], "        "))
     if result == []:
         return None
     return string.join(result, "\n        ")
 
 map_field = {
+    'action'    : map_action,
     'timestamp' : map_timestamp,
     'bkids'     : map_bkids,
 }
@@ -255,52 +264,78 @@ def field(name, entry, verbose=Verbose):
     return val
 
 def nodeinfo_raw(name, ninfo, prefix=""):
-    # This does essentially what the pprint module does,
-    # except that it sorts the keys for deterministic output.
+    # This just formats the dictionary, which we would normally use str()
+    # to do, except that we want the keys sorted for deterministic output.
     d = ninfo.__dict__
-    keys = d.keys()
-    keys.sort()
+    try:
+        keys = ninfo.field_list + ['_version_id']
+    except AttributeError:
+        keys = d.keys()
+        keys.sort()
     l = []
     for k in keys:
-        l.append('%s: %s' % (repr(k), repr(d[k])))
+        l.append('%s: %s' % (repr(k), repr(d.get(k))))
+    if '\n' in name:
+        name = repr(name)
     return name + ': {' + string.join(l, ', ') + '}'
 
-def nodeinfo_string(name, ninfo, prefix=""):
-    fieldlist = ["bsig", "csig", "timestamp", "size"]
+def nodeinfo_cooked(name, ninfo, prefix=""):
+    try:
+        field_list = ninfo.field_list
+    except AttributeError:
+        field_list = []
     f = lambda x, ni=ninfo, v=Verbose: field(x, ni, v)
-    outlist = [name+":"] + filter(None, map(f, fieldlist))
+    if '\n' in name:
+        name = repr(name)
+    outlist = [name+':'] + filter(None, map(f, field_list))
     if Verbose:
-        sep = "\n    " + prefix
+        sep = '\n    ' + prefix
     else:
-        sep = " "
+        sep = ' '
     return string.join(outlist, sep)
 
-def printfield(name, entry, prefix=""):
-    if Raw:
-        print nodeinfo_raw(name, entry.ninfo, prefix)
-    else:
-        print nodeinfo_string(name, entry.ninfo, prefix)
+nodeinfo_string = nodeinfo_cooked
 
+def printfield(name, entry, prefix=""):
     outlist = field("implicit", entry, 0)
     if outlist:
         if Verbose:
             print "    implicit:"
         print "        " + outlist
+    outact = field("action", entry, 0)
+    if outact:
+        if Verbose:
+            print "    action: " + outact
+        else:
+            print "        " + outact
 
-def printentries(entries):
+def printentries(entries, location):
     if Print_Entries:
         for name in Print_Entries:
             try:
                 entry = entries[name]
             except KeyError:
-                sys.stderr.write("sconsign: no entry `%s' in `%s'\n" % (name, args[0]))
+                sys.stderr.write("sconsign: no entry `%s' in `%s'\n" % (name, location))
             else:
-                printfield(name, entry)
+                try:
+                    ninfo = entry.ninfo
+                except AttributeError:
+                    print name + ":"
+                else:
+                    print nodeinfo_string(name, entry.ninfo)
+                printfield(name, entry.binfo)
     else:
         names = entries.keys()
         names.sort()
         for name in names:
-            printfield(name, entries[name])
+            entry = entries[name]
+            try:
+                ninfo = entry.ninfo
+            except AttributeError:
+                print name + ":"
+            else:
+                print nodeinfo_string(name, entry.ninfo)
+            printfield(name, entry.binfo)
 
 class Do_SConsignDB:
     def __init__(self, dbm_name, dbm):
@@ -338,8 +373,13 @@ class Do_SConsignDB:
                     print_e = e
                 sys.stderr.write("sconsign: %s\n" % (print_e))
                 return
-        except:
+        except KeyboardInterrupt:
+            raise
+        except cPickle.UnpicklingError:
             sys.stderr.write("sconsign: ignoring invalid `%s' file `%s'\n" % (self.dbm_name, fname))
+            return
+        except Exception, e:
+            sys.stderr.write("sconsign: ignoring invalid `%s' file `%s': %s\n" % (self.dbm_name, fname, e))
             return
 
         if Print_Directories:
@@ -358,7 +398,7 @@ class Do_SConsignDB:
 
     def printentries(self, dir, val):
         print '=== ' + dir + ':'
-        printentries(cPickle.loads(val))
+        printentries(cPickle.loads(val), dir)
 
 def Do_SConsignDir(name):
     try:
@@ -368,10 +408,15 @@ def Do_SConsignDir(name):
         return
     try:
         sconsign = SCons.SConsign.Dir(fp)
-    except:
-        sys.stderr.write("sconsign: ignoring invalid .sconsign file `%s'\n" % name)
+    except KeyboardInterrupt:
+        raise
+    except cPickle.UnpicklingError:
+        sys.stderr.write("sconsign: ignoring invalid .sconsign file `%s'\n" % (name))
         return
-    printentries(sconsign.entries)
+    except Exception, e:
+        sys.stderr.write("sconsign: ignoring invalid .sconsign file `%s': %s\n" % (name, e))
+        return
+    printentries(sconsign.entries, args[0])
 
 ##############################################################################
 
@@ -380,7 +425,7 @@ import getopt
 helpstr = """\
 Usage: sconsign [OPTIONS] FILE [...]
 Options:
-  -b, --bsig                  Print build signature information.
+  -a, --act, --action         Print build action information.
   -c, --csig                  Print content signature information.
   -d DIR, --dir=DIR           Print only info about DIR.
   -e ENTRY, --entry=ENTRY     Print only info about ENTRY.
@@ -394,16 +439,17 @@ Options:
   -v, --verbose               Verbose, describe each field.
 """
 
-opts, args = getopt.getopt(sys.argv[1:], "bcd:e:f:hirstv",
-                            ['bsig', 'csig', 'dir=', 'entry=',
+opts, args = getopt.getopt(sys.argv[1:], "acd:e:f:hirstv",
+                            ['act', 'action',
+                             'csig', 'dir=', 'entry=',
                              'format=', 'help', 'implicit',
                              'raw', 'readable',
                              'size', 'timestamp', 'verbose'])
 
 
 for o, a in opts:
-    if o in ('-b', '--bsig'):
-        Print_Flags['bsig'] = 1
+    if o in ('-a', '--act', '--action'):
+        Print_Flags['action'] = 1
     elif o in ('-c', '--csig'):
         Print_Flags['csig'] = 1
     elif o in ('-d', '--dir'):
@@ -430,7 +476,7 @@ for o, a in opts:
     elif o in ('-i', '--implicit'):
         Print_Flags['implicit'] = 1
     elif o in ('--raw',):
-        Raw = 1
+        nodeinfo_string = nodeinfo_raw
     elif o in ('-r', '--readable'):
         Readable = 1
     elif o in ('-s', '--size'):

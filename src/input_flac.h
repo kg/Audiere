@@ -2,7 +2,7 @@
 #define INPUT_FLAC_H
 
 
-#include <FLAC/seekable_stream_decoder.h>
+#include <FLAC/stream_decoder.h>
 #include "audiere.h"
 #include "basic_source.h"
 #include "utility.h"
@@ -34,37 +34,37 @@ namespace audiere {
       const FLAC__Frame* frame,
       const FLAC__int32* const buffer[]);
 
-    static FLAC__SeekableStreamDecoderReadStatus read_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+    static FLAC__StreamDecoderReadStatus read_callback(
+      const FLAC__StreamDecoder* decoder,
       FLAC__byte buffer[],
-      unsigned* bytes,
+      size_t* bytes,
       void* client_data);
-    static FLAC__SeekableStreamDecoderSeekStatus seek_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+    static FLAC__StreamDecoderSeekStatus seek_callback(
+      const FLAC__StreamDecoder* decoder,
       FLAC__uint64 absolute_byte_offset,
       void* client_data);
-    static FLAC__SeekableStreamDecoderTellStatus tell_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+    static FLAC__StreamDecoderTellStatus tell_callback(
+      const FLAC__StreamDecoder* decoder,
       FLAC__uint64* absolute_byte_offset,
       void* client_data);
-    static FLAC__SeekableStreamDecoderLengthStatus length_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+    static FLAC__StreamDecoderLengthStatus length_callback(
+      const FLAC__StreamDecoder* decoder,
       FLAC__uint64* stream_length,
       void* client_data);
     static FLAC__bool eof_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+      const FLAC__StreamDecoder* decoder,
       void* client_data);
     static FLAC__StreamDecoderWriteStatus write_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+      const FLAC__StreamDecoder* decoder,
       const FLAC__Frame* frame,
       const FLAC__int32* const buffer[],
       void* client_data);
     static void metadata_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+      const FLAC__StreamDecoder* decoder,
       const FLAC__StreamMetadata* metadata,
       void* client_data);
     static void error_callback(
-      const FLAC__SeekableStreamDecoder* decoder,
+      const FLAC__StreamDecoder* decoder,
       FLAC__StreamDecoderErrorStatus status,
       void* client_data);
 
@@ -74,7 +74,7 @@ namespace audiere {
 
     FilePtr m_file;
 
-    FLAC__SeekableStreamDecoder* m_decoder;
+    FLAC__StreamDecoder* m_decoder;
 
     /**
      * This is the buffer used to combine the different channels from FLAC

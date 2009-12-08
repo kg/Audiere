@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../third-party/vc6/include"
+				AdditionalIncludeDirectories="../../third-party/vc6/include;../../third-party/DX9SDK/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS;NOMINMAX;WIN32_LEAN_AND_MEAN;STRICT;FLAC__NO_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -121,7 +121,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../third-party/vc6/include"
+				AdditionalIncludeDirectories="../../third-party/vc6/include;../../third-party/DX9SDK/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIERE_EXPORTS;NOMINMAX;WIN32_LEAN_AND_MEAN;STRICT;FLAC__NO_DLL"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"

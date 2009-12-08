@@ -44,8 +44,17 @@ namespace audiere {
     }
 
     // initialize the stream decoder!
-    FLAC__StreamDecoderInitStatus state =
-      FLAC__stream_decoder_init_stream(m_decoder,read_callback,seek_callback,tell_callback,length_callback,eof_callback,write_callback,metadata_callback,error_callback,this);
+    FLAC__StreamDecoderInitStatus state = FLAC__stream_decoder_init_stream(
+        m_decoder,
+        read_callback,
+        seek_callback,
+        tell_callback,
+        length_callback,
+        eof_callback,
+        write_callback,
+        metadata_callback,
+        error_callback,
+        this);
     if (state != FLAC__STREAM_DECODER_INIT_STATUS_OK) {
       FLAC__stream_decoder_finish(m_decoder);
       FLAC__stream_decoder_delete(m_decoder);

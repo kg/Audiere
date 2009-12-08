@@ -33,8 +33,6 @@ namespace audiere {
     m_seekable = false;
     m_length = 0;
     m_position = 0;
-
-    m_decoder = "mp3:mpaudec";
   }
 
 

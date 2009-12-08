@@ -63,9 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmswd.lib rpcrt4.lib comctl32.lib ws2_32.lib"
+				AdditionalDependencies="rpcrt4.lib comctl32.lib ws2_32.lib"
 				OutputFile="$(OutDir)/wxPlayer.exe"
 				LinkIncremental="2"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/wxPlayer.pdb"
 				SubSystem="2"
@@ -140,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw.lib rpcrt4.lib comctl32.lib ws2_32.lib"
+				AdditionalDependencies="rpcrt4.lib comctl32.lib ws2_32.lib"
 				OutputFile="$(OutDir)/wxPlayer.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"

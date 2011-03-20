@@ -45,6 +45,12 @@ else
 ALSA_DIST    = device_alsa.cpp device_alsa.h
 endif
 
+if HAVE_PA
+PA_SOURCES = device_pa.cpp device_pa.h
+else
+PA_DIST    = device_pa.cpp device_pa.h
+endif
+
 DSOUND_SRC = \
 	device_ds.cpp device_ds.h \
 	device_ds_buffer.cpp device_ds_buffer.h \
@@ -131,6 +137,7 @@ libaudiere_la_SOURCES = \
 	$(AL_SOURCES) \
 	$(OSS_SOURCES) \
 	$(ALSA_SOURCES) \
+	$(PA_SOURCES) \
 	$(WINMM_SOURCES) \
 	$(COREAUDIO_SOURCES) \
 	dumb_resample.cpp \

@@ -1,0 +1,11 @@
+
+_ReSharper.*
+*.sdf
+*.opensdf
+*.suo
+*.user
+*.filters
+*.ipch
+*.pch
+Debug
+Release

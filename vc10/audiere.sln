@@ -4,6 +4,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audiere", "audiere\audiere.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxPlayer", "wxPlayer\wxPlayer.vcxproj", "{665D32B5-2444-4A17-AC86-CBEF0076A550}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple", "simple\simple.vcxproj", "{9BBE19C1-9061-44DE-940B-6916E4673D82}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E5195361-63CD-4C1B-8DD7-3E579779B1F6} = {E5195361-63CD-4C1B-8DD7-3E579779B1F6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -18,6 +23,10 @@ Global
 		{665D32B5-2444-4A17-AC86-CBEF0076A550}.Debug|Win32.Build.0 = Debug|Win32
 		{665D32B5-2444-4A17-AC86-CBEF0076A550}.Release|Win32.ActiveCfg = Release|Win32
 		{665D32B5-2444-4A17-AC86-CBEF0076A550}.Release|Win32.Build.0 = Release|Win32
+		{9BBE19C1-9061-44DE-940B-6916E4673D82}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9BBE19C1-9061-44DE-940B-6916E4673D82}.Debug|Win32.Build.0 = Debug|Win32
+		{9BBE19C1-9061-44DE-940B-6916E4673D82}.Release|Win32.ActiveCfg = Release|Win32
+		{9BBE19C1-9061-44DE-940B-6916E4673D82}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

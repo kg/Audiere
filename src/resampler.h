@@ -37,6 +37,7 @@ namespace audiere {
     const char* ADR_CALL getTagValue(int i);
     const char* ADR_CALL getTagType(int i);
     const char* ADR_CALL getDecoder();
+    MultichannelSampleSource * ADR_CALL asMultichannel();
 
     void  setPitchShift(float shift);
     float getPitchShift();

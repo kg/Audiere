@@ -268,6 +268,9 @@ namespace audiere {
   };
 
 
+  class MultichannelSampleSource;
+
+
   /**
    * Source of raw PCM samples.  Sample sources have an intrinsic format
    * (@see SampleFormat), sample rate, and number of channels.  They can
@@ -376,8 +379,46 @@ namespace audiere {
      * it will be in the format <type>:<decoder>, so an example is: ogg:standard and mp3:mpaudec
      */
     virtual const char* ADR_CALL getDecoder() = 0;
+
+    /**
+     * If this sample source is backed by a multichannel decoder, this method will return a
+     * pointer to its multichannel decoder interface. You can use this interface to manipulate
+     * the source's individual channels and query information about them.
+     */
+    virtual MultichannelSampleSource * ADR_CALL asMultichannel() = 0;
   };
   typedef RefPtr<SampleSource> SampleSourcePtr;
+
+
+  /**
+   * MultichannelSampleSource is a more advanced form of the SampleSource interface that
+   * provides access to the individual channels of multichannel decoders.
+   */
+  class MultichannelSampleSource : public SampleSource {
+  protected:
+    ~MultichannelSampleSource() { }
+
+  public:
+    /**
+     * Returns the muted state of the specified channel.
+     *
+     * @param index  index of the channel
+     */
+    ADR_METHOD(bool) getChannelMuted(int index) = 0;
+
+    /**
+     * Returns the name of the specified channel, if any.
+     *
+     * @param index  index of the channel
+     */
+    ADR_METHOD(const char *) getChannelName(int index) = 0;
+
+    /**
+     * Returns the number of channels in this stream.
+     */
+    ADR_METHOD(int) getChannelCount() = 0;
+  };
+  typedef RefPtr<MultichannelSampleSource> MultichannelSampleSourcePtr;
 
 
   /**

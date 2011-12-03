@@ -10,7 +10,7 @@
 
 namespace audiere {
 
-  class MODInputStream : public BasicSource {
+  class MODInputStream : public BasicMultichannelSource {
   public:
     MODInputStream();
     ~MODInputStream();
@@ -25,6 +25,11 @@ namespace audiere {
 
     int doRead(int frame_count, void* buffer);
 
+    ADR_METHOD(bool) getChannelMuted(int index);
+
+    ADR_METHOD(const char *) getChannelName(int index);
+
+    ADR_METHOD(int) getChannelCount();
   private:
     DUH* openDUH();
 

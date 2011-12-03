@@ -188,6 +188,9 @@ namespace audiere {
     const char* ADR_CALL getTagType(int i)  { return m_source->getTagType(i);  }
     const char* ADR_CALL getDecoder()  { return m_source->getDecoder();  }
 
+    MultichannelSampleSource * ADR_CALL asMultichannel() {
+        return m_source->asMultichannel();
+    }
 
   private:
     SampleSourcePtr m_source;

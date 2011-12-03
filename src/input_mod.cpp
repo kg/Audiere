@@ -171,4 +171,21 @@ namespace audiere {
     return (This->getRepeat() ? 0 : -1);
   }
 
+  bool MODInputStream::getChannelMuted(int index) {
+      return false;
+  }
+
+  const char * MODInputStream::getChannelName(int index) {
+      return 0;
+  }
+
+  int MODInputStream::getChannelCount() {
+      if (!m_renderer)
+          return 0;
+
+      DUMB_IT_SIGRENDERER * itsr = duh_get_it_sigrenderer(m_renderer);
+
+      if (!itsr)
+          return 0;
+  }
 }
